@@ -1,0 +1,3 @@
+"""
+Plugin definitions for statick.
+"""

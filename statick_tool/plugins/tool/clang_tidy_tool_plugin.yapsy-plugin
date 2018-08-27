@@ -1,0 +1,3 @@
+[Core]
+Name = clang-tidy Tool Plugin
+Module = clang_tidy_tool_plugin

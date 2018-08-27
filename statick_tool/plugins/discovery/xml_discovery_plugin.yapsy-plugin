@@ -1,0 +1,3 @@
+[Core]
+Name = XML Discovery Plugin
+Module = xml_discovery_plugin

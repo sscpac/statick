@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+"""
+Executable script for running statick against a workspace.
+"""
+
+import sys
+import os
+from statick_tool.args import Args
+from statick_tool.statick import Statick
+from statick_tool.report import generate_report
+
+def main():
+    """
+    Run statick_ws.
+    """
+    args = Args("Statick workspace tool")
+    args.parser.add_argument("path", help="Path of workspace to scan")
+    args.parser.add_argument("--packages-file", dest="packages_file", type=str,
+                             help="File listing packages to scan")
+    args.parser.add_argument("--list-packages", dest="list_packages",
+                             action="store_true", help="List packages and levels")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    parsed_args = args.get_args()
+
+    out_dir = parsed_args.output_directory
+    if not os.path.isdir(out_dir):
+        print("Output directory not found at " + out_dir + "!")
+        sys.exit(1)
+
+    ignore_packages = statick.get_ignore_packages()
+
+    packages = []
+    for root, dirs, files in os.walk(parsed_args.path):
+        for sub_dir in dirs:
+            full_dir = os.path.join(root, sub_dir)
+            files = os.listdir(full_dir)
+            if "CMakeLists.txt" in files and "CATKIN_IGNORE" not in files and \
+                    "AMENT_IGNORE" not in files and "package.xml" in files:
+                if ignore_packages and sub_dir in ignore_packages:
+                    continue
+                packages.append((sub_dir, full_dir))
+
+    if parsed_args.packages_file is not None:
+        packages_file_list = []
+        try:
+            packages_file = os.path.abspath(parsed_args.packages_file)
+            with open(packages_file, "r") as f:
+                packages_file_list = [package.strip() for package in f.readlines()
+                               if len(package.strip()) > 0 and package[0] != "#"]
+        except IOError:
+            print("Packages file not found")
+            sys.exit(1)
+        packages = [package for package in packages if package[0] in packages_file_list]
+
+    count = 0
+    total_issues = []
+    for package in packages:
+        if parsed_args.list_packages:
+            print("%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args)))
+            continue
+
+        count += 1
+        print("-- Scanning package " + package[0] + " (" + str(count) + \
+            " of " + str(len(packages)) + ") --")
+        issues = statick.run(package[1], parsed_args)
+        if issues is not None:
+            total_issues.append(issues)
+        else:
+            print("Failed to run statick on package " + package[0] + "!")
+            sys.exit(1)
+        print("-- Done scanning package " + package[0] + " (" + str(count) +  \
+            " of " + str(len(packages)) + ") --")
+
+    if parsed_args.list_packages:
+        sys.exit(0)
+
+    print("-- All packages run --")
+    print("-- overall report --")
+
+    issues = {}
+    for issue in total_issues:
+        for key, value in issue.iteritems():
+            if key in issues:
+                issues[key] += value
+            else:
+                issues[key] = value
+
+    output_file = os.path.join(out_dir, "all" + ".compliance_all")
+    generate_report(issues, output_file)
+
+if __name__ == "__main__":
+    main()

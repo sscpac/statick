@@ -1,0 +1,38 @@
+# auto-generated cmake targets
+- "all"
+- "help"
+- "preinstall"
+- "install"
+- "clean"
+- "test"
+- "tests"
+- "run_tests"
+- "cmake_check_build_system"
+- "clean_test_results*"
+- "doxygen"
+- "Makefile"
+- "edit_cache"
+- "cmake_force"
+- "default_target"
+- "rebuild_cache"
+- "depend"
+- "list_install_components"
+- "download_extra_data"
+
+# auto-generated catkin targets
+- "run_tests_*"
+- "*_genpy"
+- "*_gencpp"
+- "*_genlisp"
+- "*_generate_messages_cpp"
+- "*_generate_messages_py"
+- "*_generate_messages_lisp"
+- "*_generate_messages"
+- "*_gencfg"
+
+# other
+- "gtest"
+- "gtest_main"
+
+# roslint targets
+- "roslint*"

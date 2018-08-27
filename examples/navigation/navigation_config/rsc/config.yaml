@@ -1,0 +1,47 @@
+levels:
+  threshold:
+    tool:
+      pylint:
+        flags: "--disable=R,I,C0302,W0141,W0142,W0511,W0703
+                --max-line-length=100
+                --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
+                --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
+      make:
+        flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
+      catkin_lint:
+        flags: "-W2 --ignore DESCRIPTION_BOILERPLATE,DESCRIPTION_MEANINGLESS,GLOBAL_VAR_COLLISION,LINK_DIRECTORY,LITERAL_PROJECT_NAME,TARGET_NAME_COLLISION"
+      cppcheck:
+        flags: "-j 4 --suppress=unreadVariable --suppress=unusedPrivateFunction --suppress=unusedStructMember
+                --enable=warning,style --config-exclude=/usr --template='[{file}:{line}]: ({severity} {id}) {message}'"
+      cpplint:
+        # These flags must remain on one line to not break the flag parsing
+        flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
+
+  objective:
+    inherits_from: "threshold"
+    tool:
+      pylint:
+        flags: "--disable=I0011,W0141,W0142,W0511
+                --max-line-length=100
+                --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
+                --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
+      clang-tidy:
+        # These flags must remain on one line to not break the flag parsing
+        # cert-err58-cpp gives unwanted error for pluginlib code
+        flags: "-checks='*,-cert-err58-cpp,-cert-err60-cpp,-clang-analyzer-deadcode.DeadStores,-clang-analyzer-alpha.deadcode.UnreachableCode,-clang-analyzer-optin.performance.Padding,-cppcoreguidelines-*,-google-readability-namespace-comments,-google-runtime-int,-llvm-include-order,-llvm-namespace-comment,-modernize-*,-misc-unused-parameters,-readability-else-after-return'"
+      xmllint:
+        flags: ""
+      yamllint:
+        flags: "-d '{extends: default,
+                     rules: {
+                       colons: {max-spaces-before: 0, max-spaces-after: -1},
+                       commas: disable,
+                       document-start: disable,
+                       line-length: disable}}'"
+      cmakelint:
+        flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
+
+  my_custom_level:
+    tool:
+      my_custom_tool:
+        flags: "\\\\bprintf"

@@ -1,0 +1,3 @@
+[Core]
+Name = YAML Discovery Plugin
+Module = yaml_discovery_plugin

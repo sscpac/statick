@@ -1,0 +1,3 @@
+[Core]
+Name = clang-format Tool Plugin
+Module = clang_format_tool_plugin

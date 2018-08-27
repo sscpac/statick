@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+"""
+Executable script for running gauntlet against a workspace.
+"""
+
+from statick_tool import gauntlet
+
+if __name__ == "__main__":
+    gauntlet.main()

@@ -1,0 +1,3 @@
+[Core]
+Name = Pyflakes Tool Plugin
+Module = pyflakes_tool_plugin

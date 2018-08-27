@@ -1,0 +1,3 @@
+[Core]
+Name = PEP8 Tool Plugin
+Module = pep8_tool_plugin

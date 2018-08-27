@@ -1,0 +1,3 @@
+[Core]
+Name = Cpplint Tool Plugin
+Module = cpplint_tool_plugin

@@ -1,0 +1,3 @@
+[Core]
+Name = yamllint Tool Plugin
+Module = yamllint_tool_plugin

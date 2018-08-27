@@ -1,0 +1,3 @@
+[Core]
+Name = Uncrustify Tool Plugin
+Module = uncrustify_tool_plugin

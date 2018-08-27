@@ -1,0 +1,54 @@
+global:
+  exceptions:
+    file:
+      # System headers
+      - tools: all
+        globs: ["/opt/ros/*", "/usr/*"]
+      # ROS auto-generated headers
+      - tools: all
+        globs: ["*/devel/include/*"]
+    message_regex:
+      # This is triggered by std::isnan for some reason
+      - tools: [clang-tidy]
+        regex: "implicit cast 'typename __gnu_cxx.*__type' -> bool"
+      # ROS uses uint8_t for its bool type. It's too much trouble to make
+      # everything using ROS bools to cast.
+      - tools: [clang-tidy]
+        regex: "implicit cast '_.*_type' -> bool"
+      - tools: [clang-tidy]
+        regex: "implicit cast bool -> '_.*_type'"
+      - tools: [clang-tidy]
+        regex: "implicit cast 'safe_bool' -> bool"
+      # This happens for boost::shared_ptrs
+      - tools: [clang-tidy]
+        regex: "implicit cast 'unspecified_bool_type' -> bool"
+      # This happens for yamlcpp
+      - tools: [clang-tidy]
+        regex: "implicit cast 'YAML::detail::unspecified_bool_type' -> bool"
+      # clang-tidy chokes on openmp headers
+      - tools: [clang-tidy]
+        regex: "'omp.h' file not found"
+      # BOOST_STATIC_ASSERT causes this
+      - tools: [clang-tidy]
+        regex: "unused typedef 'boost_static_assert_typedef_.*'"
+      # clang-tidy complains about pluginlib
+      - tools: [clang-tidy]
+        regex: "'log_deprecated' is deprecated"
+      # catkin_lint doesn't like usage of gtest without rosunit for some reason
+      - tools: [catkin_lint]
+        regex: "missing test_depend on 'rosunit'"
+      # Some packages need to be able to call this twice
+      - tools: [catkin_lint]
+        regex: "duplicate catkin_package()"
+      # Some packages need to be able to change this
+      - tools: [catkin_lint]
+        regex: "variable CMAKE_MODULE_PATH is modified"
+      # catkin_lint false detects on packages exporting their own plugins
+      - tools: [catkin_lint]
+        regex: "package exports (.+) plugin but does not exec_depend on '\\1'"
+      # numpy breaks pylint
+      - tools: [pylint]
+        regex: ".+: Module 'numpy' has no '.+' member"
+
+ignore_packages:
+  []

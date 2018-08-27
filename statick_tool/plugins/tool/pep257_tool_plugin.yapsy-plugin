@@ -1,0 +1,3 @@
+[Core]
+Name = PEP257 Tool Plugin
+Module = pep257_tool_plugin
