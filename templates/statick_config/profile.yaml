@@ -1,0 +1,7 @@
+default: sei_cert
+
+packages:
+
+# You can do individual package level overrides like:
+# packages:
+#   my_package: objective
