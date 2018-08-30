@@ -1,0 +1,11 @@
+bandit
+clang-3.9
+clang-format-3.9
+clang-tidy-3.9
+flawfinder
+libomp-dev
+libxml2
+pylint
+python-git
+python-pylint-django
+python-yapsy

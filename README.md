@@ -22,15 +22,20 @@ The exact package names may vary for other systems.
 These packages are for the tools used by the default configuration of Statick.
 Depending on your usage and configuration, you may not need these packages.
 
-    $ sudo apt install libxml2 ros-kinetic-roslint pylint python-catkin-lint clang-3.9 clang-format-3.9 clang-tidy-3.9 python-yapsy python-git libomp-dev bandit flawfinder python-pylint-django
-    $ sudo pip install yamllint cmakelint lizard
+    $ cat install.txt  | xargs sudo apt-get install
+    $ pip install -r requirements.txt
+
+To run against ROS packages there are a few more system packages to get.
+This command assumes you have setup the [ROS apt repository](http://wiki.ros.org/ROS/Installation) for your system.
+
+    $ cat ros-deps.txt  | xargs sudo apt-get install
 
 ## Setup cppcheck
 
 cppcheck is a static analysis tool for C++.
 It is possible to set a required version of the tool to ensure consistency of output.
 The required version of the tool can be passed in as part of the tool flags in the `config.yaml` file.
-If a flag is not set for the version then any version of the tool will run.
+If a flag is not set for the version then any installed version of the tool will run.
 If a required version is set but not found then the tool will not run.
 An example of how to install a specific version of cppcheck is below.
 
