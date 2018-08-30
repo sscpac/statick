@@ -1,0 +1,12 @@
+*.pyc
+*.swo
+*.swp
+*~
+examples/navigation/statick_example*
+examples/sbpl/statick_example*
+examples/werkzeug/statick_example*
+
+# from setup.py
+build/
+dist/
+*.egg-info/
