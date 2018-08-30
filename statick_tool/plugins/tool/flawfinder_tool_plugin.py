@@ -1,5 +1,5 @@
 """
-Apply yamllint tool and gather results.
+Apply flawfinder tool and gather results.
 """
 from __future__ import print_function
 import subprocess
@@ -10,42 +10,44 @@ from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.issue import Issue
 
 
-class YamllintToolPlugin(ToolPlugin):
+class FlawfinderToolPlugin(ToolPlugin):
     """
-    Apply yamllint tool and gather results.
+    Apply flawfinder tool and gather results.
     """
     def get_name(self):
         """
         Get name of tool.
         """
-        return "yamllint"
+        return "flawfinder"
 
     def scan(self, package, level):
         """
         Run tool and gather output.
         """
-        flags = ["-f", "parsable"]
+        flags = ["--quiet", "-D", "--singleline"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
 
         total_output = []
-
-        for yaml_file in package["yaml"]:
+        if "c_src" not in package.keys():
+            return []
+        for src in package["c_src"]:
             try:
-                subproc_args = ["yamllint", yaml_file] + flags
+                subproc_args = ["flawfinder"] + flags + [src]
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as ex:
-                if ex.returncode == 1:
+                if ex.returncode != 32:
                     output = ex.output
                 else:
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
+
             except OSError as ex:
-                print("Couldn't find yamllint executable! (%s)" % (ex))
+                print("Couldn't find flawfinder executable! (%s)" % (ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:
@@ -64,21 +66,16 @@ class YamllintToolPlugin(ToolPlugin):
         """
         Parse tool output and report issues.
         """
-        yamllint_re = r"(.+):(\d+):(\d+):\s\[(.+)\]\s(.+)\s\((.+)\)"
-        parse = re.compile(yamllint_re)
+        flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s+(.+)"
+        parse = re.compile(flawfinder_re)
         issues = []
 
         for output in total_output:
             for line in output.split("\n"):
                 match = parse.match(line)
                 if match:
-                    issue_type = match.group(4)
-                    if issue_type == "error":
-                        level = "5"
-                    else:
-                        level = "3"
                     issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), match.group(6), level,
-                                        match.group(5), None))
+                                  self.get_name(), match.group(4),
+                                  match.group(3), match.group(5), None))
 
         return issues

@@ -101,10 +101,13 @@ class MakeToolPlugin(ToolPlugin):
         matches = self.filter_matches(matches, package)
         issues = []
         for match in matches:
+            cert_reference = None
             warning_list = warning_parse.match(match[4])
+            if warning_list is not None and warning_list.groups(1)[0] in warnings_mapping.keys():
+                cert_reference = warnings_mapping[warning_list.groups(1)[0]]
 
             if warning_list is None:
-                # Something's gone wrong if we don't match the [warning] format
+                # Something's gone wrong if we don't match the [waring] format
                 if "fatal error" in match[3]:
                     warning_level = 5
                     category = "fatal-error"
@@ -123,7 +126,7 @@ class MakeToolPlugin(ToolPlugin):
                 warning_level = 3
 
             issue = Issue(match[0], match[1], self.get_name(), category, warning_level,
-                          match[4])
+                          match[4], cert_reference)
             if issue not in issues:
                 issues.append(issue)
 

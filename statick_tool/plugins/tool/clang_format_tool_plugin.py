@@ -35,7 +35,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        clang_format_bin = "clang-format-3.9"
+        clang_format_bin = "clang-format"
         if self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
@@ -59,7 +59,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             output = subprocess.check_output([clang_format_bin,
                                               "--dump-config"],
                                              stderr=subprocess.STDOUT)
-            format_file_name = self.plugin_context.resources.get_file(".clang-format")
+            format_file_name = self.plugin_context.resources.get_file("_clang-format")
             with open(format_file_name, "r") as format_file:
                 target_format = format_file.read()
             diff = difflib.context_diff(output.split("\n"),
@@ -123,5 +123,5 @@ class ClangFormatToolPlugin(ToolPlugin):
                     count += 1
             if count > 0:
                 issues.append(Issue(filename, "0", self.get_name(), "format",
-                                    "1", str(count) + " replacements"))
+                                    "1", str(count) + " replacements", None))
         return issues

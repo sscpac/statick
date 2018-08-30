@@ -1,0 +1,14 @@
+-Wreorder:OOP53-CPP
+-Wchar-subscripts:STR34-C
+-Wunused-parameter:MSC12-C
+-Wunused-value:MSC12-C
+-Wcast-align:EXP36-C
+-Wuninitialized:EXP33-C
+-Wtrigraphs:DCP07-C
+-Wcast-qual:EXP05-C
+-Wformat:FIO47-C
+-Wunreachable-code:MISC07-C
+-Wcast-qual:EXP32-C
+-Wformat-security:FIO30-C
+-Wsequence-point:EXP30-C
+-Wparentheses:EXP13-C

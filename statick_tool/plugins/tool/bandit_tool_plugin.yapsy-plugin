@@ -1,0 +1,3 @@
+[Core]
+Name = Bandit Tool Plugin
+Module = bandit_tool_plugin

@@ -109,5 +109,5 @@ class CpplintToolPlugin(ToolPlugin):
                 norm_path = os.path.normpath(match.group(1))
                 issues.append(Issue(norm_path, match.group(2), self.get_name(),
                                     match.group(4), match.group(5),
-                                    match.group(3)))
+                                    match.group(3), None))
         return issues
