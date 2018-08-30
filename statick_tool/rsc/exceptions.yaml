@@ -7,6 +7,12 @@ global:
       # ROS auto-generated headers
       - tools: all
         globs: ["*/devel/include/*"]
+      # SBPL headers
+      - tools: all
+        globs: ["*/include/sbpl/*"]
+      # Qt auto-generated files
+      - tools: all
+        globs: ["*/build/include/*/moc_*.cpp"]
     message_regex:
       # This is triggered by std::isnan for some reason
       - tools: [clang-tidy]
@@ -25,12 +31,12 @@ global:
       # This happens for yamlcpp
       - tools: [clang-tidy]
         regex: "implicit cast 'YAML::detail::unspecified_bool_type' -> bool"
-      # clang-tidy chokes on openmp headers
-      - tools: [clang-tidy]
-        regex: "'omp.h' file not found"
       # BOOST_STATIC_ASSERT causes this
       - tools: [clang-tidy]
         regex: "unused typedef 'boost_static_assert_typedef_.*'"
+      # BOOST_FOREACH causes this
+      - tools: [clang-tidy]
+        regex: "implicit cast .* -> 'struct boost_se_params_t_.*::boost_se_param_t_.*'"
       # clang-tidy complains about pluginlib
       - tools: [clang-tidy]
         regex: "'log_deprecated' is deprecated"
@@ -49,6 +55,24 @@ global:
       # numpy breaks pylint
       - tools: [pylint]
         regex: ".+: Module 'numpy' has no '.+' member"
+      # cv2 breaks pylint
+      - tools: [pylint]
+        regex: ".+: Module 'cv2' has no '.+' member"
+      # tf breaks pylint
+      - tools: [pylint]
+        regex: ".+: Module 'tf' has no '.*Exception' member"
+      # tf2_ros breaks pylint
+      - tools: [pylint]
+        regex: ".+: Module 'tf2_ros' has no '.*Exception' member"
+      # PyKDL breaks pylint
+      - tools: [pylint]
+        regex: ".+: Module 'PyKDL' has no '.+' member"
+      # Locally disabling checks breaks pylint
+      - tools: [pylint]
+        regex: "Locally disabling .+"
+      - tools: [pylint]
+        regex: "Locally enabling .+"
+
+packages:
 
 ignore_packages:
-  []
