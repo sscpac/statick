@@ -14,6 +14,7 @@ import yaml
 from statick_tool.args import Args
 from statick_tool.resources import Resources
 
+
 def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     """
     Run gauntlet tool.

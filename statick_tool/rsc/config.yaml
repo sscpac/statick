@@ -104,6 +104,8 @@ levels:
     tool:
       pylint:
         flags: ""
+      uncrustify:
+        flags: ""
 
   ultimate:
     tool:
