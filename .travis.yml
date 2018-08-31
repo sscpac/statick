@@ -1,0 +1,21 @@
+dist: trusty
+sudo: required
+language:
+  - generic
+cache:
+  - apt
+
+notifications:
+  email:
+    on_failure: never
+
+before_install:
+  - sudo apt-get update -qq
+
+install:
+  - cat install.txt  | xargs sudo apt-get install
+  - sudo -H pip install -r requirements.txt
+
+script:
+  - mkdir statick_output
+  - ./statick . statick_output
