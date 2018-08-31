@@ -1,0 +1,20 @@
+dist: trusty
+sudo: required
+language:
+  - generic
+cache:
+  - apt
+
+notifications:
+  email:
+    on_failure: never
+
+before_install:
+  - sudo apt-get update
+    #- cat install.txt | xargs sudo apt-get install -y
+  - sudo apt-get install -y clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libxml2 pylint python-git python-yapsy
+  - sudo -H pip install -r requirements.txt
+
+script:
+  - mkdir statick_output
+  - ./statick . statick_output

@@ -1,5 +1,9 @@
 # Statick
 
+| Service | Status |
+| ------- | ------ |
+| Build   | [![Travis-CI](https://api.travis-ci.org/sscpac/statick.svg?branch=master)](https://travis-ci.org/sscpac/statick/branches) |
+
 Statick is a set of tools to analyze software packages.
 
 This README only covers basic usage of Statick.
