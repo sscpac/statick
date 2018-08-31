@@ -7,6 +7,7 @@ import sys
 from statick_tool.args import Args
 from statick_tool.statick import Statick
 
+
 def main():
     """
     Run statick.
@@ -20,10 +21,15 @@ def main():
 
     path = parsed_args.path
     issues = statick.run(path, parsed_args)
-    if issues is not None:
-        sys.exit(0)
-    else:
+    found_issue = False
+    for tool in issues.values():
+        if len(tool) > 0:
+            found_issue = True
+    if issues is None or found_issue:
         sys.exit(1)
+    else:
+        sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
