@@ -11,8 +11,11 @@ notifications:
 
 before_install:
   - sudo apt-get update
-  - cat install.txt | xargs sudo apt-get install
-  - sudo -H pip install -r requirements.txt
+    #- cat install.txt | xargs sudo apt-get install -y
+    #- cat ros-deps.txt | xargs sudo apt-get install -y
+    #- sudo -H pip install -r requirements.txt
+  - sudo apt-get install -y bandit clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libomp-dev libxml2 pylint python-git python-pylint-django python-yapsy python-catkin-lint ros-kinetic-roslint
+  - sudo -H pip install yamllint cmakelint lizard
 
 script:
   - mkdir statick_output
