@@ -2,7 +2,7 @@
 
 | Service | Status |
 | ------- | ------ |
-| Build   | [![Travis-CI](https://api.travis-ci.org/tdenewiler/statick.svg?branch=master)](https://travis-ci.org/tdenewiler/statick/branches) |
+| Build   | [![Travis-CI](https://api.travis-ci.org/denewiler/statick.svg?branch=master)](https://travis-ci.org/denewiler/statick/branches) |
 
 Statick is a set of tools to analyze software packages.
 
