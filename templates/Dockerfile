@@ -11,9 +11,9 @@ RUN update-locale LC_ALL=en_US.UTF-8
 # Statick requirements
 
 # packages available from apt
-RUN apt-get update && apt-get install -y git wget build-essential cppcheck cmake pylint libxml2 python-yapsy libomp-dev bandit flawfinder python-pylint-django
+RUN apt-get update && apt-get install -y git wget build-essential cppcheck cmake pylint libxml2 python-yapsy libomp-dev flawfinder python-pylint-django
 # Python requirements
-RUN apt-get update && apt-get install -y python-yapsy python-yaml flawfinder clang-tidy clang-format clang python-yapsy findbugs
+RUN apt-get update && apt-get install -y python-yapsy python-yaml flawfinder clang-tidy clang-format clang python-yapsy findbugs bandit
 RUN pip install --upgrade pip
 RUN pip install yamllint cmakelint lizard flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-docstrings flake8-import-order flake8-quotes 
 
