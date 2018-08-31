@@ -1,14 +1,11 @@
-"""
-Write issue reports to screen and file.
-"""
+"""Write issue reports to screen and file."""
+
 from __future__ import print_function
 from collections import OrderedDict
 
 
 def write_report_file(issues, filename):
-    """
-    Format issues into a new file format.
-    """
+    """Format issues into a new file format."""
     with open(filename, "w") as out:
         for dummy, value in issues.iteritems():
             for issue in value:
@@ -31,9 +28,7 @@ def write_report_file(issues, filename):
 
 
 def generate_report(issues, output_filename):
-    """
-    Print report to screen.
-    """
+    """Print report to screen."""
     total = 0
     print("---Report---")
     for key, value in issues.iteritems():

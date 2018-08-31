@@ -1,6 +1,5 @@
-"""
-Apply lizard tool and gather results.
-"""
+"""Apply lizard tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import re
@@ -10,23 +9,22 @@ from statick_tool.issue import Issue
 
 
 class LizardToolPlugin(ToolPlugin):
-    """
-    Apply Lizard tool and gather results.
-    """
+    """Apply Lizard tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "lizard"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         output = None
+
+        src_dir = '.'
+        if "src_dir" in package:
+            src_dir = package["src_dir"]
+
         try:
-            output = subprocess.check_output(["lizard", "-w",
-                                              package["src_dir"]])
+            output = subprocess.check_output(["lizard", "-w", src_dir])
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 1:
                 output = ex.output
@@ -49,9 +47,7 @@ class LizardToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
         parse = re.compile(lizard_re)
         matches = []

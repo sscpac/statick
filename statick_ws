@@ -9,7 +9,8 @@ from statick_tool.args import Args
 from statick_tool.statick import Statick
 from statick_tool.report import generate_report
 
-def main():
+
+def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     """
     Run statick_ws.
     """
@@ -26,7 +27,7 @@ def main():
 
     out_dir = parsed_args.output_directory
     if not os.path.isdir(out_dir):
-        print("Output directory not found at " + out_dir + "!")
+        print "Output directory not found at " + out_dir + "!"
         sys.exit(1)
 
     ignore_packages = statick.get_ignore_packages()
@@ -46,11 +47,13 @@ def main():
         packages_file_list = []
         try:
             packages_file = os.path.abspath(parsed_args.packages_file)
-            with open(packages_file, "r") as f:
-                packages_file_list = [package.strip() for package in f.readlines()
-                               if len(package.strip()) > 0 and package[0] != "#"]
+            with open(packages_file, "r") as fname:
+                packages_file_list = [package.strip() for package
+                                      in fname.readlines()
+                                      if len(package.strip()) > 0 and
+                                      package[0] != "#"]
         except IOError:
-            print("Packages file not found")
+            print "Packages file not found"
             sys.exit(1)
         packages = [package for package in packages if package[0] in packages_file_list]
 
@@ -58,26 +61,26 @@ def main():
     total_issues = []
     for package in packages:
         if parsed_args.list_packages:
-            print("%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args)))
+            print "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
             continue
 
         count += 1
-        print("-- Scanning package " + package[0] + " (" + str(count) + \
-            " of " + str(len(packages)) + ") --")
+        print "-- Scanning package " + package[0] + " (" + str(count) + \
+            " of " + str(len(packages)) + ") --"
         issues = statick.run(package[1], parsed_args)
         if issues is not None:
             total_issues.append(issues)
         else:
-            print("Failed to run statick on package " + package[0] + "!")
+            print "Failed to run statick on package " + package[0] + "!"
             sys.exit(1)
-        print("-- Done scanning package " + package[0] + " (" + str(count) +  \
-            " of " + str(len(packages)) + ") --")
+        print "-- Done scanning package " + package[0] + " (" + str(count) +  \
+            " of " + str(len(packages)) + ") --"
 
     if parsed_args.list_packages:
         sys.exit(0)
 
-    print("-- All packages run --")
-    print("-- overall report --")
+    print "-- All packages run --"
+    print "-- overall report --"
 
     issues = {}
     for issue in total_issues:

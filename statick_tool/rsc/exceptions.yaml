@@ -13,6 +13,9 @@ global:
       # Qt auto-generated files
       - tools: all
         globs: ["*/build/include/*/moc_*.cpp"]
+      # Auto-generated build files
+      - tools: all
+        globs: ["*/build/*"]
     message_regex:
       # This is triggered by std::isnan for some reason
       - tools: [clang-tidy]
@@ -31,6 +34,9 @@ global:
       # This happens for yamlcpp
       - tools: [clang-tidy]
         regex: "implicit cast 'YAML::detail::unspecified_bool_type' -> bool"
+      # clang-tidy chokes on openmp headers
+      - tools: [clang-tidy]
+        regex: "'omp.h' file not found"
       # BOOST_STATIC_ASSERT causes this
       - tools: [clang-tidy]
         regex: "unused typedef 'boost_static_assert_typedef_.*'"
@@ -76,3 +82,4 @@ global:
 packages:
 
 ignore_packages:
+  []

@@ -1,33 +1,32 @@
-"""
-Exceptions interface.
-"""
+"""Exceptions interface."""
+
 import os
 import fnmatch
 import re
 import yaml
 
+
 class Exceptions(object):
     """
-    Manages which plugins are run for each statick scan level and what flags
-    are used for each plugin at those levels.
+    Manages which plugins are run for each statick scan level.
+
+    Sets what flags are used for each plugin at those levels.
     """
+
     def __init__(self, filename):
-        with open(filename) as f:
-            self.exceptions = yaml.safe_load(f)
+        """Initialize exceptions interface."""
+        with open(filename) as fname:
+            self.exceptions = yaml.safe_load(fname)
 
     def get_ignore_packages(self):
-        """
-        Get list of packages to skip when scanning a workspace.
-        """
+        """Get list of packages to skip when scanning a workspace."""
         ignore = []
         if "ignore_packages" in self.exceptions and self.exceptions["ignore_packages"] is not None:
             ignore = self.exceptions["ignore_packages"]
         return ignore
 
     def get_exceptions(self, package):
-        """
-        Get specific exceptions for given package.
-        """
+        """Get specific exceptions for given package."""
         exceptions = {"file": [], "message_regex": []}
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
@@ -37,23 +36,24 @@ class Exceptions(object):
             if "message_regex" in global_exceptions:
                 exceptions["message_regex"] += global_exceptions["message_regex"]
 
+# pylint: disable=too-many-boolean-expressions
         if self.exceptions and "packages" in self.exceptions \
-            and self.exceptions["packages"] and package.name in self.exceptions["packages"] \
-            and self.exceptions["packages"][package.name] \
-            and "exceptions" in self.exceptions["packages"][package.name]:
+            and self.exceptions["packages"] and package.name in \
+                self.exceptions["packages"] \
+                and self.exceptions["packages"][package.name] \
+                and "exceptions" in self.exceptions["packages"][package.name]:
             package_exceptions = self.exceptions["packages"][package.name]["exceptions"]
             if "file" in package_exceptions:
                 exceptions["file"] += package_exceptions["file"]
             if "message_regex" in package_exceptions:
                 exceptions["message_regex"] += package_exceptions["message_regex"]
+# pylint: enable=too-many-boolean-expressions
 
         return exceptions
 
     @classmethod
     def filter_file_exceptions(cls, package, exceptions, issues):
-        """
-        Filter issues based on file pattern exceptions list.
-        """
+        """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in issues.iteritems():
             to_remove = []
             for issue in tool_issues:
@@ -71,9 +71,7 @@ class Exceptions(object):
 
     @classmethod
     def filter_regex_exceptions(cls, exceptions, issues):
-        """
-        Filter issues based on message regex exceptions list.
-        """
+        """Filter issues based on message regex exceptions list."""
         for exception in exceptions:
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
@@ -93,6 +91,7 @@ class Exceptions(object):
     def filter_nolint(cls, issues):
         """
         Filter out lines that have an explicit NOLINT on them.
+
         Sometimes the tools themselves don't properly filter these out if
         there is a complex macro or something.
         """
@@ -107,9 +106,7 @@ class Exceptions(object):
         return issues
 
     def filter_issues(self, package, issues):
-        """
-        Filter issues based on exceptions list.
-        """
+        """Filter issues based on exceptions list."""
         exceptions = self.get_exceptions(package)
 
         if len(exceptions["file"]) > 0:

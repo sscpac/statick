@@ -1,6 +1,5 @@
-"""
-Apply clang-format tool and gather results.
-"""
+"""Apply clang-format tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -12,26 +11,19 @@ from statick_tool.issue import Issue
 
 
 class ClangFormatToolPlugin(ToolPlugin):
-    """
-    Apply clang-format tool and gather results.
-    """
+    """Apply clang-format tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "clang-format"
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
 
-    def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
+        """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
 
@@ -41,7 +33,8 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         flags = ["-header-filter="+package["src_dir"]+"/.*", "-p",
                  package["bin_dir"]+"/compile_commands.json"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -85,8 +78,7 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            print("clang-format failed! Returncode = ".
-                  format(str(ex.returncode)))
+            print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
             print("{}".format(ex.output))
             return None
 
@@ -98,17 +90,15 @@ class ClangFormatToolPlugin(ToolPlugin):
             for output in total_output:
                 print("{}".format(output))
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fname:
             for output in total_output:
-                f.write(output)
+                fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
         parse = re.compile(clangformat_re)
         issues = []

@@ -1,6 +1,5 @@
-"""
-Apply cmakelint tool and gather results.
-"""
+"""Apply cmakelint tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -12,24 +11,20 @@ from statick_tool.issue import Issue
 
 
 class CMakelintToolPlugin(ToolPlugin):
-    """
-    Apply cmakelint tool and gather results.
-    """
+    """Apply cmakelint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "cmakelint"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "cmake" not in package or not package["cmake"]:
             # Package is not cmake!
             return []
 
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = list(lex)
@@ -63,9 +58,7 @@ class CMakelintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         cmakelint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]"
         parse = re.compile(cmakelint_re)
         issues = []

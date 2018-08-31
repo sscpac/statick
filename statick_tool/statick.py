@@ -1,6 +1,5 @@
-"""
-Code analysis front-end.
-"""
+"""Code analysis front-end."""
+
 from __future__ import print_function
 import copy
 import os
@@ -22,10 +21,10 @@ logging.basicConfig()
 
 
 class Statick(object):
-    """
-    Code analysis front-end.
-    """
+    """Code analysis front-end."""
+
     def __init__(self, user_paths):
+        """Initialize Statick."""
         self.resources = Resources(user_paths)
 
         self.manager = PluginManager()
@@ -51,15 +50,11 @@ class Statick(object):
         self.exceptions = Exceptions(self.resources.get_file("exceptions.yaml"))
 
     def get_ignore_packages(self):
-        """
-        Get packages to ignore during scan process.
-        """
+        """Get packages to ignore during scan process."""
         return self.exceptions.get_ignore_packages()
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("output_directory", help="Output directory")
         args.add_argument("--show-tool-output", dest="show_tool_output",
                           action="store_true", help="Show tool output")
@@ -77,9 +72,7 @@ class Statick(object):
             plugin.gather_args(args)
 
     def get_level(self, path, args):
-        """
-        Get level to scan package at.
-        """
+        """Get level to scan package at."""
         path = os.path.abspath(path)
 
         profile_filename = "profile.yaml"
@@ -96,22 +89,11 @@ class Statick(object):
 
         return level
 
-    def run(self, path, args):
-        """
-        Run scan tools against targets on path.
-        """
+    def run(self, path, args):  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+        """Run scan tools against targets on path."""
         path = os.path.abspath(path)
         if not os.path.exists(path):
             print("No package found at {}!".format(path))
-            return None
-
-        profile_filename = "profile.yaml"
-        if args.profile is not None:
-            profile_filename = args.profile
-        try:
-            profile = Profile(self.resources.get_file(profile_filename))
-        except TypeError:
-            print("Could not find profile file {}!".format(profile_filename))
             return None
 
         package = Package(os.path.basename(path), path)
@@ -160,7 +142,7 @@ class Statick(object):
         if len(discovery_plugins) == 0:
             discovery_plugins = self.discovery_plugins.keys()
         for plugin_name in discovery_plugins:
-            if not plugin_name in self.discovery_plugins.keys():
+            if plugin_name not in self.discovery_plugins.keys():
                 print("Can't find specified discovery plugin {}!".format(plugin_name))
                 return None
 
@@ -179,13 +161,13 @@ class Statick(object):
         while len(plugins_to_run) > 0:
             plugin_name = plugins_to_run[0]
 
-            if not plugin_name in self.tool_plugins.keys():
+            if plugin_name not in self.tool_plugins.keys():
                 print("Can't find specified tool plugin {}!".format(plugin_name))
                 return None
 
             if args.force_tool_list is not None:
                 force_tool_list = args.force_tool_list.split(",")
-                if not plugin_name in force_tool_list and plugin_name not in plugin_dependencies:
+                if plugin_name not in force_tool_list and plugin_name not in plugin_dependencies:
                     print("Skipping plugin not in force list {}!".format(plugin_name))
                     plugins_to_run.remove(plugin_name)
                     continue
@@ -198,7 +180,8 @@ class Statick(object):
             for dependency_name in dependencies:
                 if dependency_name not in plugins_ran:
                     if dependency_name not in enabled_plugins:
-                        print("Plugin {} depends on plugin {} which isn't enabled!".format(plugin_name, dependency_name))
+                        print("Plugin {} depends on plugin {} which isn't "
+                              "enabled!".format(plugin_name, dependency_name))
                         return None
                     plugin_dependencies.append(dependency_name)
                     plugins_to_run.remove(dependency_name)

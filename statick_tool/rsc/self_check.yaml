@@ -1,0 +1,7 @@
+default: self_check
+
+packages:
+
+# You can do individual package level overrides like:
+# packages:
+#   my_package: objective

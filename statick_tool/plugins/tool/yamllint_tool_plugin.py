@@ -1,6 +1,5 @@
-"""
-Apply yamllint tool and gather results.
-"""
+"""Apply yamllint tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,21 +10,17 @@ from statick_tool.issue import Issue
 
 
 class YamllintToolPlugin(ToolPlugin):
-    """
-    Apply yamllint tool and gather results.
-    """
+    """Apply yamllint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "yamllint"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         flags = ["-f", "parsable"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -61,9 +56,7 @@ class YamllintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         yamllint_re = r"(.+):(\d+):(\d+):\s\[(.+)\]\s(.+)\s\((.+)\)"
         parse = re.compile(yamllint_re)
         issues = []

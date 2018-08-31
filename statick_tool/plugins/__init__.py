@@ -1,3 +1,1 @@
-"""
-Plugin definitions for statick.
-"""
+"""Plugin definitions for statick."""
