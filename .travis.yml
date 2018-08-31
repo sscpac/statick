@@ -14,7 +14,12 @@ before_install:
     #- cat install.txt | xargs sudo apt-get install -y
   - sudo apt-get install -y clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libxml2 pylint python-git python-yapsy findbugs
   - sudo -H pip install -r requirements.txt
+  - sudo pip install sphinx travis-sphinx
 
 script:
   - mkdir statick_output
   - ./statick . statick_output --profile self_check.yaml
+  - travis-sphinx build
+    
+after_success:
+    - travis-sphinx deploy
