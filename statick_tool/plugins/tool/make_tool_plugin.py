@@ -107,7 +107,7 @@ class MakeToolPlugin(ToolPlugin):
                 cert_reference = warnings_mapping[warning_list.groups(1)[0]]
 
             if warning_list is None:
-                # Something's gone wrong if we don't match the [waring] format
+                # Something's gone wrong if we don't match the [warning] format
                 if "fatal error" in match[3]:
                     warning_level = 5
                     category = "fatal-error"
