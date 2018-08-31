@@ -5,6 +5,9 @@ clang-tidy-3.9
 flawfinder
 libomp-dev
 libxml2
+pep257
+pep8
+pyflakes
 pylint
 python-git
 python-pylint-django
