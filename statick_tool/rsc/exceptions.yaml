@@ -7,6 +7,9 @@ global:
       # ROS auto-generated headers
       - tools: all
         globs: ["*/devel/include/*"]
+      # Auto-generated build files
+      - tools: all
+        globs: ["*/build/*"]
     message_regex:
       # This is triggered by std::isnan for some reason
       - tools: [clang-tidy]
