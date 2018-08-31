@@ -1,6 +1,9 @@
 FROM ubuntu:xenial
 MAINTAINER SPAWAR
 
+LABEL org.label-schema.name = "Statick Runner"
+LABEL org.label-schema.vcs-url = "https://github.com/sscpac/statick"
+
 USER root
 
 # Set up the locale
@@ -10,10 +13,10 @@ RUN update-locale LC_ALL=en_US.UTF-8
 
 # Statick requirements
 
-# packages available from apt
-RUN apt-get update && apt-get install -y git wget build-essential cppcheck cmake pylint libxml2 python-yapsy libomp-dev flawfinder python-pylint-django
-# Python requirements
-RUN apt-get update && apt-get install -y python-yapsy python-yaml flawfinder clang-tidy clang-format clang python-yapsy findbugs bandit
+# packages needed to checkout and run statick itself
+RUN apt-get update && apt-get install -y git wget build-essential python-yapsy python-yapsy python-yaml
+# external tools
+RUN apt-get update && apt-get install -y flawfinder clang-tidy clang-format clang python-yapsy findbugs bandit flawfinder libomp-dev libxml2 cppcheck cmake pylint python-pylint-django
 RUN pip install --upgrade pip
 RUN pip install yamllint cmakelint lizard flake8 flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-docstrings flake8-import-order flake8-quotes 
 
