@@ -88,6 +88,7 @@ class MakeToolPlugin(ToolPlugin):
         warning_parse = re.compile(make_warning_re)
         matches = []
         # Load the plugin mapping if possible
+        warnings_mapping = self.load_mapping()
         for line in output.split('\n'):
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):
