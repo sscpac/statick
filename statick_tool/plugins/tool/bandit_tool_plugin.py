@@ -41,7 +41,8 @@ class BanditToolPlugin(ToolPlugin):
             bandit_bin = self.plugin_context.args.bandit_bin
 
         flags = ["--format=csv"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -72,19 +73,17 @@ class BanditToolPlugin(ToolPlugin):
         with open(self.get_name() + ".log", "w") as f:
             f.write(output)
 
-        issues = self.parse_output(output)
+        issues = self.parse_output()
         return issues
 
-
-    def parse_output(self, output):
+    def parse_output(self):
         """
         Parse tool output and report issues.
         """
-
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        try: 
+        try:
             with open('bandit_results.csv', 'r') as csvfile:
                 csvreader = csv.reader(csvfile, quoting=csv.QUOTE_MINIMAL)
                 for line in csvreader:

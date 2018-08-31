@@ -106,6 +106,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         parse = re.compile(clang_tidy_re)
         issues = []
         # Load the plugin mapping if possible
+        warnings_mapping = self.load_mapping()
         for line in output.split('\n'):
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):

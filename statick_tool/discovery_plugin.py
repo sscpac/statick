@@ -23,7 +23,7 @@ class DiscoveryPlugin(IPlugin):
         """
         pass
 
-    def scan(self, package, level, plugin_context):
+    def scan(self, package, level):
         """
         Scan package to discover files for analysis.
         """

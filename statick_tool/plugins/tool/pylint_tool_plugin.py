@@ -26,7 +26,8 @@ class PylintToolPlugin(ToolPlugin):
         """
         flags = ["--msg-template='{abspath}:{line}: [{msg_id}({symbol}), "
                  "{obj}] {msg}'", "--reports=no"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -86,7 +87,7 @@ class PylintToolPlugin(ToolPlugin):
                                                 match.group(4), None))
                     else:
                         issues.append(Issue(match.group(1), match.group(2),
-                                      self.get_name(), match.group(3),
-                                      "5", match.group(4), None))
+                                            self.get_name(), match.group(3),
+                                            "5", match.group(4), None))
 
         return issues

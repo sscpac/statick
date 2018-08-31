@@ -100,6 +100,11 @@ levels:
         # cert-err58-cpp gives unwanted error for pluginlib code
         flags: "-checks='*,-cert-dcl50-cpp,-Wreserved-id-macro,-Weverything,-Wuser-defined-literals,-Wvexing-parse,-Misc-new-delete-overloads,-Cert-dcl59-cpp,-Wunsequenced,-analyzer-checker=cplusplus,-Wunevaluated-expression,-Wuniinitialized,-clang-analyzer-core.UndefinedBinaryOperatorResult,-Wdangling-initializer-list,-Wdelete-incomplete,-Wvarargs,-Winvalid-offsetof,-Wdynamic-class-memaccess,-wparentheses,-Wint-to-pointer-cast,-Wint-conversion,-Wincompatible-pointer-types,Clang-analyzer-cplusplus.NewDelete clang-analyzer-alpha.security.ArrayBoundV2,Clang-analyzer-cplusplus.NewDeleteLeaks-Wmismatched-new-delete,clang-analyzer-unix.MismatchedDeallocator,Clang-analyzer-unix.Malloc,Misc-non-copyable-objects,Cert-err52-cpp,-Wexceptions,Cert-err58-cpp,Cert-err60-cpp,Cert-err34-c,Cert-err34-c,-Clang-analyzer-alpha.cplusplus.VirtualCall,-Wdelete-non-virtual-dtor,-Wreorder,Cert-msc50-cpp,-Wreturn-type,-Winvalid-noreturn,Cert-msc30-c,Cert-flp30-c,Cert-env33-c'"
 
+  self_check:
+    tool:
+      pylint:
+        flags: ""
+
   ultimate:
     tool:
       bandit:
