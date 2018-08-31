@@ -63,7 +63,7 @@ class LizardToolPlugin(ToolPlugin):
         issues = []
         for match in matches:
             issue = Issue(match[0], match[1], self.get_name(), match[2], "5",
-                          match[3])
+                          match[3], None)
             if issue not in issues:
                 issues.append(issue)
 

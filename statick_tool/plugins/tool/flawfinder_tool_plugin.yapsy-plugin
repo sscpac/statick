@@ -1,0 +1,3 @@
+[Core]
+Name = Flawfinder Tool Plugin
+Module = flawfinder_tool_plugin

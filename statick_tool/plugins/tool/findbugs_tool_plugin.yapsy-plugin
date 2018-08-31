@@ -1,0 +1,3 @@
+[Core]
+Name = Findbugs Tool Plugin
+Module = findbugs_tool_plugin

@@ -41,7 +41,7 @@ class ClangTidyToolPlugin(ToolPlugin):
            "bin_dir" not in package:
             return []
 
-        clang_tidy_bin = "clang-tidy-3.9"
+        clang_tidy_bin = "clang-tidy"
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
@@ -112,8 +112,11 @@ class ClangTidyToolPlugin(ToolPlugin):
             if match and not self.check_for_exceptions(match):
                 if line[1] != '*' and match.group(3) != "information" \
                     and match.group(4) != "note":
+                    cert_reference = None
+                    if match.group(6) in warnings_mapping.keys():
+                        cert_reference = warnings_mapping[match.group(6)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(4) +
                                         "/" + match.group(6), "3",
-                                        match.group(5)))
+                                        match.group(5), cert_reference))
         return issues

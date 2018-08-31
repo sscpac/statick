@@ -12,12 +12,21 @@ def write_report_file(issues, filename):
     with open(filename, "w") as out:
         for dummy, value in issues.iteritems():
             for issue in value:
-                line = "[%s][%s][%s:%s][%s][%s]\n" % (issue.filename,
-                                                      issue.line_number,
-                                                      issue.tool,
-                                                      issue.issue_type,
-                                                      issue.message,
-                                                      issue.severity)
+                if issue.cert_reference:
+                    line = "[%s][%s][%s:%s][%s (%s)][%s]\n" % (issue.filename,
+                                                               issue.line_number,
+                                                               issue.tool,
+                                                               issue.issue_type,
+                                                               issue.message,
+                                                               issue.cert_reference,
+                                                               issue.severity)
+                else:
+                    line = "[%s][%s][%s:%s][%s][%s]\n" % (issue.filename,
+                                                          issue.line_number,
+                                                          issue.tool,
+                                                          issue.issue_type,
+                                                          issue.message,
+                                                          issue.severity)
                 out.write(line)
 
 
@@ -31,12 +40,21 @@ def generate_report(issues, output_filename):
         unique_issues = list(OrderedDict.fromkeys(value))
         print("Tool {}: {} unique issues".format(key, len(unique_issues)))
         for issue in unique_issues:
-            print("  {}:{}: {}:{}: {} [{}]".format(issue.filename,
-                                                   issue.line_number,
-                                                   issue.tool,
-                                                   issue.issue_type,
-                                                   issue.message,
-                                                   issue.severity))
+            if issue.cert_reference:
+                print("  {}:{}: {}:{}: {} ({}) [{}]".format(issue.filename,
+                                                            issue.line_number,
+                                                            issue.tool,
+                                                            issue.issue_type,
+                                                            issue.message,
+                                                            issue.cert_reference,
+                                                            issue.severity))
+            else:
+                print("  {}:{}: {}:{}: {} [{}]".format(issue.filename,
+                                                       issue.line_number,
+                                                       issue.tool,
+                                                       issue.issue_type,
+                                                       issue.message,
+                                                       issue.severity))
 
         total += len(unique_issues)
     print("---Report---")

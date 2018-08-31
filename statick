@@ -20,7 +20,7 @@ def main():
 
     path = parsed_args.path
     issues = statick.run(path, parsed_args)
-    if issues is not None:
+    if issues:
         sys.exit(1)
     else:
         sys.exit(0)
