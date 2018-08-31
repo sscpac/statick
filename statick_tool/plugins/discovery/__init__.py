@@ -1,3 +1,1 @@
-"""
-Default discovery plugins for statick.
-"""
+"""Default discovery plugins for statick."""

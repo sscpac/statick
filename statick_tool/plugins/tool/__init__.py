@@ -1,3 +1,1 @@
-"""
-Default tool plugins for statick.
-"""
+"""Default tool plugins for statick."""

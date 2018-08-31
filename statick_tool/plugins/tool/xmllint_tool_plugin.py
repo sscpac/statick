@@ -1,6 +1,5 @@
-"""
-Apply xmllint tool and gather results.
-"""
+"""Apply xmllint tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,20 +10,16 @@ from statick_tool.issue import Issue
 
 
 class XmllintToolPlugin(ToolPlugin):
-    """
-    Apply xmllint tool and gather results.
-    """
+    """Apply xmllint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "xmllint"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        """Run tool and gather output."""
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = list(lex)
@@ -61,9 +56,7 @@ class XmllintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         xmllint_re = r"(.+):(\d+):\s(.+)\s:\s(.+)"
         parse = re.compile(xmllint_re)
         issues = []

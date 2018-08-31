@@ -1,6 +1,5 @@
-"""
-Apply Cpplint tool and gather results.
-"""
+"""Apply Cpplint tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -12,25 +11,18 @@ from statick_tool.issue import Issue
 
 
 class CpplintToolPlugin(ToolPlugin):
-    """
-    Apply Cpplint tool and gather results.
-    """
+    """Apply Cpplint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "cpplint"
 
     def get_tool_dependencies(self):
-        """
-        Get a list of tools that must run before this one.
-        """
+        """Get a list of tools that must run before this one."""
         return ["make"]
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "cpplint" not in package:
             print("  cpplint not found!")
             return []
@@ -38,7 +30,8 @@ class CpplintToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = list(lex)
@@ -76,9 +69,7 @@ class CpplintToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match):
-        """
-        Manual exceptions.
-        """
+        """Manual exceptions."""
         if (match.group(1).endswith(".cpp") or
                 match.group(1).endswith(".cc")) and \
                 match.group(4) == "build/namespaces":
@@ -97,9 +88,7 @@ class CpplintToolPlugin(ToolPlugin):
             return False
 
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
         parse = re.compile(lint_re)
         issues = []

@@ -1,6 +1,5 @@
-"""
-Apply pylint tool and gather results.
-"""
+"""Apply pylint tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,22 +10,18 @@ from statick_tool.issue import Issue
 
 
 class PylintToolPlugin(ToolPlugin):
-    """
-    Apply pylint tool and gather results.
-    """
+    """Apply pylint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "pylint"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         flags = ["--msg-template='{abspath}:{line}: [{msg_id}({symbol}), "
                  "{obj}] {msg}'", "--reports=no"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -54,17 +49,15 @@ class PylintToolPlugin(ToolPlugin):
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fname:
             for output in total_output:
-                f.write(output)
+                fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         pylint_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
         parse = re.compile(pylint_re)
         issues = []
@@ -86,7 +79,7 @@ class PylintToolPlugin(ToolPlugin):
                                                 match.group(4), None))
                     else:
                         issues.append(Issue(match.group(1), match.group(2),
-                                      self.get_name(), match.group(3),
-                                      "5", match.group(4), None))
+                                            self.get_name(), match.group(3),
+                                            "5", match.group(4), None))
 
         return issues

@@ -1,6 +1,5 @@
-"""
-Apply make tool and gather results.
-"""
+"""Apply make tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import re
@@ -10,19 +9,14 @@ from statick_tool.issue import Issue
 
 
 class MakeToolPlugin(ToolPlugin):
-    """
-    Apply Make tool and gather results.
-    """
+    """Apply Make tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "make"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "make_targets" not in package:
             return []
 
@@ -45,28 +39,20 @@ class MakeToolPlugin(ToolPlugin):
             print("Couldn't find make executable! (%s)" % (ex))
             return None
 
-        with open(self.get_name() + ".log", "w") as f:
-            f.write(output)
+        with open(self.get_name() + ".log", "w") as fname:
+            fname.write(output)
 
         issues = self.parse_output(package, output)
         return issues
 
     @classmethod
     def check_for_exceptions(cls, match):
-        """
-        Manual exceptions.
-        """
-        if match.group(4) == "note":
-            # Ignore notes.
-            return True
-        else:
-            return False
+        """Manual exceptions."""
+        return match.group(4) == "note"
 
     @classmethod
     def filter_matches(cls, matches, package):
-        """
-        Filter matches.
-        """
+        """Filter matches."""
         i = 0
         result = []
         while i < len(matches):
@@ -82,10 +68,8 @@ class MakeToolPlugin(ToolPlugin):
             i += 1
         return result
 
-    def parse_output(self, package, output):
-        """
-        Parse tool output and report issues.
-        """
+    def parse_output(self, package, output):  # pylint: disable=too-many-locals, too-many-branches
+        """Parse tool output and report issues."""
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
         parse = re.compile(make_re)

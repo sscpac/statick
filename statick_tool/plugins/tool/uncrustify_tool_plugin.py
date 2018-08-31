@@ -1,10 +1,8 @@
-"""
-Apply uncrustify tool and gather results.
-"""
+"""Apply uncrustify tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
-import re
 import difflib
 
 from statick_tool.tool_plugin import ToolPlugin
@@ -12,35 +10,28 @@ from statick_tool.issue import Issue
 
 
 class UncrustifyToolPlugin(ToolPlugin):
-    """
-    Apply uncrustify tool and gather results.
-    """
+    """Apply uncrustify tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "uncrustify"
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--uncrustify-bin", dest="uncrustify_bin",
                           type=str, help="uncrustify binary path")
 
-    def scan(self, package, level, plugin_context):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
+        """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
 
         uncrustify_bin = "uncrustify"
-        if plugin_context.args.uncrustify_bin is not None:
-            uncrustify_bin = plugin_context.args.uncrustify_bin
+        if self.plugin_context.args.uncrustify_bin is not None:
+            uncrustify_bin = self.plugin_context.args.uncrustify_bin
 
         flags = []
-        user_flags = plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -55,10 +46,10 @@ class UncrustifyToolPlugin(ToolPlugin):
         total_output = []
 
         try:
-            format_file_name = plugin_context.resources.get_file("uncrustify.cfg")
+            format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
 
             for src in files:
-                format_file_name = plugin_context.resources.get_file("uncrustify.cfg")
+                format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
                 cmd = [uncrustify_bin, '-c', format_file_name, '-f', src]
                 output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
                 src_cmd = ['cat', src]
@@ -85,24 +76,22 @@ class UncrustifyToolPlugin(ToolPlugin):
             print("{}".format(ex.output))
             return None
 
-        if plugin_context.args.show_tool_output:
+        if self.plugin_context.args.show_tool_output:
             for output in total_output:
                 print("{}".format(output))
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fname:
             for output in total_output:
-                f.write(output)
+                fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         issues = []
         for output in total_output:
             issues.append(Issue(output, "0", self.get_name(), "format",
-                                "1", "Uncrustify mis-match"))
+                                "1", "Uncrustify mis-match", None))
 
         return issues

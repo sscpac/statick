@@ -17,4 +17,4 @@ before_install:
 
 script:
   - mkdir statick_output
-  - ./statick . statick_output
+  - ./statick . statick_output --profile self_check.yaml

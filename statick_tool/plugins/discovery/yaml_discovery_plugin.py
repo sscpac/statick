@@ -1,6 +1,5 @@
-"""
-Discover YAML files to analyze.
-"""
+"""Discover YAML files to analyze."""
+
 from __future__ import print_function
 import os
 import fnmatch
@@ -10,19 +9,14 @@ from statick_tool.discovery_plugin import DiscoveryPlugin
 
 
 class YAMLDiscoveryPlugin(DiscoveryPlugin):
-    """
-    Discover YAML files to analyze.
-    """
+    """Discover YAML files to analyze."""
+
     def get_name(self):
-        """
-        Get name of discovery type.
-        """
+        """Get name of discovery type."""
         return "yaml"
 
     def scan(self, package, level):
-        """
-        Scan package looking for YAML files.
-        """
+        """Scan package looking for YAML files."""
         yaml_files = []
         globs = ["*.yaml"]
 

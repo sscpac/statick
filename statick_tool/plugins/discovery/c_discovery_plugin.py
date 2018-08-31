@@ -1,6 +1,5 @@
-"""
-Discover C files to analyze.
-"""
+"""Discover C files to analyze."""
+
 from __future__ import print_function
 import os
 import subprocess
@@ -10,19 +9,14 @@ from statick_tool.discovery_plugin import DiscoveryPlugin
 
 
 class CDiscoveryPlugin(DiscoveryPlugin):
-    """
-    Discover C/C++ files to analyze.
-    """
+    """Discover C/C++ files to analyze."""
+
     def get_name(self):
-        """
-        Get name of discovery type.
-        """
+        """Get name of discovery type."""
         return "C"
 
     def scan(self, package, level):
-        """
-        Scan package looking for C files.
-        """
+        """Scan package looking for C files."""
         c_files = []
         c_extensions = ('.c', '.cc', '.cpp', '.cxx', '.h', '.hxx', '.hpp')
 
@@ -32,11 +26,12 @@ class CDiscoveryPlugin(DiscoveryPlugin):
                     full_path = os.path.join(root, f)
                     c_files.append(os.path.abspath(full_path))
                 else:
-                        full_path = os.path.join(root, f)
-                        output = subprocess.check_output(["file", full_path])
-                        if ("c source" in output.lower() or
-                                "c++ source" in output.lower()) and not f.endswith(".cfg"):
-                            c_files.append(os.path.abspath(full_path))
+                    full_path = os.path.join(root, f)
+                    output = subprocess.check_output(["file", full_path])
+                    if ("c source" in output.lower() or
+                            "c++ source" in output.lower()) and not \
+                            f.endswith(".cfg"):
+                        c_files.append(os.path.abspath(full_path))
 
         c_files = list(OrderedDict.fromkeys(c_files))
 
