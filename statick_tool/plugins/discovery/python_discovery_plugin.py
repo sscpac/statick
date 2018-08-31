@@ -1,6 +1,5 @@
-"""
-Discover python files to analyze.
-"""
+"""Discover python files to analyze."""
+
 from __future__ import print_function
 import os
 import fnmatch
@@ -11,19 +10,14 @@ from statick_tool.discovery_plugin import DiscoveryPlugin
 
 
 class PythonDiscoveryPlugin(DiscoveryPlugin):
-    """
-    Discover python files to analyze.
-    """
+    """Discover python files to analyze."""
+
     def get_name(self):
-        """
-        Get name of discovery type.
-        """
+        """Get name of discovery type."""
         return "python"
 
     def scan(self, package, level):
-        """
-        Scan package looking for python files.
-        """
+        """Scan package looking for python files."""
         python_files = []
 
         for root, _, files in os.walk(package.path):
@@ -37,7 +31,8 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
                 if can_run:
                     output = subprocess.check_output(["file", full_path])
                     if ("python script" in output or
-                            "Python script" in output) and not f.endswith(".cfg"):
+                            "Python script" in output) and not \
+                            f.endswith(".cfg"):
                         python_files.append(os.path.abspath(full_path))
 
         python_files = list(OrderedDict.fromkeys(python_files))

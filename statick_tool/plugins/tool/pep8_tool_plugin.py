@@ -1,6 +1,5 @@
-"""
-Apply pep8 tool and gather results.
-"""
+"""Apply pep8 tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,19 +10,14 @@ from statick_tool.issue import Issue
 
 
 class Pep8ToolPlugin(ToolPlugin):
-    """
-    Apply pep8 tool and gather results.
-    """
+    """Apply pep8 tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "pep8"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         flags = ["--format=pylint"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
@@ -59,9 +53,7 @@ class Pep8ToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         pep8_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
         parse = re.compile(pep8_re)
         issues = []

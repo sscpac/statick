@@ -1,6 +1,5 @@
-"""
-Plugin context interface.
-"""
+"""Plugin context interface."""
+
 from collections import namedtuple
 
 PluginContext = namedtuple("PluginContext",

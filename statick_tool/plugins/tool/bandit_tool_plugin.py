@@ -1,6 +1,5 @@
-"""
-Apply bandit tool and gather results.
-"""
+"""Apply bandit tool and gather results."""
+
 from __future__ import print_function
 import csv
 import subprocess
@@ -11,26 +10,19 @@ from statick_tool.issue import Issue
 
 
 class BanditToolPlugin(ToolPlugin):
-    """
-    Apply bandit tool and gather results.
-    """
+    """Apply bandit tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "bandit"
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--bandit-bin", dest="bandit_bin", type=str,
                           help="bandit binary path")
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "python_src" not in package:
             return []
         elif len(package["python_src"]) == 0:
@@ -77,9 +69,7 @@ class BanditToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()

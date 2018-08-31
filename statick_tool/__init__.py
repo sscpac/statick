@@ -1,5 +1,3 @@
-"""
-Tool for running static analysis tools against packages of code.
-"""
+"""Tool for running static analysis tools against packages of code."""
 
-__version__ = "0.1"
+__version__ = "0.1.2"

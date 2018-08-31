@@ -1,6 +1,5 @@
-"""
-Code analysis front-end.
-"""
+"""Code analysis front-end."""
+
 from __future__ import print_function
 import copy
 import os
@@ -22,10 +21,10 @@ logging.basicConfig()
 
 
 class Statick(object):
-    """
-    Code analysis front-end.
-    """
+    """Code analysis front-end."""
+
     def __init__(self, user_paths):
+        """Initialize Statick."""
         self.resources = Resources(user_paths)
 
         self.manager = PluginManager()
@@ -51,15 +50,11 @@ class Statick(object):
         self.exceptions = Exceptions(self.resources.get_file("exceptions.yaml"))
 
     def get_ignore_packages(self):
-        """
-        Get packages to ignore during scan process.
-        """
+        """Get packages to ignore during scan process."""
         return self.exceptions.get_ignore_packages()
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("output_directory", help="Output directory")
         args.add_argument("--show-tool-output", dest="show_tool_output",
                           action="store_true", help="Show tool output")
@@ -77,9 +72,7 @@ class Statick(object):
             plugin.gather_args(args)
 
     def get_level(self, path, args):
-        """
-        Get level to scan package at.
-        """
+        """Get level to scan package at."""
         path = os.path.abspath(path)
 
         profile_filename = "profile.yaml"
@@ -97,9 +90,7 @@ class Statick(object):
         return level
 
     def run(self, path, args):  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
-        """
-        Run scan tools against targets on path.
-        """
+        """Run scan tools against targets on path."""
         path = os.path.abspath(path)
         if not os.path.exists(path):
             print("No package found at {}!".format(path))

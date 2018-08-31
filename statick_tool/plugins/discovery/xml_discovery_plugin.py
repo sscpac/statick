@@ -1,6 +1,5 @@
-"""
-Discover XML files to analyze.
-"""
+"""Discover XML files to analyze."""
+
 from __future__ import print_function
 import os
 import fnmatch
@@ -10,19 +9,14 @@ from statick_tool.discovery_plugin import DiscoveryPlugin
 
 
 class XMLDiscoveryPlugin(DiscoveryPlugin):
-    """
-    Discover XML files to analyze.
-    """
+    """Discover XML files to analyze."""
+
     def get_name(self):
-        """
-        Get name of discovery type.
-        """
+        """Get name of discovery type."""
         return "xml"
 
     def scan(self, package, level):
-        """
-        Scan package looking for XML files.
-        """
+        """Scan package looking for XML files."""
         xml_files = []
         globs = ["*.xml", "*.launch"]
 

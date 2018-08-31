@@ -1,6 +1,5 @@
-"""
-Apply findbugs tool and gather results.
-"""
+"""Apply findbugs tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,32 +10,23 @@ from statick_tool.issue import Issue
 
 
 class FindbugsToolPlugin(ToolPlugin):
-    """
-    Apply findbugs tool and gather results.
-    """
+    """Apply findbugs tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "findbugs"
 
     def get_tool_dependencies(self):
-        """
-        Get a list of tools that must run before this one.
-        """
+        """Get a list of tools that must run before this one."""
         return ["make"]
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--findbugs-bin", dest="findbugs_bin", type=str,
                           help="findbugs binary path")
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "java_bin" not in package:
             return []
 
@@ -45,18 +35,23 @@ class FindbugsToolPlugin(ToolPlugin):
             findbugs_bin = self.plugin_context.args.findbugs_bin
 
         flags = ["-effort:max", "-dontCombineWarnings", "longBugCodes"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
 
-        include_file = self.plugin_context.config.get_tool_config(self.get_name(), level, "include")
-        exclude_file = self.plugin_context.config.get_tool_config(self.get_name(), level, "exclude")
+        include_file = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                  level, "include")
+        exclude_file = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                  level, "exclude")
         if include_file is not None:
-            flags += ["-include %s" % (self.plugin_context.resources.get_file(include_file))]
+            flags += ["-include %s" %
+                      (self.plugin_context.resources.get_file(include_file))]
 
         if exclude_file is not None:
-            flags += ["-exclude %s" % (self.plugin_context.resources.get_file(exclude_file))]
+            flags += ["-exclude %s" %
+                      (self.plugin_context.resources.get_file(exclude_file))]
 
         files = []
         if "java_bin" in package:
@@ -86,12 +81,8 @@ class FindbugsToolPlugin(ToolPlugin):
         issues = self.parse_output(output)
         return issues
 
-
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
-
+        """Parse tool output and report issues."""
         findbugs_re = r"\w \w (.+) \w+:\s+(.+)\s+(.+):\[line\s+(\d+)\]"
         parse = re.compile(findbugs_re)
         issues = []

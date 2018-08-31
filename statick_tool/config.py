@@ -1,29 +1,30 @@
 """
-Manages which plugins are run for each statick scan level and what flags
-are used for each plugin at those levels.
+Manages which plugins are run for each statick scan level.
+
+Sets what flags are used for each plugin at those levels.
 """
 from collections import OrderedDict
 import yaml
 
+
 class Config(object):
     """
-    Manages which plugins are run for each statick scan level and what flags
-    are used for each plugin at those levels.
+    Manages which plugins are run for each statick scan level.
+
+    Sets what flags are used for each plugin at those levels.
     """
+
     def __init__(self, filename):
+        """Initialize configuration."""
         with open(filename) as fname:
             self.config = yaml.safe_load(fname)
 
     def has_level(self, level):
-        """
-        Check if given level exists in config.
-        """
+        """Check if given level exists in config."""
         return "levels" in self.config and level in self.config["levels"]
 
     def get_enabled_plugins(self, level, plugin_type):
-        """
-        Get what plugins are enabled for a certain level.
-        """
+        """Get what plugins are enabled for a certain level."""
         level_config = self.config["levels"][level]
         plugins = []
         if plugin_type in level_config:
@@ -35,21 +36,15 @@ class Config(object):
         return plugins
 
     def get_enabled_tool_plugins(self, level):
-        """
-        Get what tool plugins are enabled for a certain level.
-        """
+        """Get what tool plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "tool")
 
     def get_enabled_discovery_plugins(self, level):
-        """
-        Get what discovery plugins are enabled for a certain level.
-        """
+        """Get what discovery plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "discovery")
 
     def get_plugin_config(self, plugin_type, plugin, level, key, default=None):  #pylint: disable=too-many-arguments
-        """
-        Get flags to use for a plugin at a certain level.
-        """
+        """Get flags to use for a plugin at a certain level."""
         level_config = self.config["levels"][level]
         if plugin_type in level_config:
             type_config = level_config[plugin_type]
@@ -63,13 +58,9 @@ class Config(object):
         return default
 
     def get_tool_config(self, plugin, level, key, default=None):
-        """
-        Get tool flags to use for a plugin at a certain level.
-        """
+        """Get tool flags to use for a plugin at a certain level."""
         return self.get_plugin_config("tool", plugin, level, key, default)
 
     def get_discovery_config(self, plugin, level, key, default=None):
-        """
-        Get discovery flags to use for a plugin at a certain level.
-        """
+        """Get discovery flags to use for a plugin at a certain level."""
         return self.get_plugin_config("discovery", plugin, level, key, default)

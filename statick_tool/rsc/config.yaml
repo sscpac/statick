@@ -102,6 +102,10 @@ levels:
 
   self_check:
     tool:
+      pep257:
+        flags: ""
+      pyflakes:
+        flags: ""
       pylint:
         flags: ""
       uncrustify:

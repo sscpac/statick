@@ -1,6 +1,5 @@
-"""
-Run grep.
-"""
+"""Run grep."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,22 +10,18 @@ from statick_tool.issue import Issue
 
 
 class MyCustomToolPlugin(ToolPlugin):
-    """
-    Run grep.
-    """
+    """Run grep."""
+
     @classmethod
     def get_name(cls):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "my_custom_tool"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         flags = ["-rn"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -52,9 +47,7 @@ class MyCustomToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         grep_re = r"(.+):(\d+):(.+)"
         parse = re.compile(grep_re)
         issues = []

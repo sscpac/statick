@@ -1,6 +1,5 @@
-"""
-Apply cppcheck tool and gather results.
-"""
+"""Apply cppcheck tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -12,38 +11,30 @@ from statick_tool.issue import Issue
 
 
 class CppcheckToolPlugin(ToolPlugin):
-    """
-    Apply cppcheck tool and gather results.
-    """
+    """Apply cppcheck tool and gather results."""
+
 # pylint: disable=super-init-not-called
     def __init__(self):
+        """Initialize cppcheck extensions."""
         self.valid_extensions = [".h", ".hpp", ".c", ".cc", ".cpp", ".cxx"]
 # pylint: enable=super-init-not-called
 
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "cppcheck"
 
     def get_tool_dependencies(self):
-        """
-        Get a list of tools that must run before this one.
-        """
+        """Get a list of tools that must run before this one."""
         return ["make"]
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--cppcheck-bin", dest="cppcheck_bin", type=str,
                           help="cppcheck binary path")
 
 # pylint: disable=too-many-locals, too-many-branches
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
 
@@ -121,18 +112,14 @@ class CppcheckToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match):
-        """
-        Manual exceptions.
-        """
+        """Manual exceptions."""
         # Sometimes you can't fix variableScope in old c code
         if match.group(1).endswith(".c") and match.group(4) == "variableScope":
             return True
         return False
 
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
         parse = re.compile(cppcheck_re)
         issues = []

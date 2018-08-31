@@ -1,6 +1,5 @@
-"""
-Apply clang-tidy tool and gather results.
-"""
+"""Apply clang-tidy tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,32 +10,23 @@ from statick_tool.issue import Issue
 
 
 class ClangTidyToolPlugin(ToolPlugin):
-    """
-    Apply clang-tidy tool and gather results.
-    """
+    """Apply clang-tidy tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "clang-tidy"
 
     def get_tool_dependencies(self):
-        """
-        Get a list of tools that must run before this one.
-        """
+        """Get a list of tools that must run before this one."""
         return ["make"]
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--clang-tidy-bin", dest="clang_tidy_bin", type=str,
                           help="clang-tidy binary path")
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "make_targets" not in package or "src_dir" not in package or \
            "bin_dir" not in package:
             return []
@@ -46,8 +36,10 @@ class ClangTidyToolPlugin(ToolPlugin):
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
         flags = ["-header-filter="+package["src_dir"]+"/.*", "-p",
-                 package["bin_dir"]+"/compile_commands.json", "-extra-arg=-fopenmp=libomp"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+                 package["bin_dir"]+"/compile_commands.json",
+                 "-extra-arg=-fopenmp=libomp"]
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -87,21 +79,16 @@ class ClangTidyToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match):
-        """
-        Manual exceptions.
-        """
+        """Manual exceptions."""
         # You are allowed to have 'using namespace' in source files
         if (match.group(1).endswith(".cpp") or
                 match.group(1).endswith(".cc")) and \
-            match.group(6) == "google-build-using-namespace":
+                match.group(6) == "google-build-using-namespace":
             return True
         return False
 
     def parse_output(self, output):
-        """
-        Parse tool output and report issues.
-        """
-
+        """Parse tool output and report issues."""
         clang_tidy_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)\]"
         parse = re.compile(clang_tidy_re)
         issues = []
@@ -111,7 +98,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 if line[1] != '*' and match.group(3) != "information" \
-                    and match.group(4) != "note":
+                        and match.group(4) != "note":
                     cert_reference = None
                     if match.group(6) in warnings_mapping.keys():
                         cert_reference = warnings_mapping[match.group(6)]

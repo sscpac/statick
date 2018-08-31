@@ -1,4 +1,5 @@
 """Apply lizard tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import re

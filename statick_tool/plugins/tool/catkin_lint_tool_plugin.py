@@ -1,6 +1,5 @@
-"""
-Apply catkin_lint tool and gather results.
-"""
+"""Apply catkin_lint tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -12,23 +11,19 @@ from statick_tool.issue import Issue
 
 
 class CatkinLintToolPlugin(ToolPlugin):
-    """
-    Apply catkin_lint tool and gather results.
-    """
+    """Apply catkin_lint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "catkin_lint"
 
     def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "catkin" not in package or not package["catkin"]:
             return []
 
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags)
         lex.quotes = '"'
         lex.whitespace_split = True
@@ -60,21 +55,17 @@ class CatkinLintToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions_has_file(cls, match, package):
-        """
-        Manual exceptions.
-        """
+        """Manual exceptions."""
         message = match.group(5)
         norm_path = os.path.normpath(package.path + "/" + match.group(2))
         line = open(norm_path, "r").readlines()[int(match.group(3))-1].strip()
 
         # There are a few cases where this is ok.
-# pylint: disable=line-too-long
         if message == "variable CMAKE_CXX_FLAGS is modified":
             if line == 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")':
                 return True
             elif line == 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")':
                 return True
-# pylint: enable=line-too-long
         # There are a few cases where this is ok.
         elif message == "variable CMAKE_C_FLAGS is modified":
             if line == 'set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")':
@@ -84,9 +75,7 @@ class CatkinLintToolPlugin(ToolPlugin):
 
     @classmethod
     def get_level(cls, issue_type):
-        """
-        Get level for given issue type.
-        """
+        """Get level for given issue type."""
         if issue_type == "error":
             return "5"
         elif issue_type == "warning":
@@ -95,9 +84,7 @@ class CatkinLintToolPlugin(ToolPlugin):
             return "1"
 
     def parse_output(self, package, output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         lint_re = r"(.+):\s(.+)\((\d+)\):\s(.+):\s(.+)"
         lint2_re = r"(.+):\s(.+):\s(.+)"
         parse = re.compile(lint_re)
@@ -114,7 +101,8 @@ class CatkinLintToolPlugin(ToolPlugin):
                                              match.group(2))
 
                 issues.append(Issue(norm_path, match.group(3),
-                                    self.get_name(), match.group(4), self.get_level(match.group(4)),
+                                    self.get_name(), match.group(4),
+                                    self.get_level(match.group(4)),
                                     match.group(5), None))
             else:
                 match2 = parse2.match(line)
@@ -135,5 +123,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                                "check both for this issue)"
 
                     issues.append(Issue(norm_path, "1", self.get_name(),
-                                        match2.group(2), self.get_level(match2.group(2)), message))
+                                        match2.group(2),
+                                        self.get_level(match2.group(2)),
+                                        message))
         return issues

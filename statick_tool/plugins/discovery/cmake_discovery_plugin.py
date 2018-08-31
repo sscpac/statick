@@ -1,6 +1,5 @@
-"""
-Discovery plugin to find CMake-based projects.
-"""
+"""Discovery plugin to find CMake-based projects."""
+
 from __future__ import print_function
 import os
 import shutil
@@ -11,19 +10,14 @@ from statick_tool.discovery_plugin import DiscoveryPlugin
 
 
 class CMakeDiscoveryPlugin(DiscoveryPlugin):
-    """
-    Discovery plugin to find CMake-based projects.
-    """
+    """Discovery plugin to find CMake-based projects."""
+
     def get_name(self):
-        """
-        Get name of discovery type.
-        """
+        """Get name of discovery type."""
         return "cmake"
 
     def scan(self, package, level):
-        """
-        Scan package looking for CMake files.
-        """
+        """Scan package looking for CMake files."""
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
 
         if not os.path.isfile(cmake_file):
@@ -71,9 +65,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 # pylint: disable=too-many-locals
     @classmethod
     def process_output(cls, output, package):
-        """
-        Parse the tool output.
-        """
+        """Parse the tool output."""
 # pylint: disable=anomalous-backslash-in-string
         cmake_target_re = r"-- TARGET: \[NAME:(.+)\]" \
                           "\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"
@@ -99,7 +91,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                 src = [src for src in match.group(4).split(";")
                        if not qt_p.match(src)]
                 src = [src if os.path.isabs(src)
-                       else os.path.join(src_dir, src) for src in src]
+                       else os.path.join(src_dir, src) for src in src]  # NOLINT
 
                 target = {"name": name, "src_dir": src_dir,
                           "include_dirs": include_dirs, "src": src}

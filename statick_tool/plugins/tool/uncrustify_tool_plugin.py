@@ -1,6 +1,5 @@
-"""
-Apply uncrustify tool and gather results.
-"""
+"""Apply uncrustify tool and gather results."""
+
 from __future__ import print_function
 import subprocess
 import shlex
@@ -11,26 +10,19 @@ from statick_tool.issue import Issue
 
 
 class UncrustifyToolPlugin(ToolPlugin):
-    """
-    Apply uncrustify tool and gather results.
-    """
+    """Apply uncrustify tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "uncrustify"
 
     def gather_args(self, args):
-        """
-        Gather arguments.
-        """
+        """Gather arguments."""
         args.add_argument("--uncrustify-bin", dest="uncrustify_bin",
                           type=str, help="uncrustify binary path")
 
     def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
-        """
-        Run tool and gather output.
-        """
+        """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
 
@@ -96,9 +88,7 @@ class UncrustifyToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         issues = []
         for output in total_output:
             issues.append(Issue(output, "0", self.get_name(), "format",

@@ -1,9 +1,11 @@
 """
 Main file for statick gauntlet tool.
+
 This is used to find dependency issues in catkin_workspaces.
 This file is a huge mess right now since it's ported pretty directly
 from the old version of the tool.
 """
+
 import subprocess
 import os
 import sys
@@ -16,9 +18,7 @@ from statick_tool.resources import Resources
 
 
 def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-    """
-    Run gauntlet tool.
-    """
+    """Run gauntlet tool."""
     args = Args("Statick gauntlet tool")
     args.parser.add_argument("src_path", help="Path of catkin src directory")
     args.parser.add_argument("out_path", help="Output path")
@@ -70,7 +70,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
             target_re = r"^([a-zA-Z0-9][^$#\/\t=]*):([^=]|$)"
             target_rec = re.compile(target_re)
             try:
-                _ = subprocess.check_output(["make", "-qp"], cwd=out_path)
+                _ = subprocess.check_output(["make", "-qp"], cwd=out_path)  # NOLINT
             except subprocess.CalledProcessError as exc:
                 for line in exc.output.split("\n"):
                     match = target_rec.match(line)
