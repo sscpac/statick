@@ -20,13 +20,13 @@ class PyflakesToolPlugin(ToolPlugin):
         """
         return "pyflakes"
 
-    def scan(self, package, level, plugin_context):
+    def scan(self, package, level):
         """
         Run tool and gather output.
         """
         flags = []
-        user_flags = plugin_context.config.get_tool_config(self.get_name(),
-                                                           level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -46,14 +46,14 @@ class PyflakesToolPlugin(ToolPlugin):
                     print("{}".format(ex.output))
                     return None
 
-            if plugin_context.args.show_tool_output:
+            if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fname:
             for output in total_output:
-                f.write(output)
+                fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues

@@ -45,8 +45,8 @@ class MakeToolPlugin(ToolPlugin):
             print("Couldn't find make executable! (%s)" % (ex))
             return None
 
-        with open(self.get_name() + ".log", "w") as f:
-            f.write(output)
+        with open(self.get_name() + ".log", "w") as fname:
+            fname.write(output)
 
         issues = self.parse_output(package, output)
         return issues
@@ -56,11 +56,7 @@ class MakeToolPlugin(ToolPlugin):
         """
         Manual exceptions.
         """
-        if match.group(4) == "note":
-            # Ignore notes.
-            return True
-        else:
-            return False
+        return match.group(4) == "note"
 
     @classmethod
     def filter_matches(cls, matches, package):
@@ -82,7 +78,7 @@ class MakeToolPlugin(ToolPlugin):
             i += 1
         return result
 
-    def parse_output(self, package, output):
+    def parse_output(self, package, output):  # pylint: disable=too-many-locals, too-many-branches
         """
         Parse tool output and report issues.
         """
@@ -92,7 +88,6 @@ class MakeToolPlugin(ToolPlugin):
         warning_parse = re.compile(make_warning_re)
         matches = []
         # Load the plugin mapping if possible
-        warnings_mapping = self.load_mapping()
         for line in output.split('\n'):
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):

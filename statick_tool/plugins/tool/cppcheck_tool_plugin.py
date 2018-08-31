@@ -50,8 +50,8 @@ class CppcheckToolPlugin(ToolPlugin):
         flags = ["--report-progress", "--verbose", "--inline-suppr", "--language=c++"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
         user_version = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                             level,
-                                                             "version")
+                                                                  level,
+                                                                  "version")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -112,8 +112,8 @@ class CppcheckToolPlugin(ToolPlugin):
         if self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        with open(self.get_name() + ".log", "w") as f:
-            f.write(output)
+        with open(self.get_name() + ".log", "w") as fname:
+            fname.write(output)
 
         issues = self.parse_output(output)
         return issues
@@ -136,7 +136,6 @@ class CppcheckToolPlugin(ToolPlugin):
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
         parse = re.compile(cppcheck_re)
         issues = []
-        warnings_mapping = self.load_mapping()
         for line in output.split('\n'):
             match = parse.match(line)
             if match and line[1] != '*' and match.group(3) != \

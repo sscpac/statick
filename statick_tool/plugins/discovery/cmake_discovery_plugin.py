@@ -61,8 +61,8 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             print("Couldn't find cmake executable!")
             return None
 
-        with open("cmake.log", "w") as f:
-            f.write(output)
+        with open("cmake.log", "w") as fname:
+            fname.write(output)
 
         self.process_output(output, package)
 

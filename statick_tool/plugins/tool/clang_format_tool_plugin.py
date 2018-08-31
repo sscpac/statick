@@ -28,7 +28,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
 
-    def scan(self, package, level):
+    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
         """
         Run tool and gather output.
         """
@@ -85,8 +85,7 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            print("clang-format failed! Returncode = ".
-                  format(str(ex.returncode)))
+            print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
             print("{}".format(ex.output))
             return None
 
@@ -98,9 +97,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             for output in total_output:
                 print("{}".format(output))
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fname:
             for output in total_output:
-                f.write(output)
+                fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues

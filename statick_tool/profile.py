@@ -3,13 +3,13 @@ Manages which scan levels are run for packages.
 """
 import yaml
 
-class Profile(object):
+class Profile(object):  # pylint: disable=too-few-public-methods
     """
     Manages which scan levels are run for packages.
     """
     def __init__(self, filename):
-        with open(filename) as f:
-            self.profile = yaml.safe_load(f)
+        with open(filename) as fname:
+            self.profile = yaml.safe_load(fname)
 
     def get_package_level(self, package):
         """

@@ -12,8 +12,8 @@ class Exceptions(object):
     are used for each plugin at those levels.
     """
     def __init__(self, filename):
-        with open(filename) as f:
-            self.exceptions = yaml.safe_load(f)
+        with open(filename) as fname:
+            self.exceptions = yaml.safe_load(fname)
 
     def get_ignore_packages(self):
         """
@@ -37,6 +37,7 @@ class Exceptions(object):
             if "message_regex" in global_exceptions:
                 exceptions["message_regex"] += global_exceptions["message_regex"]
 
+# pylint: disable=too-many-boolean-expressions
         if self.exceptions and "packages" in self.exceptions \
             and self.exceptions["packages"] and package.name in self.exceptions["packages"] \
             and self.exceptions["packages"][package.name] \
@@ -46,6 +47,7 @@ class Exceptions(object):
                 exceptions["file"] += package_exceptions["file"]
             if "message_regex" in package_exceptions:
                 exceptions["message_regex"] += package_exceptions["message_regex"]
+# pylint: enable=too-many-boolean-expressions
 
         return exceptions
 

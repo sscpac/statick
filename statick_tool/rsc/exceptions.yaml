@@ -49,6 +49,9 @@ global:
       # numpy breaks pylint
       - tools: [pylint]
         regex: ".+: Module 'numpy' has no '.+' member"
+      # Do not warn about locally enabling pylint flags
+      - tools: [pylint]
+        regex: "Locally enabling*"
 
 ignore_packages:
   []

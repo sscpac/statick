@@ -54,9 +54,9 @@ class PylintToolPlugin(ToolPlugin):
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fname:
             for output in total_output:
-                f.write(output)
+                fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues
@@ -86,7 +86,7 @@ class PylintToolPlugin(ToolPlugin):
                                                 match.group(4)))
                     else:
                         issues.append(Issue(match.group(1), match.group(2),
-                                      self.get_name(), match.group(3),
-                                      "5", match.group(4)))
+                                            self.get_name(), match.group(3),
+                                            "5", match.group(4)))
 
         return issues

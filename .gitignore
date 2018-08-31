@@ -6,6 +6,8 @@ examples/navigation/statick_example*
 examples/sbpl/statick_example*
 examples/werkzeug/statick_example*
 
+statick_output
+
 # from setup.py
 build/
 dist/

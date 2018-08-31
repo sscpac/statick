@@ -2,8 +2,8 @@
 Manages which plugins are run for each statick scan level and what flags
 are used for each plugin at those levels.
 """
-import yaml
 from collections import OrderedDict
+import yaml
 
 class Config(object):
     """
@@ -11,8 +11,8 @@ class Config(object):
     are used for each plugin at those levels.
     """
     def __init__(self, filename):
-        with open(filename) as f:
-            self.config = yaml.safe_load(f)
+        with open(filename) as fname:
+            self.config = yaml.safe_load(fname)
 
     def has_level(self, level):
         """
