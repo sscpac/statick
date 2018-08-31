@@ -11,8 +11,6 @@ notifications:
 
 before_install:
   - sudo apt-get update -qq
-
-install:
   - cat install.txt | xargs sudo apt-get install
   - sudo -H pip install -r requirements.txt
 
