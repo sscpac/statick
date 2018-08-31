@@ -14,7 +14,7 @@ before_install:
     #- cat install.txt | xargs sudo apt-get install -y
     #- cat ros-deps.txt | xargs sudo apt-get install -y
     #- sudo -H pip install -r requirements.txt
-  - sudo apt-get install -y bandit clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libomp-dev libxml2 pylint python-git python-pylint-django python-yapsy python-catkin-lint ros-kinetic-roslint
+  - sudo apt-get install -y clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libxml2 pylint python-git python-yapsy
   - sudo -H pip install yamllint cmakelint lizard
 
 script:
