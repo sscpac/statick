@@ -24,9 +24,13 @@ class LizardToolPlugin(ToolPlugin):
         Run tool and gather output.
         """
         output = None
+
+        src_dir = '.'
+        if "src_dir" in package:
+            src_dir = package["src_dir"]
+
         try:
-            output = subprocess.check_output(["lizard", "-w",
-                                              package["src_dir"]])
+            output = subprocess.check_output(["lizard", "-w", src_dir])
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 1:
                 output = ex.output
@@ -63,7 +67,7 @@ class LizardToolPlugin(ToolPlugin):
         issues = []
         for match in matches:
             issue = Issue(match[0], match[1], self.get_name(), match[2], "5",
-                          match[3])
+                          match[3], None)
             if issue not in issues:
                 issues.append(issue)
 

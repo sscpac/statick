@@ -89,6 +89,6 @@ class Pep257ToolPlugin(ToolPlugin):
                         message = match.group(2)
                         issues.append(Issue(filename, line_number,
                                             self.get_name(), issue_type,
-                                            "5", message))
+                                            "5", message, None))
 
         return issues

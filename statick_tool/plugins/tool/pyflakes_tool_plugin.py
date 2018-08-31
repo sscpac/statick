@@ -72,6 +72,6 @@ class PyflakesToolPlugin(ToolPlugin):
                 if match:
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), self.get_name(),
-                                        "5", match.group(3)))
+                                        "5", match.group(3), None))
 
         return issues

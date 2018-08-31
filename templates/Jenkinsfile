@@ -1,0 +1,52 @@
+pipeline {
+	agent {
+		dockerfile {
+			label 'docker'
+		}
+	}
+
+	environment {
+		LANG = 'en_US.UTF-8'
+		JAVA_OPTS = "-Xmx8292m"
+	}
+
+	stages {
+		stage('Clean Workspace') {
+			steps {
+			sh '''
+			rm -rf statick_output *.tar.xz
+			'''
+			}
+		}
+		stage('Checkout Statick') {
+			steps {
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'statick']], userRemoteConfigs: [[url: "https://github.com/sscpac/statick.git"]]])
+			}
+		}
+		# Add stages to check out (if needed) and build your project here
+
+		stage('Run Statick') {
+			steps {
+			        # If you have multiple modules, you can optionally make this a for loop over the directories you care about
+				sh '''#!/bin/bash -e
+				mkdir -p statick_output
+				echo "Starting statick runs"
+				./statick/statick . statick_output --profile sei_cert.yaml
+				'''
+			}
+		}
+		stage('Collect Statick Results') {
+			steps {
+				warnings canComputeNew: true, parserConfigurations: [[parserName: 'Statick', pattern: 'statick_output/*.statick']]
+
+				step([$class: 'AnalysisPublisher', defaultEncoding: '', healthy: '', unHealthy: ''])
+			}
+		}
+		stage('Archive Results') {
+			steps {
+				sh 'tar -cJvf statick_results_${BUILD_NUMBER}.tar.xz statick_output/*.statick'
+				archiveArtifacts '*.tar.xz'
+			}
+		}
+	}
+}

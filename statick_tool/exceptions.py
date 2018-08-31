@@ -20,7 +20,7 @@ class Exceptions(object):
         Get list of packages to skip when scanning a workspace.
         """
         ignore = []
-        if "ignore_packages" in self.exceptions:
+        if "ignore_packages" in self.exceptions and self.exceptions["ignore_packages"] is not None:
             ignore = self.exceptions["ignore_packages"]
         return ignore
 

@@ -115,7 +115,7 @@ class CatkinLintToolPlugin(ToolPlugin):
 
                 issues.append(Issue(norm_path, match.group(3),
                                     self.get_name(), match.group(4), self.get_level(match.group(4)),
-                                    match.group(5)))
+                                    match.group(5), None))
             else:
                 match2 = parse2.match(line)
 
@@ -135,6 +135,5 @@ class CatkinLintToolPlugin(ToolPlugin):
                                "check both for this issue)"
 
                     issues.append(Issue(norm_path, "1", self.get_name(),
-                                        match2.group(2), self.get_level(match2.group(2)), message,
-                                        None))
+                                        match2.group(2), self.get_level(match2.group(2)), message))
         return issues

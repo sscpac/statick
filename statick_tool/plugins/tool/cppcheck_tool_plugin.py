@@ -142,8 +142,11 @@ class CppcheckToolPlugin(ToolPlugin):
                     "information" and not self.check_for_exceptions(match):
                 dummy, extension = os.path.splitext(match.group(1))
                 if extension in self.valid_extensions:
+                    cert_reference = None
+                    if match.group(4) in warnings_mapping.keys():
+                        cert_reference = warnings_mapping[match.group(4)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(3) +
                                         '/' + match.group(4), "5",
-                                        match.group(5)))
+                                        match.group(5), cert_reference))
         return issues

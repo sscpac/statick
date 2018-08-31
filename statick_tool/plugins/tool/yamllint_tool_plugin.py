@@ -79,6 +79,6 @@ class YamllintToolPlugin(ToolPlugin):
                         level = "3"
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(6), level,
-                                        match.group(5)))
+                                        match.group(5), None))
 
         return issues

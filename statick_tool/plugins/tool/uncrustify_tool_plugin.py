@@ -102,6 +102,6 @@ class UncrustifyToolPlugin(ToolPlugin):
         issues = []
         for output in total_output:
             issues.append(Issue(output, "0", self.get_name(), "format",
-                                "1", "Uncrustify mis-match"))
+                                "1", "Uncrustify mis-match", None))
 
         return issues
