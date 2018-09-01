@@ -144,8 +144,9 @@ levels:
         flags: ""
       pylint:
         flags: ""
-      uncrustify:
-        flags: ""
+      # Not using uncrustify since it is duplicated and not totally compatible with clang-format.
+      #uncrustify:
+      #  flags: ""
       xmllint:
         flags: ""
       yamllint:
