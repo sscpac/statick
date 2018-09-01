@@ -22,4 +22,4 @@ script:
   - travis-sphinx build
     
 after_success:
-    - travis-sphinx deploy
+  - travis-sphinx deploy
