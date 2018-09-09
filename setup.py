@@ -23,5 +23,7 @@ setup(
     scripts=['statick', 'statick_ws', 'statick_gauntlet'],
     long_description=long_description,
     long_description_content_type='text/markdown',
+    install_requires=['bandit', 'cmakelint', 'lizard', 'pep257', 'pep8',
+                      'pyflakes', 'yamllint'],
     url='https://github.com/sscpac/statick'
 )
