@@ -27,7 +27,7 @@ class Pep257ToolPlugin(ToolPlugin):
 
         total_output = []
 
-        tool = "pep257"
+        tool = self.get_name()
         for src in package["python_src"]:
             try:
                 subproc_args = [tool, src] + flags
