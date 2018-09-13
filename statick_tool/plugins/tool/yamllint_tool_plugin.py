@@ -32,6 +32,7 @@ class YamllintToolPlugin(ToolPlugin):
                 subproc_args = ["yamllint", yaml_file] + flags
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT)
+
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:
                     output = ex.output
@@ -39,6 +40,7 @@ class YamllintToolPlugin(ToolPlugin):
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
+
             except OSError as ex:
                 print("Couldn't find yamllint executable! (%s)" % (ex))
                 return None

@@ -27,12 +27,13 @@ class Pep257ToolPlugin(ToolPlugin):
 
         total_output = []
 
-        tool = self.get_name()
+        pep257_bin = "pep257"
         for src in package["python_src"]:
             try:
-                subproc_args = [tool, src] + flags
+                subproc_args = [pep257_bin, src] + flags
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT)
+
             except subprocess.CalledProcessError as ex:
                 if ex.returncode != 32:
                     output = ex.output
@@ -40,10 +41,9 @@ class Pep257ToolPlugin(ToolPlugin):
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
+
             except OSError as ex:
-                print("Error running {} on {}: {}".format(tool, src,
-                                                          ex.strerror))
-                print("You may need to install {}.".format(tool))
+                print("Couldn't find %s! (%s)" % (pep257_bin, ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:
