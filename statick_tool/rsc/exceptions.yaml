@@ -16,6 +16,12 @@ global:
       # Auto-generated build files
       - tools: all
         globs: ["*/build/*"]
+      # Auto-generated build files
+      - tools: all
+        globs: ["*/dist/*"]
+      # Documentation files
+      - tools: all
+        globs: ["*/docs/*"]
     message_regex:
       # This is triggered by std::isnan for some reason
       - tools: [clang-tidy]

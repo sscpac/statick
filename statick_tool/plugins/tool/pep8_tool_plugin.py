@@ -27,11 +27,13 @@ class Pep8ToolPlugin(ToolPlugin):
 
         total_output = []
 
+        pep8_bin = "pep8"
         for src in package["python_src"]:
             try:
-                subproc_args = ["pep8", src] + flags
+                subproc_args = [pep8_bin, src] + flags
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT)
+
             except subprocess.CalledProcessError as ex:
                 if ex.returncode != 32:
                     output = ex.output
@@ -39,6 +41,10 @@ class Pep8ToolPlugin(ToolPlugin):
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
+
+            except OSError as ex:
+                print("Couldn't find %s! (%s)" % (pep8_bin, ex))
+                return None
 
             if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
