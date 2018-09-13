@@ -14,10 +14,11 @@ The User Guide is especially important for tips on creating and using your own t
 Statick uses a plugin system to load plugins from both a default resource location and also
 user-definable locations to run against software.
 
-The plugins for the statick scans are divided into two categories:
+The plugins for the statick scans are divided into three categories:
 
   - Discovery plugins that find files to scan inside of a code package.
   - Tool plugins to run analysis programs against the files discovered by the discovery plugins.
+  - Reporting plugins to output the analysis results in various formats.
 
 ## Install Required Tools
 

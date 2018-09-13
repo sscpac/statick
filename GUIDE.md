@@ -15,6 +15,8 @@ This may involve running a program such as `cmake` or looking for certain file e
 
 `tool plugin` - Tool plugins run code scanning tools against files discovered by a discovery plugin.
 
+`reporting plugin` - Reporting plugins output the results of the tool plugin to a location and in a method defined by the plugin. This could be anything from writing a file to uploading to a website.
+
 `user paths` - User paths are a list of directories passed to the `--user-paths` argument.
 This is used to pass custom configuration and plugin files to Statick.
 
@@ -199,7 +201,7 @@ The `ignore_packages` key is a list of package names that should be skipped when
 
 ## Plugins
 
-Plugins allow you to implement file discovery or use tools that aren't provided builtin with Statick.
+Plugins allow you to implement file discovery, use tools, or output in formats/to locations that aren't provided builtin with Statick.
 
 Plugins consist of both a Python file and a `yapsy` file.
 For a description of how yapsy works, check out the [documentation](http://yapsy.sourceforge.net/).
