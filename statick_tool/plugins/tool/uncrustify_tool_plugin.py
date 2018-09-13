@@ -76,6 +76,10 @@ class UncrustifyToolPlugin(ToolPlugin):
             print("{}".format(ex.output))
             return None
 
+        except OSError as ex:
+            print("Couldn't find uncrustify executable! (%s)" % (ex))
+            return None
+
         if self.plugin_context.args.show_tool_output:
             for output in total_output:
                 print("{}".format(output))
