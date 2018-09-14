@@ -1,0 +1,2 @@
+sphinx==1.7.9
+travis-sphinx==2.2.1
