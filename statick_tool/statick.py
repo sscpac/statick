@@ -91,6 +91,8 @@ class Statick(object):
 
     def run(self, path, args):  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
         """Run scan tools against targets on path."""
+        success = True
+
         path = os.path.abspath(path)
         if not os.path.exists(path):
             print("No package found at {}!".format(path))
@@ -101,14 +103,14 @@ class Statick(object):
 
         if not self.config.has_level(level):
             print("Can't find specified level {} in config!".format(level))
-            return None
+            return None, False
 
         orig_path = os.getcwd()
 
         if not os.path.isdir(args.output_directory):
             print("Output directory not found at {}!".
                   format(args.output_directory))
-            return None
+            return None, False
 
         output_dir = os.path.join(args.output_directory,
                                   package.name + "-" + level)
@@ -118,7 +120,7 @@ class Statick(object):
         if not os.path.isdir(output_dir):
             print("Unable to create output directory at {}!".format(
                 output_dir))
-            return None
+            return None, False
         print("Writing output to: {}".format(output_dir))
 
         os.chdir(output_dir)
@@ -133,7 +135,7 @@ class Statick(object):
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
             print("Package {} is configured to be ignored by Statick.".format(package.name))
-            return issues
+            return issues, True
 
         plugin_context = PluginContext(args, self.resources, self.config)
 
@@ -144,7 +146,7 @@ class Statick(object):
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins.keys():
                 print("Can't find specified discovery plugin {}!".format(plugin_name))
-                return None
+                return None, False
 
             plugin = self.discovery_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
@@ -163,7 +165,7 @@ class Statick(object):
 
             if plugin_name not in self.tool_plugins.keys():
                 print("Can't find specified tool plugin {}!".format(plugin_name))
-                return None
+                return None, False
 
             if args.force_tool_list is not None:
                 force_tool_list = args.force_tool_list.split(",")
@@ -182,7 +184,7 @@ class Statick(object):
                     if dependency_name not in enabled_plugins:
                         print("Plugin {} depends on plugin {} which isn't "
                               "enabled!".format(plugin_name, dependency_name))
-                        return None
+                        return None, False
                     plugin_dependencies.append(dependency_name)
                     plugins_to_run.remove(dependency_name)
                     plugins_to_run.insert(0, dependency_name)
@@ -198,6 +200,7 @@ class Statick(object):
                 print("{} tool plugin done.".format(plugin.get_name()))
             else:
                 print("{} tool plugin failed".format(plugin.get_name()))
+                success = False
 
             plugins_to_run.remove(plugin_name)
             plugins_ran.append(plugin_name)
@@ -212,4 +215,4 @@ class Statick(object):
         generate_report(issues, output_file)
         print("Done!")
 
-        return issues
+        return issues, success

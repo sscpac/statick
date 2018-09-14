@@ -59,6 +59,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
 
     count = 0
     total_issues = []
+    issues = {}
     for package in packages:
         if parsed_args.list_packages:
             print "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
@@ -67,7 +68,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
         count += 1
         print "-- Scanning package " + package[0] + " (" + str(count) + \
             " of " + str(len(packages)) + ") --"
-        issues = statick.run(package[1], parsed_args)
+        issues, dummy = statick.run(package[1], parsed_args)
         if issues is not None:
             total_issues.append(issues)
         else:
@@ -82,7 +83,6 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     print "-- All packages run --"
     print "-- overall report --"
 
-    issues = {}
     for issue in total_issues:
         for key, value in issue.iteritems():
             if key in issues:
