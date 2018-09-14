@@ -110,6 +110,15 @@ levels:
         flags: ""
       uncrustify:
         flags: ""
+      xmllint:
+        flags: ""
+      yamllint:
+        flags: "-d '{extends: default,
+                     rules: {
+                       colons: {max-spaces-before: 0, max-spaces-after: -1},
+                       commas: disable,
+                       document-start: disable,
+                       line-length: disable}}'"
 
   ultimate:
     tool:
@@ -145,8 +154,8 @@ levels:
       pylint:
         flags: ""
       # Not using uncrustify since it is duplicated and not totally compatible with clang-format.
-      #uncrustify:
-      #  flags: ""
+      # uncrustify:
+      #   flags: ""
       xmllint:
         flags: ""
       yamllint:
