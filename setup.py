@@ -27,6 +27,6 @@ setup(
                       'pyflakes', 'yamllint'],
     url='https://github.com/sscpac/statick',
     classifiers=[
-        "License :: OSI Approved :: CC0-1.0 License",
+        "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     ],
 )
