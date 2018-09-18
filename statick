@@ -20,12 +20,8 @@ def main():
     parsed_args = args.get_args()
 
     path = parsed_args.path
-    issues = statick.run(path, parsed_args)
-    found_issue = False
-    for tool in issues.values():
-        if len(tool) > 0:
-            found_issue = True
-    if issues is None or found_issue:
+    issues, success = statick.run(path, parsed_args)
+    if issues is None or not success:
         sys.exit(1)
     else:
         sys.exit(0)
