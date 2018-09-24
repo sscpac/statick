@@ -1,0 +1,3 @@
+[Core]
+Name = Perl Discovery Plugin
+Module = perl_discovery_plugin
