@@ -86,6 +86,8 @@ class ClangFormatToolPlugin(ToolPlugin):
             output = ex.output
             print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
             print("{}".format(ex.output))
+            print("Raising exception: {}". \
+                    format(self.plugin_context.args.clang_format_raise_exception))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             else:
