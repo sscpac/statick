@@ -21,10 +21,17 @@ class ClangFormatToolPlugin(ToolPlugin):
         """Gather arguments."""
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
-        args.add_argument("--clang-format-raise-exception", default=True,
-                          dest="clang_format_raise_exception", type=bool,
+        args.add_argument("--clang-format-raise-exception",
+                          dest="clang_format_raise_exception",
+                          action="store_true",
                           help="clang-format raise exception on mismatched "
                                "configuration file")
+        args.add_argument("--clang-format-ignore-exception",
+                          dest="clang_format_raise_exception",
+                          action="store_false",
+                          help="clang-format ignore exception on mismatched "
+                               "configuration file")
+        args.set_defaults(clang_format_raise_exception=True)
 
     def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
         """Run tool and gather output."""
