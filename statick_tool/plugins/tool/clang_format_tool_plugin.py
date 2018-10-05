@@ -79,13 +79,17 @@ class ClangFormatToolPlugin(ToolPlugin):
                                                   "-output-replacements-xml"],
                                                  stderr=subprocess.STDOUT)
                 output = src + "\n" + output
-                total_output.append(output)
+                if self.plugin_context.args.clang_format_raise_exception:
+                    total_output.append(output)
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
             print("{}".format(ex.output))
-            return None
+            if self.plugin_context.args.clang_format_raise_exception:
+                return None
+            else:
+                return []
 
         except OSError as ex:
             print("Couldn't find %s! (%s)" % (clang_format_bin, ex))
