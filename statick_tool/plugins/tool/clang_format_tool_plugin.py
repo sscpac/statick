@@ -21,6 +21,17 @@ class ClangFormatToolPlugin(ToolPlugin):
         """Gather arguments."""
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
+        args.add_argument("--clang-format-raise-exception",
+                          dest="clang_format_raise_exception",
+                          action="store_true",
+                          help="clang-format raise exception on mismatched "
+                               "configuration file")
+        args.add_argument("--clang-format-ignore-exception",
+                          dest="clang_format_raise_exception",
+                          action="store_false",
+                          help="clang-format ignore exception on mismatched "
+                               "configuration file")
+        args.set_defaults(clang_format_raise_exception=True)
 
     def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
         """Run tool and gather output."""
@@ -67,20 +78,25 @@ class ClangFormatToolPlugin(ToolPlugin):
                                                             ".clang-format style is not correct. There is one located in {}. Put this file in your home directory.".
                                                             format(format_file_name))
 # pylint: enable=line-too-long
-                        raise exc
+                        if self.plugin_context.args.clang_format_raise_exception:
+                            raise exc
 
             for src in files:
                 output = subprocess.check_output([clang_format_bin, src,
                                                   "-output-replacements-xml"],
                                                  stderr=subprocess.STDOUT)
                 output = src + "\n" + output
-                total_output.append(output)
+                if self.plugin_context.args.clang_format_raise_exception:
+                    total_output.append(output)
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
             print("{}".format(ex.output))
-            return None
+            if self.plugin_context.args.clang_format_raise_exception:
+                return None
+            else:
+                return []
 
         except OSError as ex:
             print("Couldn't find %s! (%s)" % (clang_format_bin, ex))
