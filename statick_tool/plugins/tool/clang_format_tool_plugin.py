@@ -21,6 +21,10 @@ class ClangFormatToolPlugin(ToolPlugin):
         """Gather arguments."""
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
+        args.add_argument("--clang-format-raise-exception", default=True,
+                          dest="clang_format_raise_exception", type=bool,
+                          help="clang-format raise exception on mismatched "
+                               "configuration file")
 
     def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
         """Run tool and gather output."""
@@ -67,7 +71,8 @@ class ClangFormatToolPlugin(ToolPlugin):
                                                             ".clang-format style is not correct. There is one located in {}. Put this file in your home directory.".
                                                             format(format_file_name))
 # pylint: enable=line-too-long
-                        raise exc
+                        if self.plugin_context.args.clang_format_raise_exception:
+                            raise exc
 
             for src in files:
                 output = subprocess.check_output([clang_format_bin, src,

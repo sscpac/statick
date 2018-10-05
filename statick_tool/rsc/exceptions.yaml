@@ -19,6 +19,10 @@ global:
       # Auto-generated build files
       - tools: all
         globs: ["*/dist/*"]
+      - tools: all
+        globs: ["*/egg-info/*"]
+      - tools: all
+        globs: ["*/statick_output/*"]
       # Documentation files
       - tools: all
         globs: ["*/docs/*"]
