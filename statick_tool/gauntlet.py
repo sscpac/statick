@@ -6,7 +6,10 @@ This file is a huge mess right now since it's ported pretty directly
 from the old version of the tool.
 """
 
+from __future__ import print_function
+
 import fnmatch
+import subprocess
 import os
 import re
 import subprocess
@@ -37,10 +40,10 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     src_path = os.path.abspath(parsed_args.src_path)
     out_path = os.path.abspath(parsed_args.out_path)
     if not os.path.exists(src_path) or not os.path.isdir(src_path):
-        print "Source path " + src_path + " not found!"
+        print("Source path " + src_path + " not found!")
         sys.exit(1)
     if not os.path.exists(out_path) or not os.path.isdir(out_path):
-        print "Output path " + out_path + " not found!"
+        print("Output path " + out_path + " not found!")
         sys.exit(1)
 
     src_files = os.listdir(src_path)
@@ -48,24 +51,24 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     fail_file = os.path.join(out_path, "failed.txt")
 
     if "CMakeLists.txt" not in src_files:
-        print "No CMakeLists.txt found in src directory. Is your catkin workspace initialized?"
+        print("No CMakeLists.txt found in src directory. Is your catkin workspace initialized?")
         sys.exit(1)
 
     if "CMakeCache.txt" not in out_files or parsed_args.force_cmake:
-        print "Running CMake..."
+        print("Running CMake...")
         try:
             subprocess.check_output(["cmake", src_path, "-B" + out_path])
         except subprocess.CalledProcessError as exc:
-            print "CMake FAILED!"
-            print exc.output
-            print "CMake FAILED!"
+            print("CMake FAILED!")
+            print(exc.output)
+            print("CMake FAILED!")
             sys.exit(1)
-        print "CMake complete"
+        print("CMake complete")
     else:
-        print "CMake cache found. Skipping CMake step."
+        print("CMake cache found. Skipping CMake step.")
 
     raw_targets = []
-    print "Gathering make targets..."
+    print("Gathering make targets...")
     if not parsed_args.failed_only:
         if parsed_args.targets_file is None:
             target_re = r"^([a-zA-Z0-9][^$#\/\t=]*):([^=]|$)"
@@ -85,7 +88,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
                     raw_targets = [target.strip() for target in fname.readlines()
                                    if len(target.strip()) > 0 and target[0] != "#"]
             except IOError:
-                print "Targets file not found"
+                print("Targets file not found")
                 sys.exit(1)
     else:
         try:
@@ -93,17 +96,17 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
                 raw_targets = [target.strip() for target in fname.readlines()
                                if len(target.strip()) > 0 and target[0] != "#"]
         except IOError:
-            print "Failed file from previous run not found. " \
-                  "Did you actually run the gauntlet once before?"
+            print("Failed file from previous run not found. "
+                  "Did you actually run the gauntlet once before?")
             sys.exit(1)
-    print "Gathering make targets complete."
+    print("Gathering make targets complete.")
 
     ignore_targets = []
     try:
         with open(resources.get_file("gauntlet_ignore.yaml")) as fname:
             ignore_targets = yaml.safe_load(fname)
     except IOError:
-        print "Gauntlet ignore yaml file not found."
+        print("Gauntlet ignore yaml file not found.")
 
     targets = []
     for raw_target in raw_targets:
@@ -124,47 +127,47 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
 
     with open(fail_file, "w") as fname:
         i = 0
-        print "BEGIN GAUNTLET"
+        print("BEGIN GAUNTLET")
         for target in targets:
             i += 1
-            print "------------"
-            print " start " + target
-            print "", i, "of", len(targets)
-            print "------------"
+            print("------------")
+            print(" start " + target)
+            print("", i, "of", len(targets))
+            print("------------")
 
-            print "@@clean@@"
+            print("@@clean@@")
             proc = subprocess.Popen(["make", "clean"], cwd=out_path)
             proc.wait()
-            print "@@get rid of headers@@"
+            print("@@get rid of headers@@")
             proc = subprocess.Popen(["find", "devel", "-name", "*.h", "-type", "f", "-delete"],
                                     cwd=out_path)
             proc.wait()
-            print "@@make@@"
+            print("@@make@@")
             proc = subprocess.Popen(["make", target, "-j8"], cwd=out_path)
             proc.wait()
             result = proc.returncode
             if result != 0:
-                print "*** FAILURE ***"
-                print "  target", target
-                print "*** FAILURE ***"
+                print("*** FAILURE ***")
+                print("  target", target)
+                print("*** FAILURE ***")
                 failed.append(target)
                 fname.write(target + "\n")
                 fname.flush()
-            print "@@done@@"
+            print("@@done@@")
 
-            print "------------"
-            print " end " + target
-            print "", i, "of", len(targets)
-            print "------------"
+            print("------------")
+            print(" end " + target)
+            print("", i, "of", len(targets))
+            print("------------")
             if len(failed) > 0:
-                print "*** FAILED *** "
+                print("*** FAILED *** ")
                 for fail in failed:
-                    print "  " + fail
-                print "*** FAILED *** "
-        print "END GAUNTLET"
+                    print("  " + fail)
+                print("*** FAILED *** ")
+        print("END GAUNTLET")
         if len(failed) > 0:
-            print "Build failures found"
+            print("Build failures found")
             sys.exit(1)
         else:
-            print "No errors"
+            print("No errors")
             sys.exit(0)
