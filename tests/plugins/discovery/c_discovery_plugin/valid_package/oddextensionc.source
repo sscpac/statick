@@ -1,0 +1,5 @@
+// The file command should still identify this as a source file
+
+#include <string.h>
+
+int main() {}
