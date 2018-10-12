@@ -17,11 +17,32 @@ before_install:
   - sudo pip install statick
   - sudo pip install -r requirements.txt
   - sudo pip install -r requirements-docs.txt
+  - sudo pip install tox
 
-script:
-  - mkdir statick_output
-  - ./statick . statick_output --profile self_check.yaml
-  - travis-sphinx build
-    
-after_success:
-  - travis-sphinx deploy
+
+matrix:
+  include:
+    - python: 2.7
+      env:
+        - TOX_ENV=py27
+    - python: 3.5
+      env:
+        - TOX_ENV=py35
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - tox -e $TOX_ENV
+        - mkdir statick_output
+        - ./statick . statick_output --profile self_check.yaml
+      # Force this to only run for one Python version
+    - stage: build
+      python: 2.7
+      script:
+        - travis-sphinx build
+    - stage: deploy
+      # Force this to only run for one Python version
+      python: 2.7
+      script:
+        - travis-sphinx deploy
