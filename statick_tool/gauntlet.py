@@ -53,7 +53,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     if "CMakeCache.txt" not in out_files or parsed_args.force_cmake:
         print "Running CMake..."
         try:
-            _ = subprocess.check_output(["cmake", src_path, "-B" + out_path])
+            subprocess.check_output(["cmake", src_path, "-B" + out_path])
         except subprocess.CalledProcessError as exc:
             print "CMake FAILED!"
             print exc.output
@@ -70,7 +70,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
             target_re = r"^([a-zA-Z0-9][^$#\/\t=]*):([^=]|$)"
             target_rec = re.compile(target_re)
             try:
-                _ = subprocess.check_output(["make", "-qp"], cwd=out_path)  # NOLINT
+                subprocess.check_output(["make", "-qp"], cwd=out_path)  # NOLINT
             except subprocess.CalledProcessError as exc:
                 for line in exc.output.split("\n"):
                     match = target_rec.match(line)

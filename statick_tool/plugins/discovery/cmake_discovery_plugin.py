@@ -90,8 +90,8 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                 include_dirs = match.group(3).split(";")
                 src = [src for src in match.group(4).split(";")
                        if not qt_p.match(src)]
-                src = [src if os.path.isabs(src)
-                       else os.path.join(src_dir, src) for src in src]  # NOLINT
+                src = [src if os.path.isabs(src)  # noqa F812
+                       else os.path.join(src_dir, src) for src in src]  # NOLINT  # noqa F812
 
                 target = {"name": name, "src_dir": src_dir,
                           "include_dirs": include_dirs, "src": src}

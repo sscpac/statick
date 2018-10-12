@@ -38,12 +38,12 @@ class Statick(object):
         self.discovery_plugins = {}
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
             self.discovery_plugins[plugin_info.plugin_object.get_name()] = \
-                    plugin_info.plugin_object
+                plugin_info.plugin_object
 
         self.tool_plugins = {}
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
             self.tool_plugins[plugin_info.plugin_object.get_name()] = \
-                    plugin_info.plugin_object
+                plugin_info.plugin_object
 
         self.config = Config(self.resources.get_file("config.yaml"))
 

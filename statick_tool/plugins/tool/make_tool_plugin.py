@@ -58,7 +58,7 @@ class MakeToolPlugin(ToolPlugin):
         while i < len(matches):
             cur_match = matches[i]
             if "overloaded-virtual" in cur_match[4] and i + 1 < len(matches):
-                next_match = matches[i+1]
+                next_match = matches[i + 1]
                 if next_match[0].startswith(package.path):
                     result.append((next_match[0], next_match[1], next_match[2],
                                    cur_match[3], cur_match[4] + next_match[4]))

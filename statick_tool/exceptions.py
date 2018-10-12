@@ -112,7 +112,7 @@ class Exceptions(object):
                     self.print_exception_warning(tool)
                     continue
                 lines = open(issue.filename, "r").readlines()
-                line_number = int(issue.line_number)-1
+                line_number = int(issue.line_number) - 1
                 if line_number < len(lines) and "NOLINT" in lines[line_number]:
                     to_remove.append(issue)
             issues[tool] = [issue for issue in tool_issues if issue not in to_remove]
