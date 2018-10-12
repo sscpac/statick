@@ -28,7 +28,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
                     c_files.append(os.path.abspath(full_path))
                 else:
                     full_path = os.path.join(root, f)
-                    output = subprocess.check_output(["file", full_path])
+                    output = subprocess.check_output(["file", full_path], universal_newlines=True)
                     if ("c source" in output.lower() or
                             "c++ source" in output.lower()) and not \
                             f.endswith(".cfg"):
