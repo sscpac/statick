@@ -43,7 +43,8 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 
         try:
             output = subprocess.check_output(subproc_args,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
             if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
         except subprocess.CalledProcessError as ex:
