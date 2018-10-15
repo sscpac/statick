@@ -1,11 +1,12 @@
 """Apply lizard tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import re
 
-from statick_tool.tool_plugin import ToolPlugin
+import re
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class LizardToolPlugin(ToolPlugin):

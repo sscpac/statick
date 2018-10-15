@@ -1,13 +1,13 @@
 """Apply bandit tool and gather results."""
 
 from __future__ import print_function
+
 import csv
-
-import subprocess
 import shlex
+import subprocess
 
-from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class BanditToolPlugin(ToolPlugin):

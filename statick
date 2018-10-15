@@ -4,6 +4,7 @@ Executable script for running statick against a single package.
 """
 
 import sys
+
 from statick_tool.args import Args
 from statick_tool.statick import Statick
 

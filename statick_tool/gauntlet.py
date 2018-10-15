@@ -6,11 +6,12 @@ This file is a huge mess right now since it's ported pretty directly
 from the old version of the tool.
 """
 
-import subprocess
-import os
-import sys
-import re
 import fnmatch
+import os
+import re
+import subprocess
+import sys
+
 import yaml
 
 from statick_tool.args import Args

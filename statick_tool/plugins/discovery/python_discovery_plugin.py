@@ -1,8 +1,9 @@
 """Discover python files to analyze."""
 
 from __future__ import print_function
-import os
+
 import fnmatch
+import os
 import subprocess
 from collections import OrderedDict
 

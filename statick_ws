@@ -3,11 +3,12 @@
 Executable script for running statick against a workspace.
 """
 
-import sys
 import os
+import sys
+
 from statick_tool.args import Args
-from statick_tool.statick import Statick
 from statick_tool.report import generate_report
+from statick_tool.statick import Statick
 
 
 def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-statements

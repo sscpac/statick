@@ -1,13 +1,14 @@
 """Apply clang-format tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import shlex
-import re
-import difflib
 
-from statick_tool.tool_plugin import ToolPlugin
+import difflib
+import re
+import shlex
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangFormatToolPlugin(ToolPlugin):

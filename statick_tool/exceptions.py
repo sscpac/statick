@@ -12,9 +12,10 @@ to be ignored. The path for the issue is set in the tool plugin that
 generates the issues.
 """
 
-import os
 import fnmatch
+import os
 import re
+
 import yaml
 
 

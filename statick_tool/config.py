@@ -4,6 +4,7 @@ Manages which plugins are run for each statick scan level.
 Sets what flags are used for each plugin at those levels.
 """
 from collections import OrderedDict
+
 import yaml
 
 

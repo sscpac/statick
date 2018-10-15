@@ -1,10 +1,11 @@
 """Discovery plugin to find CMake-based projects."""
 
 from __future__ import print_function
+
 import os
+import re
 import shutil
 import subprocess
-import re
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 

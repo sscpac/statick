@@ -1,21 +1,23 @@
 """Code analysis front-end."""
 
 from __future__ import print_function
+
 import copy
-import os
 import logging
+import os
 
 from yapsy.PluginManager import PluginManager
+
 from statick_tool import __version__
-from statick_tool.package import Package
-from statick_tool.discovery_plugin import DiscoveryPlugin
-from statick_tool.tool_plugin import ToolPlugin
-from statick_tool.report import generate_report
-from statick_tool.exceptions import Exceptions
 from statick_tool.config import Config
-from statick_tool.profile import Profile
-from statick_tool.resources import Resources
+from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
+from statick_tool.profile import Profile
+from statick_tool.report import generate_report
+from statick_tool.resources import Resources
+from statick_tool.tool_plugin import ToolPlugin
 
 logging.basicConfig()
 

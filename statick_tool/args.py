@@ -4,6 +4,7 @@ Custom argument handling.
 Enable usage of user-paths argument before parsing other arguments.
 """
 from __future__ import print_function
+
 import argparse
 import os
 

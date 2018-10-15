@@ -1,13 +1,14 @@
 """Apply catkin_lint tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import shlex
-import re
-import os
 
-from statick_tool.tool_plugin import ToolPlugin
+import os
+import re
+import shlex
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class CatkinLintToolPlugin(ToolPlugin):

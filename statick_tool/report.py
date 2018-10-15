@@ -1,6 +1,7 @@
 """Write issue reports to screen and file."""
 
 from __future__ import print_function
+
 from collections import OrderedDict
 
 
