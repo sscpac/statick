@@ -21,13 +21,14 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for CMake files."""
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
 
-        if not os.path.isfile(cmake_file):
-            print("  Package is not cmake.")
-            return
-
         package["cmake"] = True
         package["make_targets"] = []
         package["headers"] = []
+
+        if not os.path.isfile(cmake_file):
+            print("  Package is not cmake.")
+            package["cmake"] = False
+            return
 
         print("  Found cmake package {}".format(cmake_file))
 
