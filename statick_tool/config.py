@@ -46,6 +46,8 @@ class Config(object):
 
     def get_plugin_config(self, plugin_type, plugin, level, key, default=None):  # pylint: disable=too-many-arguments
         """Get flags to use for a plugin at a certain level."""
+        if level not in self.config["levels"].keys():
+            return default
         level_config = self.config["levels"][level]
         if plugin_type in level_config:
             type_config = level_config[plugin_type]
