@@ -31,7 +31,8 @@ class XmllintToolPlugin(ToolPlugin):
             try:
                 subproc_args = ["xmllint", xml_file] + flags
                 output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT)
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:
                     output = ex.output

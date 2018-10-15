@@ -36,7 +36,8 @@ class CMakelintToolPlugin(ToolPlugin):
         try:
             subproc_args = ["cmakelint"] + flags + [cmake_file]
             output = subprocess.check_output(subproc_args,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 1:
                 output = ex.output

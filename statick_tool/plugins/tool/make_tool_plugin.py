@@ -26,9 +26,11 @@ class MakeToolPlugin(ToolPlugin):
         make_args = ["make", "statick_cmake_target"] + extra_args
 
         try:
-            output = subprocess.check_output(["make", "clean"])
+            output = subprocess.check_output(["make", "clean"],
+                                             universal_newlines=True)
             output = subprocess.check_output(make_args,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
             if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
         except subprocess.CalledProcessError as ex:

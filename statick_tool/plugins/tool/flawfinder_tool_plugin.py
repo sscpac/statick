@@ -33,7 +33,8 @@ class FlawfinderToolPlugin(ToolPlugin):
             try:
                 subproc_args = ["flawfinder"] + flags + [src]
                 output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT)
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
             except subprocess.CalledProcessError as ex:
                 if ex.returncode != 32:
                     output = ex.output

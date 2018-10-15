@@ -52,7 +52,8 @@ class ClangTidyToolPlugin(ToolPlugin):
 
         try:
             output = subprocess.check_output([clang_tidy_bin] + flags + files,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
             if "clang-diagnostic-error" in output:
                 raise subprocess.CalledProcessError(-1,
                                                     clang_tidy_bin,

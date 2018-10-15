@@ -46,7 +46,8 @@ class PydocstyleToolPlugin(ToolPlugin):
             try:
                 subproc_args = [tool_bin, src] + flags
                 output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT)
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
 
             except subprocess.CalledProcessError as ex:
                 if ex.returncode != 32:

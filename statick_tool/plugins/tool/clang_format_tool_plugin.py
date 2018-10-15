@@ -63,7 +63,8 @@ class ClangFormatToolPlugin(ToolPlugin):
         try:
             output = subprocess.check_output([clang_format_bin,
                                               "--dump-config"],
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
             format_file_name = self.plugin_context.resources.get_file("_clang-format")
             with open(format_file_name, "r") as format_file:
                 target_format = format_file.read()

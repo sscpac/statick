@@ -46,7 +46,8 @@ class BanditToolPlugin(ToolPlugin):
 
         try:
             output = subprocess.check_output([bandit_bin] + flags + files,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
 
         except subprocess.CalledProcessError as ex:
             output = ex.output

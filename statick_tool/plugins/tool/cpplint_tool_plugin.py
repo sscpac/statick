@@ -46,7 +46,8 @@ class CpplintToolPlugin(ToolPlugin):
 
         try:
             output = subprocess.check_output([cpplint] + flags + files,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:

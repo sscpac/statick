@@ -54,7 +54,8 @@ class CppcheckToolPlugin(ToolPlugin):
 
         try:
             output = subprocess.check_output([cppcheck_bin, "--version"],
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
             ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
             parse = re.compile(ver_re)
             match = parse.match(output)
@@ -93,7 +94,8 @@ class CppcheckToolPlugin(ToolPlugin):
         try:
             output = subprocess.check_output([cppcheck_bin] + flags +
                                              include_args + files,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 2:

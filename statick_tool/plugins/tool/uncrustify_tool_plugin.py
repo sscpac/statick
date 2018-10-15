@@ -52,9 +52,11 @@ class UncrustifyToolPlugin(ToolPlugin):
             for src in files:
                 format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
                 cmd = [uncrustify_bin, '-c', format_file_name, '-f', src]
-                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
                 src_cmd = ['cat', src]
-                src_output = subprocess.check_output(src_cmd, stderr=subprocess.STDOUT)
+                src_output = subprocess.check_output(src_cmd, stderr=subprocess.STDOUT,
+                                                     universal_newlines=True)
                 diff = difflib.context_diff(output.split("\n"), src_output.split("\n"))
                 found_diff = False
                 output = output.split('\n', 1)[1]
