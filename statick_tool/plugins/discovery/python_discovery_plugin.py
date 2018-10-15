@@ -28,14 +28,12 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
 
             for f in files:
                 full_path = os.path.join(root, f)
-                can_run = os.access(full_path, os.X_OK)
-                if can_run:
-                    output = subprocess.check_output(["file", full_path],
-                                                     universal_newlines=True)
-                    if ("python script" in output or
-                            "Python script" in output) and not \
-                            f.endswith(".cfg"):
-                        python_files.append(os.path.abspath(full_path))
+                output = subprocess.check_output(["file", full_path],
+                                                 universal_newlines=True)
+                if ("python script" in output or
+                        "Python script" in output) and not \
+                        f.endswith(".cfg"):
+                    python_files.append(os.path.abspath(full_path))
 
         python_files = list(OrderedDict.fromkeys(python_files))
 
