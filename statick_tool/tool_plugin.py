@@ -2,6 +2,8 @@
 
 from __future__ import print_function
 
+import shlex
+
 from yapsy.IPlugin import IPlugin
 
 
@@ -47,3 +49,13 @@ class ToolPlugin(IPlugin):
                     continue
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping
+
+    def get_user_flags(self, level, name=self.get_name()):
+        user_flags = self.plugin_context.config.get_tool_config(name, level,
+                                                                "flags")
+        flags = []
+        if user_flags:
+            lex = shlex.shlex(user_flags, posix=True)
+            lex.whitespace_split = True
+            flags = list(lex)
+        return flags

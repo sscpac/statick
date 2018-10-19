@@ -4,7 +4,6 @@ from __future__ import print_function
 
 import os
 import re
-import shlex
 import subprocess
 
 from statick_tool.issue import Issue
@@ -22,13 +21,8 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         if "catkin" not in package or not package["catkin"]:
             return []
-
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                level, "flags")
-        lex = shlex.shlex(user_flags)
-        lex.quotes = '"'
-        lex.whitespace_split = True
-        flags = list(lex)
+        flags = []
+        flags += self.get_user_flags(level)
 
         try:
             subproc_args = ["catkin_lint", package.path] + flags
