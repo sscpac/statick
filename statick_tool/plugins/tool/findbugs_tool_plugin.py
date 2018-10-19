@@ -3,7 +3,6 @@
 from __future__ import print_function
 
 import re
-import shlex
 import subprocess
 
 from statick_tool.issue import Issue
@@ -37,11 +36,7 @@ class FindbugsToolPlugin(ToolPlugin):
 
         flags = ["-textui", "-effort:max", "-dontCombineWarnings",
                  "-longBugCodes", "-low"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                level, "flags")
-        lex = shlex.shlex(user_flags, posix=True)
-        lex.whitespace_split = True
-        flags = flags + list(lex)
+        flags += self.get_user_flags(level)
 
         include_file = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                   level, "include")

@@ -3,7 +3,6 @@
 from __future__ import print_function
 
 import re
-import shlex
 import subprocess
 
 from statick_tool.issue import Issue
@@ -39,11 +38,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         flags = ["-header-filter=" + package["src_dir"] + "/.*", "-p",
                  package["bin_dir"] + "/compile_commands.json",
                  "-extra-arg=-fopenmp=libomp"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                level, "flags")
-        lex = shlex.shlex(user_flags, posix=True)
-        lex.whitespace_split = True
-        flags = flags + list(lex)
+        flags += self.get_user_flags(level)
 
         files = []
         if "make_targets" in package:

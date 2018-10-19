@@ -4,7 +4,6 @@ from __future__ import print_function
 
 import os
 import re
-import shlex
 import subprocess
 
 from statick_tool.issue import Issue
@@ -40,13 +39,10 @@ class CppcheckToolPlugin(ToolPlugin):
             return []
 
         flags = ["--report-progress", "--verbose", "--inline-suppr", "--language=c++"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(), level, "flags")
+        flags += self.get_user_flags(level)
         user_version = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                   level,
                                                                   "version")
-        lex = shlex.shlex(user_flags, posix=True)
-        lex.whitespace_split = True
-        flags = flags + list(lex)
 
         cppcheck_bin = "cppcheck"
         if self.plugin_context.args.cppcheck_bin is not None:
