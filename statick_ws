@@ -93,5 +93,6 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     output_file = os.path.join(out_dir, "all" + ".compliance_all")
     generate_report(issues, output_file)
 
+
 if __name__ == "__main__":
     main()
