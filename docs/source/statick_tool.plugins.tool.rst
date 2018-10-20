@@ -101,7 +101,7 @@ statick_tool.plugins.tool.make_tool_plugin module
     :show-inheritance:
 
 statick_tool.plugins.tool.pydocstyle_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.pydocstyle_tool_plugin
     :members:
@@ -109,7 +109,7 @@ statick_tool.plugins.tool.pydocstyle_tool_plugin module
     :show-inheritance:
 
 statick_tool.plugins.tool.pycodestyle_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.pycodestyle_tool_plugin
     :members:
