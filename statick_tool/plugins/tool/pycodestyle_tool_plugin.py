@@ -1,4 +1,4 @@
-"""Apply pep8 tool and gather results."""
+"""Apply pycodestyle tool and gather results."""
 
 from __future__ import print_function
 import subprocess
@@ -9,28 +9,41 @@ from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.issue import Issue
 
 
-class Pep8ToolPlugin(ToolPlugin):
-    """Apply pep8 tool and gather results."""
+class PycodestyleToolPlugin(ToolPlugin):
+    """Apply pycodestyle tool and gather results."""
 
     def get_name(self):
         """Get name of tool."""
-        return "pep8"
+        return "pycodestyle"
 
     def scan(self, package, level):
         """Run tool and gather output."""
         flags = ["--format=pylint"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
+        # This check is done to support the switch from the pep8 package name
+        # to the pycodestyle package name. See:
+        # https://github.com/PyCQA/pycodestyle/issues/466
+        # We want to support the old tool name in configuration files for a
+        # while.
+        if user_flags is None:
+            user_flags = self.plugin_context.config.get_tool_config("pep8",
+                                                                    level,
+                                                                    "flags")
+            if user_flags is not None:
+                print("DEPRECATION WARNING: The tool name changed from pep8 to "
+                      "pycodestyle. Please update your configuration file to "
+                      "use the new tool name.")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
 
         total_output = []
 
-        pep8_bin = "pep8"
+        tool_bin = "pycodestyle"
         for src in package["python_src"]:
             try:
-                subproc_args = [pep8_bin, src] + flags
+                subproc_args = [tool_bin, src] + flags
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT)
 
@@ -43,7 +56,7 @@ class Pep8ToolPlugin(ToolPlugin):
                     return None
 
             except OSError as ex:
-                print("Couldn't find %s! (%s)" % (pep8_bin, ex))
+                print("Couldn't find %s! (%s)" % (tool_bin, ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:
@@ -60,8 +73,8 @@ class Pep8ToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output):
         """Parse tool output and report issues."""
-        pep8_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse = re.compile(pep8_re)
+        tool_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
+        parse = re.compile(tool_re)
         issues = []
 
         for output in total_output:
