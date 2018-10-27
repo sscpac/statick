@@ -100,18 +100,18 @@ statick_tool.plugins.tool.make_tool_plugin module
     :undoc-members:
     :show-inheritance:
 
-statick_tool.plugins.tool.pep257_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+statick_tool.plugins.tool.pydocstyle_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: statick_tool.plugins.tool.pep257_tool_plugin
+.. automodule:: statick_tool.plugins.tool.pydocstyle_tool_plugin
     :members:
     :undoc-members:
     :show-inheritance:
 
-statick_tool.plugins.tool.pep8_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+statick_tool.plugins.tool.pycodestyle_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: statick_tool.plugins.tool.pep8_tool_plugin
+.. automodule:: statick_tool.plugins.tool.pycodestyle_tool_plugin
     :members:
     :undoc-members:
     :show-inheritance:

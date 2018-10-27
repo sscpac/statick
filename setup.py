@@ -23,8 +23,8 @@ setup(
     scripts=['statick', 'statick_ws', 'statick_gauntlet'],
     long_description=long_description,
     long_description_content_type='text/markdown',
-    install_requires=['bandit', 'cmakelint', 'lizard', 'pep257', 'pep8',
-                      'pyflakes', 'yamllint'],
+    install_requires=['bandit', 'cmakelint', 'lizard', 'pycodestyle',
+                      'pydocstyle', 'pyflakes', 'yamllint'],
     url='https://github.com/sscpac/statick',
     classifiers=[
         "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",

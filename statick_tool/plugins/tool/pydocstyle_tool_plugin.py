@@ -1,4 +1,4 @@
-"""Apply pep257 tool and gather results."""
+"""Apply pydocstyle tool and gather results."""
 
 from __future__ import print_function
 import subprocess
@@ -9,28 +9,41 @@ from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.issue import Issue
 
 
-class Pep257ToolPlugin(ToolPlugin):
-    """Apply pep257 tool and gather results."""
+class PydocstyleToolPlugin(ToolPlugin):
+    """Apply pydocstyle tool and gather results."""
 
     def get_name(self):
         """Get name of tool."""
-        return "pep257"
+        return "pydocstyle"
 
     def scan(self, package, level):
         """Run tool and gather output."""
         flags = []
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
+        # This check is done to support the switch from the pep257 package name
+        # to the pydocstyle package name. See:
+        # https://github.com/PyCQA/pydocstyle/issues/172
+        # We want to support the old tool name in configuration files for a
+        # while.
+        if user_flags is None:
+            user_flags = self.plugin_context.config.get_tool_config("pep257",
+                                                                    level,
+                                                                    "flags")
+            if user_flags is not None:
+                print("DEPRECATION WARNING: The tool name changed from pep257 to "
+                      "pydocstyle. Please update your configuration file to "
+                      "use the new tool name.")
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
 
         total_output = []
 
-        pep257_bin = "pep257"
+        tool_bin = "pydocstyle"
         for src in package["python_src"]:
             try:
-                subproc_args = [pep257_bin, src] + flags
+                subproc_args = [tool_bin, src] + flags
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT)
 
@@ -43,7 +56,7 @@ class Pep257ToolPlugin(ToolPlugin):
                     return None
 
             except OSError as ex:
-                print("Couldn't find %s! (%s)" % (pep257_bin, ex))
+                print("Couldn't find %s! (%s)" % (tool_bin, ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:
@@ -60,10 +73,10 @@ class Pep257ToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output):
         """Parse tool output and report issues."""
-        pep257_re_first = r"(.+):(\d+)"
-        parse_first = re.compile(pep257_re_first)
-        pep257_re_second = r"\s(.+):\s(.+)"
-        parse_second = re.compile(pep257_re_second)
+        tool_re = r"(.+):(\d+)"
+        parse_first = re.compile(tool_re)
+        tool_re_second = r"\s(.+):\s(.+)"
+        parse_second = re.compile(tool_re_second)
         issues = []
         filename = ''
         line_number = 0

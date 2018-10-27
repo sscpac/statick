@@ -1,7 +1,7 @@
 bandit
 cmakelint
 lizard
-pep257
-pep8
+pycodestyle
+pydocstyle
 pyflakes
 yamllint
