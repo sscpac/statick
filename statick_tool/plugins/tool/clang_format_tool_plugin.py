@@ -42,8 +42,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        flags = ["-header-filter=" + package["src_dir"] + "/.*", "-p",
-                 package["bin_dir"] + "/compile_commands.json"]
+        flags = []
         flags += self.get_user_flags(level)
 
         files = []
@@ -81,7 +80,8 @@ class ClangFormatToolPlugin(ToolPlugin):
             for src in files:
                 output = subprocess.check_output([clang_format_bin, src,
                                                   "-output-replacements-xml"],
-                                                 stderr=subprocess.STDOUT)
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
                 output = src + "\n" + output
                 if self.plugin_context.args.clang_format_raise_exception:
                     total_output.append(output)
