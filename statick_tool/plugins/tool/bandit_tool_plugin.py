@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import csv
+
 import subprocess
 import shlex
 
@@ -65,36 +66,31 @@ class BanditToolPlugin(ToolPlugin):
         with open(self.get_name() + ".log", "w") as f:
             f.write(output)
 
-        issues = self.parse_output()
+        issues = self.parse_output(output.split('\n'))
         return issues
 
-    def parse_output(self):
+    def parse_output(self, output):
         """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        try:
-            with open('bandit_results.csv', 'r') as csvfile:
-                csvreader = csv.reader(csvfile, quoting=csv.QUOTE_MINIMAL)
-                for line in csvreader:
-                    if len(line) < 7:
-                        continue
-                    if line[0] == 'filename':
-                        # Skip the column header line
-                        continue
-                    cert_reference = None
-                    if line[1] in warnings_mapping.keys():
-                        cert_reference = warnings_mapping[line[1]]
-                    severity = 1
-                    if line[4] == "MEDIUM":
-                        severity = 3
-                    elif line[4] == "HIGH":
-                        severity = 5
-                    issues.append(Issue(line[0], line[5],
-                                        self.get_name(), line[1],
-                                        severity, line[4], cert_reference))
-        except IOError:
-            # We couldn't find the results file for some reason
-            pass
+        for line in output:
+            line_data = line.split(',')
+            if len(line_data) < 7:
+                continue
+            if line_data[0] == 'filename':
+                # Skip the column header line
+                continue
+            cert_reference = None
+            if line_data[1] in warnings_mapping.keys():
+                cert_reference = warnings_mapping[line[1]]
+            severity = '1'
+            if line_data[4] == "MEDIUM":
+                severity = '3'
+            elif line_data[4] == "HIGH":
+                severity = '5'
+            issues.append(Issue(line_data[0], line_data[6],
+                                self.get_name(), line_data[2],
+                                severity, line_data[5], cert_reference))
 
         return issues
