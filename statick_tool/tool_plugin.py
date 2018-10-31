@@ -50,7 +50,9 @@ class ToolPlugin(IPlugin):
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping
 
-    def get_user_flags(self, level, name=self.get_name()):
+    def get_user_flags(self, level, name=None):
+        if name is None:
+            name = self.get_name()
         user_flags = self.plugin_context.config.get_tool_config(name, level,
                                                                 "flags")
         flags = []
