@@ -25,7 +25,7 @@ class CpplintToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         if "cpplint" not in package:
             print("  cpplint not found!")
-            return []
+            return None
 
         if "make_targets" not in package and "headers" not in package:
             return []
