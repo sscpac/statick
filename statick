@@ -22,8 +22,10 @@ def main():
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
     if issues is None or not success:
+        print("Statick exiting with errors.")
         sys.exit(1)
     else:
+        print("Statick exiting with success.")
         sys.exit(0)
 
 
