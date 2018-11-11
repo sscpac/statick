@@ -3,6 +3,7 @@
 | Service | Status |
 | ------- | ------ |
 | Build   | [![Travis-CI](https://api.travis-ci.org/sscpac/statick.svg?branch=master)](https://travis-ci.org/sscpac/statick/branches) |
+| PyPi    | [![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick) |
 
 Statick is a set of tools to analyze software packages.
 
