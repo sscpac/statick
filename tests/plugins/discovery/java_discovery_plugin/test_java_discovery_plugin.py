@@ -28,10 +28,10 @@ def test_java_discovery_plugin_found():
 
 
 def test_java_discovery_plugin_scan_valid():
-    cdp = JavaDiscoveryPlugin()
+    jdp = JavaDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    cdp.scan(package, 'level')
+    jdp.scan(package, 'level')
     expected_src = ['test.java']
     expected_bin = ['test.class']
     # We have to add the path to each of the above...yuck
@@ -45,10 +45,10 @@ def test_java_discovery_plugin_scan_valid():
 
 
 def test_java_discovery_plugin_scan_invalid_nocmake():
-    cdp = JavaDiscoveryPlugin()
+    jdp = JavaDiscoveryPlugin()
     package = Package('invalid_package',
                       os.path.join(os.path.dirname(__file__),
                                    'invalid_package'))
-    cdp.scan(package, 'level')
+    jdp.scan(package, 'level')
     assert(not package['java_src'])
     assert(not package['java_bin'])
