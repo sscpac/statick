@@ -28,10 +28,10 @@ def test_xml_discovery_plugin_found():
 
 
 def test_xml_discovery_plugin_scan_valid():
-    cdp = XMLDiscoveryPlugin()
+    xmldp = XMLDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    cdp.scan(package, 'level')
+    xmldp.scan(package, 'level')
     expected = ['test.xml', 'test.launch']
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename)
@@ -41,9 +41,9 @@ def test_xml_discovery_plugin_scan_valid():
 
 
 def test_xml_discovery_plugin_scan_invalid_nocmake():
-    cdp = XMLDiscoveryPlugin()
+    xmldp = XMLDiscoveryPlugin()
     package = Package('invalid_package',
                       os.path.join(os.path.dirname(__file__),
                                    'invalid_package'))
-    cdp.scan(package, 'level')
+    xmldp.scan(package, 'level')
     assert(not package['xml'])

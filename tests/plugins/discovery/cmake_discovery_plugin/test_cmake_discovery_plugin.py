@@ -21,9 +21,9 @@ def setup_cmake_discovery_plugin():
                            'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
-    cdp = CMakeDiscoveryPlugin()
-    cdp.set_plugin_context(plugin_context)
-    return cdp
+    cmdp = CMakeDiscoveryPlugin()
+    cmdp.set_plugin_context(plugin_context)
+    return cmdp
 
 
 def test_cmake_discovery_plugin_found():
@@ -45,17 +45,17 @@ def test_cmake_discovery_plugin_found():
 
 
 def test_cmake_discovery_plugin_scan_valid():
-    cdp = setup_cmake_discovery_plugin()
+    cmdp = setup_cmake_discovery_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    cdp.scan(package, 'level')
+    cmdp.scan(package, 'level')
     assert(package['cmake'])
 
 
 def test_cmake_discovery_plugin_scan_invalid():
-    cdp = setup_cmake_discovery_plugin()
+    cmdp = setup_cmake_discovery_plugin()
     package = Package('invalid_package',
                       os.path.join(os.path.dirname(__file__),
                                    'invalid_package'))
-    cdp.scan(package, 'level')
+    cmdp.scan(package, 'level')
     assert(not package['cmake'])

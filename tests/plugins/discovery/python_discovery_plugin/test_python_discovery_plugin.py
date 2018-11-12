@@ -27,10 +27,10 @@ def test_python_discovery_plugin_found():
 
 
 def test_python_discovery_plugin_scan_valid():
-    cdp = PythonDiscoveryPlugin()
+    pydp = PythonDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    cdp.scan(package, 'level')
+    pydp.scan(package, 'level')
     expected = ['test.py', 'oddextensionpy.source']
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename)
@@ -40,9 +40,9 @@ def test_python_discovery_plugin_scan_valid():
 
 
 def test_python_discovery_plugin_scan_invalid_nocmake():
-    cdp = PythonDiscoveryPlugin()
+    pydp = PythonDiscoveryPlugin()
     package = Package('invalid_package',
                       os.path.join(os.path.dirname(__file__),
                                    'invalid_package'))
-    cdp.scan(package, 'level')
+    pydp.scan(package, 'level')
     assert(not package['python_src'])
