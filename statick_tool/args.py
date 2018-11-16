@@ -28,10 +28,10 @@ class Args(object):
         self.parser = argparse.ArgumentParser(description=name)
         self.parser.add_argument("--user-paths", **user_path_args)
 
-    def get_user_paths(self):
+    def get_user_paths(self, args=None):
         """Get a list of user paths containing config or plugins."""
         user_paths = []
-        args = self.pre_parser.parse_known_args()[0]
+        args = self.pre_parser.parse_known_args(args)[0]
         if args.user_paths is not None:
             paths = args.user_paths.split(",")
             for path in paths:
@@ -41,6 +41,6 @@ class Args(object):
                     print("Could not find user path {}!".format(path))
         return user_paths
 
-    def get_args(self):
+    def get_args(self, args=None):
         """Get parsed command-line arguments."""
-        return self.parser.parse_args()
+        return self.parser.parse_args(args)
