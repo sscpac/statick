@@ -74,8 +74,19 @@ class BanditToolPlugin(ToolPlugin):
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        output_minus_log = list(filter(lambda a: not a.startswith("[main]"),
-                                       output))
+
+        # Copy output for modification
+        output_minus_log = list(output)
+
+        # Bandit prints a bunch of log messages out and you can't suppress
+        # them, so iterate over the list until we find the CSV header
+        for line in output:  # Intentionally output, not output_minus_log
+            if line.startswith('filename'):
+                # Found the CSV header, stop removing things
+                break
+            else:
+                output_minus_log.remove(line)
+
         csvreader = csv.DictReader(output_minus_log)
         for line in csvreader:
             cert_reference = None
