@@ -74,23 +74,20 @@ class BanditToolPlugin(ToolPlugin):
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        for line in output:
-            line_data = line.split(',')
-            if len(line_data) < 7:
-                continue
-            if line_data[0] == 'filename':
-                # Skip the column header line
-                continue
+        output_minus_log = list(filter(lambda a: not a.startswith("[main]"),
+                                       output))
+        csvreader = csv.DictReader(output_minus_log)
+        for line in csvreader:
             cert_reference = None
-            if line_data[1] in warnings_mapping.keys():
-                cert_reference = warnings_mapping[line[1]]
+            if line['test_id'] in warnings_mapping.keys():
+                cert_reference = warnings_mapping[line['test_id']]
             severity = '1'
-            if line_data[4] == "MEDIUM":
+            if line['issue_confidence'] == "MEDIUM":
                 severity = '3'
-            elif line_data[4] == "HIGH":
+            elif line['issue_confidence'] == "HIGH":
                 severity = '5'
-            issues.append(Issue(line_data[0], line_data[6],
-                                self.get_name(), line_data[2],
-                                severity, line_data[5], cert_reference))
+            issues.append(Issue(line['filename'], line['line_number'],
+                                self.get_name(), line['test_id'],
+                                severity, line['issue_text'], cert_reference))
 
         return issues
