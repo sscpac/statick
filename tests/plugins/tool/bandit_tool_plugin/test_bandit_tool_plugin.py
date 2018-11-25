@@ -59,8 +59,9 @@ def test_bandit_tool_plugin_scan_valid():
 def test_bandit_tool_plugin_parse_valid():
     '''Verify that we can parse the normal output of bandit'''
     btp = setup_bandit_tool_plugin()
-    output = "valid_package/b404.py,blacklist,B404,LOW,HIGH,Consider possible security implications associated with subprocess module.,1,[1],https://bandit.readthedocs.io/en/latest/blacklists/blacklist_imports.html#b404-import-subprocess"
-    issues = btp.parse_output([output])
+    output = ["filename,test_name,test_id,issue_severity,issue_confidence,issue_text,line_number,line_range,more_info",
+              "valid_package/b404.py,blacklist,B404,LOW,HIGH,Consider possible security implications associated with subprocess module.,1,[1],https://bandit.readthedocs.io/en/latest/blacklists/blacklist_imports.html#b404-import-subprocess"]
+    issues = btp.parse_output(output)
     assert(len(issues) == 1)
     assert(issues[0].filename == 'valid_package/b404.py')
     assert(issues[0].line_number == '1')

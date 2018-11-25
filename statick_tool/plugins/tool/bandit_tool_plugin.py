@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import csv
 import subprocess
 
 from statick_tool.issue import Issue
