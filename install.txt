@@ -8,6 +8,5 @@ libxml2
 libxml2-utils
 pylint
 python-git
-python-pylint-django
 python-yapsy
 uncrustify
