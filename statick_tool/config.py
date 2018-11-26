@@ -29,7 +29,7 @@ class Config(object):
         level_config = self.config["levels"][level]
         plugins = []
         if plugin_type in level_config:
-            plugins += level_config[plugin_type].keys()
+            plugins += list(level_config[plugin_type])
         if "inherits_from" in level_config:
             inherited_level = level_config["inherits_from"]
             plugins += self.get_enabled_plugins(inherited_level, plugin_type)

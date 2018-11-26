@@ -102,7 +102,7 @@ class ClangTidyToolPlugin(ToolPlugin):
                 if line[1] != '*' and match.group(3) != "information" \
                         and match.group(4) != "note":
                     cert_reference = None
-                    if match.group(6) in warnings_mapping.keys():
+                    if match.group(6) in warnings_mapping:
                         cert_reference = warnings_mapping[match.group(6)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(4) +

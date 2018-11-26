@@ -90,7 +90,7 @@ class MakeToolPlugin(ToolPlugin):
         for match in matches:
             cert_reference = None
             warning_list = warning_parse.match(match[4])
-            if warning_list is not None and warning_list.groups(1)[0] in warnings_mapping.keys():
+            if warning_list is not None and warning_list.groups(1)[0] in warnings_mapping:
                 cert_reference = warnings_mapping[warning_list.groups(1)[0]]
 
             if warning_list is None:

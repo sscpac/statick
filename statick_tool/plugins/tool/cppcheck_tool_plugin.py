@@ -134,7 +134,7 @@ class CppcheckToolPlugin(ToolPlugin):
                 dummy, extension = os.path.splitext(match.group(1))
                 if extension in self.valid_extensions:
                     cert_reference = None
-                    if match.group(4) in warnings_mapping.keys():
+                    if match.group(4) in warnings_mapping:
                         cert_reference = warnings_mapping[match.group(4)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(3) +

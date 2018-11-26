@@ -27,7 +27,7 @@ class FlawfinderToolPlugin(ToolPlugin):
         flags = flags + list(lex)
 
         total_output = []
-        if "c_src" not in package.keys():
+        if "c_src" not in package:
             return []
         for src in package["c_src"]:
             try:

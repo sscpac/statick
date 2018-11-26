@@ -93,7 +93,7 @@ class FindbugsToolPlugin(ToolPlugin):
             match = parse.match(line)
             if match:
                 cert_reference = None
-                if match.group(1) in warnings_mapping.keys():
+                if match.group(1) in warnings_mapping:
                     cert_reference = warnings_mapping[match.group(1)]
                 issues.append(Issue(match.group(3), match.group(4),
                                     self.get_name(), match.group(1),

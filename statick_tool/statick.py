@@ -67,10 +67,10 @@ class Statick(object):
         args.add_argument('--version', action='version',
                           version='%(prog)s {version}'.format(version=__version__))
 
-        for _, plugin in self.discovery_plugins.iteritems():
+        for _, plugin in list(self.discovery_plugins.items()):
             plugin.gather_args(args)
 
-        for _, plugin in self.tool_plugins.iteritems():
+        for _, plugin in list(self.tool_plugins.items()):
             plugin.gather_args(args)
 
     def get_level(self, path, args):
@@ -144,9 +144,9 @@ class Statick(object):
         print("---Discovery---")
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if len(discovery_plugins) == 0:
-            discovery_plugins = self.discovery_plugins.keys()
+            discovery_plugins = list(self.discovery_plugins.keys())
         for plugin_name in discovery_plugins:
-            if plugin_name not in self.discovery_plugins.keys():
+            if plugin_name not in self.discovery_plugins:
                 print("Can't find specified discovery plugin {}!".format(plugin_name))
                 return None, False
 
@@ -165,7 +165,7 @@ class Statick(object):
         while len(plugins_to_run) > 0:
             plugin_name = plugins_to_run[0]
 
-            if plugin_name not in self.tool_plugins.keys():
+            if plugin_name not in self.tool_plugins:
                 if plugin_name == "pep257":
                     plugin_name = "pydocstyle"
                     plugins_to_run.remove("pep257")
