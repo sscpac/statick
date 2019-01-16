@@ -13,7 +13,7 @@ before_install:
   - sudo apt-get update
     # Some desired apt packages are not available in Ubuntu 14.04 (Travis).
     # - cat install.txt | xargs sudo apt-get install -y
-  - sudo apt-get install -y clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libxml2-utils pylint python-git python-yapsy findbugs
+  - sudo apt-get install -y clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libxml2-utils pylint findbugs
   - sudo pip install statick
   - sudo pip install -r requirements.txt
   - sudo pip install -r requirements-docs.txt
