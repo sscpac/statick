@@ -8,5 +8,4 @@ libxml2
 libxml2-utils
 pylint
 python-git
-python-yapsy
 uncrustify
