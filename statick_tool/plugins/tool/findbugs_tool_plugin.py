@@ -27,7 +27,7 @@ class FindbugsToolPlugin(ToolPlugin):
 
     def scan(self, package, level):
         """Run tool and gather output."""
-        if "java_bin" not in package:
+        if "java_bin" not in package or not package["java_bin"]:
             return []
 
         findbugs_bin = "findbugs"
