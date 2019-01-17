@@ -34,7 +34,7 @@ class FindbugsToolPlugin(ToolPlugin):
         if self.plugin_context.args.findbugs_bin is not None:
             findbugs_bin = self.plugin_context.args.findbugs_bin
 
-        flags = ["-effort:max", "-dontCombineWarnings", "longBugCodes"]
+        flags = ["-effort:max", "-dontCombineWarnings", "-longBugCodes"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
@@ -53,6 +53,8 @@ class FindbugsToolPlugin(ToolPlugin):
             flags += ["-exclude %s" %
                       (self.plugin_context.resources.get_file(exclude_file))]
 
+
+        print(flags)
         files = []
         if "java_bin" in package:
             files += package["java_bin"]
