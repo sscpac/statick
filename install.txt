@@ -1,12 +1,10 @@
-bandit
 clang-3.9
 clang-format-3.9
 clang-tidy-3.9
+findbugs
 flawfinder
 libomp-dev
 libxml2
 libxml2-utils
 pylint
-python-git
-python-yapsy
 uncrustify
