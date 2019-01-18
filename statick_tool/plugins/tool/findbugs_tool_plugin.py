@@ -34,7 +34,7 @@ class FindbugsToolPlugin(ToolPlugin):
         if self.plugin_context.args.findbugs_bin is not None:
             findbugs_bin = self.plugin_context.args.findbugs_bin
 
-        flags = ["-textui", "-effort:max", "-dontCombineWarnings", "-longBugCodes"]
+        flags = ["-textui", "-effort:max", "-dontCombineWarnings", "-longBugCodes", "-low"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
