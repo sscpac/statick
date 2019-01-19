@@ -27,14 +27,14 @@ class FindbugsToolPlugin(ToolPlugin):
 
     def scan(self, package, level):
         """Run tool and gather output."""
-        if "java_bin" not in package:
+        if "java_bin" not in package or not package["java_bin"]:
             return []
 
         findbugs_bin = "findbugs"
         if self.plugin_context.args.findbugs_bin is not None:
             findbugs_bin = self.plugin_context.args.findbugs_bin
 
-        flags = ["-effort:max", "-dontCombineWarnings", "longBugCodes"]
+        flags = ["-textui", "-effort:max", "-dontCombineWarnings", "-longBugCodes", "-low"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
@@ -46,12 +46,10 @@ class FindbugsToolPlugin(ToolPlugin):
         exclude_file = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                   level, "exclude")
         if include_file is not None:
-            flags += ["-include %s" %
-                      (self.plugin_context.resources.get_file(include_file))]
+            flags += ["-include", self.plugin_context.resources.get_file(include_file)]
 
         if exclude_file is not None:
-            flags += ["-exclude %s" %
-                      (self.plugin_context.resources.get_file(exclude_file))]
+            flags += ["-exclude", self.plugin_context.resources.get_file(exclude_file)]
 
         files = []
         if "java_bin" in package:
