@@ -183,6 +183,8 @@ There are two types of exceptions.
 The `tools` key can either be `all` to suppress warnings from all tools or a list of specific tools.
 The `globs` key is a list of globs of files to ignore.
 The glob could also be a specific filename.
+For an exception to be applied to a specific issue, it is required that the issue contain an absolute path to the filename.
+The path for the issue is set in the tool plugin that generates the issues.
 
 `message_regex` exceptions ignore warnings based on a regular expression match against an error message.
 The `tools` key can either be `all` to suppress warnings from all tools or a list of specific tools.
