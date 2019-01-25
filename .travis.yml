@@ -3,6 +3,7 @@ sudo: required
 language: python
 python:
   - '2.7'
+
 cache:
   - apt
 
@@ -13,30 +14,27 @@ notifications:
 before_install:
   - sudo apt-get update
   - cat install.txt | xargs sudo apt-get install -y
-  - sudo pip install -r requirements-docs.txt
-  - sudo pip install tox
-
 
 matrix:
   include:
     - python: 2.7
-      env:
-        - TOX_ENV=py27
+      env: TOX_ENV=py27
 
 jobs:
   include:
     - stage: test
-      script:
-        - tox -e $TOX_ENV
-      script:
-        - mkdir statick_output; ./statick . statick_output --profile self_check.yaml
+      install: pip install tox
+      script: tox -e $TOX_ENV
+      script: mkdir statick_output; ./statick . statick_output --profile self_check.yaml
       # Force this to only run for one Python version
     - stage: build
       python: 2.7
+      install: pip install -r requirements-docs.txt
       script:
         - travis-sphinx build
     - stage: deploy
       # Force this to only run for one Python version
       python: 2.7
+      install: pip install -r requirements-docs.txt
       script:
         - travis-sphinx deploy
