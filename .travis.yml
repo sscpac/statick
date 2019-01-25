@@ -25,6 +25,9 @@ jobs:
     - stage: test
       install: pip install tox
       script: tox -e $TOX_ENV
+      # This adds a second parallel "test" stage (since we didn't specify
+      # the stage name)
+    - install: pip install -r requirements.txt
       script: mkdir statick_output; ./statick . statick_output --profile self_check.yaml
       # Force this to only run for one Python version
     - stage: build
