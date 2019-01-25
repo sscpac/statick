@@ -6,6 +6,7 @@ python:
 
 cache:
   - apt
+  - pip
 
 notifications:
   email:
@@ -15,16 +16,12 @@ before_install:
   - sudo apt-get update
   - cat install.txt | xargs sudo apt-get install -y
 
-matrix:
-  include:
-    - python: '2.7'
-      env: TOX_ENV=py27
-
 jobs:
   include:
     - stage: test
       install: pip install tox
-      script: tox -e $TOX_ENV
+      # Borrowed from flask-mongoengine
+      script: tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/')
       # This adds a second parallel "test" stage (since we didn't specify
       # the stage name)
     - install: pip install -r requirements.txt
