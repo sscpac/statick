@@ -29,12 +29,9 @@ jobs:
       # Force this to only run for one Python version
     - stage: build
       python: '2.7'
-      install: pip install -r requirements-docs.txt
+      install:
+        - pip install -r requirements.txt
+        - pip install -r requirements-docs.txt
       script:
         - travis-sphinx build
-    - stage: deploy
-      # Force this to only run for one Python version
-      python: '2.7'
-      install: pip install -r requirements-docs.txt
-      script:
         - travis-sphinx deploy
