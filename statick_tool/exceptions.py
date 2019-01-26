@@ -1,4 +1,16 @@
-"""Exceptions interface."""
+"""
+Exceptions interface.
+
+Exceptions allow for ignoring detected issues. This is commonly done to
+suppress false positives or to ignore issues that a group has no intention
+of addressing.
+
+The two types of exceptions are a list of filenames or regular expressions.
+If using filename matching for the exception it is required that the
+reported issue contain the absolute path to the file containing the issue
+to be ignored. The path for the issue is set in the tool plugin that
+generates the issues.
+"""
 
 import os
 import fnmatch
@@ -7,16 +19,13 @@ import yaml
 
 
 class Exceptions(object):
-    """
-    Manages which plugins are run for each statick scan level.
-
-    Sets what flags are used for each plugin at those levels.
-    """
+    """Interface for applying exceptions."""
 
     def __init__(self, filename):
         """Initialize exceptions interface."""
         with open(filename) as fname:
             self.exceptions = yaml.safe_load(fname)
+        self.warning_printed = False
 
     def get_ignore_packages(self):
         """Get list of packages to skip when scanning a workspace."""
@@ -51,12 +60,14 @@ class Exceptions(object):
 
         return exceptions
 
-    @classmethod
-    def filter_file_exceptions(cls, package, exceptions, issues):
+    def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in issues.iteritems():
             to_remove = []
             for issue in tool_issues:
+                if not os.path.isabs(issue.filename):
+                    self.print_exception_warning(tool)
+                    continue
                 rel_path = os.path.relpath(issue.filename, package.path)
                 for exception in exceptions:
                     if exception["tools"] == 'all' or tool in exception["tools"]:
@@ -87,8 +98,7 @@ class Exceptions(object):
                                 to_remove]
         return issues
 
-    @classmethod
-    def filter_nolint(cls, issues):
+    def filter_nolint(self, issues):
         """
         Filter out lines that have an explicit NOLINT on them.
 
@@ -98,6 +108,9 @@ class Exceptions(object):
         for tool, tool_issues in issues.iteritems():
             to_remove = []
             for issue in tool_issues:
+                if not os.path.isabs(issue.filename):
+                    self.print_exception_warning(tool)
+                    continue
                 lines = open(issue.filename, "r").readlines()
                 line_number = int(issue.line_number)-1
                 if line_number < len(lines) and "NOLINT" in lines[line_number]:
@@ -121,3 +134,14 @@ class Exceptions(object):
         issues = self.filter_nolint(issues)
 
         return issues
+
+    def print_exception_warning(self, tool):
+        """
+        Print warning about exception not being applied for an issue.
+
+        Warning will only be printed once per tool.
+        """
+        if not self.warning_printed:
+            print "[WARNING] File exceptions not available for {} tool " \
+                "plugin due to lack of absolute paths for issues.".format(tool)
+            self.warning_printed = True
