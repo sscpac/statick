@@ -25,6 +25,7 @@ class Exceptions(object):
         """Initialize exceptions interface."""
         with open(filename) as fname:
             self.exceptions = yaml.safe_load(fname)
+        self.warning_printed = False
 
     def get_ignore_packages(self):
         """Get list of packages to skip when scanning a workspace."""
@@ -59,13 +60,13 @@ class Exceptions(object):
 
         return exceptions
 
-    @classmethod
-    def filter_file_exceptions(cls, package, exceptions, issues):
+    def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in issues.iteritems():
             to_remove = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
+                    self.print_exception_warning(tool)
                     continue
                 rel_path = os.path.relpath(issue.filename, package.path)
                 for exception in exceptions:
@@ -97,8 +98,7 @@ class Exceptions(object):
                                 to_remove]
         return issues
 
-    @classmethod
-    def filter_nolint(cls, issues):
+    def filter_nolint(self, issues):
         """
         Filter out lines that have an explicit NOLINT on them.
 
@@ -109,6 +109,7 @@ class Exceptions(object):
             to_remove = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
+                    self.print_exception_warning(tool)
                     continue
                 lines = open(issue.filename, "r").readlines()
                 line_number = int(issue.line_number)-1
@@ -133,3 +134,14 @@ class Exceptions(object):
         issues = self.filter_nolint(issues)
 
         return issues
+
+    def print_exception_warning(self, tool):
+        """
+        Print warning about exception not being applied for an issue.
+
+        Warning will only be printed once per tool.
+        """
+        if not self.warning_printed:
+            print "[WARNING] File exceptions not available for {} tool " \
+                "plugin due to lack of absolute paths for issues.".format(tool)
+            self.warning_printed = True
