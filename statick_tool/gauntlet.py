@@ -9,7 +9,6 @@ from the old version of the tool.
 from __future__ import print_function
 
 import fnmatch
-import subprocess
 import os
 import re
 import subprocess
