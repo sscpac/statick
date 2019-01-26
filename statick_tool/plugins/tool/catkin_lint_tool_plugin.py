@@ -125,5 +125,5 @@ class CatkinLintToolPlugin(ToolPlugin):
                     issues.append(Issue(norm_path, "1", self.get_name(),
                                         match2.group(2),
                                         self.get_level(match2.group(2)),
-                                        message))
+                                        message, None))
         return issues
