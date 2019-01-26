@@ -12,6 +12,8 @@ to be ignored. The path for the issue is set in the tool plugin that
 generates the issues.
 """
 
+from __future__ import print_function
+
 import fnmatch
 import os
 import re
@@ -148,5 +150,5 @@ class Exceptions(object):
 
         Warning will only be printed once per tool.
         """
-        print "[WARNING] File exceptions not available for {} tool " \
-            "plugin due to lack of absolute paths for issues.".format(tool)
+        print("[WARNING] File exceptions not available for {} tool "
+              "plugin due to lack of absolute paths for issues.".format(tool))
