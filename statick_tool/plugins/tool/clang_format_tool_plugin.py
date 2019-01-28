@@ -1,13 +1,14 @@
 """Apply clang-format tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import shlex
-import re
-import difflib
 
-from statick_tool.tool_plugin import ToolPlugin
+import difflib
+import re
+import shlex
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangFormatToolPlugin(ToolPlugin):
@@ -42,8 +43,8 @@ class ClangFormatToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        flags = ["-header-filter="+package["src_dir"]+"/.*", "-p",
-                 package["bin_dir"]+"/compile_commands.json"]
+        flags = ["-header-filter=" + package["src_dir"] + "/.*", "-p",
+                 package["bin_dir"] + "/compile_commands.json"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")
         lex = shlex.shlex(user_flags, posix=True)
@@ -72,7 +73,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 if line.startswith("+ ") or line.startswith("- ") or \
                    line.startswith("! "):
                     if line[2:].strip()[0] != "#":
-# pylint: disable=line-too-long
+                        # pylint: disable=line-too-long
                         exc = subprocess.CalledProcessError(-1,
                                                             clang_format_bin,
                                                             ".clang-format style is not correct. There is one located in {}. Put this file in your home directory.".

@@ -5,6 +5,7 @@ Handles chainging user directories and the default statick resource directory.
 """
 
 from __future__ import print_function
+
 import os
 
 

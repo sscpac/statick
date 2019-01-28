@@ -1,9 +1,12 @@
-dist: trusty
+dist: xenial
 sudo: required
-language:
-  - generic
+language: python
+python:
+  - '2.7'
+
 cache:
   - apt
+  - pip
 
 notifications:
   email:
@@ -11,25 +14,33 @@ notifications:
 
 before_install:
   - sudo apt-get update
-    # Some desired apt packages are not available in Ubuntu 14.04 (Travis).
-    # - cat install.txt | xargs sudo apt-get install -y
-  - sudo apt-get install -y clang-3.9 clang-format-3.9 clang-tidy-3.9 flawfinder libxml2-utils pylint findbugs
-  - sudo pip install statick
-  - sudo pip install -r requirements.txt
-  - sudo pip install -r requirements-docs.txt
+  - cat install.txt | xargs sudo apt-get install -y
 
-script:
-  - mkdir statick_output
-  - ./statick . statick_output --profile self_check.yaml
-  - travis-sphinx build
-    
-after_success:
-  - travis-sphinx deploy
-
-deploy:
-  provider: pypi
-  user: tdenewiler
-  password:
-    secure: t4ewjCNq1cFlWrdz+dapN1FlGSi7HHZVlErDuVFJuVFeuBxcVOyDLoRhbcZsX4/bAirM5DAWKfR+MiucZ/Ut8D0r3YFjvyaf9FfnXlKCt0Z3V/FxwADsy489dDjY7M7H+2563k4NyR03rXO/0qsU/An1fROv0buycLA2+PwuYPUeM0eRwuYPgSDyL+84AYPHVqwU8p0VKw4Z58iGVzyzpy3tZN4jxne+bO8tXf+qj7lC1Oi53/kJvhG5XvdI8lIPZv6KyO4t7lNzrniS6+SbNQqFSYrJ0zh28iXhoA3iM0u2YbKvRcc2CduwQzykwzIMWlCRrvrRBsePpuDT4k9VDXeOaNbu5ZxLY87bZWsld/549itidtqjF1So8tcgdAS5aO1O6G4BqfXXIhBdRHKxiUrm2h28ubXq4eHvDjxXpE7YLMN2jiXptTXX5zVRo9gkCv4UPk/Ugsk2XQ234UByq3aQjgiFDreBh5SCqzEQtUgY10neoKsG0kigrAYMJH0xMxhr00mPXMWJI9dumGilSI/Cz1uQmXuMqBxXg2IwAfulBDG6rsYCHSw0mFJvFEqt5ifnyP9WtHozc3PHWY2+1RLlzCpEnezHyRWZ4HrcPSWUKdHy9INczOQ9U2G1MH1cXOgZ0+rnHMdtsg+mbo+Y/A9mbiVyLcxgznoE1fSsYI0=
-  on:
-    tags: true
+jobs:
+  include:
+    - stage: test
+      install: pip install tox
+      # Borrowed from flask-mongoengine
+      script: tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/')
+      # This adds a second parallel "test" stage (since we didn't specify
+      # the stage name)
+    - install: pip install -r requirements.txt
+      script: mkdir statick_output; ./statick . statick_output --profile self_check.yaml
+      # Force this to only run for one Python version
+    - stage: build
+      python: '2.7'
+      install:
+        - pip install -r requirements.txt
+        - pip install -r requirements-docs.txt
+      script:
+        - travis-sphinx build
+        - travis-sphinx deploy
+    - stage: deploy
+      python: '2.7'
+      script: skip
+      provider: pypi
+      user: tdenewiler
+      password:
+        secure: t4ewjCNq1cFlWrdz+dapN1FlGSi7HHZVlErDuVFJuVFeuBxcVOyDLoRhbcZsX4/bAirM5DAWKfR+MiucZ/Ut8D0r3YFjvyaf9FfnXlKCt0Z3V/FxwADsy489dDjY7M7H+2563k4NyR03rXO/0qsU/An1fROv0buycLA2+PwuYPUeM0eRwuYPgSDyL+84AYPHVqwU8p0VKw4Z58iGVzyzpy3tZN4jxne+bO8tXf+qj7lC1Oi53/kJvhG5XvdI8lIPZv6KyO4t7lNzrniS6+SbNQqFSYrJ0zh28iXhoA3iM0u2YbKvRcc2CduwQzykwzIMWlCRrvrRBsePpuDT4k9VDXeOaNbu5ZxLY87bZWsld/549itidtqjF1So8tcgdAS5aO1O6G4BqfXXIhBdRHKxiUrm2h28ubXq4eHvDjxXpE7YLMN2jiXptTXX5zVRo9gkCv4UPk/Ugsk2XQ234UByq3aQjgiFDreBh5SCqzEQtUgY10neoKsG0kigrAYMJH0xMxhr00mPXMWJI9dumGilSI/Cz1uQmXuMqBxXg2IwAfulBDG6rsYCHSw0mFJvFEqt5ifnyP9WtHozc3PHWY2+1RLlzCpEnezHyRWZ4HrcPSWUKdHy9INczOQ9U2G1MH1cXOgZ0+rnHMdtsg+mbo+Y/A9mbiVyLcxgznoE1fSsYI0=
+      on:
+        tags: true

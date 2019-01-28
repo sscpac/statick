@@ -1,12 +1,13 @@
 """Apply uncrustify tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import shlex
-import difflib
 
-from statick_tool.tool_plugin import ToolPlugin
+import difflib
+import shlex
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class UncrustifyToolPlugin(ToolPlugin):

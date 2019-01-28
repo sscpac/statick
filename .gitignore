@@ -14,3 +14,9 @@ dist/
 *.egg-info/
 
 docs/_build
+
+# From tests
+.coverage
+.pytest_cache
+.tox
+output-*/

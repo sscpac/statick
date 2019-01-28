@@ -1,13 +1,14 @@
 """Apply catkin_lint tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import shlex
-import re
-import os
 
-from statick_tool.tool_plugin import ToolPlugin
+import os
+import re
+import shlex
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class CatkinLintToolPlugin(ToolPlugin):
@@ -58,7 +59,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Manual exceptions."""
         message = match.group(5)
         norm_path = os.path.normpath(package.path + "/" + match.group(2))
-        line = open(norm_path, "r").readlines()[int(match.group(3))-1].strip()
+        line = open(norm_path, "r").readlines()[int(match.group(3)) - 1].strip()
 
         # There are a few cases where this is ok.
         if message == "variable CMAKE_CXX_FLAGS is modified":

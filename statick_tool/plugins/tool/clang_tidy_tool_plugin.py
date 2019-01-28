@@ -1,12 +1,13 @@
 """Apply clang-tidy tool and gather results."""
 
 from __future__ import print_function
-import subprocess
-import shlex
-import re
 
-from statick_tool.tool_plugin import ToolPlugin
+import re
+import shlex
+import subprocess
+
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangTidyToolPlugin(ToolPlugin):
@@ -35,8 +36,8 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
-        flags = ["-header-filter="+package["src_dir"]+"/.*", "-p",
-                 package["bin_dir"]+"/compile_commands.json",
+        flags = ["-header-filter=" + package["src_dir"] + "/.*", "-p",
+                 package["bin_dir"] + "/compile_commands.json",
                  "-extra-arg=-fopenmp=libomp"]
         user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                 level, "flags")

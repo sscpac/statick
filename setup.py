@@ -3,7 +3,7 @@
 
 try:
     from setuptools import setup
-except:  # pylint: disable=bare-except
+except:  # pylint: disable=bare-except # noqa: E722
     from distutils.core import setup  # pylint: disable=wrong-import-order
 
 import statick_tool
