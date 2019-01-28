@@ -26,7 +26,6 @@ class Exceptions(object):
         """Initialize exceptions interface."""
         with open(filename) as fname:
             self.exceptions = yaml.safe_load(fname)
-        self.warning_printed = False
 
     def get_ignore_packages(self):
         """Get list of packages to skip when scanning a workspace."""
@@ -64,10 +63,13 @@ class Exceptions(object):
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in issues.iteritems():
+            warning_printed = False
             to_remove = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
-                    self.print_exception_warning(tool)
+                    if not warning_printed:
+                        self.print_exception_warning(tool)
+                        warning_printed = True
                     continue
                 rel_path = os.path.relpath(issue.filename, package.path)
                 for exception in exceptions:
@@ -107,10 +109,13 @@ class Exceptions(object):
         there is a complex macro or something.
         """
         for tool, tool_issues in issues.iteritems():
+            warning_printed = False
             to_remove = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
-                    self.print_exception_warning(tool)
+                    if not warning_printed:
+                        self.print_exception_warning(tool)
+                        warning_printed = True
                     continue
                 lines = open(issue.filename, "r").readlines()
                 line_number = int(issue.line_number) - 1
@@ -136,13 +141,12 @@ class Exceptions(object):
 
         return issues
 
-    def print_exception_warning(self, tool):
+    @classmethod
+    def print_exception_warning(cls, tool):
         """
         Print warning about exception not being applied for an issue.
 
         Warning will only be printed once per tool.
         """
-        if not self.warning_printed:
-            print "[WARNING] File exceptions not available for {} tool " \
-                "plugin due to lack of absolute paths for issues.".format(tool)
-            self.warning_printed = True
+        print "[WARNING] File exceptions not available for {} tool " \
+            "plugin due to lack of absolute paths for issues.".format(tool)
