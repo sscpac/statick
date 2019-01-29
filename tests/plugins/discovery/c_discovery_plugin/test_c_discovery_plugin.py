@@ -25,19 +25,21 @@ def test_c_discovery_plugin_found():
     assert(any(plugin_info.name == 'C/C++ Discovery Plugin' for
                plugin_info in manager.getPluginsOfCategory("Discovery")))
 
+
 def test_c_discovery_plugin_scan_valid():
     cdp = CDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     cdp.scan(package, 'level')
-    expected = [ 'test.c', 'test.cpp', 'test.cc', 'test.cxx', 'test.h',
-                 'test.hxx', 'test.hpp', 'oddextensioncpp.source',
-                 'oddextensionc.source']
+    expected = ['test.c', 'test.cpp', 'test.cc', 'test.cxx', 'test.h',
+                'test.hxx', 'test.hpp', 'oddextensioncpp.source',
+                'oddextensionc.source']
     # We have to add the path to each of the above...yuck
-    expected_fullpath = [ os.path.join(package.path, filename)
-                          for filename in expected ]
+    expected_fullpath = [os.path.join(package.path, filename)
+                         for filename in expected]
     # Neat trick to verify that two unordered lists are the same
     assert(set(package['c_src']) == set(expected_fullpath))
+
 
 def test_c_discovery_plugin_scan_invalid_nocmake():
     cdp = CDiscoveryPlugin()

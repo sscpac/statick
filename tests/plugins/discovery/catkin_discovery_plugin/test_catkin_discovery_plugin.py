@@ -26,6 +26,7 @@ def test_catkin_discovery_plugin_found():
     assert(any(plugin_info.name == 'Catkin Discovery Plugin' for
                plugin_info in manager.getPluginsOfCategory("Discovery")))
 
+
 def test_catkin_discovery_plugin_scan_valid():
     cdp = CatkinDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
@@ -33,13 +34,15 @@ def test_catkin_discovery_plugin_scan_valid():
     cdp.scan(package, 'level')
     assert(package['catkin'])
 
-def test_catkin_discovery_plugin_scan_invalid_nocmake():
+
+def test_catkin_discovery_plugin_scan_invalid_badpath():
     cdp = CatkinDiscoveryPlugin()
     package = Package('invalid_package',
                       os.path.join(os.path.dirname(__file__),
                                    'invalid_package'))
     cdp.scan(package, 'level')
     assert(not package['catkin'])
+
 
 def test_catkin_discovery_plugin_scan_invalid_nocmake():
     cdp = CatkinDiscoveryPlugin()
@@ -48,6 +51,7 @@ def test_catkin_discovery_plugin_scan_invalid_nocmake():
                                    'invalid_package_nocmakelists'))
     cdp.scan(package, 'level')
     assert(not package['catkin'])
+
 
 def test_catkin_discovery_plugin_scan_invalid_packagexml():
     cdp = CatkinDiscoveryPlugin()
