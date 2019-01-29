@@ -1,11 +1,12 @@
 import os
-import statick_tool
 
+from yapsy.PluginManager import PluginManager
+
+import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
-from statick_tool.plugins.discovery.catkin_discovery_plugin \
-    import CatkinDiscoveryPlugin
-from yapsy.PluginManager import PluginManager
+from statick_tool.plugins.discovery.catkin_discovery_plugin import \
+    CatkinDiscoveryPlugin
 
 
 def test_catkin_discovery_plugin_found():
