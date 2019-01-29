@@ -25,6 +25,7 @@ def test_args_user_paths_undefined():
 
 
 def test_args_user_paths_multiple_definitions():
+    # expected result: The second entry wins
     args = Args('test')
     user_paths = args.get_user_paths(['--user-paths',
                                       os.path.join(os.path.dirname(__file__),
