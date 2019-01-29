@@ -3,6 +3,8 @@
 Executable script for running statick against a workspace.
 """
 
+from __future__ import print_function
+
 import os
 import sys
 

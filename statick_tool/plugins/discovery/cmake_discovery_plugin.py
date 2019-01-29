@@ -69,13 +69,13 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     def process_output(cls, output, package):
         """Parse the tool output."""
 # pylint: disable=anomalous-backslash-in-string
-        cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605
+        cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
         target_p = re.compile(cmake_target_re)
         cmake_headers_re = r"-- HEADERS: (.+)"
         headers_p = re.compile(cmake_headers_re)
         cmake_roslint_re = r"-- ROSLINT: (.+)"
         roslint_p = re.compile(cmake_roslint_re)
-        cmake_project_re = r"-- PROJECT: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[BIN_DIR:(.+)\]"  # NOQA: W605
+        cmake_project_re = r"-- PROJECT: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[BIN_DIR:(.+)\]"  # NOQA: W605 # NOLINT
         project_p = re.compile(cmake_project_re)
 # pylint: enable=anomalous-backslash-in-string
 
