@@ -27,13 +27,14 @@ class FlawfinderToolPlugin(ToolPlugin):
         flags = flags + list(lex)
 
         total_output = []
-        if "c_src" not in package.keys():
+        if "c_src" not in package:
             return []
         for src in package["c_src"]:
             try:
                 subproc_args = ["flawfinder"] + flags + [src]
                 output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT)
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
             except subprocess.CalledProcessError as ex:
                 if ex.returncode != 32:
                     output = ex.output

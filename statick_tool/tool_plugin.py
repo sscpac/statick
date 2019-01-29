@@ -1,5 +1,7 @@
 """Tool plugin."""
 
+from __future__ import print_function
+
 from yapsy.IPlugin import IPlugin
 
 
@@ -40,8 +42,8 @@ class ToolPlugin(IPlugin):
             for line in mapping_file.readlines():
                 split_line = line.strip().split(':')
                 if len(split_line) != 2:
-                    print "Warning: invalid line %s in file %s" % \
-                          (line, file_name)
+                    print("Warning: invalid line %s in file %s" %
+                          (line, file_name))
                     continue
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping

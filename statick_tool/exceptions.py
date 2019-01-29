@@ -12,6 +12,8 @@ to be ignored. The path for the issue is set in the tool plugin that
 generates the issues.
 """
 
+from __future__ import print_function
+
 import fnmatch
 import os
 import re
@@ -62,7 +64,7 @@ class Exceptions(object):
 
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
-        for tool, tool_issues in issues.iteritems():
+        for tool, tool_issues in list(issues.items()):
             warning_printed = False
             to_remove = []
             for issue in tool_issues:
@@ -90,7 +92,7 @@ class Exceptions(object):
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
             compiled_re = re.compile(exception_re)
-            for tool, tool_issues in issues.iteritems():
+            for tool, tool_issues in list(issues.items()):
                 to_remove = []
                 if exception_tools == "all" or tool in exception_tools:
                     for issue in tool_issues:
@@ -108,7 +110,7 @@ class Exceptions(object):
         Sometimes the tools themselves don't properly filter these out if
         there is a complex macro or something.
         """
-        for tool, tool_issues in issues.iteritems():
+        for tool, tool_issues in list(issues.items()):
             warning_printed = False
             to_remove = []
             for issue in tool_issues:
@@ -148,5 +150,5 @@ class Exceptions(object):
 
         Warning will only be printed once per tool.
         """
-        print "[WARNING] File exceptions not available for {} tool " \
-            "plugin due to lack of absolute paths for issues.".format(tool)
+        print("[WARNING] File exceptions not available for {} tool "
+              "plugin due to lack of absolute paths for issues.".format(tool))

@@ -33,7 +33,8 @@ class CatkinLintToolPlugin(ToolPlugin):
         try:
             subproc_args = ["catkin_lint", package.path] + flags
             output = subprocess.check_output(subproc_args,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:

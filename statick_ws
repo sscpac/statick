@@ -3,6 +3,8 @@
 Executable script for running statick against a workspace.
 """
 
+from __future__ import print_function
+
 import os
 import sys
 
@@ -28,7 +30,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
 
     out_dir = parsed_args.output_directory
     if not os.path.isdir(out_dir):
-        print "Output directory not found at " + out_dir + "!"
+        print("Output directory not found at " + out_dir + "!")
         sys.exit(1)
 
     ignore_packages = statick.get_ignore_packages()
@@ -54,7 +56,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
                                       if len(package.strip()) > 0 and
                                       package[0] != "#"]
         except IOError:
-            print "Packages file not found"
+            print("Packages file not found")
             sys.exit(1)
         packages = [package for package in packages if package[0] in packages_file_list]
 
@@ -63,29 +65,29 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     issues = {}
     for package in packages:
         if parsed_args.list_packages:
-            print "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
+            print("%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args)))
             continue
 
         count += 1
-        print "-- Scanning package " + package[0] + " (" + str(count) + \
-            " of " + str(len(packages)) + ") --"
+        print("-- Scanning package " + package[0] + " (" + str(count) + \
+            " of " + str(len(packages)) + ") --")
         issues, dummy = statick.run(package[1], parsed_args)
         if issues is not None:
             total_issues.append(issues)
         else:
-            print "Failed to run statick on package " + package[0] + "!"
+            print("Failed to run statick on package " + package[0] + "!")
             sys.exit(1)
-        print "-- Done scanning package " + package[0] + " (" + str(count) +  \
-            " of " + str(len(packages)) + ") --"
+        print("-- Done scanning package " + package[0] + " (" + str(count) +  \
+            " of " + str(len(packages)) + ") --")
 
     if parsed_args.list_packages:
         sys.exit(0)
 
-    print "-- All packages run --"
-    print "-- overall report --"
+    print("-- All packages run --")
+    print("-- overall report --")
 
     for issue in total_issues:
-        for key, value in issue.iteritems():
+        for key, value in list(issue.items()):
             if key in issues:
                 issues[key] += value
             else:

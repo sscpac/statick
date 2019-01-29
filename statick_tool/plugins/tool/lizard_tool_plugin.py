@@ -25,7 +25,8 @@ class LizardToolPlugin(ToolPlugin):
             src_dir = package["src_dir"]
 
         try:
-            output = subprocess.check_output(["lizard", "-w", src_dir])
+            output = subprocess.check_output(["lizard", "-w", src_dir],
+                                             universal_newlines=True)
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 1:
                 output = ex.output

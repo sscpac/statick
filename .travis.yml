@@ -3,6 +3,10 @@ sudo: required
 language: python
 python:
   - '2.7'
+  - '3.4'
+  - '3.5'
+  - '3.6'
+  - '3.7'
 
 cache:
   - apt
@@ -16,15 +20,22 @@ before_install:
   - sudo apt-get update
   - cat install.txt | xargs sudo apt-get install -y
 
+install:
+  - pip install -r requirements.txt
+
+# This stage is run against everything in the matrix (so every python version)
+script:
+  - pip install tox
+  # Borrowed from flask-mongoengine
+  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/')
+
+
 jobs:
   include:
-    - stage: test
-      install: pip install tox
-      # Borrowed from flask-mongoengine
-      script: tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/')
       # This adds a second parallel "test" stage (since we didn't specify
-      # the stage name)
-    - install: pip install -r requirements.txt
+      # the stage name) just to run statick
+    - stage: test
+      python: '2.7'
       script: mkdir statick_output; ./statick . statick_output --profile self_check.yaml
       # Force this to only run for one Python version
     - stage: build

@@ -46,7 +46,8 @@ class BanditToolPlugin(ToolPlugin):
 
         try:
             output = subprocess.check_output([bandit_bin] + flags + files,
-                                             stderr=subprocess.STDOUT)
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
@@ -90,7 +91,7 @@ class BanditToolPlugin(ToolPlugin):
         csvreader = csv.DictReader(output_minus_log)
         for line in csvreader:
             cert_reference = None
-            if line['test_id'] in warnings_mapping.keys():
+            if line['test_id'] in warnings_mapping:
                 cert_reference = warnings_mapping[line['test_id']]
             severity = '1'
             if line['issue_confidence'] == "MEDIUM":
