@@ -1,3 +1,4 @@
+"""Unit tests for the YAML discovery plugin."""
 import os
 
 from yapsy.PluginManager import PluginManager
@@ -10,6 +11,7 @@ from statick_tool.plugins.discovery.yaml_discovery_plugin import \
 
 
 def test_yaml_discovery_plugin_found():
+    """Test that the YAML discovery plugin is detected by the plugin system."""
     manager = PluginManager()
     # Get the path to statick_tool/__init__.py, get the directory part, and
     # add 'plugins' to that to get the standard plugins dir
@@ -20,14 +22,15 @@ def test_yaml_discovery_plugin_found():
     })
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "yaml"
-    assert(any(plugin_info.plugin_object.get_name() == 'yaml' for
-               plugin_info in manager.getPluginsOfCategory("Discovery")))
-    # While we're at it, verify that a plugin is named C Discovery Plugin
-    assert(any(plugin_info.name == 'YAML Discovery Plugin' for
-               plugin_info in manager.getPluginsOfCategory("Discovery")))
+    assert any(plugin_info.plugin_object.get_name() == 'yaml' for
+               plugin_info in manager.getPluginsOfCategory("Discovery"))
+    # While we're at it, verify that a plugin is named YAML Discovery Plugin
+    assert any(plugin_info.name == 'YAML Discovery Plugin' for
+               plugin_info in manager.getPluginsOfCategory("Discovery"))
 
 
 def test_yaml_discovery_plugin_scan_valid():
+    """Test that the YAML discovery plugin correctly identifies YAML files."""
     ydp = YAMLDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
@@ -37,13 +40,14 @@ def test_yaml_discovery_plugin_scan_valid():
     expected_fullpath = [os.path.join(package.path, filename)
                          for filename in expected]
     # Neat trick to verify that two unordered lists are the same
-    assert(set(package['yaml']) == set(expected_fullpath))
+    assert set(package['yaml']) == set(expected_fullpath)
 
 
-def test_yaml_discovery_plugin_scan_invalid_nocmake():
+def test_yaml_discovery_plugin_scan_invalid():
+    """Test that the YAML discovery plugin doesn't identify non-YAML files."""
     ydp = YAMLDiscoveryPlugin()
     package = Package('invalid_package',
                       os.path.join(os.path.dirname(__file__),
                                    'invalid_package'))
     ydp.scan(package, 'level')
-    assert(not package['yaml'])
+    assert not package['yaml']
