@@ -26,6 +26,15 @@ global:
       # Documentation files
       - tools: all
         globs: ["*/docs/*"]
+      # Tox packages (used in testing)
+      - tools: all
+        globs: ["*/.tox/*"]
+      # Leftover files from tox
+      - tools: all
+        globs: ["*/output-py*/*"]
+      # The test directories themselves - there are files with intentional errors
+      - tools: all
+        globs: ["*/tests/*"]
     message_regex:
       # This is triggered by std::isnan for some reason
       - tools: [clang-tidy]
