@@ -51,10 +51,7 @@ class ToolPlugin(IPlugin):
         return warning_mapping
 
     def get_user_flags(self, level, name=None):
-        """
-        Utility function to get the user-defined extra flags for a specific
-        tool/level combination.
-        """
+        """Get the user-defined extra flags for a specific tool/level combination."""
         if name is None:
             name = self.get_name()
         user_flags = self.plugin_context.config.get_tool_config(name, level,
