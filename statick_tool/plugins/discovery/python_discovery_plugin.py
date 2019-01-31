@@ -34,7 +34,7 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
                 for f in files:
                     full_path = os.path.join(root, f)
                     output = subprocess.check_output(["file", full_path],
-                                                 universal_newlines=True)
+                                                     universal_newlines=True)
                     if ("python script" in output or
                             "Python script" in output) and not \
                             f.endswith(".cfg"):
