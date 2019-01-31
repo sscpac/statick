@@ -1,5 +1,7 @@
 """Discovery plugin."""
 import os
+import sys
+
 from yapsy.IPlugin import IPlugin
 
 
@@ -27,4 +29,14 @@ class DiscoveryPlugin(IPlugin):
     @staticmethod
     def file_command_exists():
         """Return whether the 'file' command is available on $PATH"""
-        return os.path.isfile('file') and os.access(fpath, os.X_OK)
+        if sys.platform == 'win32':
+            command_name = 'file.exe'
+        else:
+            command_name = 'file'
+
+        for path in os.environ["PATH"].split(os.pathsep):
+            exe_path = os.path.join(path, command_name)
+            if os.path.isfile(exe_path) and os.access(exe_path, os.X_OK):
+                return True
+
+        return False
