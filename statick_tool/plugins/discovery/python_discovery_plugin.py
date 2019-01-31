@@ -21,19 +21,24 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for python files."""
         python_files = []
 
+        file_cmd_exists = True
+        if not DiscoveryPlugin.file_command_exists():
+            file_cmd_exists = False
+
         for root, _, files in os.walk(package.path):
             for f in fnmatch.filter(files, "*.py"):
                 full_path = os.path.join(root, f)
                 python_files.append(os.path.abspath(full_path))
 
-            for f in files:
-                full_path = os.path.join(root, f)
-                output = subprocess.check_output(["file", full_path],
+            if file_cmd_exists:
+                for f in files:
+                    full_path = os.path.join(root, f)
+                    output = subprocess.check_output(["file", full_path],
                                                  universal_newlines=True)
-                if ("python script" in output or
-                        "Python script" in output) and not \
-                        f.endswith(".cfg"):
-                    python_files.append(os.path.abspath(full_path))
+                    if ("python script" in output or
+                            "Python script" in output) and not \
+                            f.endswith(".cfg"):
+                        python_files.append(os.path.abspath(full_path))
 
         python_files = list(OrderedDict.fromkeys(python_files))
 

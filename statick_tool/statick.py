@@ -142,6 +142,9 @@ class Statick(object):
         plugin_context = PluginContext(args, self.resources, self.config)
 
         print("---Discovery---")
+        if not DiscoveryPlugin.file_command_exists():
+            print("file command isn't available, discovery plugins will be less effective")
+
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if len(discovery_plugins) == 0:
             discovery_plugins = list(self.discovery_plugins.keys())
