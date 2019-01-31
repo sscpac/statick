@@ -20,13 +20,16 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for C files."""
         c_files = []
         c_extensions = ('.c', '.cc', '.cpp', '.cxx', '.h', '.hxx', '.hpp')
+        file_cmd_exists = True
+        if not DiscoveryPlugin.file_command_exists():
+            file_cmd_exists = False
 
         for root, _, files in os.walk(package.path):
             for f in files:
                 if f.lower().endswith(c_extensions):
                     full_path = os.path.join(root, f)
                     c_files.append(os.path.abspath(full_path))
-                else:
+                elif file_cmd_exists:
                     full_path = os.path.join(root, f)
                     output = subprocess.check_output(["file", full_path], universal_newlines=True)
                     if ("c source" in output.lower() or

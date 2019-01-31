@@ -1,5 +1,5 @@
 """Discovery plugin."""
-
+import os
 from yapsy.IPlugin import IPlugin
 
 
@@ -23,3 +23,8 @@ class DiscoveryPlugin(IPlugin):
     def set_plugin_context(self, plugin_context):
         """Set the plugin context."""
         self.plugin_context = plugin_context
+
+    @staticmethod
+    def file_command_exists():
+        """Return whether the 'file' command is available on $PATH"""
+        return os.path.isfile('file') and os.access(fpath, os.X_OK)
