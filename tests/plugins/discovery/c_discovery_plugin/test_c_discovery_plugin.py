@@ -35,8 +35,9 @@ def test_c_discovery_plugin_scan_valid():
                                                     'valid_package'))
     cdp.scan(package, 'level')
     expected = ['test.c', 'test.cpp', 'test.cc', 'test.cxx', 'test.h',
-                'test.hxx', 'test.hpp', 'oddextensioncpp.source',
-                'oddextensionc.source']
+                'test.hxx', 'test.hpp']
+    if cdp.file_command_exists():
+        expected += ['oddextensioncpp.source', 'oddextensionc.source']
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename)
                          for filename in expected]
@@ -44,7 +45,7 @@ def test_c_discovery_plugin_scan_valid():
     assert set(package['c_src']) == set(expected_fullpath)
 
 
-def test_c_discovery_plugin_scan_invalid_nocmake():
+def test_c_discovery_plugin_scan_invalid():
     """Test that the C discovery plugin doesn't find non-C files."""
     cdp = CDiscoveryPlugin()
     package = Package('invalid_package',
