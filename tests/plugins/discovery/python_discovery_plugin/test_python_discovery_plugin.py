@@ -35,7 +35,9 @@ def test_python_discovery_plugin_scan_valid():
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     pydp.scan(package, 'level')
-    expected = ['test.py', 'oddextensionpy.source']
+    expected = ['test.py']
+    if pydp.file_command_exists():
+        expected += ['oddextensionpy.source']
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename)
                          for filename in expected]
