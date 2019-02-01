@@ -1,9 +1,17 @@
-"""Apply CCCC tool and gather results."""
+r"""
+Apply CCCC tool and gather results.
+
+To run the CCCC tool locally (without Statick) one way to do so is:
+
+    find . -name \*.h -print -o -name \*.cpp -print | xargs cccc
+
+That will generate several reports, including HTML. The results can be viewd
+in a web browser.
+"""
 
 from __future__ import print_function
 import subprocess
 import csv
-from os.path import expanduser
 import xmltodict
 
 from statick_tool.tool_plugin import ToolPlugin
@@ -24,7 +32,7 @@ class CCCCToolPlugin(ToolPlugin):
         if "c_src" not in package.keys():
             return []
 
-        config_file = expanduser("~") + "/.cccc_config"
+        config_file = self.plugin_context.resources.get_file("cccc.opt")
         if config_file is not None:
             opts = "--opt_infile=" + config_file
 
@@ -54,192 +62,39 @@ class CCCCToolPlugin(ToolPlugin):
         issues = self.parse_output(package, config_file)
         return issues
 
-    def parse_output(self, package, config_file):  # pylint: disable=too-many-branches, too-many-statements
+    def parse_output(self, package, config_file):
         """Parse tool output and report issues."""
         with open('.cccc/cccc.xml') as f:
             doc = xmltodict.parse(f.read())
 
-        thresh = self.parse_config(config_file)
-        print("cbo warning: {}".format(thresh["CBO"]["warn"]))
+        config = self.parse_config(config_file)
 
-        issues = []
+        results = {}
+        for module in doc['CCCC_Project']['structural_summary']['module']:
+            results[module['name']] = {}
+            metrics = {}
+            for field in module:
+                if '@value' in  module[field]:
+                    metrics[field] = {"value": module[field]['@value']}
+            results[module['name']] = metrics
 
-        for module in doc['CCCC_Project']['procedural_summary']['module']:  # pylint: disable=too-many-nested-blocks
-            for key, value in module.items():
-                # if key == 'name':
-                #     name = value
-                if key == 'lines_of_code':
-                    for k, val in value.items():
-                        threshold = 500
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'McCabes_cyclomatic_complexity':
-                    for k, val in value.items():
-                        threshold = 200
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'lines_of_comment':
-                    for k, val in value.items():
-                        threshold = 10000
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'lines_of_code_per_line_of_comment':
-                    for k, val in value.items():
-                        threshold = 7
-                        if k == '@value' and val != '------' and \
-                                int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'McCabes_cyclomatic_complexity_per_line_of_comment':
-                    for k, val in value.items():
-                        threshold = 5
-                        if k == '@value' and val != '------' and \
-                                int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
+        for module in doc['CCCC_Project']['procedural_summary']['module']:
+            metrics = results[module['name']]
+            for field in module:
+                if '@value' in  module[field]:
+                    metrics[field] = {"value": module[field]['@value']}
+            results[module['name']] = metrics
 
-        for module in doc['CCCC_Project']['oo_design']['module']:  # pylint: disable=too-many-nested-blocks
-            for key, value in module.items():
-                # if key == 'name':
-                #     name = value
-                if key == 'coupling_between_objects':
-                    for k, val in value.items():
-                        threshold = 14
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'depth_of_inheritance_tree':
-                    for k, val in value.items():
-                        threshold = 5
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'number_of_children':
-                    for k, val in value.items():
-                        threshold = 20
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'weighted_methods_per_class_unity':
-                    for k, val in value.items():
-                        threshold = 30
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'weighted_methods_per_class_visibility':
-                    for k, val in value.items():
-                        threshold = 10
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
+        for module in doc['CCCC_Project']['oo_design']['module']:
+            metrics = results[module['name']]
+            for field in module:
+                if '@value' in  module[field]:
+                    metrics[field] = {"value": module[field]['@value']}
+            results[module['name']] = metrics
 
-        for module in doc['CCCC_Project']['structural_summary']['module']:  # pylint: disable=too-many-nested-blocks
-            for key, value in module.items():
-                # if key == 'name':
-                #     name = value
-                if key == 'fan_out_visible':
-                    for k, val in value.items():
-                        threshold = 6
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'fan_out_concrete':
-                    for k, val in value.items():
-                        threshold = 6
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'fan_out':
-                    for k, val in value.items():
-                        threshold = 12
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'fan_in_visible':
-                    for k, val in value.items():
-                        threshold = 6
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'fan_in_concrete':
-                    for k, val in value.items():
-                        threshold = 6
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'fan_in':
-                    for k, val in value.items():
-                        threshold = 12
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'IF4_visible':
-                    for k, val in value.items():
-                        threshold = 30
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'IF4_concrete':
-                    for k, val in value.items():
-                        threshold = 30
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
-                if key == 'IF4':
-                    for k, val in value.items():
-                        threshold = 100
-                        if k == '@value' and int(val) > threshold:
-                            issue = self.add_issue(key, package, int(val),
-                                                   threshold)
-                            if issue not in issues:
-                                issues.append(issue)
+        issues = self.find_issues(config, results, package)
 
         return issues
-
-    def add_issue(self, issue_type, package, num, thresh):
-        """Add issue to list of issues returned by tool."""
-        message = 'Amount ({}) exceeds threshold ({})'.format(num, thresh)
-        return Issue(package["c_src"][0], 0, self.get_name(), issue_type,
-                     "5", message, None)
 
     @classmethod
     def parse_config(cls, config_file):
@@ -247,48 +102,104 @@ class CCCCToolPlugin(ToolPlugin):
         Parse CCCC configuration file.
 
         Gets warning and error thresholds for all the metrics.
-        Default values are from version 3.pre57.
-        """
-        thresh = {}
-        thresh["CBO"] = {"warn": 12.0, "error": 30.0}
-        thresh["COM"] = {"warn": 999999.0, "error": 9999999.0}
-        thresh["COMper"] = {"warn": 999999.0, "error": 9999999.0}
-        thresh["DIT"] = {"warn": 3.0, "error": 6.0}
-        thresh["FI"] = {"warn": 12.0, "error": 20.0}
-        thresh["FIc"] = {"warn": 6.0, "error": 12.0}
-        thresh["FIv"] = {"warn": 6.0, "error": 12.0}
-        thresh["FO"] = {"warn": 12.0, "error": 20.0}
-        thresh["FOc"] = {"warn": 6.0, "error": 12.0}
-        thresh["FOv"] = {"warn": 6.0, "error": 12.0}
-        thresh["IF4"] = {"warn": 100.0, "error": 1000.0}
-        thresh["IF4c"] = {"warn": 30.0, "error": 100.0}
-        thresh["IF4v"] = {"warn": 30.0, "error": 100.0}
-        thresh["LOCf"] = {"warn": 30.0, "error": 100.0}
-        thresh["LOCm"] = {"warn": 500.0, "error": 2000.0}
-        thresh["LOCp"] = {"warn": 999999.0, "error": 9999999.0}
-        thresh["LOCper"] = {"warn": 500.0, "error": 2000.0}
-        thresh["L_C"] = {"warn": 7.0, "error": 30.0}
-        thresh["MVGf"] = {"warn": 10.0, "error": 30.0}
-        thresh["MVGm"] = {"warn": 200.0, "error": 1000.0}
-        thresh["MVGp"] = {"warn": 999999.0, "error": 9999999.0}
-        thresh["MVGper"] = {"warn": 200.0, "error": 1000.0}
-        thresh["M_C"] = {"warn": 5.0, "error": 10.0}
-        thresh["NOC"] = {"warn": 4.0, "error": 15.0}
-        thresh["WMC1"] = {"warn": 30.0, "error": 100.0}
-        thresh["WMCv"] = {"warn": 10.0, "error": 30.0}
+        An explanation to dump default values to a configuration file is at:
+        http://sarnold.github.io/cccc/CCCC_User_Guide.html#config
 
-        print("configuration file: {}".format(config_file))
+        `cccc --opt_outfile=cccc.opt`
+        """
+        config = {}
+
         if config_file is None:
-            return thresh
+            return config
 
         with open(config_file, "r") as csvfile:
-            csvreader = csv.DictReader(csvfile, delimiter="@")
-            for line in csvreader:
-                print("{}".format(line))
-                if line["CCCC_FileExt"] is "CCCC_MetTmnt":
-                    # print 'found line with {}'.format(thresh[line["ada.95"]])
-                    thresh[line[".ADA"]["warn"]] = thresh[line["ada.95"]]
-                    print 'thresh = ', thresh[line["ada.95"]]
+            reader = csv.DictReader(csvfile, delimiter="@")
+            for row in reader:
+                if row['CCCC_FileExt'] == 'CCCC_MetTmnt':
+                    config[row[".ADA"]] = {"warn": row['ada.95'],
+                                           "error": row[''],
+                                           "name": row[None][3],
+                                           "key": row[".ADA"]}
 
-        print("cbo warning: {}".format(thresh["CBO"]["warn"]))
-        return thresh
+        return config
+
+    def find_issues(self, config, results, package):
+        """Identify issues by comparing tool results with tool configuration."""
+        issues = []
+
+        for key, val in results.items():
+            for item in val.keys():
+                val_id = self.convert_name_to_id(item)
+                if val_id is not '' and val_id in config.keys():
+                    if val[item]["value"] == '------':
+                        continue
+                    result = float(val[item]["value"])
+                    thresh_error = float(config[val_id]["error"])
+                    thresh_warn = float(config[val_id]["warn"])
+                    msg = key + ' - ' + config[val_id]['name']
+                    if result > thresh_error:
+                        msg += ' - value: {}, theshold: {}'.format(result,
+                                                                   thresh_error)
+                        issues.append(Issue(package['c_src'][0], 0,
+                                            self.get_name(), 'error', 5,
+                                            msg, None))
+                    elif result > thresh_warn:
+                        msg += ' - value: {}, theshold: {}'.format(result,
+                                                                   thresh_warn)
+                        issues.append(Issue(package['c_src'][0], 0,
+                                            self.get_name(), 'warn', 3,
+                                            msg, None))
+
+        return issues
+
+    @classmethod
+    def convert_name_to_id(cls, name):  # pylint: disable=too-many-branches
+        """
+        Convert result name to configuration name.
+
+        The name given in CCCC results is different than the name given in CCCC
+        configuration. This will map the name in the configuration file to the
+        name given in the results.
+        """
+        name_id = ''
+
+        if name == 'IF4':
+            name_id = "IF4"
+        elif name == 'fan_out_concrete':
+            name_id = "FOc"
+        elif name == 'IF4_visible':
+            name_id = "IF4v"
+        elif name == 'coupling_between_objects':
+            name_id = "CBO"
+        elif name == 'fan_in_visible':
+            name_id = "FIv"
+        elif name == 'weighted_methods_per_class_unity':
+            name_id = "WMC1"
+        elif name == 'fan_out':
+            name_id = "FO"
+        elif name == 'weighted_methods_per_class_visibility':
+            name_id = "WMCv"
+        elif name == 'fan_out_visible':
+            name_id = "FOv"
+        elif name == 'IF4_concrete':
+            name_id = "IF4c"
+        elif name == 'depth_of_inheritance_tree':
+            name_id = "DIT"
+        elif name == 'number_of_children':
+            name_id = "NOC"
+        elif name == 'fan_in_concrete':
+            name_id = "FIc"
+        elif name == 'fan_in':
+            name_id = "FI"
+        elif name == 'lines_of_comment':
+            name_id = "COM"
+        elif name == 'lines_of_code_per_line_of_comment':
+            name_id = "L_C"
+        elif name == 'McCabes_cyclomatic_complexity':
+            name_id = "MVGper"
+        elif name == 'lines_of_code':
+            name_id = "LOCp"
+        elif name == 'McCabes_cyclomatic_complexity_per_line_of_comment':
+            name_id = "M_C"
+
+        return name_id
