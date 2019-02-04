@@ -2,7 +2,10 @@
 import argparse
 import os
 import stat
+import sys
 import tempfile
+
+import pytest
 
 from statick_tool.config import Config
 from statick_tool.plugin_context import PluginContext
@@ -104,7 +107,16 @@ def test_tool_plugin_is_valid_executable_valid():
 
 
 def test_tool_plugin_is_valid_executable_no_exe_flag():
-    """Test that is_valid_executable returns False for a non-executable file."""
+    """
+    Test that is_valid_executable returns False for a non-executable file.
+
+    NOTE: any platform which doesn't have executable bits should skip
+    this test, since the os.stat call will always say that the file is
+    executable
+    """
+
+    if sys.platform.startswith('win32'):
+        pytest.skip("windows doesn't have executable flags")
     # Create a file
     _, filename = tempfile.mkstemp()
     assert not ToolPlugin.is_valid_executable(filename)
