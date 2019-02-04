@@ -10,12 +10,14 @@ in a web browser.
 """
 
 from __future__ import print_function
-import subprocess
+
 import csv
+import subprocess
+
 import xmltodict
 
-from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class CCCCToolPlugin(ToolPlugin):
@@ -74,21 +76,21 @@ class CCCCToolPlugin(ToolPlugin):
             results[module['name']] = {}
             metrics = {}
             for field in module:
-                if '@value' in  module[field]:
+                if '@value' in  module[field]:  # noqa: E271
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
         for module in doc['CCCC_Project']['procedural_summary']['module']:
             metrics = results[module['name']]
             for field in module:
-                if '@value' in  module[field]:
+                if '@value' in  module[field]:  # noqa: E271
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
         for module in doc['CCCC_Project']['oo_design']['module']:
             metrics = results[module['name']]
             for field in module:
-                if '@value' in  module[field]:
+                if '@value' in  module[field]:  # noqa: E271
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
@@ -130,7 +132,7 @@ class CCCCToolPlugin(ToolPlugin):
         for key, val in results.items():
             for item in val.keys():
                 val_id = self.convert_name_to_id(item)
-                if val_id is not '' and val_id in config.keys():
+                if val_id != '' and val_id in config.keys():
                     if val[item]["value"] == '------':
                         continue
                     result = float(val[item]["value"])
