@@ -1,6 +1,7 @@
 """Tests for statick_tool.tool_plugin."""
 import argparse
 import os
+import shutil
 import stat
 import sys
 import tempfile
@@ -102,7 +103,6 @@ def test_tool_plugin_is_valid_executable_valid():
     tmp_file = tempfile.NamedTemporaryFile()
     st = os.stat(tmp_file.name)
     os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
     assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
@@ -125,3 +125,78 @@ def test_tool_plugin_is_valid_executable_no_exe_flag():
 def test_tool_plugin_is_valid_executable_nonexistent():
     """Test that is_valid_executable returns False for a nonexistent file."""
     assert not ToolPlugin.is_valid_executable('nonexistent')
+
+
+def test_tool_plugin_command_exists_valid_win32_fullpath_extension(monkeypatch):
+    """
+    Test that command_exists works correctly (win32 environment, full path given, .exe appended)
+
+    command_exists should find the file as created.
+    """
+    # Monkeypatch sys.platform to be win32
+    monkeypatch.setattr('sys.platform', lambda: 'win32')
+
+    # Make a temporary directory which will be part of the path
+    tmp_dir = tempfile.mkdtemp()
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.exe', dir=tmp_dir)
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    sys.path.insert(0, tmp_dir)
+
+    assert ToolPlugin.command_exists(tmp_file.name)
+
+    # Cleanup
+    shutil.rmtree(tmp_dir)
+
+
+def test_tool_plugin_command_exists_valid_win32_fullpath_different_extension(monkeypatch):
+    """
+    Test that command_exists works correctly (win32 environment, full path given, non-exe extension).
+
+    command_exists shouldn't try to add .exe and should find the file as provided.
+    """
+    # Monkeypatch sys.platform to be win32
+    monkeypatch.setattr('sys.platform', lambda: 'win32')
+
+    # Make a temporary directory which will be part of the path
+    tmp_dir = tempfile.mkdtemp()
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.bat', dir=tmp_dir)
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    sys.path.insert(0, tmp_dir)
+
+    assert ToolPlugin.command_exists(tmp_file.name)
+
+    # Cleanup
+    shutil.rmtree(tmp_dir)
+
+
+def test_tool_plugin_command_exists_valid_win32_fullpath_no_extension(monkeypatch):
+    """
+    Test that command_exists works correctly (win32 environment, full path given, no extension).
+
+    command_exists shouldn't try to add .exe (because it's a full path)
+    """
+    # Monkeypatch sys.platform to be win32
+    monkeypatch.setattr('sys.platform', lambda: 'win32')
+
+    # Make a temporary directory which will be part of the path
+    tmp_dir = tempfile.mkdtemp()
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(dir=tmp_dir)
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    sys.path.insert(0, tmp_dir)
+
+    assert ToolPlugin.command_exists(tmp_file.name)
+
+    # Cleanup
+    shutil.rmtree(tmp_dir)
