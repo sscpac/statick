@@ -2,7 +2,9 @@
 
 from __future__ import print_function
 
+import os
 import shlex
+import sys
 
 from yapsy.IPlugin import IPlugin
 
@@ -62,3 +64,32 @@ class ToolPlugin(IPlugin):
             lex.whitespace_split = True
             flags = list(lex)
         return flags
+
+    @staticmethod
+    def is_valid_executable(path):
+        """Return whether a provided command exists and is executable."""
+        return os.path.isfile(path) and os.access(path, os.X_OK)
+
+    @staticmethod
+    def command_exists(command):
+        """Return whether a particular command is available on $PATH"""
+
+        if sys.platform == 'win32':
+            # Tack .exe on if the command doesn't have an extension
+            _, extension = os.path.splitext(command)
+            if not extension:
+                command += '.exe'
+
+        fpath, fname = os.path.split(command)
+
+        if fpath:
+            # Contains a path, not just a command, so don't search PATH
+            return ToolPlugin.is_valid_executable(command)
+
+        else:
+            for path in os.environ["PATH"].split(os.pathsep):
+                exe_path = os.path.join(path, command)
+                if os.path.isfile(exe_path) and os.access(exe_path, os.X_OK):
+                    return True
+
+        return False

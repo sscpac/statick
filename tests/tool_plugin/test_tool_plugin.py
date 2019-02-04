@@ -1,6 +1,8 @@
 """Tests for statick_tool.tool_plugin."""
 import argparse
 import os
+import stat
+import tempfile
 
 from statick_tool.config import Config
 from statick_tool.plugin_context import PluginContext
@@ -88,3 +90,26 @@ def test_tool_plugin_get_user_flags_valid_flags():
     tp.set_plugin_context(plugin_context)
     flags = tp.get_user_flags('level', name='test')
     assert flags == ['look', 'a', 'flag']
+
+
+def test_tool_plugin_is_valid_executable_valid():
+    """Test that is_valid_executable returns True for executable files."""
+
+    # Create an executable file
+    _, filename = tempfile.mkstemp()
+    st = os.stat(filename)
+    os.chmod(filename, st.st_mode | stat.S_IXUSR)
+
+    assert ToolPlugin.is_valid_executable(filename)
+
+
+def test_tool_plugin_is_valid_executable_no_exe_flag():
+    """Test that is_valid_executable returns False for a non-executable file."""
+    # Create a file
+    _, filename = tempfile.mkstemp()
+    assert not ToolPlugin.is_valid_executable(filename)
+
+
+def test_tool_plugin_is_valid_executable_nonexistent():
+    """Test that is_valid_executable returns False for a nonexistent file."""
+    assert not ToolPlugin.is_valid_executable('nonexistent')
