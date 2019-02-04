@@ -99,11 +99,11 @@ def test_tool_plugin_is_valid_executable_valid():
     """Test that is_valid_executable returns True for executable files."""
 
     # Create an executable file
-    _, filename = tempfile.mkstemp()
-    st = os.stat(filename)
-    os.chmod(filename, st.st_mode | stat.S_IXUSR)
+    tmp_file = tempfile.NamedTemporaryFile()
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
 
-    assert ToolPlugin.is_valid_executable(filename)
+    assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_no_exe_flag():
@@ -118,8 +118,8 @@ def test_tool_plugin_is_valid_executable_no_exe_flag():
     if sys.platform.startswith('win32'):
         pytest.skip("windows doesn't have executable flags")
     # Create a file
-    _, filename = tempfile.mkstemp()
-    assert not ToolPlugin.is_valid_executable(filename)
+    tmp_file = tempfile.NamedTemporaryFile()
+    assert not ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_nonexistent():
