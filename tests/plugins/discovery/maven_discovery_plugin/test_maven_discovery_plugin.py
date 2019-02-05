@@ -50,7 +50,7 @@ def test_maven_discovery_plugin_scan_same_depth():
     package = Package('two_package', os.path.join(os.path.dirname(__file__),
                                                   'two_package'))
     mdp.scan(package, 'level')
-    expected_top = ['a/pom.xml', 'b/pom.xml']
+    expected_top = [os.path.join('a', 'pom.xml'), os.path.join('b', 'pom.xml')]
     expected_top_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_top]
     assert set(package['top_poms']) == set(expected_top_fullpath)
@@ -63,8 +63,8 @@ def test_maven_discovery_plugin_scan_multilevel():
     package = Package('multi_package', os.path.join(os.path.dirname(__file__),
                                                     'multi_package'))
     mdp.scan(package, 'level')
-    expected_top = ['a/pom.xml', 'b/pom.xml']
-    expected_all = expected_top + ['a/c/pom.xml']
+    expected_top = [os.path.join('a', 'pom.xml'), os.path.join('b', 'pom.xml')]
+    expected_all = expected_top + [os.path.join('a', 'c', 'pom.xml')]
     expected_top_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_top]
     expected_all_fullpath = [os.path.join(package.path, filename)
