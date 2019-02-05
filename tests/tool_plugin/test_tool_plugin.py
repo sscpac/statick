@@ -237,7 +237,7 @@ def test_tool_plugin_command_exists_fullpath(monkeypatch):
     assert ToolPlugin.command_exists(tmp_file.name)
 
     # Cleanup
-    shutil.rmtree(tmp_dir)
+    shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
@@ -261,7 +261,7 @@ def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
     assert ToolPlugin.command_exists(tmp_file_name)
 
     # Cleanup
-    shutil.rmtree(tmp_dir)
+    shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
@@ -283,4 +283,4 @@ def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
     assert not ToolPlugin.command_exists(tmp_file_name)
 
     # Cleanup
-    shutil.rmtree(tmp_dir)
+    shutil.rmtree(tmp_dir, ignore_errors=True)
