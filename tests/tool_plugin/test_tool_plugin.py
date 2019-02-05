@@ -127,64 +127,104 @@ def test_tool_plugin_is_valid_executable_nonexistent():
     assert not ToolPlugin.is_valid_executable('nonexistent')
 
 
-def test_tool_plugin_command_exists_valid_win32_fullpath_extension(monkeypatch):
+def test_tool_plugin_is_valid_executable_extension_nopathext(monkeypatch):
     """
-    Test that command_exists works correctly (win32 environment, full path given, .exe appended)
+    Test that is_valid_executable works correctly with .exe appended, no PATHEXT
 
-    command_exists should find the file as created.
+    is_valid_executable should find the file as created.
     """
-    # Monkeypatch sys.platform to be win32
-    monkeypatch.setattr('sys.platform', lambda: 'win32')
 
-    # Make a temporary directory which will be part of the path
-    tmp_dir = tempfile.mkdtemp()
+    # Monkeypatch the environment to clear PATHEXT
+    monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(suffix='.exe', dir=tmp_dir)
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.exe')
     st = os.stat(tmp_file.name)
     os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
 
-    sys.path.insert(0, tmp_dir)
-
-    assert ToolPlugin.command_exists(tmp_file.name)
-
-    # Cleanup
-    shutil.rmtree(tmp_dir)
+    assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
-def test_tool_plugin_command_exists_valid_win32_fullpath_different_extension(monkeypatch):
+def test_tool_plugin_is_valid_executable_noextension_nopathext(monkeypatch):
     """
-    Test that command_exists works correctly (win32 environment, full path given, non-exe extension).
+    Test that is_valid_executable works correctly with no extension and no PATHEXT
 
-    command_exists shouldn't try to add .exe and should find the file as provided.
+    is_valid_executable should find the file as created.
     """
-    # Monkeypatch sys.platform to be win32
-    monkeypatch.setattr('sys.platform', lambda: 'win32')
 
-    # Make a temporary directory which will be part of the path
-    tmp_dir = tempfile.mkdtemp()
+    # Monkeypatch the environment to clear PATHEXT
+    monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(suffix='.bat', dir=tmp_dir)
+    tmp_file = tempfile.NamedTemporaryFile()
     st = os.stat(tmp_file.name)
     os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
 
-    sys.path.insert(0, tmp_dir)
-
-    assert ToolPlugin.command_exists(tmp_file.name)
-
-    # Cleanup
-    shutil.rmtree(tmp_dir)
+    assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
-def test_tool_plugin_command_exists_valid_win32_fullpath_no_extension(monkeypatch):
+def test_tool_plugin_is_valid_executable_extension_pathext(monkeypatch):
     """
-    Test that command_exists works correctly (win32 environment, full path given, no extension).
+    Test that is_valid_executable works correctly with an extension and a set PATHEXT
 
-    command_exists shouldn't try to add .exe (because it's a full path)
+    is_valid_executable should find the file as created.
     """
-    # Monkeypatch sys.platform to be win32
-    monkeypatch.setattr('sys.platform', lambda: 'win32')
+
+    # Monkeypatch the environment to set
+    monkeypatch.setenv('PATHEXT', '.exe;.bat')
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.exe')
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    assert ToolPlugin.is_valid_executable(tmp_file.name)
+
+
+def test_tool_plugin_is_valid_executable_noextension_pathext(monkeypatch):
+    """
+    Test that is_valid_executable works correctly with no extension and a set PATHEXT
+
+    is_valid_executable should find the file as created.
+    """
+
+    # Monkeypatch the environment to set
+    monkeypatch.setenv('PATHEXT', '.exe;.bat')
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile()
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    assert ToolPlugin.is_valid_executable(tmp_file.name)
+
+
+def test_tool_plugin_is_valid_executable_wrongextension_pathext(monkeypatch):
+    """
+    Test that is_valid_executable works correctly with a set PATHEXT and a non-PATHEXT extension.
+
+    is_valid_executable should NOT find the file.
+    """
+
+    # Monkeypatch the environment to set
+    monkeypatch.setenv('PATHEXT', '.exe;.bat')
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.potato')
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    # Get the created file minus the suffix
+    no_ext_path, _ = os.path.splitext(tmp_file.name)
+
+    assert not ToolPlugin.is_valid_executable(no_ext_path)
+
+
+def test_tool_plugin_command_exists_fullpath(monkeypatch):
+    """Test that command_exists works correctly (full path given). """
+
+    # Monkeypatch the environment to clear PATHEXT
+    monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary directory which will be part of the path
     tmp_dir = tempfile.mkdtemp()
@@ -194,9 +234,53 @@ def test_tool_plugin_command_exists_valid_win32_fullpath_no_extension(monkeypatc
     st = os.stat(tmp_file.name)
     os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
 
-    sys.path.insert(0, tmp_dir)
-
     assert ToolPlugin.command_exists(tmp_file.name)
+
+    # Cleanup
+    shutil.rmtree(tmp_dir)
+
+
+def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
+    """Test that command_exists works correctly (only filename given, command is on PATH). """
+
+    # Monkeypatch the environment to clear PATHEXT
+    monkeypatch.delenv('PATHEXT', raising=False)
+
+    # Make a temporary directory which will be part of the path
+    tmp_dir = tempfile.mkdtemp()
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(dir=tmp_dir)
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    monkeypatch.setenv('PATH', tmp_dir)
+
+    _, tmp_file_name = os.path.split(tmp_file.name)
+
+    assert ToolPlugin.command_exists(tmp_file_name)
+
+    # Cleanup
+    shutil.rmtree(tmp_dir)
+
+
+def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
+    """Test that command_exists works correctly (only filename given, command is not on PATH). """
+
+    # Monkeypatch the environment to clear PATHEXT
+    monkeypatch.delenv('PATHEXT', raising=False)
+
+    # Make a temporary directory which will be part of the path
+    tmp_dir = tempfile.mkdtemp()
+
+    # Make a temporary executable
+    tmp_file = tempfile.NamedTemporaryFile(dir=tmp_dir)
+    st = os.stat(tmp_file.name)
+    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+
+    _, tmp_file_name = os.path.split(tmp_file.name)
+
+    assert not ToolPlugin.command_exists(tmp_file_name)
 
     # Cleanup
     shutil.rmtree(tmp_dir)
