@@ -1,0 +1,3 @@
+[Core]
+Name = Maven Discovery Plugin
+Module = maven_discovery_plugin
