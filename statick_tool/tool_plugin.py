@@ -91,9 +91,8 @@ class ToolPlugin(IPlugin):
 
     @staticmethod
     def command_exists(command):
-        """Return whether a particular command is available on $PATH"""
-
-        fpath, fname = os.path.split(command)
+        """Return whether a particular command is available on $PATH."""
+        fpath, _ = os.path.split(command)
 
         if fpath:
             # Contains a path, not just a command, so don't search PATH
