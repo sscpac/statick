@@ -58,7 +58,7 @@ def test_maven_discovery_plugin_scan_same_depth():
 
 
 def test_maven_discovery_plugin_scan_multilevel():
-    """Test that the Maven discovery plugin finds pom.xml files at multiple tepths."""
+    """Test that the Maven discovery plugin finds pom.xml files at multiple depths."""
     mdp = MavenDiscoveryPlugin()
     package = Package('multi_package', os.path.join(os.path.dirname(__file__),
                                                     'multi_package'))
