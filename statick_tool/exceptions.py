@@ -62,6 +62,35 @@ class Exceptions(object):
 
         return exceptions
 
+    def filter_file_exceptions_early(self, package):
+        """
+        Filter files based on file pattern exceptions list.
+
+        Only filters files which have tools=all, intended for use after the
+        discovery plugins have been run (so that Statick doesn't run the tool
+        plugins against files which will be ignored anyway).
+        """
+        exceptions = self.get_exceptions(package)
+        for _, pkg_val in package:
+            if pkg_val is not list:
+                continue
+            for filename in pkg_val:
+                removed = False
+                if not os.path.isabs(filename):
+                    continue
+                rel_path = os.path.relpath(filename, package.path)
+                for exception in exceptions:
+                    if exception["tools"] == 'all':
+                        for pattern in exception["globs"]:
+                            if fnmatch.fnmatch(rel_path, pattern):
+                                pkg_val.remove(filename)
+                                removed = True
+                                break
+                        if removed:
+                            break
+
+        return package
+
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in list(issues.items()):
