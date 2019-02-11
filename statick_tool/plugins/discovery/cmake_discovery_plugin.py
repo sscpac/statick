@@ -17,7 +17,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "cmake"
 
-    def scan(self, package, level):
+    def scan(self, package, level, exceptions):
         """Scan package looking for CMake files."""
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
 

@@ -16,7 +16,7 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "java"
 
-    def scan(self, package, level):
+    def scan(self, package, level, exceptions):
         """Scan package looking for java files."""
         java_src_files = []
         java_class_files = []
@@ -34,7 +34,16 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         java_class_files = list(OrderedDict.fromkeys(java_class_files))
 
         print("  {} java source files found.".format(len(java_src_files)))
+        original_src_file_count = len(java_src_files)
+        java_src_files = exceptions.filter_file_exceptions_early(package, java_src_files)
+        if original_src_file_count > len(java_src_files):
+            print("  After filtering, {} java source files will be scanned.".format(len(java_src_files)))
+
         print("  {} java class files found.".format(len(java_class_files)))
+        original_class_file_count = len(java_class_files)
+        java_class_files = exceptions.filter_file_exceptions_early(package, java_class_files)
+        if original_class_file_count > len(java_class_files):
+            print("  After filtering, {} java class files will be scanned.".format(len(java_class_files)))
 
         package["java_src"] = java_src_files
         package["java_bin"] = java_class_files

@@ -156,9 +156,8 @@ class Statick(object):
             plugin = self.discovery_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
             print("Running {} discovery plugin...".format(plugin.get_name()))
-            plugin.scan(package, level)
+            plugin.scan(package, level, self.exceptions)
             print("{} discovery plugin done.".format(plugin.get_name()))
-        package = self.exceptions.filter_file_exceptions_early(package)
         print("---Discovery---")
 
         print("---Tools---")

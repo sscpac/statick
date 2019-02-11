@@ -18,7 +18,7 @@ class DiscoveryPlugin(IPlugin):
         """Gather arguments for plugin."""
         pass
 
-    def scan(self, package, level):
+    def scan(self, package, level, exceptions):
         """Scan package to discover files for analysis."""
         pass
 

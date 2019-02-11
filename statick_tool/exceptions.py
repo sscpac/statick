@@ -62,7 +62,7 @@ class Exceptions(object):
 
         return exceptions
 
-    def filter_file_exceptions_early(self, package):
+    def filter_file_exceptions_early(self, package, file_list):
         """
         Filter files based on file pattern exceptions list.
 
@@ -71,25 +71,25 @@ class Exceptions(object):
         plugins against files which will be ignored anyway).
         """
         exceptions = self.get_exceptions(package)
-        for _, pkg_val in package:
-            if pkg_val is not list:
+        to_remove = []
+        for filename in file_list:
+            removed = False
+            if not os.path.isabs(filename):
                 continue
-            for filename in pkg_val:
-                removed = False
-                if not os.path.isabs(filename):
-                    continue
-                rel_path = os.path.relpath(filename, package.path)
-                for exception in exceptions:
-                    if exception["tools"] == 'all':
-                        for pattern in exception["globs"]:
-                            if fnmatch.fnmatch(rel_path, pattern):
-                                pkg_val.remove(filename)
-                                removed = True
-                                break
-                        if removed:
+            rel_path = os.path.relpath(filename, package.path)
+            for exception in exceptions["file"]:
+                if exception["tools"] == 'all':
+                    for pattern in exception["globs"]:
+                        if fnmatch.fnmatch(rel_path, pattern) or fnmatch.fnmatch(filename, pattern):
+                            to_remove.append(filename)
+                            removed = True
                             break
+                    if removed:
+                        break
+        file_list = [filename for filename in file_list if filename not in
+                     to_remove]
+        return file_list
 
-        return package
 
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
