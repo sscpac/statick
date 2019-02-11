@@ -16,7 +16,7 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "xml"
 
-    def scan(self, package, level, exceptions):
+    def scan(self, package, level, exceptions=None):
         """Scan package looking for XML files."""
         xml_files = []
         globs = ["*.xml", "*.launch"]
@@ -32,9 +32,10 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
         xml_files = list(OrderedDict.fromkeys(xml_files))
 
         print("  {} XML files found.".format(len(xml_files)))
-        original_file_count = len(xml_files)
-        xml_files = exceptions.filter_file_exceptions_early(package, xml_files)
-        if original_file_count > len(xml_files):
-            print("  After filtering, {} XML files will be scanned.".format(len(xml_files)))
+        if exceptions:
+            original_file_count = len(xml_files)
+            xml_files = exceptions.filter_file_exceptions_early(package, xml_files)
+            if original_file_count > len(xml_files):
+                print("  After filtering, {} XML files will be scanned.".format(len(xml_files)))
 
         package["xml"] = xml_files

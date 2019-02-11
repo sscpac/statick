@@ -16,7 +16,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "C"
 
-    def scan(self, package, level, exceptions):
+    def scan(self, package, level, exceptions=None):
         """Scan package looking for C files."""
         c_files = []
         c_extensions = ('.c', '.cc', '.cpp', '.cxx', '.h', '.hxx', '.hpp')
@@ -40,9 +40,10 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         c_files = list(OrderedDict.fromkeys(c_files))
 
         print("  {} C/C++ files found.".format(len(c_files)))
-        original_file_count = len(c_files)
-        c_files = exceptions.filter_file_exceptions_early(package, c_files)
-        if original_file_count > len(c_files):
-            print("  After filtering, {} C/C++ files will be scanned.".format(len(c_files)))
+        if exceptions:
+            original_file_count = len(c_files)
+            c_files = exceptions.filter_file_exceptions_early(package, c_files)
+            if original_file_count > len(c_files):
+                print("  After filtering, {} C/C++ files will be scanned.".format(len(c_files)))
 
         package["c_src"] = c_files

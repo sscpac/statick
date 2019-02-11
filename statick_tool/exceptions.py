@@ -90,7 +90,6 @@ class Exceptions(object):
                      to_remove]
         return file_list
 
-
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in list(issues.items()):
