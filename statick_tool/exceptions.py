@@ -74,13 +74,10 @@ class Exceptions(object):
         to_remove = []
         for filename in file_list:
             removed = False
-            if not os.path.isabs(filename):
-                continue
-            rel_path = os.path.relpath(filename, package.path)
             for exception in exceptions["file"]:
                 if exception["tools"] == 'all':
                     for pattern in exception["globs"]:
-                        if fnmatch.fnmatch(rel_path, pattern) or fnmatch.fnmatch(filename, pattern):
+                        if fnmatch.fnmatch(filename, pattern):
                             to_remove.append(filename)
                             removed = True
                             break
