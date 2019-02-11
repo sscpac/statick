@@ -17,7 +17,7 @@ setup(
     description='Tool for running static analysis tools against packages of code.',
     version=statick_tool.__version__,
     packages=['statick_tool'],
-    package_data={'statick_tool': ['rsc/*', 'rsc/.clang-format',
+    package_data={'statick_tool': ['rsc/*', 'rsc/.clang-format', 'rsc/plugin_mapping/*',
                                    'plugins/*.py', 'plugins/discovery/*',
                                    'plugins/tool/*']},
     scripts=['statick', 'statick_ws', 'statick_gauntlet'],
