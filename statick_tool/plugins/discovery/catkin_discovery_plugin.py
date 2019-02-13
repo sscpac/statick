@@ -14,7 +14,7 @@ class CatkinDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "catkin"
 
-    def scan(self, package, level):
+    def scan(self, package, level, exceptions=None):
         """Scan package looking for catkin files."""
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
         package_file = os.path.join(package.path, "package.xml")
