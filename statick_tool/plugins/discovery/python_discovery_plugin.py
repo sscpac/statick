@@ -47,6 +47,7 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(python_files)
             python_files = exceptions.filter_file_exceptions_early(package, python_files)
             if original_file_count > len(python_files):
-                print("  After filtering, {} python files will be scanned.".format(len(python_files)))
+                print("  After filtering, {} python files will be scanned.".
+                      format(len(python_files)))
 
         package["python_src"] = python_files
