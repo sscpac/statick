@@ -1,6 +1,4 @@
-"""
-Write issue reports to the console.
-"""
+"""Write issue reports to the console."""
 from __future__ import print_function
 
 from collections import OrderedDict
@@ -9,9 +7,7 @@ from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class PrintToConsoleReportingPlugin(ReportingPlugin):
-    """
-    Prints the Statick reports out to the terminal.
-    """
+    """Prints the Statick reports out to the terminal."""
 
     def get_name(self):
         """Return the name of the plugin."""
@@ -22,9 +18,12 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
         Go through the issues list and print them to the console.
 
         Args:
-            TODO
+            package (:obj:`Package`): The Package object that was analyzed.
+            issues (:obj:`dict` of :obj:`str` to :obj:`Issue`): The issues
+                found by the Statick analysis, keyed by the tool that found
+                them.
+            level: (:obj:`str`): Name of the level used in the scan
         """
-
         total = 0
         for key, value in issues.iteritems():
             unique_issues = list(OrderedDict.fromkeys(value))
