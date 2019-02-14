@@ -91,14 +91,6 @@ statick_tool.profile module
     :undoc-members:
     :show-inheritance:
 
-statick_tool.report module
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: statick_tool.report
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 statick_tool.resources module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
