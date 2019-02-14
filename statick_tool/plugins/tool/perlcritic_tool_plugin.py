@@ -1,13 +1,12 @@
 """Apply Perl::Critic tool and gather results."""
 
 from __future__ import print_function
-import csv
+
 import os
 import subprocess
-import shlex
 
-from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.issue import Issue
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class PerlCriticToolPlugin(ToolPlugin):
@@ -34,11 +33,7 @@ class PerlCriticToolPlugin(ToolPlugin):
             perlcritic_bin = self.plugin_context.args.perlcritic_bin
 
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                level, "flags")
-        lex = shlex.shlex(user_flags, posix=True)
-        lex.whitespace_split = True
-        flags = flags + list(lex)
+        flags += self.get_user_flags(level)
 
         files = []
         if "perl_src" in package:
@@ -54,11 +49,11 @@ class PerlCriticToolPlugin(ToolPlugin):
                 print("perlcritic failed! Returncode = {}".
                       format(str(ex.returncode)))
                 print("{}".format(ex.output))
-                return None
+                return []
 
         except OSError as ex:
-            print("Couldn't find %s! (%s)" % (perl_bin, ex))
-            return None
+            print("Couldn't find %s! (%s)" % (perlcritic_bin, ex))
+            return []
 
         if self.plugin_context.args.show_tool_output:
             print("{}".format(output))
@@ -83,7 +78,6 @@ class PerlCriticToolPlugin(ToolPlugin):
                     if split_line[2].replace('::', '__') in warnings_mapping.keys():
                         cert_reference = warnings_mapping[split_line[2].replace('::', '__')]
 
-                    print(split_line)
                     issues.append(Issue(split_line[0], split_line[1].replace(os.linesep, ' '),
                                         self.get_name(), split_line[2],
                                         split_line[3], split_line[2], cert_reference))
