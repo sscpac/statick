@@ -1,17 +1,16 @@
-"""
-Write issue reports to a file.
-"""
+"""Write issue reports to a file."""
 from __future__ import print_function
 
 import os
+
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class WriteFileReportingPlugin(ReportingPlugin):
-    """ Writes Statick results to a file. """
+    """Writes Statick results to a file."""
 
     def get_name(self):
-        """ Return the plugin name. """
+        """Return the plugin name."""
         return "write_file"
 
     def report(self, package, issues, level):
@@ -25,7 +24,6 @@ class WriteFileReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan
         """
-
         # We _should_ be in output_dir already, but let's be safe about it
         output_dir = os.path.join(self.plugin_context.args.output_directory,
                                   package.name + "-" + level)

@@ -1,1 +1,1 @@
-"""Default reporting plugins for Statick"""
+"""Default reporting plugins for Statick."""

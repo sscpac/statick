@@ -15,7 +15,6 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
-from statick_tool.report import generate_report
 from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
@@ -242,7 +241,7 @@ class Statick(object):
         if len(reporting_plugins) == 0:
             reporting_plugins = self.reporting_plugins.keys()
         for plugin_name in reporting_plugins:
-            if not plugin_name in self.reporting_plugins.keys():
+            if plugin_name not in self.reporting_plugins.keys():
                 print("Can't find specified reporting plugin {}!".format(plugin_name))
                 return None
 
