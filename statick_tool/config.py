@@ -73,3 +73,7 @@ class Config(object):
     def get_discovery_config(self, plugin, level, key, default=None):
         """Get discovery flags to use for a plugin at a certain level."""
         return self.get_plugin_config("discovery", plugin, level, key, default)
+
+    def get_reporting_config(self, plugin, level, key, default=None):
+        """Get reporting flags to use for a plugin at a certain level."""
+        return self.get_plugin_config("reporting", plugin, level, key, default)
