@@ -101,6 +101,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
 
     # Make a dummy plugincontext as well
     plugin_context = PluginContext(args, None, None)
+    plugin_context.args.output_directory = parsed_args.output_directory
 
     if len(enabled_reporting_plugins) == 0:
         enabled_reporting_plugins = list(available_reporting_plugins)

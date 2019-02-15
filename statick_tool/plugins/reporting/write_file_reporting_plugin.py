@@ -22,11 +22,18 @@ class WriteFileReportingPlugin(ReportingPlugin):
             issues (:obj:`dict` of :obj:`str` to :obj:`Issue`): The issues
                 found by the Statick analysis, keyed by the tool that found
                 them.
-            level: (:obj:`str`): Name of the level used in the scan
+            level: (:obj:`str`): Name of the level used in the scan.
         """
         # We _should_ be in output_dir already, but let's be safe about it
         output_dir = os.path.join(self.plugin_context.args.output_directory,
                                   package.name + "-" + level)
+
+        if not os.path.isdir(output_dir):
+            os.mkdir(output_dir)
+        if not os.path.isdir(output_dir):
+            print("Unable to create output directory at {}!".format(
+                output_dir))
+            return None, False
 
         output_file = os.path.join(output_dir,
                                    package.name + "-" + level + ".statick")
