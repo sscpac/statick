@@ -45,9 +45,7 @@ class Config(object):
         return self.get_enabled_plugins(level, "discovery")
 
     def get_enabled_reporting_plugins(self, level):
-        """
-        Get what reporting plugins are enabled for a certain level.
-        """
+        """Get what reporting plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "reporting")
 
     def get_plugin_config(self, plugin_type, plugin, level, key, default=None):  # pylint: disable=too-many-arguments
