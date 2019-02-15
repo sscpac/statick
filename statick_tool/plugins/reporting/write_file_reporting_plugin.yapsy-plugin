@@ -1,0 +1,3 @@
+[Core]
+Name = Write File Reporting Plugin
+Module = write_file_reporting_plugin

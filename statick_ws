@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-Executable script for running statick against a workspace.
-"""
+"""Executable script for running statick against a workspace."""
 
 from __future__ import print_function
 
@@ -9,14 +7,13 @@ import os
 import sys
 
 from statick_tool.args import Args
-from statick_tool.report import generate_report
+from statick_tool.package import Package
+from statick_tool.plugin_context import PluginContext
 from statick_tool.statick import Statick
 
 
 def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-    """
-    Run statick_ws.
-    """
+    """Run statick_ws."""
     args = Args("Statick workspace tool")
     args.parser.add_argument("path", help="Path of workspace to scan")
     args.parser.add_argument("--packages-file", dest="packages_file", type=str,
@@ -69,16 +66,16 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
             continue
 
         count += 1
-        print("-- Scanning package " + package[0] + " (" + str(count) + \
-            " of " + str(len(packages)) + ") --")
+        print("-- Scanning package " + package[0] + " (" + str(count) +
+              " of " + str(len(packages)) + ") --")
         issues, dummy = statick.run(package[1], parsed_args)
         if issues is not None:
             total_issues.append(issues)
         else:
             print("Failed to run statick on package " + package[0] + "!")
             sys.exit(1)
-        print("-- Done scanning package " + package[0] + " (" + str(count) +  \
-            " of " + str(len(packages)) + ") --")
+        print("-- Done scanning package " + package[0] + " (" + str(count) +
+              " of " + str(len(packages)) + ") --")
 
     if parsed_args.list_packages:
         sys.exit(0)
@@ -93,8 +90,30 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
             else:
                 issues[key] = value
 
-    output_file = os.path.join(out_dir, "all" + ".compliance_all")
-    generate_report(issues, output_file)
+    # Make a fake 'all' package for reporting
+    dummy_all_package = Package('all_packages', parsed_args.path)
+    level = statick.get_level(dummy_all_package.path, parsed_args)
+    enabled_reporting_plugins = statick.config.get_enabled_reporting_plugins(level)
+    available_reporting_plugins = {}
+    for plugin_info in statick.manager.getPluginsOfCategory("Reporting"):
+        available_reporting_plugins[plugin_info.plugin_object.get_name()] = \
+            plugin_info.plugin_object
+
+    # Make a dummy plugincontext as well
+    plugin_context = PluginContext(args, None, None)
+    plugin_context.args.output_directory = parsed_args.output_directory
+
+    if len(enabled_reporting_plugins) == 0:
+        enabled_reporting_plugins = list(available_reporting_plugins)
+
+    for plugin_name in enabled_reporting_plugins:
+        if plugin_name not in available_reporting_plugins:
+            print("Can't find specified reporting plugin {}!".format(plugin_name))
+        plugin = statick.reporting_plugins[plugin_name]
+        plugin.set_plugin_context(plugin_context)
+        print("Running {} reporting plugin...".format(plugin.get_name()))
+        plugin.report(dummy_all_package, issues, level)
+        print("{} reporting plugin done.".format(plugin.get_name()))
 
 
 if __name__ == "__main__":

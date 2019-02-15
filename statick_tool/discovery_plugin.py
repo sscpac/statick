@@ -18,8 +18,13 @@ class DiscoveryPlugin(IPlugin):
         """Gather arguments for plugin."""
         pass
 
-    def scan(self, package, level):
-        """Scan package to discover files for analysis."""
+    def scan(self, package, level, exceptions=None):
+        """
+        Scan package to discover files for analysis.
+
+        If exceptions is passed, then the plugin should (if practical)
+        use it to filter which files the plugin detects.
+        """
         pass
 
     def set_plugin_context(self, plugin_context):
@@ -28,7 +33,7 @@ class DiscoveryPlugin(IPlugin):
 
     @staticmethod
     def file_command_exists():
-        """Return whether the 'file' command is available on $PATH"""
+        """Return whether the 'file' command is available on $PATH."""
         if sys.platform == 'win32':
             command_name = 'file.exe'
         else:

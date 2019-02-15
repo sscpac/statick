@@ -72,7 +72,6 @@ class ToolPlugin(IPlugin):
         If the provided path has an extension on it, don't change it, otherwise
         try adding common extensions.
         """
-
         # On Windows, PATHEXT contains a list of extensions which can be
         # appended to a program name when searching PATH.
         extensions = os.environ.get('PATHEXT', None)

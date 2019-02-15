@@ -17,7 +17,7 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "python"
 
-    def scan(self, package, level):
+    def scan(self, package, level, exceptions=None):
         """Scan package looking for python files."""
         python_files = []
 
@@ -43,5 +43,11 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         python_files = list(OrderedDict.fromkeys(python_files))
 
         print("  {} python files found.".format(len(python_files)))
+        if exceptions:
+            original_file_count = len(python_files)
+            python_files = exceptions.filter_file_exceptions_early(package, python_files)
+            if original_file_count > len(python_files):
+                print("  After filtering, {} python files will be scanned.".
+                      format(len(python_files)))
 
         package["python_src"] = python_files

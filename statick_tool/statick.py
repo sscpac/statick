@@ -15,7 +15,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
-from statick_tool.report import generate_report
+from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
@@ -33,7 +33,8 @@ class Statick(object):
         self.manager.setPluginPlaces(self.resources.get_plugin_paths())
         self.manager.setCategoriesFilter({
             "Discovery": DiscoveryPlugin,
-            "Tool": ToolPlugin
+            "Tool": ToolPlugin,
+            "Reporting": ReportingPlugin
         })
         self.manager.collectPlugins()
 
@@ -46,6 +47,11 @@ class Statick(object):
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
             self.tool_plugins[plugin_info.plugin_object.get_name()] = \
                 plugin_info.plugin_object
+
+        self.reporting_plugins = {}
+        for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
+            self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
+                    plugin_info.plugin_object
 
         self.config = Config(self.resources.get_file("config.yaml"))
 
@@ -71,6 +77,9 @@ class Statick(object):
             plugin.gather_args(args)
 
         for _, plugin in list(self.tool_plugins.items()):
+            plugin.gather_args(args)
+
+        for _, plugin in self.reporting_plugins.iteritems():
             plugin.gather_args(args)
 
     def get_level(self, path, args):
@@ -108,7 +117,6 @@ class Statick(object):
             return None, False
 
         orig_path = os.getcwd()
-
         if not os.path.isdir(args.output_directory):
             print("Output directory not found at {}!".
                   format(args.output_directory))
@@ -156,7 +164,7 @@ class Statick(object):
             plugin = self.discovery_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
             print("Running {} discovery plugin...".format(plugin.get_name()))
-            plugin.scan(package, level)
+            plugin.scan(package, level, self.exceptions)
             print("{} discovery plugin done.".format(plugin.get_name()))
         print("---Discovery---")
 
@@ -228,9 +236,21 @@ class Statick(object):
 
         os.chdir(orig_path)
 
-        output_file = os.path.join(args.output_directory,
-                                   package.name + "-" + level + ".statick")
-        generate_report(issues, output_file)
+        print("---Reporting---")
+        reporting_plugins = self.config.get_enabled_reporting_plugins(level)
+        if len(reporting_plugins) == 0:
+            reporting_plugins = self.reporting_plugins.keys()
+        for plugin_name in reporting_plugins:
+            if plugin_name not in self.reporting_plugins.keys():
+                print("Can't find specified reporting plugin {}!".format(plugin_name))
+                return None
+
+            plugin = self.reporting_plugins[plugin_name]
+            plugin.set_plugin_context(plugin_context)
+            print("Running {} reporting plugin...".format(plugin.get_name()))
+            plugin.report(package, issues, level)
+            print("{} reporting plugin done.".format(plugin.get_name()))
+        print("---Reporting---")
         print("Done!")
 
         return issues, success

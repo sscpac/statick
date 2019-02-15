@@ -1,0 +1,7 @@
+global:
+  exceptions:
+    file:
+      - tools: all
+        globs: ['*unlikelystring*']
+      - tools: something
+        globs: ['*uncommontext*']

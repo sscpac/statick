@@ -1,0 +1,3 @@
+[Core]
+Name = Print To Console Reporting Plugin
+Module = print_to_console_reporting_plugin
