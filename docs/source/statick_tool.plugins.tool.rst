@@ -108,7 +108,7 @@ statick_tool.plugins.tool.perlcritic_tool_plugin module
     :undoc-members:
     :show-inheritance:
 
- statick_tool.plugins.tool.pydocstyle_tool_plugin module
+statick_tool.plugins.tool.pydocstyle_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.pydocstyle_tool_plugin
