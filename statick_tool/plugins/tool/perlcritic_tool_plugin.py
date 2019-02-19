@@ -2,7 +2,6 @@
 
 from __future__ import print_function
 
-import os
 import subprocess
 
 from statick_tool.issue import Issue
@@ -61,28 +60,25 @@ class PerlCriticToolPlugin(ToolPlugin):
         with open(self.get_name() + ".log", "w") as f:
             f.write(output)
 
-        issues = self.parse_output()
+        issues = self.parse_output(output.split('\n'))
+
         return issues
 
-    def parse_output(self):
+    def parse_output(self, output):
         """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        try:
-            with open(self.get_name() + '.log', 'r') as logfile:
-                for line in logfile:
-                    split_line = line.replace(os.linesep, '').split(':::')
+        for line in output:
+            split_line = line.strip().split(':::')
+            if len(split_line) < 5:  # Should split into five segments, anything less is invalid
+                continue
+            cert_reference = None
+            if split_line[2].replace('::', '__') in warnings_mapping.keys():
+                cert_reference = warnings_mapping[split_line[2].replace('::', '__')]
 
-                    cert_reference = None
-                    if split_line[2].replace('::', '__') in warnings_mapping.keys():
-                        cert_reference = warnings_mapping[split_line[2].replace('::', '__')]
-
-                    issues.append(Issue(split_line[0], split_line[1].replace(os.linesep, ' '),
-                                        self.get_name(), split_line[2],
-                                        split_line[3], split_line[2], cert_reference))
-        except IOError:
-            # We couldn't find the results file for some reason
-            pass
+            issues.append(Issue(split_line[0], split_line[1],
+                                self.get_name(), split_line[2],
+                                split_line[4], split_line[3], cert_reference))
 
         return issues
