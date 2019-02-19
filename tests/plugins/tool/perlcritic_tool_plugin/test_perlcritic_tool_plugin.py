@@ -2,6 +2,7 @@
 import argparse
 import os
 
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -52,11 +53,12 @@ def test_perlcritic_tool_plugin_found():
 def test_perlcritic_tool_plugin_scan_valid():
     """Integration test: Make sure the perlcritic output hasn't changed."""
     pctp = setup_perlcritic_tool_plugin()
+    if not pctp.command_exists('perlcritic'):
+        pytest.skip("perlcritic command not available, can't test its output")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['perl_src'] = [os.path.join(os.path.dirname(__file__),
                                         'valid_package', 'test.pl')]
-    print(package)
     issues = pctp.scan(package, 'level')
     assert len(issues) == 1
     assert issues[0].line_number == '2'
