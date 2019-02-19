@@ -40,7 +40,8 @@ class PerlCriticToolPlugin(ToolPlugin):
 
         try:
             output = subprocess.check_output([perlcritic_bin] + flags + files,
-                                             stderr=subprocess.STDOUT).join(' ')
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True).join(' ')
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
@@ -57,7 +58,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         if self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "wt") as f:
             f.write(output)
 
         issues = self.parse_output(output.split('\n'))
