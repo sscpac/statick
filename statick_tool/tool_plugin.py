@@ -36,8 +36,16 @@ class ToolPlugin(IPlugin):
 
     def load_mapping(self):
         """Load a mapping between warnings and identifiers."""
-        file_name = "plugin_mapping/%s.txt" % (self.get_name())
+        file_name = "plugin_mapping/{}.txt".format(self.get_name())
         full_path = self.plugin_context.resources.get_file(file_name)
+        if self.plugin_context.args.mapping_file_suffix is not None:
+            # If the user specified a suffix, try to get the suffixed version of the file
+            suffixed_file_name = "plugin_mapping/{}-{}.txt".format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
+            suffixed_full_path = self.plugin_context.resources.get_file(suffixed_file_name)
+            if suffixed_full_path is not None:
+                # If there actually is a file with that suffix, use it (else use the un-suffixed version)
+                full_path = suffixed_full_path
+
         if full_path is None:
             return {}
         warning_mapping = {}
