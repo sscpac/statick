@@ -14,6 +14,8 @@ levels:
         flags: "-j 4 --enable=warning --config-exclude=/usr --template='[{file}:{line}]: ({severity} {id}) {message}'"
       bandit:
         flags: ""
+      perlcritic:
+        flags: "--brutal --theme='bugs || certrule || certrec'"
 
   threshold:
     tool:
