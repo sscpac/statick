@@ -15,6 +15,7 @@ import csv
 import subprocess
 
 import xmltodict
+from six import string_types
 
 from statick_tool.issue import Issue
 from statick_tool.tool_plugin import ToolPlugin
@@ -29,7 +30,7 @@ class CCCCToolPlugin(ToolPlugin):
 
     def scan(self, package, level):
         """Run tool and gather output."""
-        output = None
+        log_output = None
 
         if "c_src" not in package.keys():
             return []
@@ -41,11 +42,11 @@ class CCCCToolPlugin(ToolPlugin):
         for src in package["c_src"]:
             try:
                 subproc_args = ["cccc"] + [opts] + [src]
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT)
+                log_output = subprocess.check_output(subproc_args,
+                                                     stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:
-                    output = ex.output
+                    log_output = ex.output
                 else:
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
@@ -56,23 +57,28 @@ class CCCCToolPlugin(ToolPlugin):
                 return None
 
             if self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+                print("{}".format(log_output))
 
-        with open(self.get_name() + ".log", "w") as f:
-            f.write(output)
+        with open(self.get_name() + ".log", "wb") as f:
+            f.write(log_output)
 
-        issues = self.parse_output(package, config_file)
+        with open('.cccc/cccc.xml') as f:
+            tool_output = xmltodict.parse(f.read())
+
+        issues = self.parse_output(tool_output, package, config_file)
         return issues
 
-    def parse_output(self, package, config_file):
+    def parse_output(self, output, package, config_file):  # pylint: disable=too-many-branches
         """Parse tool output and report issues."""
-        with open('.cccc/cccc.xml') as f:
-            doc = xmltodict.parse(f.read())
+        if 'CCCC_Project' not in output:
+            return None
 
         config = self.parse_config(config_file)
 
         results = {}
-        for module in doc['CCCC_Project']['structural_summary']['module']:
+        for module in output['CCCC_Project']['structural_summary']['module']:
+            if 'name' not in module or isinstance(module, string_types):
+                break
             results[module['name']] = {}
             metrics = {}
             for field in module:
@@ -80,14 +86,18 @@ class CCCCToolPlugin(ToolPlugin):
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
-        for module in doc['CCCC_Project']['procedural_summary']['module']:
+        for module in output['CCCC_Project']['procedural_summary']['module']:
+            if 'name' not in module or isinstance(module, string_types):
+                break
             metrics = results[module['name']]
             for field in module:
                 if '@value' in  module[field]:  # noqa: E271
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
-        for module in doc['CCCC_Project']['oo_design']['module']:
+        for module in output['CCCC_Project']['oo_design']['module']:
+            if 'name' not in module or isinstance(module, string_types):
+                break
             metrics = results[module['name']]
             for field in module:
                 if '@value' in  module[field]:  # noqa: E271
