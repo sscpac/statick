@@ -1,0 +1,3 @@
+[Core]
+Name = Perl::Critic Tool Plugin
+Module = perlcritic_tool_plugin

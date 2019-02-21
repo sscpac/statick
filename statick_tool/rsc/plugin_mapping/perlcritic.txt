@@ -1,0 +1,7 @@
+BuiltinFunctions__ProhibitUniversalCan:DCL30-PL
+BuiltinFunctions__ProhibitUniversalIsa:DCL30-PL
+InputOutput__ProhibitTwoArgOpen:IDS31-PL
+InputOutput__RequireCheckedClose:EXP32-PL
+InputOutput__RequireCheckedOpen:EXP32-PL
+InputOutput__RequireCheckedSyscalls:EXP32-PL
+Modules__ProhibitEvilModules:DCL30-PL
