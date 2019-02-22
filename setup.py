@@ -19,7 +19,7 @@ setup(
     packages=['statick_tool'],
     package_data={'statick_tool': ['rsc/*', 'rsc/.clang-format', 'rsc/plugin_mapping/*',
                                    'plugins/*.py', 'plugins/discovery/*',
-                                   'plugins/tool/*']},
+                                   'plugins/tool/*', 'plugins/reporting/*']},
     scripts=['statick', 'statick_ws', 'statick_gauntlet'],
     long_description=long_description,
     long_description_content_type='text/markdown',
