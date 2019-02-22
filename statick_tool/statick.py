@@ -72,6 +72,8 @@ class Statick(object):
                           type=str, help="Force only the given list of tools to run")
         args.add_argument('--version', action='version',
                           version='%(prog)s {version}'.format(version=__version__))
+        args.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
+                          type=str, help="Suffix to use when searching for CERT mapping files")
 
         for _, plugin in list(self.discovery_plugins.items()):
             plugin.gather_args(args)

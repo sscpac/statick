@@ -77,6 +77,9 @@ class Exceptions(object):
             for exception in exceptions["file"]:
                 if exception["tools"] == 'all':
                     for pattern in exception["globs"]:
+                        # Hack to avoid exceptions for everything on Travis CI.
+                        if pattern == '*/build/*':
+                            filename.lstrip('/home/travis/build/')
                         if fnmatch.fnmatch(filename, pattern):
                             to_remove.append(filename)
                             removed = True
@@ -89,7 +92,7 @@ class Exceptions(object):
 
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
-        for tool, tool_issues in list(issues.items()):
+        for tool, tool_issues in list(issues.items()):  # pylint: disable=too-many-nested-blocks
             warning_printed = False
             to_remove = []
             for issue in tool_issues:
@@ -102,7 +105,11 @@ class Exceptions(object):
                 for exception in exceptions:
                     if exception["tools"] == 'all' or tool in exception["tools"]:
                         for pattern in exception["globs"]:
-                            if fnmatch.fnmatch(issue.filename, pattern) or \
+                            # Hack to avoid exceptions for everything on Travis CI.
+                            filename = issue.filename
+                            if pattern == '*/build/*':
+                                filename.lstrip('/home/travis/build/')
+                            if fnmatch.fnmatch(filename, pattern) or \
                                fnmatch.fnmatch(rel_path, pattern):
                                 to_remove.append(issue)
             issues[tool] = [issue for issue in tool_issues if issue not in
