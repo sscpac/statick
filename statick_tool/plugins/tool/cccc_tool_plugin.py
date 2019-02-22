@@ -28,6 +28,11 @@ class CCCCToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cccc"
 
+    def gather_args(self, args):
+        """Gather arguments."""
+        args.add_argument("--cccc-bin", dest="cccc_bin", type=str,
+                          help="CCCC binary path")
+
     def scan(self, package, level):
         """Run tool and gather output."""
         log_output = None
@@ -35,13 +40,17 @@ class CCCCToolPlugin(ToolPlugin):
         if "c_src" not in package.keys():
             return []
 
+        cccc_bin = "cccc"
+        if self.plugin_context.args.cccc_bin is not None:
+            cccc_bin = self.plugin_context.args.cccc_bin
+
         config_file = self.plugin_context.resources.get_file("cccc.opt")
         if config_file is not None:
             opts = "--opt_infile=" + config_file
 
         for src in package["c_src"]:
             try:
-                subproc_args = ["cccc"] + [opts] + [src]
+                subproc_args = [cccc_bin] + [opts] + [src]
                 log_output = subprocess.check_output(subproc_args,
                                                      stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as ex:
