@@ -23,6 +23,7 @@ def setup_cccc_tool_plugin():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
                             action="store_true", help="Show tool output")
+    arg_parser.add_argument("--cccc-bin", dest="cccc_bin")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
@@ -63,7 +64,7 @@ def test_cccc_tool_plugin_scan_valid():
                                      'valid_package', 'example.cpp')]
     issues = ctp.scan(package, 'level')
     print('issues: {}'.format(issues))
-    assert len(issues) == 0
+    assert not issues
 
 
 def test_cccc_tool_plugin_parse_valid():
