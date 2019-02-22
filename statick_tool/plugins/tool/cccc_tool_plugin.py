@@ -31,7 +31,7 @@ class CCCCToolPlugin(ToolPlugin):
     def gather_args(self, args):
         """Gather arguments."""
         args.add_argument("--cccc-bin", dest="cccc_bin", type=str,
-                          help="CCCC binary path")
+                          help="cccc binary path")
 
     def scan(self, package, level):
         """Run tool and gather output."""
