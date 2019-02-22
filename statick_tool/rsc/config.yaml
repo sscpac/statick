@@ -109,7 +109,7 @@ levels:
       pyflakes:
         flags: ""
       pylint:
-        flags: ""
+        flags: "--good-names=f,i,j,k,ex,_"
       uncrustify:
         flags: ""
       xmllint:

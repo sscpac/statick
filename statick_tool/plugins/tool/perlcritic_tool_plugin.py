@@ -24,7 +24,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         if "perl_src" not in package:
             return []
-        elif len(package["perl_src"]) == 0:
+        if not package["perl_src"]:
             return []
 
         perlcritic_bin = "perlcritic"
@@ -72,7 +72,8 @@ class PerlCriticToolPlugin(ToolPlugin):
         warnings_mapping = self.load_mapping()
         for line in output:
             split_line = line.strip().split(':::')
-            if len(split_line) < 5:  # Should split into five segments, anything less is invalid
+            # Should split into five segments, anything less is invalid.
+            if len(split_line) < 5:
                 continue
             cert_reference = None
             if split_line[2].replace('::', '__') in warnings_mapping.keys():

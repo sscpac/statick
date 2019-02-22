@@ -72,17 +72,16 @@ class CpplintToolPlugin(ToolPlugin):
                 match.group(4) == "build/namespaces":
             # allow using namespace inside source files
             return True
-        elif match.group(4) == "build/namespaces" and \
+        if match.group(4) == "build/namespaces" and \
                 "unnamed" in match.group(3):
             # ignore anonymous namespace warning
             return True
-        elif "cfg/cpp" in match.group(1) and \
+        if "cfg/cpp" in match.group(1) and \
                 match.group(1).endswith("Config.h") and \
                 match.group(4) == "build/storage_class":
             # ignoring issue in auto-generated ROS code
             return True
-        else:
-            return False
+        return False
 
     def parse_output(self, output):
         """Parse tool output and report issues."""

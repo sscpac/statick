@@ -85,7 +85,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
                 targets_file = os.path.abspath(parsed_args.targets_file)
                 with open(targets_file, "r") as fname:
                     raw_targets = [target.strip() for target in fname.readlines()
-                                   if len(target.strip()) > 0 and target[0] != "#"]
+                                   if target.strip() and target[0] != "#"]
             except IOError:
                 print("Targets file not found")
                 sys.exit(1)
@@ -93,7 +93,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
         try:
             with open(fail_file, "r") as fname:
                 raw_targets = [target.strip() for target in fname.readlines()
-                               if len(target.strip()) > 0 and target[0] != "#"]
+                               if target.strip() and target[0] != "#"]
         except IOError:
             print("Failed file from previous run not found. "
                   "Did you actually run the gauntlet once before?")
@@ -158,13 +158,13 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
             print(" end " + target)
             print("", i, "of", len(targets))
             print("------------")
-            if len(failed) > 0:
+            if failed:
                 print("*** FAILED *** ")
                 for fail in failed:
                     print("  " + fail)
                 print("*** FAILED *** ")
         print("END GAUNTLET")
-        if len(failed) > 0:
+        if failed:
             print("Build failures found")
             sys.exit(1)
         else:

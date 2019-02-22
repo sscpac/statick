@@ -12,11 +12,9 @@ class DiscoveryPlugin(IPlugin):
 
     def get_name(self):
         """Get name of plugin."""
-        pass
 
     def gather_args(self, args):
         """Gather arguments for plugin."""
-        pass
 
     def scan(self, package, level, exceptions=None):
         """
@@ -25,7 +23,6 @@ class DiscoveryPlugin(IPlugin):
         If exceptions is passed, then the plugin should (if practical)
         use it to filter which files the plugin detects.
         """
-        pass
 
     def set_plugin_context(self, plugin_context):
         """Set the plugin context."""

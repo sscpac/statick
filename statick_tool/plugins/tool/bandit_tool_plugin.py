@@ -25,7 +25,7 @@ class BanditToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         if "python_src" not in package:
             return []
-        elif len(package["python_src"]) == 0:
+        if not package["python_src"]:
             return []
 
         bandit_bin = "bandit"

@@ -35,9 +35,11 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
                     full_path = os.path.join(root, f)
                     output = subprocess.check_output(["file", full_path],
                                                      universal_newlines=True)
+                    # pylint: disable=unsupported-membership-test
                     if ("python script" in output or
                             "Python script" in output) and not \
                             f.endswith(".cfg"):
+                        # pylint: enable=unsupported-membership-test
                         python_files.append(os.path.abspath(full_path))
 
         python_files = list(OrderedDict.fromkeys(python_files))

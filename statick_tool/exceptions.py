@@ -77,7 +77,12 @@ class Exceptions(object):
             for exception in exceptions["file"]:
                 if exception["tools"] == 'all':
                     for pattern in exception["globs"]:
-                        if fnmatch.fnmatch(filename, pattern):
+                        # Hack to avoid exceptions for everything on Travis CI.
+                        fname = filename
+                        prefix = '/home/travis/build/'
+                        if pattern == '*/build/*' and fname.startswith(prefix):
+                            fname = fname[len(prefix):]
+                        if fnmatch.fnmatch(fname, pattern):
                             to_remove.append(filename)
                             removed = True
                             break
@@ -89,7 +94,7 @@ class Exceptions(object):
 
     def filter_file_exceptions(self, package, exceptions, issues):
         """Filter issues based on file pattern exceptions list."""
-        for tool, tool_issues in list(issues.items()):
+        for tool, tool_issues in list(issues.items()):  # pylint: disable=too-many-nested-blocks
             warning_printed = False
             to_remove = []
             for issue in tool_issues:
@@ -102,7 +107,12 @@ class Exceptions(object):
                 for exception in exceptions:
                     if exception["tools"] == 'all' or tool in exception["tools"]:
                         for pattern in exception["globs"]:
-                            if fnmatch.fnmatch(issue.filename, pattern) or \
+                            # Hack to avoid exceptions for everything on Travis CI.
+                            fname = issue.filename
+                            prefix = '/home/travis/build/'
+                            if pattern == '*/build/*' and fname.startswith(prefix):
+                                fname = fname[len(prefix):]
+                            if fnmatch.fnmatch(fname, pattern) or \
                                fnmatch.fnmatch(rel_path, pattern):
                                 to_remove.append(issue)
             issues[tool] = [issue for issue in tool_issues if issue not in
@@ -155,12 +165,12 @@ class Exceptions(object):
         """Filter issues based on exceptions list."""
         exceptions = self.get_exceptions(package)
 
-        if len(exceptions["file"]) > 0:
+        if exceptions["file"]:
             issues = self.filter_file_exceptions(package,
                                                  exceptions["file"],
                                                  issues)
 
-        if len(exceptions["message_regex"]) > 0:
+        if exceptions["message_regex"]:
             issues = self.filter_regex_exceptions(exceptions["message_regex"],
                                                   issues)
 
