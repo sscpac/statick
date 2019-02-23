@@ -28,6 +28,14 @@ statick_tool.plugins.tool.catkin_lint_tool_plugin module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.cccc_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.cccc_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.clang_format_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
