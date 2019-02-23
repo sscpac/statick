@@ -7,5 +7,6 @@ pydocstyle
 pyflakes
 pylint
 pylint-django<2.0
+xmltodict
 yamllint
 yapsy
