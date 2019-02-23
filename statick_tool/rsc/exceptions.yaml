@@ -6,7 +6,7 @@ global:
         globs: ["/opt/ros/*", "/usr/*"]
       # ROS auto-generated headers
       - tools: all
-        globs: ["*/devel/include/*"]
+        globs: ["*/devel/include/*", "*/devel/*/include"]
       # SBPL headers
       - tools: all
         globs: ["*/include/sbpl/*"]
