@@ -38,7 +38,15 @@ class ClangFormatToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
+        user_version = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                  level,
+                                                                  "version")
+
         clang_format_bin = "clang-format"
+        if user_version is not None:
+            clang_format_bin = "{}-{}".format(clang_format_bin, user_version)
+
+        # If the user explicitly specifies a binary, let that override the user_version
         if self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
