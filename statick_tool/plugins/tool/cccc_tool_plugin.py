@@ -152,7 +152,8 @@ class CCCCToolPlugin(ToolPlugin):
             for item in val.keys():
                 val_id = self.convert_name_to_id(item)
                 if val_id != '' and val_id in config.keys():
-                    if val[item]["value"] == '------':
+                    if val[item]["value"] == '------' or \
+                            val[item]["value"] == '******':
                         continue
                     result = float(val[item]["value"])
                     thresh_error = float(config[val_id]["error"])
