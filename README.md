@@ -4,6 +4,8 @@
 | ------- | ------ |
 | Build   | [![Travis-CI](https://api.travis-ci.org/sscpac/statick.svg?branch=master)](https://travis-ci.org/sscpac/statick/branches) |
 | PyPI    | [![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick) |
+| Codecov | [![Codecov](https://codecov.io/gh/sscpac/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/sscpac/statick/) |
+
 
 Statick is a set of tools to analyze software packages.
 
