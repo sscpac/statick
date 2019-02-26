@@ -66,7 +66,7 @@ class PydocstyleToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output):  # pylint: disable=too-many-locals
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+)"
         parse_first = re.compile(tool_re)

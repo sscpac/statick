@@ -84,7 +84,7 @@ class CppcheckToolPlugin(ToolPlugin):
                 include_args.append("-I")
                 include_args.append(include_dir)
 
-        if len(files) == 0:
+        if not files:
             return []
 
         try:

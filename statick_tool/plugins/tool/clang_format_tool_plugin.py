@@ -92,8 +92,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             print("{}".format(ex.output))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
-            else:
-                return []
+            return []
 
         except OSError as ex:
             print("Couldn't find %s! (%s)" % (clang_format_bin, ex))

@@ -6,6 +6,7 @@ import copy
 import logging
 import os
 
+from six import iteritems
 from yapsy.PluginManager import PluginManager
 
 from statick_tool import __version__
@@ -81,7 +82,7 @@ class Statick(object):
         for _, plugin in list(self.tool_plugins.items()):
             plugin.gather_args(args)
 
-        for _, plugin in self.reporting_plugins.iteritems():
+        for _, plugin in iteritems(self.reporting_plugins):
             plugin.gather_args(args)
 
     def get_level(self, path, args):
@@ -109,7 +110,7 @@ class Statick(object):
         path = os.path.abspath(path)
         if not os.path.exists(path):
             print("No package found at {}!".format(path))
-            return None
+            return None, False
 
         package = Package(os.path.basename(path), path)
         level = self.get_level(path, args)
@@ -156,7 +157,7 @@ class Statick(object):
             print("file command isn't available, discovery plugins will be less effective")
 
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
-        if len(discovery_plugins) == 0:
+        if not discovery_plugins:
             discovery_plugins = list(self.discovery_plugins.keys())
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
@@ -175,7 +176,7 @@ class Statick(object):
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
         plugin_dependencies = []
-        while len(plugins_to_run) > 0:
+        while plugins_to_run:
             plugin_name = plugins_to_run[0]
 
             if plugin_name not in self.tool_plugins:
@@ -240,12 +241,12 @@ class Statick(object):
 
         print("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
-        if len(reporting_plugins) == 0:
+        if not reporting_plugins:
             reporting_plugins = self.reporting_plugins.keys()
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins.keys():
                 print("Can't find specified reporting plugin {}!".format(plugin_name))
-                return None
+                return None, False
 
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)

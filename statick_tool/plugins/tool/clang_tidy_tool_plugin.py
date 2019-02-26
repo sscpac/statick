@@ -49,7 +49,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             output = subprocess.check_output([clang_tidy_bin] + flags + files,
                                              stderr=subprocess.STDOUT,
                                              universal_newlines=True)
-            if "clang-diagnostic-error" in output:
+            if "clang-diagnostic-error" in output:  # pylint: disable=unsupported-membership-test
                 raise subprocess.CalledProcessError(-1,
                                                     clang_tidy_bin,
                                                     output)

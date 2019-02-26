@@ -24,7 +24,7 @@ class WriteFileReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan.
         """
-        # We _should_ be in output_dir already, but let's be safe about it
+        # We _should_ be in output_dir already, but let's be safe about it.
         output_dir = os.path.join(self.plugin_context.args.output_directory,
                                   package.name + "-" + level)
 
@@ -57,3 +57,5 @@ class WriteFileReportingPlugin(ReportingPlugin):
                                                               issue.message,
                                                               issue.severity)
                     out.write(line)
+
+        return None, True

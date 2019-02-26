@@ -8,5 +8,4 @@ libomp-dev
 libperl-critic-perl
 libxml2
 libxml2-utils
-pylint
 uncrustify

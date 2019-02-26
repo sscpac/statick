@@ -1,11 +1,12 @@
+PyYAML
 bandit
 cmakelint
 lizard
 pycodestyle
 pydocstyle
 pyflakes
+pylint
 pylint-django<2.0
-PyYAML
 xmltodict
 yamllint
 yapsy

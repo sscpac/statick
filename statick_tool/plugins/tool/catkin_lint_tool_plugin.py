@@ -60,7 +60,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         if message == "variable CMAKE_CXX_FLAGS is modified":
             if line == 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")':
                 return True
-            elif line == 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")':
+            if line == 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")':
                 return True
         # There are a few cases where this is ok.
         elif message == "variable CMAKE_C_FLAGS is modified":
@@ -74,10 +74,9 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Get level for given issue type."""
         if issue_type == "error":
             return "5"
-        elif issue_type == "warning":
+        if issue_type == "warning":
             return "3"
-        else:
-            return "1"
+        return "1"
 
     def parse_output(self, package, output):
         """Parse tool output and report issues."""

@@ -56,7 +56,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 
         except OSError:
             print("Couldn't find cmake executable!")
-            return None
+            return
 
         with open("cmake.log", "w") as fname:
             fname.write(output)
@@ -65,9 +65,8 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 
         print("  {} make targets found.".format(len(package["make_targets"])))
 
-# pylint: disable=too-many-locals
     @classmethod
-    def process_output(cls, output, package):
+    def process_output(cls, output, package):  # pylint: disable=too-many-locals
         """Parse the tool output."""
 # pylint: disable=anomalous-backslash-in-string
         cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
@@ -118,4 +117,3 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             if match:
                 package["src_dir"] = match.group(2)
                 package["bin_dir"] = match.group(3)
-# pylint: enable=too-many-locals
