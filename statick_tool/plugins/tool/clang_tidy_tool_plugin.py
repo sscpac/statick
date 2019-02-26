@@ -32,6 +32,15 @@ class ClangTidyToolPlugin(ToolPlugin):
             return []
 
         clang_tidy_bin = "clang-tidy"
+
+        user_version = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                  level,
+                                                                  "version")
+
+        if user_version is not None:
+            clang_tidy_bin = "{}-{}".format(clang_tidy_bin, user_version)
+
+        # If the user explicitly specifies a binary, let that override the user_version
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
