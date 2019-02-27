@@ -37,7 +37,7 @@ global:
         globs: ["*/tests/*"]
       # VCS directories
       - tools: all
-        globs: ["*/.svn/*", "*/.git/*"]
+        globs: ["*/.svn/*", "*/.git/*", "*/.hg/*"]
     message_regex:
       # This is triggered by std::isnan for some reason
       - tools: [clang-tidy]
