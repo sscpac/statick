@@ -3,6 +3,8 @@ from __future__ import print_function
 
 from collections import OrderedDict
 
+from six import iteritems
+
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
@@ -25,7 +27,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
             level: (:obj:`str`): Name of the level used in the scan
         """
         total = 0
-        for key, value in issues.iteritems():
+        for key, value in iteritems(issues):
             unique_issues = list(OrderedDict.fromkeys(value))
             print("Tool {}: {} unique issues".format(key, len(unique_issues)))
             for issue in unique_issues:
