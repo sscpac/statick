@@ -60,12 +60,17 @@ class FlawfinderToolPlugin(ToolPlugin):
         parse = re.compile(flawfinder_re)
         issues = []
 
+        warnings_mapping = self.load_mapping()
+
         for output in total_output:
             for line in output.split("\n"):
                 match = parse.match(line)
                 if match:
+                    cert_reference = None
+                    if match.group(4) in warnings_mapping:
+                        cert_reference = warnings_mapping[match.group(4)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(4),
-                                        match.group(3), match.group(5), None))
+                                        match.group(3), match.group(5), cert_reference))
 
         return issues
