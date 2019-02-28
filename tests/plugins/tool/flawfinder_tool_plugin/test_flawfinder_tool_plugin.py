@@ -60,7 +60,6 @@ def test_flawfinder_tool_plugin_scan_valid():
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['c_src'] = [os.path.join(package.path, 'strlen.c')]
-    print(package['c_src'])
     issues = fftp.scan(package, 'level')
     assert len(issues) == 1
 
