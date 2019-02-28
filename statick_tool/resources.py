@@ -24,6 +24,8 @@ class Resources(object):
         for path in paths:
             if os.path.exists(path) and os.path.isdir(path):
                 self.paths.append(os.path.abspath(path))
+            elif os.path.exists(path) and not os.path.isdir(path):
+                print("{} is not a directory".format(path))
             else:
                 print("Could not find path {}".format(path))
 
