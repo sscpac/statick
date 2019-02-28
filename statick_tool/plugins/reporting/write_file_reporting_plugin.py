@@ -30,7 +30,7 @@ class WriteFileReportingPlugin(ReportingPlugin):
         output_dir = os.path.join(self.plugin_context.args.output_directory,
                                   package.name + "-" + level)
 
-        if not os.path.isdir(output_dir):
+        if not os.path.exists(output_dir):
             os.mkdir(output_dir)
         if not os.path.isdir(output_dir):
             print("Unable to create output directory at {}!".format(
