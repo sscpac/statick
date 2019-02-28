@@ -25,9 +25,9 @@ class PycodestyleToolPlugin(ToolPlugin):
         # https://github.com/PyCQA/pycodestyle/issues/466
         # We want to support the old tool name in configuration files for a
         # while.
-        if user_flags is None:
+        if not user_flags:
             user_flags = self.get_user_flags(level, "pep8")
-            if user_flags is not None:
+            if user_flags:
                 print("DEPRECATION WARNING: The tool name changed from pep8 to "
                       "pycodestyle. Please update your configuration file to "
                       "use the new tool name.")
