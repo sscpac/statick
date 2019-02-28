@@ -98,7 +98,7 @@ class Statick(object):
             print("Could not find profile file {}!".format(profile_filename))
             return None
         except ValueError as ex:
-            print("Profile file {} has errors: {}".format(profile_filename, ex.message))
+            print("Profile file {} has errors: {}".format(profile_filename, ex))
             return None
 
         package = Package(os.path.basename(path), path)
