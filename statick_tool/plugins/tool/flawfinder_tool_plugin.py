@@ -56,7 +56,7 @@ class FlawfinderToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output):
         """Parse tool output and report issues."""
-        flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s+(.+)"
+        flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s*(.+)"
         parse = re.compile(flawfinder_re)
         issues = []
 

@@ -67,7 +67,7 @@ def test_flawfinder_tool_plugin_scan_valid():
 def test_flawfinder_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of flawfinder."""
     fftp = setup_flawfinder_tool_plugin()
-    output = "strlen.c:2:  [1] (buffer) strlen: Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126)."
+    output = "strlen.c:2:  [1] (buffer) strlen:Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126)."
     issues = fftp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == 'strlen.c'
