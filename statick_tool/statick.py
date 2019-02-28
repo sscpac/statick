@@ -94,8 +94,11 @@ class Statick(object):
             profile_filename = args.profile
         try:
             profile = Profile(self.resources.get_file(profile_filename))
-        except TypeError:
+        except IOError:
             print("Could not find profile file {}!".format(profile_filename))
+            return None
+        except ValueError as ex:
+            print("Profile file {} has errors: {}".format(profile_filename, ex.message))
             return None
 
         package = Package(os.path.basename(path), path)
