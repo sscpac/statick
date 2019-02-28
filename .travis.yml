@@ -48,7 +48,6 @@ jobs:
         - travis-sphinx deploy
     - stage: deploy
       python: '2.7'
-      script: skip
       provider: pypi
       user: tdenewiler
       password:
