@@ -11,6 +11,14 @@ import statick_tool
 with open('README.md') as f:
     long_description = f.read()  # pylint: disable=invalid-name
 
+test_deps = [
+    'pytest',
+    'mock',
+]
+extras = {
+    'test': test_deps,
+}
+
 setup(
     author='SSC Pacific',
     name='statick',
@@ -26,6 +34,8 @@ setup(
     install_requires=['bandit', 'cmakelint', 'flawfinder', 'lizard',
                       'pycodestyle', 'pydocstyle', 'pyflakes', 'pylint',
                       'PyYAML', 'xmltodict', 'yamllint', 'yapsy'],
+    tests_require=test_deps,
+    extras_require=extras,
     url='https://github.com/sscpac/statick',
     classifiers=[
         "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
