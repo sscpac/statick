@@ -61,6 +61,33 @@ def test_bandit_tool_plugin_scan_valid():
     assert len(issues) == 1
 
 
+def test_bandit_tool_plugin_scan_no_src():
+    """
+    Test what happens when we don't have python_src in package.
+
+    Expected result: issues is an empty list
+    """
+    btp = setup_bandit_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    issues = btp.scan(package, 'level')
+    assert len(issues) == 0
+
+
+def test_bandit_tool_plugin_scan_empty_src():
+    """
+    Test what happens when python_src is an empty list.
+
+    Expected result: issues is an empty list
+    """
+    btp = setup_bandit_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['python_src'] = []
+    issues = btp.scan(package, 'level')
+    assert len(issues) == 0
+
+
 def test_bandit_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of bandit."""
     btp = setup_bandit_tool_plugin()
