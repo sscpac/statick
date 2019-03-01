@@ -1,7 +1,9 @@
 """Unit tests for the bandit tool module."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -86,6 +88,40 @@ def test_bandit_tool_plugin_scan_empty_src():
     package['python_src'] = []
     issues = btp.scan(package, 'level')
     assert len(issues) == 0
+
+
+@mock.patch('statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output')
+def test_bandit_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when python_src is an empty list.
+
+    Expected result: issues is an empty list
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    btp = setup_bandit_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['python_src'] = [os.path.join(os.path.dirname(__file__),
+                                          'valid_package', 'b404.py')]
+    issues = btp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output')
+def test_bandit_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when python_src is an empty list.
+
+    Expected result: issues is an empty list
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
+    btp = setup_bandit_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['python_src'] = [os.path.join(os.path.dirname(__file__),
+                                          'valid_package', 'b404.py')]
+    issues = btp.scan(package, 'level')
+    assert issues is None
 
 
 def test_bandit_tool_plugin_parse_valid():
