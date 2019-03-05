@@ -93,7 +93,7 @@ def test_bandit_tool_plugin_scan_empty_src():
 @mock.patch('statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output')
 def test_bandit_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
     """
-    Test what happens when python_src is an empty list.
+    Test what happens an OSError is hit (such as if bandit doesn't exist)
 
     Expected result: issues is an empty list
     """
@@ -110,7 +110,7 @@ def test_bandit_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
 @mock.patch('statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output')
 def test_bandit_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_output):
     """
-    Test what happens when python_src is an empty list.
+    Test what happens when a CalledProcessError is hit (such as if bandit encounters an error).
 
     Expected result: issues is an empty list
     """
