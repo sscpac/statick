@@ -1,10 +1,10 @@
 """Unit tests for the clang-tidy plugin."""
 import argparse
 import os
-import shutil
 import subprocess
 import tempfile
 
+import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -16,6 +16,11 @@ from statick_tool.plugins.tool.clang_tidy_tool_plugin import \
     ClangTidyToolPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
+
+try:
+    from tempfile import TemporaryDirectory
+except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
+    from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
 
 def setup_clang_tidy_tool_plugin():
@@ -67,26 +72,27 @@ def test_clang_tidy_tool_plugin_scan_valid(monkeypatch):
 
     # Need to actually run CMake to generate compile_commands.json
     bin_dir = tempfile.mkdtemp()
-    monkeypatch.chdir(bin_dir)
-    try:
-        subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
-                                 "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-                                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                                 "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=" + bin_dir],
-                                universal_newlines=True)
-    except subprocess.CalledProcessError as ex:
-        print("Problem running CMake! Returncode = {}".
-              format(str(ex.returncode)))
-        print("{}".format(ex.output))
-        pytest.fail("Failed running CMake")
+    with TemporaryDirectory() as bin_dir:
+        monkeypatch.chdir(bin_dir)
+        try:
+            subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
+                                     "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                                     "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                                     "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=" + bin_dir],
+                                    universal_newlines=True)
+        except subprocess.CalledProcessError as ex:
+            print("Problem running CMake! Returncode = {}".
+                  format(str(ex.returncode)))
+            print("{}".format(ex.output))
+            pytest.fail("Failed running CMake")
 
-    package['make_targets'] = []
-    package['make_targets'].append({})
-    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-                                                      'valid_package', 'test.c')]
-    package['bin_dir'] = bin_dir
-    package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
-    issues = cttp.scan(package, 'level')
+        package['make_targets'] = []
+        package['make_targets'].append({})
+        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                          'valid_package', 'test.c')]
+        package['bin_dir'] = bin_dir
+        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+        issues = cttp.scan(package, 'level')
     assert len(issues) == 1
     assert issues[0].filename == os.path.join(os.path.dirname(__file__), 'valid_package', 'test.c')
     assert issues[0].line_number == '6'
@@ -94,7 +100,6 @@ def test_clang_tidy_tool_plugin_scan_valid(monkeypatch):
     assert issues[0].issue_type == 'warning/clang-analyzer-deadcode.DeadStores'
     assert issues[0].severity == '3'
     assert issues[0].message == "Value stored to 'si' is never read"
-    shutil.rmtree(bin_dir)
 
 
 def test_clang_tidy_tool_plugin_parse_valid():
@@ -111,9 +116,144 @@ def test_clang_tidy_tool_plugin_parse_valid():
     assert issues[0].message == "Value stored to 'si' is never read"
 
 
+def test_clang_tidy_tool_plugin_parse_note():
+    """
+    Verify that we ignore 'note' lines of clang-tidy.
+
+    Expected output: Empty list
+    """
+    cttp = setup_clang_tidy_tool_plugin()
+    output = "valid_package/test.c:6:5: note: Value stored to 'si' is never read"
+    issues = cttp.parse_output(output)
+    assert not issues
+
+
+def test_clang_tidy_tool_plugin_parse_star():
+    """
+    Verify that we ignore *-prefixed lines of clang-tidy.
+
+    Expected output: Empty list
+    """
+    cttp = setup_clang_tidy_tool_plugin()
+    output = " * valid_package/test.c:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]"
+    issues = cttp.parse_output(output)
+    assert not issues
+
+
 def test_clang_tidy_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of clang_tidy."""
     cttp = setup_clang_tidy_tool_plugin()
     output = "invalid text"
     issues = cttp.parse_output(output)
     assert not issues
+
+
+def test_bandit_tool_plugin_scan_missing_fields():
+    """
+    Test what happens when key fields are missing from the Package argument.
+
+    Expected result: issues is empty
+    """
+    cttp = setup_clang_tidy_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    # Missing bin_dir
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+    issues = cttp.scan(package, 'level')
+    assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
+def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means clang-tidy doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    cttp = setup_clang_tidy_tool_plugin()
+    with TemporaryDirectory() as bin_dir:
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        package['make_targets'] = []
+        package['make_targets'].append({})
+        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                          'valid_package', 'test.c')]
+        package['bin_dir'] = bin_dir
+        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+        issues = cttp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
+def test_bandit_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means clang-tidy hit an error)
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
+    cttp = setup_clang_tidy_tool_plugin()
+    with TemporaryDirectory() as bin_dir:
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        package['make_targets'] = []
+        package['make_targets'].append({})
+        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                          'valid_package', 'test.c')]
+        package['bin_dir'] = bin_dir
+        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+        issues = cttp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
+def test_bandit_tool_plugin_scan_diagnosticerror(mock_subprocess_check_output):
+    """
+    Test that a CalledProcessError is raised when subprocess's output contains 'clang-diagnostic-error'
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.return_value = "clang-diagnostic-error"
+    cttp = setup_clang_tidy_tool_plugin()
+    with TemporaryDirectory() as bin_dir:
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        package['make_targets'] = []
+        package['make_targets'].append({})
+        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                          'valid_package', 'test.c')]
+        package['bin_dir'] = bin_dir
+        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+        issues = cttp.scan(package, 'level')
+    assert issues is None
+
+
+def test_checkforexceptions_true():
+    """Test check_for_exceptions behavior where it should return True."""
+    mm = mock.MagicMock()
+    mm.group.side_effect = (
+        lambda i: "test.cpp" if i == 1 else "google-build-using-namespace" if i == 6 else False
+    )
+    assert ClangTidyToolPlugin.check_for_exceptions(mm)
+    mm.group.side_effect = (
+        lambda i: "test.cc" if i == 1 else "google-build-using-namespace" if i == 6 else False
+    )
+    assert ClangTidyToolPlugin.check_for_exceptions(mm)
+
+
+def test_checkforexceptions_false():
+    """Test check_for_exceptions behavior where it should return False."""
+    mm = mock.MagicMock()
+    mm.group.side_effect = (
+        lambda i: "test.h" if i == 1 else "google-build-using-namespace" if i == 6 else False
+    )
+    assert not ClangTidyToolPlugin.check_for_exceptions(mm)
+    mm.group.side_effect = (
+        lambda i: "test.cpp" if i == 1 else "some-other-error" if i == 6 else False
+    )
+    assert not ClangTidyToolPlugin.check_for_exceptions(mm)
