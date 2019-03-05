@@ -1,11 +1,15 @@
 """Tests for the resources module."""
 
 import os
-import shutil
 import tempfile
 
 import statick_tool
 from statick_tool.resources import Resources
+
+try:
+    from tempfile import TemporaryDirectory
+except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
+    from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
 
 def test_resources_init():
@@ -15,13 +19,11 @@ def test_resources_init():
     Expected results: resources.paths should have the argument directory and the directory
     which resources.py lives in
     """
-    temp_dir = tempfile.mkdtemp()
-    resources = Resources([temp_dir])
-    assert resources.paths
-    assert resources.paths[0] == temp_dir
-    assert resources.paths[1] == os.path.dirname(statick_tool.resources.__file__)
-    # Cleanup
-    os.rmdir(temp_dir)
+    with TemporaryDirectory() as tmp_dir:
+        resources = Resources([tmp_dir])
+        assert resources.paths
+        assert resources.paths[0] == tmp_dir
+        assert resources.paths[1] == os.path.dirname(statick_tool.resources.__file__)
 
 
 def test_resources_init_empty():
@@ -72,14 +74,13 @@ def test_resources_get_plugin_paths_dirs_exist():
     Expected results: get_plugin_paths should contain all of resources.paths with
     '/plugins' appended
     """
-    temp_dir = tempfile.mkdtemp()
-    resources = Resources([temp_dir])
-    os.mkdir(os.path.join(temp_dir, 'plugins'))
-    plugin_paths = resources.get_plugin_paths()
-    assert plugin_paths[0] == os.path.join(temp_dir, 'plugins')
-    assert plugin_paths[1] == os.path.join(os.path.dirname(
-                                           statick_tool.resources.__file__), 'plugins')
-    shutil.rmtree(temp_dir)
+    with TemporaryDirectory() as tmp_dir:
+        resources = Resources([tmp_dir])
+        os.mkdir(os.path.join(tmp_dir, 'plugins'))
+        plugin_paths = resources.get_plugin_paths()
+        assert plugin_paths[0] == os.path.join(tmp_dir, 'plugins')
+        assert plugin_paths[1] == os.path.join(os.path.dirname(
+                                               statick_tool.resources.__file__), 'plugins')
 
 
 def test_resources_get_plugin_paths_dirs_dont_exist():
@@ -89,12 +90,11 @@ def test_resources_get_plugin_paths_dirs_dont_exist():
     Expected results: get_plugin_paths should contain only the default dir with
     '/plugins' appended
     """
-    temp_dir = tempfile.mkdtemp()
-    resources = Resources([temp_dir])
-    plugin_paths = resources.get_plugin_paths()
-    assert plugin_paths[0] == os.path.join(os.path.dirname(
-                                           statick_tool.resources.__file__), 'plugins')
-    shutil.rmtree(temp_dir)
+    with TemporaryDirectory() as tmp_dir:
+        resources = Resources([tmp_dir])
+        plugin_paths = resources.get_plugin_paths()
+        assert plugin_paths[0] == os.path.join(os.path.dirname(
+                                               statick_tool.resources.__file__), 'plugins')
 
 
 def test_resources_get_file_exists():
@@ -103,13 +103,11 @@ def test_resources_get_file_exists():
 
     Expected results: The file path is returned
     """
-    temp_dir = tempfile.mkdtemp()
-    resources = Resources([temp_dir])
-    os.mkdir(os.path.join(temp_dir, 'rsc'))
-    with tempfile.NamedTemporaryFile(dir=os.path.join(temp_dir, 'rsc')) as tmpfile:
-        assert resources.get_file(tmpfile.name) == os.path.join(temp_dir, 'rsc', tmpfile.name)
-
-    shutil.rmtree(temp_dir)
+    with TemporaryDirectory() as tmp_dir:
+        resources = Resources([tmp_dir])
+        os.mkdir(os.path.join(tmp_dir, 'rsc'))
+        with tempfile.NamedTemporaryFile(dir=os.path.join(tmp_dir, 'rsc')) as tmpfile:
+            assert resources.get_file(tmpfile.name) == os.path.join(tmp_dir, 'rsc', tmpfile.name)
 
 
 def test_resources_get_file_doesnt_exist():
@@ -118,9 +116,7 @@ def test_resources_get_file_doesnt_exist():
 
     Expected results: None is returned
     """
-    temp_dir = tempfile.mkdtemp()
-    resources = Resources([temp_dir])
-    os.mkdir(os.path.join(temp_dir, 'rsc'))
-    assert resources.get_file('nope') is None
-
-    shutil.rmtree(temp_dir)
+    with TemporaryDirectory() as tmp_dir:
+        resources = Resources([tmp_dir])
+        os.mkdir(os.path.join(tmp_dir, 'rsc'))
+        assert resources.get_file('nope') is None

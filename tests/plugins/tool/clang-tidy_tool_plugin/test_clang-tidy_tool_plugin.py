@@ -2,7 +2,6 @@
 import argparse
 import os
 import subprocess
-import tempfile
 
 import mock
 import pytest
@@ -71,7 +70,6 @@ def test_clang_tidy_tool_plugin_scan_valid(monkeypatch):
                                                     'valid_package'))
 
     # Need to actually run CMake to generate compile_commands.json
-    bin_dir = tempfile.mkdtemp()
     with TemporaryDirectory() as bin_dir:
         monkeypatch.chdir(bin_dir)
         try:

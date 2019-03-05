@@ -2,8 +2,6 @@
 import argparse
 import os
 import re
-import shutil
-import tempfile
 
 from yapsy.PluginManager import PluginManager
 
@@ -17,10 +15,15 @@ from statick_tool.plugins.reporting.write_file_reporting_plugin import \
 from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 
+try:
+    from tempfile import TemporaryDirectory
+except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
+    from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
+
 output_regex = r"^\s*\[(.*)\]\[(\d+)\]\[(.*):(.*)\]\[(.*)\]\[(\d+)\]$"
 
 
-def setup_write_file_reporting_plugin():
+def setup_write_file_reporting_plugin(file_path):
     """Create an instance of the file writer plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("output_directory")
@@ -30,7 +33,7 @@ def setup_write_file_reporting_plugin():
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
-    plugin_context = PluginContext(arg_parser.parse_args([tempfile.mkdtemp()]), resources, config)
+    plugin_context = PluginContext(arg_parser.parse_args([file_path]), resources, config)
     wfrp = WriteFileReportingPlugin()
     wfrp.set_plugin_context(plugin_context)
     return wfrp
@@ -57,47 +60,45 @@ def test_write_file_reporting_plugin_found():
 
 def test_write_file_reporting_plugin_report_cert():
     """Test the output of the reporting plugin."""
-    wfrp = setup_write_file_reporting_plugin()
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', 'MEM50-CPP')]}
+    with TemporaryDirectory() as tmp_dir:
+        wfrp = setup_write_file_reporting_plugin(tmp_dir)
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', 'MEM50-CPP')]}
 
-    _, success = wfrp.report(package, issues, 'level')
-    assert success
-    with open(os.path.join(wfrp.plugin_context.args.output_directory,
-                           'valid_package-level', 'valid_package-level.statick')) as outfile:
-        line = outfile.readline().strip()
-        assert re.match(output_regex, line)
-        assert line == "[test.txt][1][tool_a:type][This is a test (MEM50-CPP)][1]"
-    shutil.rmtree(wfrp.plugin_context.args.output_directory)
+        _, success = wfrp.report(package, issues, 'level')
+        assert success
+        with open(os.path.join(tmp_dir, 'valid_package-level', 'valid_package-level.statick')) as outfile:
+            line = outfile.readline().strip()
+    assert re.match(output_regex, line)
+    assert line == "[test.txt][1][tool_a:type][This is a test (MEM50-CPP)][1]"
 
 
 def test_write_file_reporting_plugin_report_nocert():
     """Test the output of the reporting plugin without a CERT reference."""
-    wfrp = setup_write_file_reporting_plugin()
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', None)]}
-    _, success = wfrp.report(package, issues, 'level')
-    assert success
-    with open(os.path.join(wfrp.plugin_context.args.output_directory,
-                           'valid_package-level', 'valid_package-level.statick')) as outfile:
-        line = outfile.readline().strip()
-        assert re.match(output_regex, line)
-        assert line == "[test.txt][1][tool_a:type][This is a test][1]"
-    shutil.rmtree(wfrp.plugin_context.args.output_directory)
+    with TemporaryDirectory() as tmp_dir:
+        wfrp = setup_write_file_reporting_plugin(tmp_dir)
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', None)]}
+        _, success = wfrp.report(package, issues, 'level')
+        assert success
+        with open(os.path.join(tmp_dir, 'valid_package-level', 'valid_package-level.statick')) as outfile:
+            line = outfile.readline().strip()
+    assert re.match(output_regex, line)
+    assert line == "[test.txt][1][tool_a:type][This is a test][1]"
 
 
 def test_write_file_reporting_plugin_report_fileexists():
     """Test the output of the reporting plugin if there's a file where the output dir should go."""
-    wfrp = setup_write_file_reporting_plugin()
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    # Makes a file where we expect a dir
-    open(os.path.join(wfrp.plugin_context.args.output_directory, package.name + "-" + "level"), 'w').close()
-    issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', None)]}
-    _, success = wfrp.report(package, issues, 'level')
-    assert os.path.isfile(os.path.join(wfrp.plugin_context.args.output_directory,
-                          'valid_package-level'))
+    with TemporaryDirectory() as tmp_dir:
+        wfrp = setup_write_file_reporting_plugin(tmp_dir)
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        # Makes a file where we expect a dir
+        open(os.path.join(tmp_dir, package.name + "-" + "level"), 'w').close()
+        issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', None)]}
+        _, success = wfrp.report(package, issues, 'level')
+        assert os.path.isfile(os.path.join(wfrp.plugin_context.args.output_directory,
+                              'valid_package-level'))
     assert not success
-    shutil.rmtree(wfrp.plugin_context.args.output_directory)
