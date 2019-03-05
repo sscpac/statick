@@ -190,7 +190,7 @@ def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 
 @mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
-def test_bandit_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+def test_clang_tidy_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised (usually means clang-tidy hit an error).
 
@@ -212,7 +212,7 @@ def test_bandit_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output
 
 
 @mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
-def test_bandit_tool_plugin_scan_diagnosticerror(mock_subprocess_check_output):
+def test_clang_tidy_tool_plugin_scan_diagnosticerror(mock_subprocess_check_output):
     """
     Test that a CalledProcessError is raised when subprocess's output contains 'clang-diagnostic-error'.
 
