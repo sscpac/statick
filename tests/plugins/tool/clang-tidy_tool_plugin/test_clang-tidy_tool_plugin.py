@@ -103,7 +103,8 @@ def test_clang_tidy_tool_plugin_scan_valid(monkeypatch):
 def test_clang_tidy_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of clang_tidy."""
     cttp = setup_clang_tidy_tool_plugin()
-    output = "valid_package/test.c:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]"
+    output = "{}:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]" \
+             .format(os.path.join("valid_package", "test.c"))
     issues = cttp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join('valid_package', 'test.c')
@@ -121,7 +122,7 @@ def test_clang_tidy_tool_plugin_parse_note():
     Expected output: Empty list
     """
     cttp = setup_clang_tidy_tool_plugin()
-    output = "valid_package/test.c:6:5: note: Value stored to 'si' is never read"
+    output = "{}:6:5: note: Value stored to 'si' is never read".format(os.path.join("valid_package", "test.c"))
     issues = cttp.parse_output(output)
     assert not issues
 
@@ -133,7 +134,8 @@ def test_clang_tidy_tool_plugin_parse_star():
     Expected output: Empty list
     """
     cttp = setup_clang_tidy_tool_plugin()
-    output = " * valid_package/test.c:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]"
+    output = " * {}:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]" \
+             .format(os.path.join("valid_package", "test.c"))
     issues = cttp.parse_output(output)
     assert not issues
 
@@ -190,7 +192,7 @@ def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
 @mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
 def test_bandit_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
-    Test what happens when a CalledProcessError is raised (usually means clang-tidy hit an error)
+    Test what happens when a CalledProcessError is raised (usually means clang-tidy hit an error).
 
     Expected result: issues is None
     """
@@ -212,7 +214,7 @@ def test_bandit_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output
 @mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
 def test_bandit_tool_plugin_scan_diagnosticerror(mock_subprocess_check_output):
     """
-    Test that a CalledProcessError is raised when subprocess's output contains 'clang-diagnostic-error'
+    Test that a CalledProcessError is raised when subprocess's output contains 'clang-diagnostic-error'.
 
     Expected result: issues is None
     """
