@@ -12,6 +12,7 @@ with open('README.md') as f:
     long_description = f.read()  # pylint: disable=invalid-name
 
 TEST_DEPS = [
+    'backports.tempfile',
     'pytest',
     'mock',
 ]
