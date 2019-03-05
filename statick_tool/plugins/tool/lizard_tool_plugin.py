@@ -53,7 +53,7 @@ class LizardToolPlugin(ToolPlugin):
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
         parse = re.compile(lizard_re)
         matches = []
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match:
                 matches.append(match.groups())

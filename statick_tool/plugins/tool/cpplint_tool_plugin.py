@@ -88,7 +88,7 @@ class CpplintToolPlugin(ToolPlugin):
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
         parse = re.compile(lint_re)
         issues = []
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 norm_path = os.path.normpath(match.group(1))

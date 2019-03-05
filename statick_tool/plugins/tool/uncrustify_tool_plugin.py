@@ -53,7 +53,7 @@ class UncrustifyToolPlugin(ToolPlugin):
                 src_cmd = ['cat', src]
                 src_output = subprocess.check_output(src_cmd, stderr=subprocess.STDOUT,
                                                      universal_newlines=True)
-                diff = difflib.context_diff(output.split("\n"), src_output.split("\n"))
+                diff = difflib.context_diff(output.splitlines(), src_output.splitlines())
                 found_diff = False
                 output = output.split('\n', 1)[1]
                 for line in diff:

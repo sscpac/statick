@@ -62,7 +62,7 @@ class BanditToolPlugin(ToolPlugin):
         with open(self.get_name() + ".log", "w") as f:
             f.write(output)
 
-        issues = self.parse_output(output.split('\n'))
+        issues = self.parse_output(output.splitlines())
         return issues
 
     def parse_output(self, output):

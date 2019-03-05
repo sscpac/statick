@@ -82,7 +82,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         qt_re = r".*build/.*(ui_|moc_|).*\.(h|cxx)"
         qt_p = re.compile(qt_re)
 
-        for line in output.split("\n"):
+        for line in output.splitlines():
             match = target_p.match(line)
             if match:
                 name = match.group(1)

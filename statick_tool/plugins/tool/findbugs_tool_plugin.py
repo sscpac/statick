@@ -84,7 +84,7 @@ class FindbugsToolPlugin(ToolPlugin):
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match:
                 cert_reference = None

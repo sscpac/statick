@@ -61,7 +61,7 @@ class PyflakesToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            for line in output.split("\n"):
+            for line in output.splitlines():
                 match = parse.match(line)
                 if match:
                     issues.append(Issue(match.group(1), match.group(2),

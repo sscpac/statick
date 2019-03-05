@@ -75,7 +75,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
             try:
                 subprocess.check_output(["make", "-qp"], cwd=out_path)  # NOLINT
             except subprocess.CalledProcessError as exc:
-                for line in exc.output.split("\n"):
+                for line in exc.output.splitlines():
                     match = target_rec.match(line)
                     if match:
                         target = match.group(1)

@@ -86,7 +86,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         parse2 = re.compile(lint2_re)
 
         issues = []
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match:
                 if self.check_for_exceptions_has_file(match, package):

@@ -80,7 +80,7 @@ class PydocstyleToolPlugin(ToolPlugin):
 
         for output in total_output:
             first_line = True
-            for line in output.split("\n"):
+            for line in output.splitlines():
                 if first_line:
                     match = parse_first.match(line)
                     first_line = False

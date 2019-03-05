@@ -123,7 +123,7 @@ class CppcheckToolPlugin(ToolPlugin):
         parse = re.compile(cppcheck_re)
         issues = []
         warnings_mapping = self.load_mapping()
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match and line[1] != '*' and match.group(3) != \
                     "information" and not self.check_for_exceptions(match):
