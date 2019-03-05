@@ -1,7 +1,9 @@
 """Unit tests for the flawfinder plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -62,6 +64,38 @@ def test_flawfinder_tool_plugin_scan_valid():
     package['c_src'] = [os.path.join(package.path, 'strlen.c')]
     issues = fftp.scan(package, 'level')
     assert len(issues) == 1
+
+
+@mock.patch('statick_tool.plugins.tool.flawfinder_tool_plugin.subprocess.check_output')
+def test_flawfinder_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means flawfinder doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    fftp = setup_flawfinder_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['c_src'] = [os.path.join(package.path, 'strlen.c')]
+    issues = fftp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.flawfinder_tool_plugin.subprocess.check_output')
+def test_flawfinder_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means flawfinder hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
+    fftp = setup_flawfinder_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['c_src'] = [os.path.join(package.path, 'strlen.c')]
+    issues = fftp.scan(package, 'level')
+    assert issues is None
 
 
 def test_flawfinder_tool_plugin_parse_valid():
