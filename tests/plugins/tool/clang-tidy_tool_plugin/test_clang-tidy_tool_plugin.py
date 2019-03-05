@@ -59,7 +59,7 @@ def test_clang_tidy_tool_plugin_found():
                plugin_info in manager.getPluginsOfCategory("Tool"))
 
 
-def test_clang_tidy_tool_plugin_scan_valid(monkeypatch):
+def test_clang_tidy_tool_plugin_scan_valid():
     """Integration test: Make sure the clang_tidy output hasn't changed."""
     cttp = setup_clang_tidy_tool_plugin()
     if not cttp.command_exists('cmake'):
@@ -71,13 +71,13 @@ def test_clang_tidy_tool_plugin_scan_valid(monkeypatch):
 
     # Need to actually run CMake to generate compile_commands.json
     with TemporaryDirectory() as bin_dir:
-        monkeypatch.chdir(bin_dir)
         try:
             subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
                                      "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
                                      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
                                      "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=" + bin_dir],
-                                    universal_newlines=True)
+                                    universal_newlines=True,
+                                    cwd=bin_dir)
         except subprocess.CalledProcessError as ex:
             print("Problem running CMake! Returncode = {}".
                   format(str(ex.returncode)))
