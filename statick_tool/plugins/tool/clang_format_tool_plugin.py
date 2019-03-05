@@ -70,8 +70,8 @@ class ClangFormatToolPlugin(ToolPlugin):
             format_file_name = self.plugin_context.resources.get_file("_clang-format")
             with open(format_file_name, "r") as format_file:
                 target_format = format_file.read()
-            diff = difflib.context_diff(output.split("\n"),
-                                        target_format.split("\n"))
+            diff = difflib.context_diff(output.splitlines(),
+                                        target_format.splitlines())
             for line in diff:
                 if line.startswith("+ ") or line.startswith("- ") or \
                    line.startswith("! "):
@@ -124,7 +124,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            lines = output.split('\n')
+            lines = output.splitlines()
             filename = lines[0]
             count = 0
             for line in lines:

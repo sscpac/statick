@@ -60,7 +60,7 @@ class CMakelintToolPlugin(ToolPlugin):
         parse = re.compile(cmakelint_re)
         issues = []
 
-        for line in output.split("\n"):
+        for line in output.splitlines():
             match = parse.match(line)
             if match:
                 issue_type = match.group(4)

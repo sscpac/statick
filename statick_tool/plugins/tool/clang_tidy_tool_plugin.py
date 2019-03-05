@@ -100,7 +100,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 if line[1] != '*' and match.group(3) != "information" \

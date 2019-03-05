@@ -61,7 +61,7 @@ class YamllintToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            for line in output.split("\n"):
+            for line in output.splitlines():
                 match = parse.match(line)
                 if match:
                     issue_type = match.group(4)

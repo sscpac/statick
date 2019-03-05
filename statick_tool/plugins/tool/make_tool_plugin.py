@@ -80,7 +80,7 @@ class MakeToolPlugin(ToolPlugin):
         matches = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        for line in output.split('\n'):
+        for line in output.splitlines():
             match = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 matches.append(match.groups())
@@ -117,7 +117,7 @@ class MakeToolPlugin(ToolPlugin):
             if issue not in issues:
                 issues.append(issue)
 
-        lines = output.split('\n')
+        lines = output.splitlines()
         if "collect2: ld returned 1 exit status" in lines:
             issues.append(Issue("Linker", "0", self.get_name(), "linker", "5",
                                 "Linking failed"))

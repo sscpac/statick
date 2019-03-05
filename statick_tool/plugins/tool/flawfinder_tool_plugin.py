@@ -63,7 +63,7 @@ class FlawfinderToolPlugin(ToolPlugin):
         warnings_mapping = self.load_mapping()
 
         for output in total_output:
-            for line in output.split("\n"):
+            for line in output.splitlines():
                 match = parse.match(line)
                 if match:
                     cert_reference = None

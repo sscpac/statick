@@ -61,7 +61,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         with open(self.get_name() + ".log", "wt") as f:
             f.write(output)
 
-        issues = self.parse_output(output.split('\n'))
+        issues = self.parse_output(output.splitlines())
 
         return issues
 
