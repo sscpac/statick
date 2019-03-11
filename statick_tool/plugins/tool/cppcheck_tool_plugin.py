@@ -38,7 +38,8 @@ class CppcheckToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        flags = ["--report-progress", "--verbose", "--inline-suppr", "--language=c++"]
+        flags = ["--report-progress", "--verbose", "--inline-suppr", "--language=c++",
+                 "--template=[{file}:{line}]: ({severity} {id}) {message}"]
         flags += self.get_user_flags(level)
         user_version = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                   level,
@@ -72,9 +73,10 @@ class CppcheckToolPlugin(ToolPlugin):
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
-                for include_dir in target["include_dirs"]:
-                    if include_dir not in include_dirs:
-                        include_dirs.append(include_dir)
+                if "include_dirs" in target:
+                    for include_dir in target["include_dirs"]:
+                        if include_dir not in include_dirs:
+                            include_dirs.append(include_dir)
         if "headers" in package:
             files += package["headers"]
 
@@ -94,10 +96,9 @@ class CppcheckToolPlugin(ToolPlugin):
                                              universal_newlines=True)
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            if ex.returncode != 2:
-                print("cppcheck failed! Returncode = {}".format(ex.returncode))
-                print("{}".format(ex.output))
-                return None
+            print("cppcheck failed! Returncode = {}".format(ex.returncode))
+            print("{}".format(ex.output))
+            return None
 
         if self.plugin_context.args.show_tool_output:
             print("{}".format(output))
