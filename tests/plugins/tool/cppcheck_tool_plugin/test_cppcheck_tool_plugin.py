@@ -79,6 +79,8 @@ def test_cppcheck_tool_plugin_scan_valid():
 def test_cppcheck_tool_plugin_scan_no_files():
     """Check what happens if the plugin isn't passed any files."""
     cctp = setup_cppcheck_tool_plugin()
+    if not cctp.command_exists('cppcheck'):
+        pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['make_targets'] = []
