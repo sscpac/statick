@@ -1,7 +1,6 @@
 """Tests for statick_tool.tool_plugin."""
 import argparse
 import os
-import shutil
 import stat
 import sys
 import tempfile
@@ -12,6 +11,11 @@ from statick_tool.config import Config
 from statick_tool.plugin_context import PluginContext
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
+
+try:
+    from tempfile import TemporaryDirectory
+except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
+    from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
 
 def test_tool_plugin_load_mapping_valid():
@@ -134,10 +138,10 @@ def test_tool_plugin_is_valid_executable_valid():
     """Test that is_valid_executable returns True for executable files."""
 
     # Create an executable file
-    tmp_file = tempfile.NamedTemporaryFile()
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-    assert ToolPlugin.is_valid_executable(tmp_file.name)
+    with tempfile.NamedTemporaryFile() as tmp_file:
+        st = os.stat(tmp_file.name)
+        os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+        assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_no_exe_flag():
@@ -152,8 +156,8 @@ def test_tool_plugin_is_valid_executable_no_exe_flag():
     if sys.platform.startswith('win32'):
         pytest.skip("windows doesn't have executable flags")
     # Create a file
-    tmp_file = tempfile.NamedTemporaryFile()
-    assert not ToolPlugin.is_valid_executable(tmp_file.name)
+    with tempfile.NamedTemporaryFile() as tmp_file:
+        assert not ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_nonexistent():
@@ -172,11 +176,10 @@ def test_tool_plugin_is_valid_executable_extension_nopathext(monkeypatch):
     monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(suffix='.exe')
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    assert ToolPlugin.is_valid_executable(tmp_file.name)
+    with tempfile.NamedTemporaryFile(suffix='.exe') as tmp_file:
+        st = os.stat(tmp_file.name)
+        os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+        assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_noextension_nopathext(monkeypatch):
@@ -190,11 +193,10 @@ def test_tool_plugin_is_valid_executable_noextension_nopathext(monkeypatch):
     monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile()
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    assert ToolPlugin.is_valid_executable(tmp_file.name)
+    with tempfile.NamedTemporaryFile() as tmp_file:
+        st = os.stat(tmp_file.name)
+        os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+        assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_extension_pathext(monkeypatch):
@@ -208,11 +210,10 @@ def test_tool_plugin_is_valid_executable_extension_pathext(monkeypatch):
     monkeypatch.setenv('PATHEXT', '.exe;.bat')
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(suffix='.exe')
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    assert ToolPlugin.is_valid_executable(tmp_file.name)
+    with tempfile.NamedTemporaryFile(suffix='.exe') as tmp_file:
+        st = os.stat(tmp_file.name)
+        os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+        assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_noextension_pathext(monkeypatch):
@@ -226,11 +227,10 @@ def test_tool_plugin_is_valid_executable_noextension_pathext(monkeypatch):
     monkeypatch.setenv('PATHEXT', '.exe;.bat')
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile()
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    assert ToolPlugin.is_valid_executable(tmp_file.name)
+    with tempfile.NamedTemporaryFile() as tmp_file:
+        st = os.stat(tmp_file.name)
+        os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+        assert ToolPlugin.is_valid_executable(tmp_file.name)
 
 
 def test_tool_plugin_is_valid_executable_wrongextension_pathext(monkeypatch):
@@ -244,14 +244,12 @@ def test_tool_plugin_is_valid_executable_wrongextension_pathext(monkeypatch):
     monkeypatch.setenv('PATHEXT', '.exe;.bat')
 
     # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(suffix='.potato')
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    # Get the created file minus the suffix
-    no_ext_path, _ = os.path.splitext(tmp_file.name)
-
-    assert not ToolPlugin.is_valid_executable(no_ext_path)
+    with tempfile.NamedTemporaryFile(suffix='.potato') as tmp_file:
+        st = os.stat(tmp_file.name)
+        os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+        # Get the created file minus the suffix
+        no_ext_path, _ = os.path.splitext(tmp_file.name)
+        assert not ToolPlugin.is_valid_executable(no_ext_path)
 
 
 def test_tool_plugin_command_exists_fullpath(monkeypatch):
@@ -261,17 +259,12 @@ def test_tool_plugin_command_exists_fullpath(monkeypatch):
     monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary directory which will be part of the path
-    tmp_dir = tempfile.mkdtemp()
-
-    # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(dir=tmp_dir)
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    assert ToolPlugin.command_exists(tmp_file.name)
-
-    # Cleanup
-    shutil.rmtree(tmp_dir, ignore_errors=True)
+    with TemporaryDirectory() as tmp_dir:
+        # Make a temporary executable
+        with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
+            st = os.stat(tmp_file.name)
+            os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+            assert ToolPlugin.command_exists(tmp_file.name)
 
 
 def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
@@ -281,21 +274,14 @@ def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
     monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary directory which will be part of the path
-    tmp_dir = tempfile.mkdtemp()
-
-    # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(dir=tmp_dir)
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    monkeypatch.setenv('PATH', tmp_dir)
-
-    _, tmp_file_name = os.path.split(tmp_file.name)
-
-    assert ToolPlugin.command_exists(tmp_file_name)
-
-    # Cleanup
-    shutil.rmtree(tmp_dir, ignore_errors=True)
+    with TemporaryDirectory() as tmp_dir:
+        # Make a temporary executable
+        with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
+            st = os.stat(tmp_file.name)
+            os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+            monkeypatch.setenv('PATH', tmp_dir)
+            _, tmp_file_name = os.path.split(tmp_file.name)
+            assert ToolPlugin.command_exists(tmp_file_name)
 
 
 def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
@@ -305,16 +291,10 @@ def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
     monkeypatch.delenv('PATHEXT', raising=False)
 
     # Make a temporary directory which will be part of the path
-    tmp_dir = tempfile.mkdtemp()
-
-    # Make a temporary executable
-    tmp_file = tempfile.NamedTemporaryFile(dir=tmp_dir)
-    st = os.stat(tmp_file.name)
-    os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
-
-    _, tmp_file_name = os.path.split(tmp_file.name)
-
-    assert not ToolPlugin.command_exists(tmp_file_name)
-
-    # Cleanup
-    shutil.rmtree(tmp_dir, ignore_errors=True)
+    with TemporaryDirectory() as tmp_dir:
+        # Make a temporary executable
+        with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
+            st = os.stat(tmp_file.name)
+            os.chmod(tmp_file.name, st.st_mode | stat.S_IXUSR)
+            _, tmp_file_name = os.path.split(tmp_file.name)
+            assert not ToolPlugin.command_exists(tmp_file_name)

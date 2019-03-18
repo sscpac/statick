@@ -43,12 +43,13 @@ class PydocstyleToolPlugin(ToolPlugin):
                                                  universal_newlines=True)
 
             except subprocess.CalledProcessError as ex:
-                if ex.returncode != 32:
-                    output = ex.output
-                else:
+                # Return code 1 just means "found problems"
+                if ex.returncode != 1:
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
+                else:
+                    output = ex.output
 
             except OSError as ex:
                 print("Couldn't find %s! (%s)" % (tool_bin, ex))

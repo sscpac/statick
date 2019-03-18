@@ -31,12 +31,9 @@ class FlawfinderToolPlugin(ToolPlugin):
                                                  stderr=subprocess.STDOUT,
                                                  universal_newlines=True)
             except subprocess.CalledProcessError as ex:
-                if ex.returncode != 32:
-                    output = ex.output
-                else:
-                    print("Problem {}".format(ex.returncode))
-                    print("{}".format(ex.output))
-                    return None
+                print("Problem {}".format(ex.returncode))
+                print("{}".format(ex.output))
+                return None
 
             except OSError as ex:
                 print("Couldn't find flawfinder executable! (%s)" % (ex))
@@ -56,7 +53,7 @@ class FlawfinderToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output):
         """Parse tool output and report issues."""
-        flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s+(.+)"
+        flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s*(.+)"
         parse = re.compile(flawfinder_re)
         issues = []
 

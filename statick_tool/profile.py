@@ -9,7 +9,14 @@ class Profile(object):  # pylint: disable=too-few-public-methods
     def __init__(self, filename):
         """Initialize profile."""
         with open(filename) as fname:
-            self.profile = yaml.safe_load(fname)
+            try:
+                self.profile = yaml.safe_load(fname)
+            except yaml.YAMLError as ex:
+                raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
+            if self.profile is None:
+                raise ValueError("{} is empty, can't continue!".format(filename))
+            elif 'default' not in self.profile:
+                raise ValueError("No 'default' key found in {}!".format(filename))
 
     def get_package_level(self, package):
         """Get which scan level to use for a given package."""

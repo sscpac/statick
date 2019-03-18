@@ -5,6 +5,7 @@ from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.java_discovery_plugin import \
     JavaDiscoveryPlugin
@@ -30,24 +31,24 @@ def test_java_discovery_plugin_found():
 
 
 def test_java_discovery_plugin_scan_valid():
-    """Test that the Java discovery plugin finds Java source and class files."""
+    """test that the java discovery plugin finds java source and class files."""
     jdp = JavaDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     jdp.scan(package, 'level')
-    expected_src = ['test.java']
-    expected_bin = ['test.class']
-    # We have to add the path to each of the above...yuck
+    expected_src = ['test.java', os.path.join('ignore_this', 'ignoreme.java')]
+    expected_bin = ['test.class', os.path.join('ignore_this', 'IgnoreMe.class')]
+    # we have to add the path to each of the above
     expected_src_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_src]
     expected_bin_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_bin]
-    # Neat trick to verify that two unordered lists are the same
+    # neat trick to verify that two unordered lists are the same
     assert set(package['java_src']) == set(expected_src_fullpath)
     assert set(package['java_bin']) == set(expected_bin_fullpath)
 
 
-def test_java_discovery_plugin_scan_invalid_nocmake():
+def test_java_discovery_plugin_scan_invalid():
     """Test that the Java discovery plugin doesn't match non-Java files."""
     jdp = JavaDiscoveryPlugin()
     package = Package('invalid_package',
@@ -56,3 +57,22 @@ def test_java_discovery_plugin_scan_invalid_nocmake():
     jdp.scan(package, 'level')
     assert not package['java_src']
     assert not package['java_bin']
+
+
+def test_java_discovery_plugin_scan_exceptions():
+    """test that the java discovery plugin properly respects exceptions."""
+    jdp = JavaDiscoveryPlugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    exceptions = Exceptions(os.path.join(os.path.dirname(__file__), 'exceptions.yaml'))
+    jdp.scan(package, 'level', exceptions)
+    expected_src = ['test.java']
+    expected_bin = ['test.class']
+    # we have to add the path to each of the above...yuck
+    expected_src_fullpath = [os.path.join(package.path, filename)
+                             for filename in expected_src]
+    expected_bin_fullpath = [os.path.join(package.path, filename)
+                             for filename in expected_bin]
+    # neat trick to verify that two unordered lists are the same
+    assert set(package['java_src']) == set(expected_src_fullpath)
+    assert set(package['java_bin']) == set(expected_bin_fullpath)
