@@ -1,0 +1,104 @@
+"""Unit tests for the spotbugs plugin."""
+import argparse
+import os
+import subprocess
+
+import pytest
+from yapsy.PluginManager import PluginManager
+
+import statick_tool
+from statick_tool.config import Config
+from statick_tool.package import Package
+from statick_tool.plugin_context import PluginContext
+from statick_tool.plugins.tool.spotbugs_tool_plugin import SpotbugsToolPlugin
+from statick_tool.resources import Resources
+from statick_tool.tool_plugin import ToolPlugin
+
+
+def setup_spotbugs_tool_plugin():
+    """Initialize and return a spotbugs plugin."""
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
+                            action="store_true", help="Show tool output")
+    arg_parser.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
+                            type=str)
+
+    resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
+                                        'plugins')])
+    config = Config(resources.get_file("config.yaml"))
+    plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    sbtp = SpotbugsToolPlugin()
+    sbtp.set_plugin_context(plugin_context)
+    return sbtp
+
+
+def test_spotbugs_tool_plugin_found():
+    """Test that the plugin manager can find the spotbugs plugin."""
+    manager = PluginManager()
+    # Get the path to statick_tool/__init__.py, get the directory part, and
+    # add 'plugins' to that to get the standard plugins dir
+    manager.setPluginPlaces([os.path.join(os.path.dirname(statick_tool.__file__),
+                                          'plugins')])
+    manager.setCategoriesFilter({
+        "Tool": ToolPlugin,
+    })
+    manager.collectPlugins()
+    # Verify that a plugin's get_name() function returns "spotbugs"
+    assert any(plugin_info.plugin_object.get_name() == 'spotbugs' for
+               plugin_info in manager.getPluginsOfCategory("Tool"))
+    # While we're at it, verify that a plugin is named Spotbugs Tool Plugin
+    assert any(plugin_info.name == 'Spotbugs Tool Plugin' for
+               plugin_info in manager.getPluginsOfCategory("Tool"))
+
+
+def test_spotbugs_tool_plugin_scan_valid():
+    """Integration test: Make sure the spotbugs output hasn't changed."""
+    sbtp = setup_spotbugs_tool_plugin()
+    # Sanity check - make sure mvn exists
+    if not sbtp.command_exists('mvn'):
+        pytest.skip("Couldn't find 'mvn' command, can't run Spotbugs tests")
+
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    # Have to compile the package first
+    try:
+        subprocess.check_output(["mvn", "clean", "compile"],
+                                universal_newlines=True,
+                                cwd=package.path)
+    except subprocess.CalledProcessError as ex:
+        print("Problem running Maven! Returncode = {}".
+              format(str(ex.returncode)))
+        print("{}".format(ex.output))
+        pytest.fail("Failed running Maven")
+
+    package['top_poms'] = [os.path.join(package.path, 'pom.xml')]
+    package['all_poms'] = [os.path.join(package.path, 'pom.xml')]
+    issues = sbtp.scan(package, 'level')
+    assert len(issues) == 1
+    assert issues[0].line_number == '4'
+    assert issues[0].tool == 'spotbugs'
+    assert issues[0].issue_type == 'MS_MUTABLE_COLLECTION_PKGPROTECT'
+    assert issues[0].severity == 1
+    assert issues[0].message == "Test.h is a mutable collection which should be package protected"
+
+
+def test_spotbugs_tool_plugin_parse_valid():
+    """Verify that we can parse the normal output of spotbugs."""
+    sbtp = setup_spotbugs_tool_plugin()
+    output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='Low' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(os.path.join(os.path.dirname(__file__), 'valid_package', 'src', 'main', 'java'))
+    issues = sbtp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].filename == os.path.join(os.path.dirname(__file__), 'valid_package', 'src', 'main', 'java', 'Test.java')
+    assert issues[0].line_number == '4'
+    assert issues[0].tool == 'spotbugs'
+    assert issues[0].issue_type == 'MS_MUTABLE_COLLECTION_PKGPROTECT'
+    assert issues[0].severity == 1
+    assert issues[0].message == "Test.h is a mutable collection which should be package protected"
+
+
+def test_spotbugs_tool_plugin_parse_invalid():
+    """Verify that we can parse the normal output of spotbugs."""
+    sbtp = setup_spotbugs_tool_plugin()
+    output = "invalid text"
+    issues = sbtp.parse_output(output)
+    assert not issues
