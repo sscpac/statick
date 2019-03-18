@@ -26,7 +26,9 @@ class SpotbugsToolPlugin(ToolPlugin):
         # Sanity check - make sure mvn exists
         if not self.command_exists('mvn'):
             print("Couldn't find 'mvn' command, can't run Spotbugs Maven integration")
-            return ""
+            # Return [] instead of None because this isn't an error per se,
+            # and we don't want to fail because a tool is missing
+            return []
 
         flags = ["-Dspotbugs.effort=Max", "-Dspotbugs.threshold=Low",
                  "-Dspotbugs.xmlOutput=true"]
@@ -54,11 +56,10 @@ class SpotbugsToolPlugin(ToolPlugin):
                 except subprocess.CalledProcessError as ex:
                     output = ex.output
                     f.write(output)
-                    if ex.returncode != 1:
-                        print("spotbugs failed! Returncode = {}".
-                              format(str(ex.returncode)))
-                        print("{}".format(ex.output))
-                        return None
+                    print("spotbugs failed! Returncode = {}".
+                          format(str(ex.returncode)))
+                    print("{}".format(ex.output))
+                    return None
 
                 except OSError as ex:
                     print("Couldn't find maven! (%s)" % (ex))
