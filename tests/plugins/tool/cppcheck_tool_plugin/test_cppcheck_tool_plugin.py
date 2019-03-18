@@ -131,7 +131,7 @@ def test_cppcheck_tool_plugin_parse_invalid():
     assert not issues
 
 
-def test_bandit_tool_plugin_scan_missing_fields():
+def test_cppcheck_tool_plugin_scan_missing_fields():
     """
     Test what happens when key fields are missing from the Package argument.
 
@@ -146,7 +146,7 @@ def test_bandit_tool_plugin_scan_missing_fields():
 
 
 @mock.patch('statick_tool.plugins.tool.cppcheck_tool_plugin.subprocess.check_output')
-def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
+def test_cppcheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     Test what happens when an OSError is raised (usually means cppcheck doesn't exist).
 
