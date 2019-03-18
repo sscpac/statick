@@ -3,6 +3,7 @@ import argparse
 import os
 import subprocess
 
+import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -102,3 +103,52 @@ def test_spotbugs_tool_plugin_parse_invalid():
     output = "invalid text"
     issues = sbtp.parse_output(output)
     assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.spotbugs_tool_plugin.ToolPlugin.command_exists')
+def test_spotbugs_tool_plugin_scan_commandnotfound(mock_command_exists):
+    """
+    Test what happens when self.command_exists returns False.
+
+    Expected result: issues is an empty list
+    """
+    mock_command_exists.return_value = False
+    sbtp = setup_spotbugs_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    issues = sbtp.scan(package, 'level')
+    assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.spotbugs_tool_plugin.subprocess.check_output')
+def test_spotbugs_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means maven doesn't exist - unlikely).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    sbtp = setup_spotbugs_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['top_poms'] = [os.path.join(package.path, 'pom.xml')]
+    package['all_poms'] = [os.path.join(package.path, 'pom.xml')]
+    issues = sbtp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.spotbugs_tool_plugin.subprocess.check_output')
+def test_spotbugs_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means maven hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output='error')
+    sbtp = setup_spotbugs_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['top_poms'] = [os.path.join(package.path, 'pom.xml')]
+    package['all_poms'] = [os.path.join(package.path, 'pom.xml')]
+    issues = sbtp.scan(package, 'level')
+    assert issues is None
