@@ -5,9 +5,9 @@ levels:
         flags: "-Wcast-align -Wchar-subscripts -Wformat-security -Wformat -Wimplicit-int -Wincompatible-pointer-types -Wint-conversion -Wint-to-pointer-cast -Wparentheses -Winvalid-offsetof -Wsequence-point -Wdelete-incomplete -Wdelete-non-virtual-dtor -Winvalid-offsetof -Wreorder -Wreturn-type -Wuninitialized -Wunused-parameter -Wunreachable-code -Wunused-value -Wvarargs -Wtrigraphs -Wvarargs -Wformat -Wcast-qual"
       clang-tidy:
         flags: "-checks='cert*,clang-analyzer-alpha.cplusplus.virtualCall,clang-analyzer-alpha.security.ArrayBoundV2,clang-analyzer-core.UndefinedBinaryOperatorResult,clang-analyzer-cplusplus.NewDelete,clang-analyzer-cplusplus.NewDeleteLeaks,clang-analyzer-unix.MismatchedDeallocatorclang-analyzer-unix.Malloc,misc-new-delete-overheads,misc-non-copyable-objects,misc-static-assert,clang-diagnostic-dangling-initializer-list,clang-diagnostic-delete-incomplete,clang-diagnostic-delete-non-virtual-dtor,clang-diagnostic-dynamic-class-memaccess,clang-diagnostic-exceptions,clang-diagnostic-implicit-int,clang-diagnostic-incompatible-pointer-types,clang-diagnostic-incompatible-pointer-types-discards-qualifiers,clang-diagnostic-int-conversion,clang-diagnostic-int-to-pointer-castclang-diagnostic-invalid-noreturn,clang-diagnostic-invalid-offsetof,clang-diagnostic-mismatched-new-delete,clang-diagnostic-parentheses,clang-diagnostic-reorder,clang-diagnostic-reserved-id-macro,clang-diagnostic-return-type,clang-diagnostic-sometimes-uninitialized,clang-diagnostic-unevaluated-expression,clang-diagnostic-uninitialized,clang-diagnostic-unsequenced,clang-diagnostic-user-defined-literals,clang-diagnostic-varargs,clang-diagnostic-vexing-parse,clang-diagnostic-trigraphs,clang-diagnostic-unreachable-code,clang-diagnostic-format,clang-diagnostic-cast-align,clang-diagnostic-cast-qual,clang-diagnostic-format-security,clang-diagnostic-sequence-point,clang-diagnostic-char-subscripts,clang-diagnostic-unused-parameter,clang-diagnostic-unused-value'"
-      findbugs:
+      spotbugs:
         flags: ""
-        include: "findBugs-security.xml"
+        include: "spotbugs-security.xml"
       flawfinder:
         flags: ""
       cppcheck:
@@ -138,9 +138,9 @@ levels:
         flags: "-j 4 --enable=warning --config-exclude=/usr --template='[{file}:{line}]: ({severity} {id}) {message}' -j 4 --suppress=unreadVariable --suppress=unusedPrivateFunction --suppress=unusedStructMember --enable=warning,style --config-exclude=/usr --template='[{file}:{line}]: ({severity} {id}) {message}'"
       cpplint:
         flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
-      findbugs:
+      spotbugs:
         flags: ""
-        include: "findBugs-security.xml"
+        include: "spotbugs-security.xml"
       flawfinder:
         flags: ""
       lizard:
