@@ -2,7 +2,6 @@ cccc
 clang-3.9
 clang-format-3.9
 clang-tidy-3.9
-findbugs
 libomp-dev
 libperl-critic-perl
 libxml2
