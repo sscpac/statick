@@ -1,4 +1,4 @@
-"""Apply findbugs tool and gather results."""
+"""Apply spotbugs tool and gather results."""
 
 from __future__ import print_function
 
@@ -6,18 +6,16 @@ import os
 import subprocess
 import xml.etree.ElementTree as etree
 
-from six import iteritems
-
 from statick_tool.issue import Issue
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class FindbugsToolPlugin(ToolPlugin):
-    """Apply findbugs tool and gather results."""
+class SpotbugsToolPlugin(ToolPlugin):
+    """Apply spotbugs tool and gather results."""
 
     def get_name(self):
         """Get name of tool."""
-        return "findbugs"
+        return "spotbugs"
 
     def get_tool_dependencies(self):
         """Get a list of tools that must run before this one."""
@@ -27,10 +25,10 @@ class FindbugsToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists('mvn'):
-            print("Couldn't find 'mvn' command, can't run Findbugs Maven integration")
+            print("Couldn't find 'mvn' command, can't run Spotbugs Maven integration")
             return ""
 
-        flags = ["-Dspotbugs.effort=max" "-Dspotbugs.threshold=low",
+        flags = ["-Dspotbugs.effort=Max", "-Dspotbugs.threshold=Low",
                  "-Dspotbugs.xmlOutput=true"]
         flags += self.get_user_flags(level)
 
@@ -57,13 +55,13 @@ class FindbugsToolPlugin(ToolPlugin):
                     output = ex.output
                     f.write(output)
                     if ex.returncode != 1:
-                        print("findbugs failed! Returncode = {}".
+                        print("spotbugs failed! Returncode = {}".
                               format(str(ex.returncode)))
                         print("{}".format(ex.output))
                         return None
 
                 except OSError as ex:
-                    print("Couldn't find %s! (%s)" % (findbugs_bin, ex))
+                    print("Couldn't find maven! (%s)" % (ex))
                     return None
 
                 if self.plugin_context.args.show_tool_output:
@@ -81,7 +79,11 @@ class FindbugsToolPlugin(ToolPlugin):
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        output_xml = etree.fromstring(output)
+        try:
+            output_xml = etree.fromstring(output)
+        except etree.ParseError as ex:
+            print("Couldn't parse Spotbugs output ({})! Provided output was:\n{}".format(ex, output))
+            return None
         for file_entry in output_xml.findall("file"):
             # Generate the filename
             java_path_string = "{}.java".format(file_entry.attrib["classname"].replace('.', os.sep))
