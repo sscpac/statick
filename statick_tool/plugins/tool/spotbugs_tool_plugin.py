@@ -39,16 +39,20 @@ class SpotbugsToolPlugin(ToolPlugin):
         exclude_file = self.plugin_context.config.get_tool_config(self.get_name(),
                                                                   level, "exclude")
         if include_file is not None:
-            flags += ["-Dspotbugs.includeFilterFile={}".format(self.plugin_context.resources.get_file(include_file))]
+            flags += ["-Dspotbugs.includeFilterFile={}".format(self.plugin_context
+                                                               .resources.get_file(include_file))]
 
         if exclude_file is not None:
-            flags += ["-Dspotbugs.excludeFilterFile={}".format(self.plugin_context.resources.get_file(exclude_file))]
+            flags += ["-Dspotbugs.excludeFilterFile={}".format(self.plugin_context
+                                                               .resources.get_file(exclude_file))]
 
         issues = []
         with open(self.get_name() + ".log", "w") as f:
             for pom in package['top_poms']:
                 try:
-                    output = subprocess.check_output(["mvn", "com.github.spotbugs:spotbugs-maven-plugin:spotbugs"] +
+                    # The spotbugs:spotbugs-maven-plugin split is auto-concatenated
+                    output = subprocess.check_output(["mvn", "com.github.spotbugs:"
+                                                      "spotbugs-maven-plugin:spotbugs"] +
                                                      flags,
                                                      cwd=os.path.dirname(pom),
                                                      stderr=subprocess.STDOUT,
@@ -71,7 +75,8 @@ class SpotbugsToolPlugin(ToolPlugin):
             # The results will be output to (pom path)/target/spotbugs.xml for each pom
             for pom in package["all_poms"]:
                 if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):
-                    with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) as outfile:
+                    with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) \
+                            as outfile:
                         issues += self.parse_output(outfile.read())
         return issues
 
@@ -83,7 +88,8 @@ class SpotbugsToolPlugin(ToolPlugin):
         try:
             output_xml = etree.fromstring(output)
         except etree.ParseError as ex:
-            print("Couldn't parse Spotbugs output ({})! Provided output was:\n{}".format(ex, output))
+            print("Couldn't parse Spotbugs output ({})! Provided output was:\n{}"
+                  .format(ex, output))
             return None
         for file_entry in output_xml.findall("file"):
             # Generate the filename
@@ -108,5 +114,6 @@ class SpotbugsToolPlugin(ToolPlugin):
                 if issue.attrib["type"] in warnings_mapping:
                     cert_reference = warnings_mapping[issue.attrib["type"]]
                 issues.append(Issue(file_path, issue.attrib["lineNumber"], self.get_name(),
-                                    issue.attrib["type"], severity, issue.attrib["message"], cert_reference))
+                                    issue.attrib["type"], severity, issue.attrib["message"],
+                                    cert_reference))
         return issues
