@@ -26,9 +26,7 @@ class SpotbugsToolPlugin(ToolPlugin):
         # Sanity check - make sure mvn exists
         if not self.command_exists('mvn'):
             print("Couldn't find 'mvn' command, can't run Spotbugs Maven integration")
-            # Return [] instead of None because this isn't an error per se,
-            # and we don't want to fail because a tool is missing
-            return []
+            return None
 
         flags = ["-Dspotbugs.effort=Max", "-Dspotbugs.threshold=Low",
                  "-Dspotbugs.xmlOutput=true"]
@@ -66,7 +64,7 @@ class SpotbugsToolPlugin(ToolPlugin):
                     return None
 
                 except OSError as ex:
-                    print("Couldn't find maven! (%s)" % (ex))
+                    print("Couldn't find maven! ({})".format(ex))
                     return None
 
                 if self.plugin_context.args.show_tool_output:
