@@ -38,7 +38,7 @@ class XmllintToolPlugin(ToolPlugin):
                     return None
 
             except OSError as ex:
-                print("Couldn't find xmllint executable! (%s)" % (ex))
+                print("Couldn't find xmllint executable! ({})".format(ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:

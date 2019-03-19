@@ -52,7 +52,7 @@ class PydocstyleToolPlugin(ToolPlugin):
                     output = ex.output
 
             except OSError as ex:
-                print("Couldn't find %s! (%s)" % (tool_bin, ex))
+                print("Couldn't find {}! ({})".format(tool_bin, ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:

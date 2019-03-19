@@ -52,7 +52,7 @@ class PerlCriticToolPlugin(ToolPlugin):
                 return []
 
         except OSError as ex:
-            print("Couldn't find %s! (%s)" % (perlcritic_bin, ex))
+            print("Couldn't find {}! ({})".format(perlcritic_bin, ex))
             return []
 
         if self.plugin_context.args.show_tool_output:

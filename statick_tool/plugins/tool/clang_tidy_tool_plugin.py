@@ -71,7 +71,7 @@ class ClangTidyToolPlugin(ToolPlugin):
                 return None
 
         except OSError as ex:
-            print("Couldn't find %s! (%s)" % (clang_tidy_bin, ex))
+            print("Couldn't find {}! ({})".format(clang_tidy_bin, ex))
             return None
 
         if self.plugin_context.args.show_tool_output:

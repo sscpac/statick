@@ -65,7 +65,7 @@ class CppcheckToolPlugin(ToolPlugin):
                           "proper version".format(user_version, match.group(2)))
                     return None
         except OSError as ex:
-            print("Cppcheck not found! (%s)" % (ex))
+            print("Cppcheck not found! ({})".format(ex))
             return None
 
         files = []
