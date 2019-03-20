@@ -44,7 +44,7 @@ def test_tex_discovery_plugin_scan_valid():
     assert set(package['tex']) == set(expected_fullpath)
 
 
-def test_c_discovery_plugin_scan_invalid():
+def test_tex_discovery_plugin_scan_invalid():
     """Test that the TeX discovery plugin doesn't find non-TeX files."""
     tdp = TexDiscoveryPlugin()
     package = Package('invalid_package',
