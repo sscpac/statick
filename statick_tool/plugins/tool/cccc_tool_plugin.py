@@ -62,7 +62,7 @@ class CCCCToolPlugin(ToolPlugin):
                     return None
 
             except OSError as ex:
-                print("Couldn't find cccc executable! (%s)" % (ex))
+                print("Couldn't find cccc executable! ({})".format(ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:

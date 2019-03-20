@@ -40,7 +40,7 @@ class PyflakesToolPlugin(ToolPlugin):
                     output = ex.output
 
             except OSError as ex:
-                print("Couldn't find pyflakes executable! (%s)" % (ex))
+                print("Couldn't find pyflakes executable! ({})".format(ex))
                 return None
 
             if self.plugin_context.args.show_tool_output:

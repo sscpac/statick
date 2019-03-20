@@ -53,7 +53,7 @@ class BanditToolPlugin(ToolPlugin):
                 return None
 
         except OSError as ex:
-            print("Couldn't find %s! (%s)" % (bandit_bin, ex))
+            print("Couldn't find {}! ({})".format(bandit_bin, ex))
             return None
 
         if self.plugin_context.args.show_tool_output:

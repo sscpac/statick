@@ -44,20 +44,20 @@ class WriteFileReportingPlugin(ReportingPlugin):
             for _, value in iteritems(issues):
                 for issue in value:
                     if issue.cert_reference:
-                        line = "[%s][%s][%s:%s][%s (%s)][%s]\n" % (issue.filename,
-                                                                   issue.line_number,
-                                                                   issue.tool,
-                                                                   issue.issue_type,
-                                                                   issue.message,
-                                                                   issue.cert_reference,
-                                                                   issue.severity)
+                        line = "[{}][{}][{}:{}][{} ({})][{}]\n".format(issue.filename,
+                                                                       issue.line_number,
+                                                                       issue.tool,
+                                                                       issue.issue_type,
+                                                                       issue.message,
+                                                                       issue.cert_reference,
+                                                                       issue.severity)
                     else:
-                        line = "[%s][%s][%s:%s][%s][%s]\n" % (issue.filename,
-                                                              issue.line_number,
-                                                              issue.tool,
-                                                              issue.issue_type,
-                                                              issue.message,
-                                                              issue.severity)
+                        line = "[{}][{}][{}:{}][{}][{}]\n".format(issue.filename,
+                                                                  issue.line_number,
+                                                                  issue.tool,
+                                                                  issue.issue_type,
+                                                                  issue.message,
+                                                                  issue.severity)
                     out.write(line)
 
         return None, True

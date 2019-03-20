@@ -39,7 +39,7 @@ class MakeToolPlugin(ToolPlugin):
             print("{}".format(ex.output))
 
         except OSError as ex:
-            print("Couldn't find make executable! (%s)" % (ex))
+            print("Couldn't find make executable! ({})".format(ex))
             return None
 
         with open(self.get_name() + ".log", "w") as fname:

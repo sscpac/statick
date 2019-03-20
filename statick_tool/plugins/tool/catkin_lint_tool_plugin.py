@@ -37,7 +37,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                 return None
 
         except OSError as ex:
-            print("Couldn't find catkin_lint executable! (%s)" % (ex))
+            print("Couldn't find catkin_lint executable! ({})".format(ex))
             return None
 
         if self.plugin_context.args.show_tool_output:

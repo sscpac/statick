@@ -52,7 +52,7 @@ class CpplintToolPlugin(ToolPlugin):
                 return None
 
         except OSError as ex:
-            print("Couldn't find cpplint executable! (%s)" % (ex))
+            print("Couldn't find cpplint executable! ({})".format(ex))
             return None
 
         if self.plugin_context.args.show_tool_output:
