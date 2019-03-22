@@ -92,8 +92,12 @@ class Statick(object):
         profile_filename = "profile.yaml"
         if args.profile is not None:
             profile_filename = args.profile
+        profile_resource = self.resources.get_file(profile_filename)
+        if profile_resource is None:
+            print("Could not find profile file {}!".format(profile_filename))
+            return None
         try:
-            profile = Profile(self.resources.get_file(profile_filename))
+            profile = Profile(profile_resource)
         except IOError:
             print("Could not find profile file {}!".format(profile_filename))
             return None
