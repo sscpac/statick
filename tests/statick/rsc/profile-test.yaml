@@ -1,0 +1,4 @@
+default: "default_value"
+
+packages:
+  package: "package_specific"
