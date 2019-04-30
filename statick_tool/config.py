@@ -3,6 +3,9 @@ Manages which plugins are run for each statick scan level.
 
 Sets what flags are used for each plugin at those levels.
 """
+
+from __future__ import print_function
+
 import os
 from collections import OrderedDict
 
