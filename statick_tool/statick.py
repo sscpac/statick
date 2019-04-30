@@ -28,6 +28,7 @@ class Statick(object):
 
     def __init__(self, user_paths):
         """Initialize Statick."""
+        print("Using user paths {}".format(user_paths))
         self.resources = Resources(user_paths)
 
         self.manager = PluginManager()
@@ -54,9 +55,22 @@ class Statick(object):
             self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
                     plugin_info.plugin_object
 
-        self.config = Config(self.resources.get_file("config.yaml"))
+        self.config = []
+        self.exceptions = []
 
-        self.exceptions = Exceptions(self.resources.get_file("exceptions.yaml"))
+    def get_config(self, args):
+        """Get Statick configuration."""
+        config_filename = "config.yaml"
+        if args.config is not None:
+            config_filename = args.config
+        self.config = Config(self.resources.get_file(config_filename))
+
+    def get_exceptions(self, args):
+        """Get Statick exceptions."""
+        exceptions_filename = "exceptions.yaml"
+        if args.exceptions is not None:
+            exceptions_filename = args.exceptions
+        self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
 
     def get_ignore_packages(self):
         """Get packages to ignore during scan process."""
@@ -67,8 +81,12 @@ class Statick(object):
         args.add_argument("output_directory", help="Output directory")
         args.add_argument("--show-tool-output", dest="show_tool_output",
                           action="store_true", help="Show tool output")
+        args.add_argument("--config", dest="config",
+                          type=str, help="Name of profile yaml file")
         args.add_argument("--profile", dest="profile",
                           type=str, help="Name of profile yaml file")
+        args.add_argument("--exceptions", dest="exceptions",
+                          type=str, help="Name of exceptions yaml file")
         args.add_argument("--force-tool-list", dest="force_tool_list",
                           type=str, help="Force only the given list of tools to run")
         args.add_argument('--version', action='version',

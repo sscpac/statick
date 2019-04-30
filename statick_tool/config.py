@@ -5,6 +5,7 @@ Sets what flags are used for each plugin at those levels.
 """
 from collections import OrderedDict
 
+import os
 import yaml
 
 
@@ -17,6 +18,10 @@ class Config(object):
 
     def __init__(self, filename):
         """Initialize configuration."""
+        print("Using config {}".format(filename))
+        if filename is None or not os.path.exists(filename):
+            self.config = []
+            return
         with open(filename) as fname:
             self.config = yaml.safe_load(fname)
 
