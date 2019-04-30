@@ -110,10 +110,16 @@ class Statick(object):
         profile_filename = "profile.yaml"
         if args.profile is not None:
             profile_filename = args.profile
-        try:
-            profile = Profile(self.resources.get_file(profile_filename))
-        except IOError:
+        profile_resource = self.resources.get_file(profile_filename)
+        if profile_resource is None:
             print("Could not find profile file {}!".format(profile_filename))
+            return None
+        try:
+            profile = Profile(profile_resource)
+        except IOError as ex:
+            # This isn't quite redundant with the profile_resource check: it's possible
+            # that something else triggers an IOError, like permissions
+            print("Failed to access profile file {}: {}".format(profile_filename, ex))
             return None
         except ValueError as ex:
             print("Profile file {} has errors: {}".format(profile_filename, ex))
