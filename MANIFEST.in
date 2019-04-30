@@ -1,0 +1,7 @@
+include statick_tool/rsc/*
+include statick_tool/rsc/.clang-format
+include statick_tool/rsc/plugin_mapping/*
+include statick_tool/plugins/*.py
+include statick_tool/plugins/discovery/*
+include statick_tool/plugins/tool/*
+include statick_tool/plugins/reporting/*

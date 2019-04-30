@@ -2,7 +2,7 @@
 
 
 try:
-    from setuptools import setup
+    from setuptools import setup, find_packages
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from distutils.core import setup  # pylint: disable=wrong-import-order
 
@@ -25,11 +25,9 @@ setup(
     name='statick',
     description='Tool for running static analysis tools against packages of code.',
     version=statick_tool.__version__,
-    packages=['statick_tool'],
-    package_data={'statick_tool': ['rsc/*', 'rsc/.clang-format', 'rsc/plugin_mapping/*',
-                                   'plugins/*.py', 'plugins/discovery/*',
-                                   'plugins/tool/*', 'plugins/reporting/*']},
+    packages=find_packages(),
     scripts=['statick', 'statick_ws', 'statick_gauntlet'],
+    include_package_data=True,
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=['bandit', 'cmakelint', 'flawfinder', 'lizard',
