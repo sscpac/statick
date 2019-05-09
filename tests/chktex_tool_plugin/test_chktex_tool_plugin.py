@@ -7,8 +7,7 @@ from yapsy.PluginManager import PluginManager
 import statick_tool
 from statick_tool.config import Config
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.chktex_tool_plugin.chktex_tool_plugin import \
-    ChktexToolPlugin
+from statick_tool.plugins.tool.chktex_tool_plugin import ChktexToolPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
