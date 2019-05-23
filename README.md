@@ -6,9 +6,7 @@
 | PyPI    | [![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick) |
 | Codecov | [![Codecov](https://codecov.io/gh/sscpac/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/sscpac/statick/) |
 
-![PyPI Version](https://img.shields.io/pypi/v/statick.svg)
 ![Python Versions](https://img.shields.io/pypi/pyversions/statick.svg)
-![PyPI Status](https://img.shields.io/pypi/status/statick.svg)
 ![License](https://img.shields.io/pypi/l/statick.svg)
 ![Daily Downloads](https://img.shields.io/pypi/dd/statick.svg)
 ![Weekly Downloads](https://img.shields.io/pypi/dw/statick.svg)
