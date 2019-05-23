@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added:
 
 ### Fixed:
+  - Added additional error checking prior to opening and reading configuration files.
 
 ## v0.2.9 - 2019-04-30
 ### Added:
