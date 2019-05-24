@@ -6,7 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## Unreleased
 ### Added:
+
+### Fixed:
+  - Added additional error checking prior to opening and reading configuration files.
+
+## v0.2.9 - 2019-04-30
+### Added:
   - Started keeping a Changelog
+  - Configuration support for tex tools (chktex and lacheck plugins in separate repository)
 
 ### Fixed:
   - Fix backtrace when Statick is run with a nonexistent file as a profile

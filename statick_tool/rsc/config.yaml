@@ -167,3 +167,16 @@ levels:
                        commas: disable,
                        document-start: disable,
                        line-length: disable}}'"
+
+  tex:
+    tool:
+      chktex:
+        flags: ""
+      lacheck:
+        flags: ""
+
+  tex_with_pylint:
+    inherits_from: "tex"
+    tool:
+      pylint:
+        flags: "--good-names=f,i,j,k,x,y,z,ex,_"
