@@ -24,6 +24,8 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
     parsed_args = args.get_args()
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
 
     out_dir = parsed_args.output_directory
     if not os.path.isdir(out_dir):
