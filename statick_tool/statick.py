@@ -28,7 +28,6 @@ class Statick(object):
 
     def __init__(self, user_paths):
         """Initialize Statick."""
-        print("Using user paths {}".format(user_paths))
         self.resources = Resources(user_paths)
 
         self.manager = PluginManager()
