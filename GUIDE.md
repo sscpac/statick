@@ -242,6 +242,7 @@ This will run the test suites in Python virtual environments for each Python ver
 If your system does not have one of the Python versions listed in `tox.ini`, that version will be skipped.
 
 If running `tox` locally does not work, one thing to try is to remove the auto-generated output directories such as `output-py27`, `output-py35`, and `.tox`. 
+There is an included `clean.sh` shell script that helps with removing auto-generated files.
 
 ## Tests and Contributing
 
