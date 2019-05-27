@@ -70,6 +70,34 @@ def test_get_level_ioerror(mocked_profile_constructor, init_statick):
     assert level is None
 
 
+def test_custom_exceptions_file(init_statick):
+    """
+    Test finding ignored packages specified in custom file.
+
+    Expected result: Some ignored package is returned
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--exceptions", dest="exceptions",
+                             type=str, default="exceptions-test.yaml")
+    init_statick.get_exceptions(args.get_args([]))
+    ignore_packages = init_statick.get_ignore_packages()
+    assert ignore_packages == ['test_package']
+
+
+def test_custom_config_file(init_statick):
+    """
+    Test using custom config file.
+
+    Expected result: Some ignored package is returned
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--config", dest="config",
+                             type=str, default="config-test.yaml")
+    init_statick.get_config(args.get_args([]))
+    has_level = init_statick.config.has_level("default_value")
+    assert has_level
+
+
 @mock.patch('statick_tool.statick.Profile')
 def test_get_level_valueerror(mocked_profile_constructor, init_statick):
     """Test the behavior when Profile throws a ValueError."""

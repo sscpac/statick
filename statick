@@ -21,6 +21,8 @@ def main():
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
     parsed_args = args.get_args()
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
 
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
