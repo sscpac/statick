@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## Unreleased
 ### Added:
+
+### Fixed:
+
+## v0.2.10 - 2019-05-27
+### Added:
   - Improved documentation on how to create third-party plugins that can be released to PyPI.
   - Support for custom files for defining configuration and exceptions.
 
