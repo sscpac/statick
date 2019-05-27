@@ -27,6 +27,16 @@ def test_profile_nonexistent():
         Profile(os.path.join(os.path.dirname(__file__), 'nope.yaml'))
 
 
+def test_profile_file_is_none():
+    """
+    Test for when a Profile is initialized with None.
+
+    Expected result: ValueError is thrown
+    """
+    with pytest.raises(ValueError):
+        Profile(os.path.join(None))
+
+
 def test_profile_empty():
     """
     Test for when a Profile is initialized with an empty YAML.
