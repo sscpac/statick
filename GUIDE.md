@@ -208,18 +208,26 @@ For a description of how yapsy works, check out the [documentation](http://yapsy
 
 A user path with some custom plugins may look like
 
-
     my_custom_config
-     |- plugins
-         |- my_discovery_plugin.py
-         |- my_discovery_plugin.yapsy
-         |- my_tool_plugin.py
-         |- my_tool_plugin.yapsy
-     |- rsc
+      setup.py
+      |- plugins
+         |- my_discovery_plugin
+            |- my_discovery_plugin.py
+            |- my_discovery_plugin.yapsy
+         |- my_tool_plugins
+            |- my_tool_plugin.py
+            |- my_tool_plugin.yapsy
+            |- my_other_tool_plugin.py
+            |- my_other_tool_plugin.yapsy
+      |- rsc
          |- config.yaml
          |- exceptions.yaml
 
 For the actual implementation of a plugin, it is recommended to copy a suitable default plugin provided by Statick and modify as needed.
+
+For the contents of `setup.py`, it is recommended to copy a working external plugin.
+Some examples are [statick-fortify](https://github.com/soartech/statick-fortify) and [statick-tex](https://github.com/tdenewiler/statick-tex).
+Those plugins are both setup in such a way that they work when released on PyPI.
 
 # Tests
 
@@ -232,6 +240,9 @@ To run tox, run the following commands from a git checkout of `statick`:
 
 This will run the test suites in Python virtual environments for each Python version.
 If your system does not have one of the Python versions listed in `tox.ini`, that version will be skipped.
+
+If running `tox` locally does not work, one thing to try is to remove the auto-generated output directories such as `output-py27`, `output-py35`, and `.tox`. 
+There is an included `clean.sh` shell script that helps with removing auto-generated files.
 
 ## Tests and Contributing
 
