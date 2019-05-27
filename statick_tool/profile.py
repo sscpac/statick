@@ -8,6 +8,8 @@ class Profile(object):  # pylint: disable=too-few-public-methods
 
     def __init__(self, filename):
         """Initialize profile."""
+        if not filename:
+            raise ValueError("{} is not a valid file".format(filename))
         with open(filename) as fname:
             try:
                 self.profile = yaml.safe_load(fname)

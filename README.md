@@ -6,6 +6,11 @@
 | PyPI    | [![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick) |
 | Codecov | [![Codecov](https://codecov.io/gh/sscpac/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/sscpac/statick/) |
 
+![Python Versions](https://img.shields.io/pypi/pyversions/statick.svg)
+![License](https://img.shields.io/pypi/l/statick.svg)
+![Daily Downloads](https://img.shields.io/pypi/dd/statick.svg)
+![Weekly Downloads](https://img.shields.io/pypi/dw/statick.svg)
+![Monthly Downloads](https://img.shields.io/pypi/dm/statick.svg)
 
 Statick is a set of tools to analyze software packages.
 

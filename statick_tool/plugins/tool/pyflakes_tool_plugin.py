@@ -36,8 +36,8 @@ class PyflakesToolPlugin(ToolPlugin):
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
-                else:
-                    output = ex.output
+
+                output = ex.output
 
             except OSError as ex:
                 print("Couldn't find pyflakes executable! ({})".format(ex))

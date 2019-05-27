@@ -1,7 +1,7 @@
 """
 Manages plugin and file lookup chaining.
 
-Handles chainging user directories and the default statick resource directory.
+Handles chaining user directories and the default statick resource directory.
 """
 
 from __future__ import print_function
@@ -13,7 +13,7 @@ class Resources(object):
     """
     Manages plugin and file lookup chaining.
 
-    Handles chainging user directories and the default statick resource
+    Handles chaining user directories and the default statick resource
     directory.
     """
 
