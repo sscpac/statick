@@ -29,7 +29,7 @@ setup(
     package_data={'statick_tool': ['rsc/*', 'rsc/.clang-format', 'rsc/plugin_mapping/*',
                                    'plugins/*.py', 'plugins/discovery/*',
                                    'plugins/tool/*', 'plugins/reporting/*']},
-    scripts=['statick', 'statick_ws', 'statick_gauntlet'],
+    scripts=['statick', 'statick_ws'],
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=['bandit', 'cmakelint', 'flawfinder', 'lizard',

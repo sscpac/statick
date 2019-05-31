@@ -51,14 +51,6 @@ statick_tool.exceptions module
     :undoc-members:
     :show-inheritance:
 
-statick_tool.gauntlet module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: statick_tool.gauntlet
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 statick_tool.issue module
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
