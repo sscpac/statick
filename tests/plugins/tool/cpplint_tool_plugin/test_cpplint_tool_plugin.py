@@ -122,16 +122,16 @@ def test_bandit_tool_plugin_scan_missing_fields():
     """
     Test what happens when key fields are missing from the Package argument.
 
-    Expected result: issues is empty
+    Expected result: issues is None then empty
     """
     ctp = setup_cpplint_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    # Missing headers in package
-    package['make_targets'] = []
-    package['make_targets'].append({})
-    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-                                                      'valid_package', 'test.c')]
+    # Missing tool name in package.
+    issues = ctp.scan(package, 'level')
+    assert issues is None
+
+    # Missing make_targets and headers in package
     package['cpplint'] = ''
     issues = ctp.scan(package, 'level')
     assert not issues
@@ -191,7 +191,7 @@ def test_checkforexceptions_true():
     )
     assert CpplintToolPlugin.check_for_exceptions(mm)
     mm.group.side_effect = (
-        lambda i: "test.cpp" if i == 1 else "unnamed" if i == 3 else "build/namespaces" if i == 4 else False
+        lambda i: "not-a-file" if i == 1 else "unnamed" if i == 3 else "build/namespaces" if i == 4 else False
     )
     assert CpplintToolPlugin.check_for_exceptions(mm)
     mm.group.side_effect = (
