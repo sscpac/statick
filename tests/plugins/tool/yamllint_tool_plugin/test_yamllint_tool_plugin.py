@@ -1,7 +1,9 @@
 """Unit tests for the YAMLLint tool plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -17,7 +19,7 @@ def setup_yamllint_tool_plugin():
     """Construct and return an instance of the YAMLLint plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
-                            action="store_true", help="Show tool output")
+                            action="store_false", help="Show tool output")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
@@ -71,6 +73,10 @@ def test_yamllint_tool_plugin_parse_valid():
     assert issues[0].severity == '3'
     assert issues[0].message == 'missing document start "---"'
 
+    output = 'valid_package/document-start.yaml:1:1: [error] missing document start "---" (document-start)'
+    issues = yltp.parse_output([output])
+    assert issues[0].severity == '5'
+
 
 def test_yamllint_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of yamllint."""
@@ -78,3 +84,41 @@ def test_yamllint_tool_plugin_parse_invalid():
     output = "invalid text"
     issues = yltp.parse_output(output)
     assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.yamllint_tool_plugin.subprocess.check_output')
+def test_yamllint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means yamllint hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
+    yltp = setup_yamllint_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['yaml'] = [os.path.join(os.path.dirname(__file__),
+                                    'valid_package', 'document-start.yaml')]
+    issues = yltp.scan(package, 'level')
+    assert not issues
+
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
+    issues = yltp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.yamllint_tool_plugin.subprocess.check_output')
+def test_yamllint_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means yamllint doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    yltp = setup_yamllint_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['yaml'] = [os.path.join(os.path.dirname(__file__),
+                                    'valid_package', 'document-start.yaml')]
+    issues = yltp.scan(package, 'level')
+    assert issues is None
