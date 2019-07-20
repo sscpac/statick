@@ -1,6 +1,7 @@
 PyYAML
 bandit
 cmakelint
+cpplint
 flawfinder
 lizard
 pycodestyle
