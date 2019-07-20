@@ -8,5 +8,4 @@ void func(const char *buff) {
   } else {
     /* Handle error */
   }
-  if (1) {}
 }

@@ -15,11 +15,6 @@ from statick_tool.plugins.tool.cpplint_tool_plugin import CpplintToolPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
-try:
-    from tempfile import TemporaryDirectory
-except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
-
 
 def setup_cpplint_tool_plugin():
     """Initialize and return an instance of the cpplint plugin."""
@@ -66,25 +61,24 @@ def test_cpplint_tool_plugin_scan_valid():
                                                     'valid_package'))
 
     # Need to actually run CMake to generate compile_commands.json
-    with TemporaryDirectory() as bin_dir:
-        try:
-            subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
-                                     "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-                                     "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                                     "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=" + bin_dir],
-                                    universal_newlines=True,
-                                    cwd=bin_dir)
-        except subprocess.CalledProcessError as ex:
-            print("Problem running CMake! Returncode = {}".
-                  format(str(ex.returncode)))
-            print("{}".format(ex.output))
-            pytest.fail("Failed running CMake")
+    try:
+        subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
+                                 "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                                 "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"],
+                                universal_newlines=True)
+    except subprocess.CalledProcessError as ex:
+        print("Problem running CMake! Returncode = {}".
+              format(str(ex.returncode)))
+        print("{}".format(ex.output))
+        pytest.fail("Failed running CMake")
 
-        package['make_targets'] = []
-        package['make_targets'].append({})
-        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-                                                          'valid_package', 'test.c')]
-        issues = ctp.scan(package, 'level')
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    package['headers'] = []
+    package['cpplint'] = ''
+    issues = ctp.scan(package, 'level')
     assert len(issues) == 1
     assert issues[0].filename == os.path.join(os.path.dirname(__file__), 'valid_package', 'test.c')
     assert issues[0].line_number == '6'
@@ -92,6 +86,12 @@ def test_cpplint_tool_plugin_scan_valid():
     assert issues[0].issue_type == 'warning/clang-analyzer-deadcode.DeadStores'
     assert issues[0].severity == '3'
     assert issues[0].message == "Value stored to 'si' is never read"
+
+
+def test_tool_dependencies():
+    """Verify that tool dependencies are reported correctly."""
+    ctp = setup_cpplint_tool_plugin()
+    assert ctp.get_tool_dependencies() == ["make"]
 
 
 def test_cpplint_tool_plugin_parse_valid():
@@ -108,19 +108,6 @@ def test_cpplint_tool_plugin_parse_valid():
     assert issues[0].issue_type == 'whitespace/blank_line'
     assert issues[0].severity == '3'
     assert issues[0].message == "Redundant blank line at the end of a code block should be deleted."
-
-
-def test_cpplint_tool_plugin_parse_star():
-    """
-    Verify that we ignore *-prefixed lines of cpplint.
-
-    Expected output: Empty list
-    """
-    ctp = setup_cpplint_tool_plugin()
-    output = " * {}:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]" \
-             .format(os.path.join("valid_package", "test.c"))
-    issues = ctp.parse_output(output)
-    assert not issues
 
 
 def test_cpplint_tool_plugin_parse_invalid():
@@ -140,12 +127,12 @@ def test_bandit_tool_plugin_scan_missing_fields():
     ctp = setup_cpplint_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    # Missing bin_dir
+    # Missing headers in package
     package['make_targets'] = []
     package['make_targets'].append({})
     package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
                                                       'valid_package', 'test.c')]
-    package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+    package['cpplint'] = ''
     issues = ctp.scan(package, 'level')
     assert not issues
 
@@ -159,16 +146,15 @@ def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     mock_subprocess_check_output.side_effect = OSError('mocked error')
     ctp = setup_cpplint_tool_plugin()
-    with TemporaryDirectory() as bin_dir:
-        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                        'valid_package'))
-        package['make_targets'] = []
-        package['make_targets'].append({})
-        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-                                                          'valid_package', 'test.c')]
-        package['bin_dir'] = bin_dir
-        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
-        issues = ctp.scan(package, 'level')
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    package['headers'] = []
+    package['cpplint'] = ''
+    issues = ctp.scan(package, 'level')
     assert issues is None
 
 
@@ -181,38 +167,15 @@ def test_cpplint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outpu
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
     ctp = setup_cpplint_tool_plugin()
-    with TemporaryDirectory() as bin_dir:
-        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                        'valid_package'))
-        package['make_targets'] = []
-        package['make_targets'].append({})
-        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-                                                          'valid_package', 'test.c')]
-        package['bin_dir'] = bin_dir
-        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
-        issues = ctp.scan(package, 'level')
-    assert issues is None
-
-
-@mock.patch('statick_tool.plugins.tool.cpplint_tool_plugin.subprocess.check_output')
-def test_cpplint_tool_plugin_scan_diagnosticerror(mock_subprocess_check_output):
-    """
-    Test that a CalledProcessError is raised when subprocess's output contains 'clang-diagnostic-error'.
-
-    Expected result: issues is None
-    """
-    mock_subprocess_check_output.return_value = "clang-diagnostic-error"
-    ctp = setup_cpplint_tool_plugin()
-    with TemporaryDirectory() as bin_dir:
-        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                        'valid_package'))
-        package['make_targets'] = []
-        package['make_targets'].append({})
-        package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-                                                          'valid_package', 'test.c')]
-        package['bin_dir'] = bin_dir
-        package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
-        issues = ctp.scan(package, 'level')
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    package['headers'] = []
+    package['cpplint'] = ''
+    issues = ctp.scan(package, 'level')
     assert issues is None
 
 
