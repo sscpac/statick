@@ -32,7 +32,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("cpplint failed! Returncode = {}".format(ex.returncode))
+                print("catkin_lint failed! Returncode = {}".format(ex.returncode))
                 print("{}".format(ex.output))
                 return None
 
