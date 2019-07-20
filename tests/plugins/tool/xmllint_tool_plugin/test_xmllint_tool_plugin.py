@@ -1,7 +1,9 @@
 """xmllint unit tests."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -17,7 +19,7 @@ def setup_xmllint_tool_plugin():
     """Create an instance of the xmllint plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
-                            action="store_true", help="Show tool output")
+                            action="store_false", help="Show tool output")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
@@ -78,3 +80,37 @@ def test_xmllint_tool_plugin_parse_invalid():
     output = "invalid text"
     issues = xltp.parse_output(output)
     assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.xmllint_tool_plugin.subprocess.check_output')
+def test_xmllint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means xmllint hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
+    xltp = setup_xmllint_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['xml'] = [os.path.join(os.path.dirname(__file__),
+                                   'valid_package', 'premature_end.xml')]
+    issues = xltp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.xmllint_tool_plugin.subprocess.check_output')
+def test_xmllint_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means xmllint doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    xltp = setup_xmllint_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['xml'] = [os.path.join(os.path.dirname(__file__),
+                                   'valid_package', 'premature_end.xml')]
+    issues = xltp.scan(package, 'level')
+    assert issues is None
