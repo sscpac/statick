@@ -1,6 +1,6 @@
 PyYAML
 bandit
-catkin_lint
+catkin-lint
 cmakelint
 cpplint
 flawfinder
