@@ -1,2 +1,3 @@
 python-catkin-lint
+python-rosdep
 ros-kinetic-roslint

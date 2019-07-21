@@ -17,11 +17,16 @@ notifications:
     on_failure: never
 
 before_install:
+  - sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu xenial main\" > /etc/apt/sources.list.d/ros-latest.list"
+  - sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
   - sudo apt-get update
-  - cat install.txt | xargs sudo apt-get install -y
 
 install:
+  - cat install.txt | xargs sudo apt-get install -y
+  - cat ros-deps.txt | xargs sudo apt-get install -y
   - pip install -r requirements.txt
+  - sudo rosdep init
+  - rosdep update
 
 # This stage is run against everything in the matrix (so every python version)
 script:
