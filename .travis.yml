@@ -18,11 +18,13 @@ notifications:
 
 before_install:
   - sudo apt-get update
-  - cat install.txt | xargs sudo apt-get install -y
-  - cat ros-deps.txt | xargs sudo apt-get install -y
 
 install:
+  - cat install.txt | xargs sudo apt-get install -y
+  - cat ros-deps.txt | xargs sudo apt-get install -y
   - pip install -r requirements.txt
+  - sudo rosdep init
+  - rosdep update
 
 # This stage is run against everything in the matrix (so every python version)
 script:
