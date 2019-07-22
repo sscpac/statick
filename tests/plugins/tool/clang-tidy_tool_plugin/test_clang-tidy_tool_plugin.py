@@ -69,7 +69,7 @@ def test_clang_tidy_tool_plugin_scan_valid():
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
 
-    # Need to actually run CMake to generate compile_commands.json
+    # Need to run CMake
     with TemporaryDirectory() as bin_dir:
         try:
             subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
