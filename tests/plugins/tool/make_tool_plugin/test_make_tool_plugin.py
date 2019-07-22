@@ -65,13 +65,13 @@ def test_make_tool_plugin_parse_valid():
     mtp = setup_make_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    output = "valid_package/hello.c:7:3: error: expected ‘;’ before ‘return’"
+    output = "valid_package/hello.c:7:3: error: expected ; before return"
     issues = mtp.parse_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == 'valid_package/hello.c'
     assert issues[0].line_number == '7'
     assert issues[0].severity == 5
-    assert issues[0].message == "expected ‘;’ before ‘return’"
+    assert issues[0].message == "expected ; before return"
 
 
 def test_make_tool_plugin_parse_invalid():
