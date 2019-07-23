@@ -42,7 +42,7 @@ jobs:
       # the stage name) just to run statick
     - stage: test
       python: '2.7'
-      script: mkdir statick_output; ./statick . statick_output --profile self_check.yaml
+      script: cp /home/travis/build/tdenewiler/statick/statick_tool/rsc/_clang-format /home/travis/.clang-format; mkdir statick_output; ./statick . statick_output --profile self_check.yaml
       # Force this to only run for one Python version
     - stage: build
       python: '2.7'
