@@ -21,3 +21,4 @@ docs/_build
 .pytest_cache
 .tox
 output-*/
+tests/plugins/tool/clang-format_tool_plugin/_clang-format

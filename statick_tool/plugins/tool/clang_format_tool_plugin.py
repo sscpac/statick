@@ -50,9 +50,6 @@ class ClangFormatToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        flags = []
-        flags += self.get_user_flags(level)
-
         files = []
         if "make_targets" in package:
             for target in package["make_targets"]:
