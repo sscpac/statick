@@ -27,7 +27,7 @@ install:
   - pip install -r requirements.txt
   - sudo rosdep init
   - rosdep update
-  - cp statick_tool/rsc/_clang-format /home/travis/.clang-format
+  - cp /home/travis/build/tdenewiler/statick/statick_tool/rsc/_clang-format /home/travis/.clang-format
 
 # This stage is run against everything in the matrix (so every python version)
 script:
