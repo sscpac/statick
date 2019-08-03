@@ -165,6 +165,17 @@ def test_tool_plugin_is_valid_executable_nonexistent():
     assert not ToolPlugin.is_valid_executable('nonexistent')
 
 
+def test_tool_dependencies():
+    """Verify that dependencies are reported correctly."""
+    arg_parser = argparse.ArgumentParser()
+    resources = Resources([os.path.join(os.path.dirname(__file__), 'user_flags_config')])
+    config = Config(resources.get_file("config.yaml"))
+    plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    tp = ToolPlugin()
+    tp.set_plugin_context(plugin_context)
+    assert tp.get_tool_dependencies() == []
+
+
 def test_tool_plugin_is_valid_executable_extension_nopathext(monkeypatch):
     """
     Test that is_valid_executable works correctly with .exe appended, no PATHEXT
