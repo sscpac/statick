@@ -22,7 +22,7 @@ def setup_cccc_tool_plugin():
     """Create an instance of the CCCC plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
-                            action="store_true", help="Show tool output")
+                            action="store_false", help="Show tool output")
     arg_parser.add_argument("--cccc-bin", dest="cccc_bin")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
