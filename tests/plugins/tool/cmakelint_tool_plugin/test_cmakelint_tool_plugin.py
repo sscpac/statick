@@ -1,7 +1,9 @@
 """Unit tests for cmakelint plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -52,6 +54,9 @@ def test_cmakelint_tool_plugin_scan_valid():
     cmltp = setup_cmakelint_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
+    issues = cmltp.scan(package, 'level')
+    assert not issues
+
     package['cmake'] = 'CMakeLists.txt'
     issues = cmltp.scan(package, 'level')
     assert len(issues) == 1
@@ -70,6 +75,10 @@ def test_cmakelint_tool_plugin_parse_valid():
     assert issues[0].severity == '3'
     assert issues[0].message == "Extra spaces between 'INVALID_FUNCTION' and its ()"
 
+    output = "valid_package/CMakeLists.txt:1: fake warning [syntax]"
+    issues = cmltp.parse_output(output)
+    assert issues[0].severity == '5'
+
 
 def test_cmakelint_tool_plugin_parse_invalid():
     """Verify that we don't parse invalid output of cmakelint."""
@@ -87,3 +96,41 @@ def test_cmakelint_tool_plugin_nonexistent_file():
     package['cmake'] = 'invalid.txt'
     issues = cmltp.scan(package, 'level')
     assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.cmakelint_tool_plugin.subprocess.check_output')
+def test_cmakelint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means cmakelint hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
+    cmltp = setup_cmakelint_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['cmake'] = [os.path.join(os.path.dirname(__file__),
+                                     'valid_package', 'CMakeLists.txt')]
+    issues = cmltp.scan(package, 'level')
+    assert not issues
+
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(0, '', output="mocked error")
+    issues = cmltp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.cmakelint_tool_plugin.subprocess.check_output')
+def test_cmakelint_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means cmakelint doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    cmltp = setup_cmakelint_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['cmake'] = [os.path.join(os.path.dirname(__file__),
+                                     'valid_package', 'CMakeLists.txt')]
+    issues = cmltp.scan(package, 'level')
+    assert issues is None
