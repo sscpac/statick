@@ -107,7 +107,7 @@ def test_lizard_tool_plugin_scan_missing_fields():
 
 
 @mock.patch('statick_tool.plugins.tool.lizard_tool_plugin.subprocess.check_output')
-def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
+def test_lizard_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     Test what happens when an OSError is raised (usually means lizard doesn't exist).
 
