@@ -70,6 +70,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             diff = difflib.context_diff(output.splitlines(),
                                         target_format.splitlines())
             for line in diff:
+                print("diff: {}".format(line))
                 if line.startswith("+ ") or line.startswith("- ") or \
                    line.startswith("! "):
                     if line[2:].strip()[0] != "#":
