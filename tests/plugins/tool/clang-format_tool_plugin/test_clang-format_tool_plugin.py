@@ -176,6 +176,10 @@ def test_clang_format_tool_plugin_scan_oserror(mock_subprocess_check_output):
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['make_targets'] = []
-    package['headers'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'indents.c')]
+    package['headers'] = [os.path.join(os.path.dirname(__file__),
+                                       'valid_package', 'indents.h')]
     issues = cftp.scan(package, 'level')
     assert issues is None
