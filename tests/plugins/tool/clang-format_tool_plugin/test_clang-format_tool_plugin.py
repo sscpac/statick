@@ -83,7 +83,7 @@ def test_clang_format_tool_plugin_scan_valid():
                                                     'valid_package'))
     # Copy the latest clang_format over
     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
-                    os.path.join(os.path.dirname(__file__), '_clang-format'))
+                    os.path.join(os.path.expanduser("~"), '.clang-format'))
     package['make_targets'] = []
     package['make_targets'].append({})
     package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
