@@ -91,7 +91,7 @@ class CCCCToolPlugin(ToolPlugin):
             results[module['name']] = {}
             metrics = {}
             for field in module:
-                if '@value' in  module[field]:  # noqa: E271
+                if '@value' in module[field]:
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
@@ -100,7 +100,7 @@ class CCCCToolPlugin(ToolPlugin):
                 break
             metrics = results[module['name']]
             for field in module:
-                if '@value' in  module[field]:  # noqa: E271
+                if '@value' in module[field]:
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
@@ -109,7 +109,7 @@ class CCCCToolPlugin(ToolPlugin):
                 break
             metrics = results[module['name']]
             for field in module:
-                if '@value' in  module[field]:  # noqa: E271
+                if '@value' in module[field]:
                     metrics[field] = {"value": module[field]['@value']}
             results[module['name']] = metrics
 
