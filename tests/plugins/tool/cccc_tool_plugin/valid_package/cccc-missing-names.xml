@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Report on software metrics-->
+<CCCC_Project>
+<procedural_summary>
+<module>
+<lines_of_code value="18" level="0" />
+</module>
+</procedural_summary>
+<oo_design>
+<module>
+<weighted_methods_per_class_unity value="5" level="0" />
+</module>
+</oo_design>
+<structural_summary>
+<module>
+<fan_out_visible value="0" level="0" />
+</module>
+</structural_summary>
+</CCCC_Project>

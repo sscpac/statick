@@ -26,7 +26,7 @@ def setup_clang_tidy_tool_plugin():
     """Initialize and return an instance of the clang-tidy plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
-                            action="store_true", help="Show tool output")
+                            action="store_false", help="Show tool output")
     arg_parser.add_argument("--clang-tidy-bin", dest="clang_tidy_bin")
     arg_parser.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
                             type=str)
@@ -148,7 +148,7 @@ def test_clang_tidy_tool_plugin_parse_invalid():
     assert not issues
 
 
-def test_bandit_tool_plugin_scan_missing_fields():
+def test_clang_tidy_tool_plugin_scan_missing_fields():
     """
     Test what happens when key fields are missing from the Package argument.
 
@@ -168,7 +168,7 @@ def test_bandit_tool_plugin_scan_missing_fields():
 
 
 @mock.patch('statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output')
-def test_bandit_tool_plugin_scan_oserror(mock_subprocess_check_output):
+def test_clang_tidy_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     Test what happens when an OSError is raised (usually means clang-tidy doesn't exist).
 
