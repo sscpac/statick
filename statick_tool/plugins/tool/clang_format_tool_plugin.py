@@ -62,8 +62,8 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         try:
             home_file = os.path.join(os.path.expanduser("~"), '.clang-format')
-            with open(home_file, "r") as format_file:
-                output = format_file.read()
+            with open(home_file, "r") as home_file:
+                output = home_file.read()
             format_file_name = self.plugin_context.resources.get_file("_clang-format")
             with open(format_file_name, "r") as format_file:
                 target_format = format_file.read()
