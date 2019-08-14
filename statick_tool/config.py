@@ -21,7 +21,6 @@ class Config(object):
 
     def __init__(self, filename):
         """Initialize configuration."""
-        print("Using config {}".format(filename))
         if filename is None or not os.path.exists(filename):
             self.config = []
             return
