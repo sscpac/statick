@@ -1,7 +1,9 @@
 """Unit tests for the pycodestyle plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -79,3 +81,37 @@ def test_pycodestyle_tool_plugin_parse_invalid():
     output = "invalid text"
     issues = pcstp.parse_output(output)
     assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.pycodestyle_tool_plugin.subprocess.check_output')
+def test_pycodestyle_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means pycodestyle doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    pcstp = setup_pycodestyle_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['python_src'] = [os.path.join(os.path.dirname(__file__),
+                                          'valid_package', 'e501.py')]
+    issues = pcstp.scan(package, 'level')
+    assert issues is None
+
+
+@mock.patch('statick_tool.plugins.tool.pycodestyle_tool_plugin.subprocess.check_output')
+def test_pycodestyle_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means pycodestyle hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(0, '', output="mocked error")
+    pcstp = setup_pycodestyle_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['python_src'] = [os.path.join(os.path.dirname(__file__),
+                                          'valid_package', 'e501.py')]
+    issues = pcstp.scan(package, 'level')
+    assert issues is None
