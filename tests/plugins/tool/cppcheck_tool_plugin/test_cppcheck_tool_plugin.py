@@ -65,7 +65,10 @@ def test_cppcheck_tool_plugin_scan_valid():
     package['make_targets'].append({})
     package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
                                                       'valid_package', 'test.c')]
+    package['make_targets'][0]['include_dirs'] = [os.path.join(os.path.dirname(__file__),
+                                                               'valid_package')]
     package['headers'] = []
+    package['path'] = os.path.join(os.path.dirname(__file__), 'valid_package')
     issues = cctp.scan(package, 'level')
     assert len(issues) == 1
     assert issues[0].filename == os.path.join(os.path.dirname(__file__), 'valid_package', 'test.c')
@@ -88,7 +91,7 @@ def test_cppcheck_tool_plugin_scan_no_files():
     package['make_targets'][0]['src'] = []
     package['headers'] = []
     issues = cctp.scan(package, 'level')
-    assert len(issues) == 0
+    assert not issues
 
 
 def test_cppcheck_tool_plugin_scan_invalid_file():
@@ -107,6 +110,12 @@ def test_cppcheck_tool_plugin_scan_invalid_file():
     # This should raise a calledProcessError, so None will be returned
     issues = cctp.scan(package, 'level')
     assert issues is None
+
+
+def test_tool_dependencies():
+    """Verify that tool dependencies are reported correctly."""
+    cctp = setup_cppcheck_tool_plugin()
+    assert cctp.get_tool_dependencies() == ["make"]
 
 
 def test_cppcheck_tool_plugin_parse_valid():
