@@ -1,7 +1,9 @@
 """Unit tests for the perlcritic plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -59,6 +61,16 @@ def test_perlcritic_tool_plugin_scan_valid():
         pytest.skip("perlcritic command not available, can't test its output")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
+
+    # Do not include perl_src
+    issues = pctp.scan(package, 'level')
+    assert not issues
+
+    # Pass in empty perl_src
+    package['perl_src'] = []
+    issues = pctp.scan(package, 'level')
+    assert not issues
+
     package['perl_src'] = [os.path.join(os.path.dirname(__file__),
                                         'valid_package', 'test.pl')]
     issues = pctp.scan(package, 'level')
@@ -89,4 +101,38 @@ def test_perlcritic_tool_plugin_parse_invalid():
     pctp = setup_perlcritic_tool_plugin()
     output = "invalid text"
     issues = pctp.parse_output(output)
+    assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.perlcritic_tool_plugin.subprocess.check_output')
+def test_perlcritic_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means perlcritic doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    pctp = setup_perlcritic_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['perl_src'] = [os.path.join(os.path.dirname(__file__),
+                                        'valid_package', 'test.pl')]
+    issues = pctp.scan(package, 'level')
+    assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.perlcritic_tool_plugin.subprocess.check_output')
+def test_perlcritic_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means perlcritic hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(0, '', output="mocked error")
+    pctp = setup_perlcritic_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['perl_src'] = [os.path.join(os.path.dirname(__file__),
+                                        'valid_package', 'test.pl')]
+    issues = pctp.scan(package, 'level')
     assert not issues
