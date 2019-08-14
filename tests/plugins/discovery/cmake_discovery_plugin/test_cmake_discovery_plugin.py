@@ -1,7 +1,9 @@
 """Unit tests for the CMake discovery plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -65,3 +67,33 @@ def test_cmake_discovery_plugin_scan_invalid():
                                    'invalid_package'))
     cmdp.scan(package, 'level')
     assert not package['cmake']
+
+
+@mock.patch('statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output')
+def test_cmake_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means yamllint hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    cmdp.scan(package, 'level')
+    assert not package['make_targets']
+
+
+@mock.patch('statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output')
+def test_cmake_discovery_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means yamllint doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError('mocked error')
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    cmdp = setup_cmake_discovery_plugin()
+    cmdp.scan(package, 'level')
+    assert not package['make_targets']
