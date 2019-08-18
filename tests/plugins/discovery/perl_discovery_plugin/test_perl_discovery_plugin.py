@@ -5,6 +5,7 @@ from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.perl_discovery_plugin import \
     PerlDiscoveryPlugin
@@ -35,7 +36,7 @@ def test_perl_discovery_plugin_scan_valid():
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     pldp.scan(package, 'level', None)
-    expected = ['test.pl']
+    expected = ['test.pl', 'ignore_this/ignoreme.pl']
     if pldp.file_command_exists():
         expected += ['oddextensionpl.source']
     # We have to add the path to each of the above...yuck
@@ -43,3 +44,18 @@ def test_perl_discovery_plugin_scan_valid():
                          for filename in expected]
     # Neat trick to verify that two unordered lists are the same
     assert set(package['perl_src']) == set(expected_fullpath)
+
+
+def test_perl_discovery_plugin_scan_exceptions():
+    """Test that the perl discovery plugin properly respects exceptions."""
+    pldp = PerlDiscoveryPlugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    exceptions = Exceptions(os.path.join(os.path.dirname(__file__), 'exceptions.yaml'))
+    pldp.scan(package, 'level', exceptions)
+    expected_src = ['test.pl', 'oddextensionpl.source']
+    # We have to add the path to each of the above...yuck
+    expected_src_fullpath = [os.path.join(package.path, filename)
+                             for filename in expected_src]
+    # Neat trick to verify that two unordered lists are the same
+    assert set(package['perl_src']) == set(expected_src_fullpath)

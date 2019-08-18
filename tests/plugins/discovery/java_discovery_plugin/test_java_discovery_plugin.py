@@ -38,12 +38,12 @@ def test_java_discovery_plugin_scan_valid():
     jdp.scan(package, 'level')
     expected_src = ['test.java', os.path.join('ignore_this', 'ignoreme.java')]
     expected_bin = ['test.class', os.path.join('ignore_this', 'IgnoreMe.class')]
-    # we have to add the path to each of the above
+    # We have to add the path to each of the above
     expected_src_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_src]
     expected_bin_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_bin]
-    # neat trick to verify that two unordered lists are the same
+    # Neat trick to verify that two unordered lists are the same
     assert set(package['java_src']) == set(expected_src_fullpath)
     assert set(package['java_bin']) == set(expected_bin_fullpath)
 
@@ -60,7 +60,7 @@ def test_java_discovery_plugin_scan_invalid():
 
 
 def test_java_discovery_plugin_scan_exceptions():
-    """test that the java discovery plugin properly respects exceptions."""
+    """Test that the java discovery plugin properly respects exceptions."""
     jdp = JavaDiscoveryPlugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
@@ -68,11 +68,11 @@ def test_java_discovery_plugin_scan_exceptions():
     jdp.scan(package, 'level', exceptions)
     expected_src = ['test.java']
     expected_bin = ['test.class']
-    # we have to add the path to each of the above...yuck
+    # We have to add the path to each of the above...yuck
     expected_src_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_src]
     expected_bin_fullpath = [os.path.join(package.path, filename)
                              for filename in expected_bin]
-    # neat trick to verify that two unordered lists are the same
+    # Neat trick to verify that two unordered lists are the same
     assert set(package['java_src']) == set(expected_src_fullpath)
     assert set(package['java_bin']) == set(expected_bin_fullpath)
