@@ -49,7 +49,8 @@ class Exceptions(object):
 
 # pylint: disable=too-many-boolean-expressions
         if self.exceptions and "packages" in self.exceptions \
-            and self.exceptions["packages"] and package.name in \
+            and self.exceptions["packages"] and \
+            package.name in \
                 self.exceptions["packages"] \
                 and self.exceptions["packages"][package.name] \
                 and "exceptions" in self.exceptions["packages"][package.name]:
