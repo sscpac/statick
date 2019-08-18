@@ -5,6 +5,7 @@ from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.yaml_discovery_plugin import \
     YAMLDiscoveryPlugin
@@ -35,7 +36,7 @@ def test_yaml_discovery_plugin_scan_valid():
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     ydp.scan(package, 'level')
-    expected = ['test.yaml']
+    expected = ['test.yaml', 'ignore_this/ignoreme.yaml']
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename)
                          for filename in expected]
@@ -51,3 +52,18 @@ def test_yaml_discovery_plugin_scan_invalid():
                                    'invalid_package'))
     ydp.scan(package, 'level')
     assert not package['yaml']
+
+
+def test_yaml_discovery_plugin_scan_exceptions():
+    """Test that the yaml discovery plugin properly respects exceptions."""
+    yamldp = YAMLDiscoveryPlugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    exceptions = Exceptions(os.path.join(os.path.dirname(__file__), 'exceptions.yaml'))
+    yamldp.scan(package, 'level', exceptions)
+    expected_src = ['test.yaml']
+    # We have to add the path to each of the above...yuck
+    expected_src_fullpath = [os.path.join(package.path, filename)
+                             for filename in expected_src]
+    # Neat trick to verify that two unordered lists are the same
+    assert set(package['yaml']) == set(expected_src_fullpath)

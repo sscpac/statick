@@ -5,6 +5,7 @@ from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.python_discovery_plugin import \
     PythonDiscoveryPlugin
@@ -35,7 +36,7 @@ def test_python_discovery_plugin_scan_valid():
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     pydp.scan(package, 'level')
-    expected = ['test.py']
+    expected = ['test.py', 'ignore_this/ignoreme.py']
     if pydp.file_command_exists():
         expected += ['oddextensionpy.source']
     # We have to add the path to each of the above...yuck
@@ -53,3 +54,18 @@ def test_python_discovery_plugin_scan_invalid():
                                    'invalid_package'))
     pydp.scan(package, 'level')
     assert not package['python_src']
+
+
+def test_python_discovery_plugin_scan_exceptions():
+    """Test that the python discovery plugin properly respects exceptions."""
+    pydp = PythonDiscoveryPlugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    exceptions = Exceptions(os.path.join(os.path.dirname(__file__), 'exceptions.yaml'))
+    pydp.scan(package, 'level', exceptions)
+    expected_src = ['test.py', 'oddextensionpy.source']
+    # We have to add the path to each of the above...yuck
+    expected_src_fullpath = [os.path.join(package.path, filename)
+                             for filename in expected_src]
+    # Neat trick to verify that two unordered lists are the same
+    assert set(package['python_src']) == set(expected_src_fullpath)
