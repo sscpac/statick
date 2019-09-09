@@ -8,6 +8,7 @@ python:
   - '3.6'
   - '3.7'
   - 'pypy'
+  - 'pypy3'
 
 cache:
   - apt
