@@ -6,8 +6,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## Unreleased
 ### Added:
+
+### Fixed:
+
+## v0.2.11 - 2019-09-08
+### Added:
   - cpplint added to requirements.txt
-  - Unit tests for cpplint tool plugin.
+  - Updated and new unit tests for:
+      - cpplint tool plugin
+      - xmllint tool plugin
+      - yamllint tool plugin
+      - catkin_lint tool plugin
+      - make tool plugin
+      - clang-format tool plugin
+      - pylint tool plugin
+      - lizard tool plugin
+      - pyflakes tool plugin
+      - cmakelint tool plugin
+      - uncrustify tool plugin
+      - CCCC tool plugin
+      - pycodestyle tool plugin
+      - perlcritic tool plugin
+      - CMake discovery plugin
+      - config module
+      - discovery module
+      - exceptions module
 
 ### Fixed:
 
