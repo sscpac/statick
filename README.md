@@ -8,6 +8,7 @@
 
 ![Python Versions](https://img.shields.io/pypi/pyversions/statick.svg)
 ![License](https://img.shields.io/pypi/l/statick.svg)
+[![Doc](https://readthedocs.org/projects/statick/badge/?version=latest)](https://statick.readthedocs.io/en/latest/?badge=latest)
 ![Daily Downloads](https://img.shields.io/pypi/dd/statick.svg)
 ![Weekly Downloads](https://img.shields.io/pypi/dw/statick.svg)
 ![Monthly Downloads](https://img.shields.io/pypi/dm/statick.svg)
