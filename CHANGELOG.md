@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Fixed:
 
+## v0.2.12 - 2019-09-08
+### Fixed:
+  - Reverted method used by clang-format tool plugin to obtain output.
+    New way worked locally but failed on Travis CI jobs.
+
 ## v0.2.11 - 2019-09-08
 ### Added:
   - cpplint added to requirements.txt
