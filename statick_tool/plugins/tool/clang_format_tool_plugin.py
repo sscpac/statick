@@ -3,7 +3,6 @@
 from __future__ import print_function
 
 import difflib
-import os
 import re
 import subprocess
 
@@ -61,9 +60,10 @@ class ClangFormatToolPlugin(ToolPlugin):
         total_output = []
 
         try:
-            home_file = os.path.join(os.path.expanduser("~"), '.clang-format')
-            with open(home_file, "r") as home_file:
-                output = home_file.read()
+            output = subprocess.check_output([clang_format_bin,
+                                              "--dump-config"],
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)
             format_file_name = self.plugin_context.resources.get_file("_clang-format")
             with open(format_file_name, "r") as format_file:
                 target_format = format_file.read()
