@@ -5,6 +5,7 @@ from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.tex_discovery_plugin import \
     TexDiscoveryPlugin
@@ -35,7 +36,7 @@ def test_tex_plugin_scan_valid():
                                                     'valid_package'))
     tdp = TexDiscoveryPlugin()
     tdp.scan(package, 'level')
-    expected = ['test.tex', 'test.bib']
+    expected = ['test.tex', 'test.bib', 'ignore_this/ignoreme.tex']
     if tdp.file_command_exists():
         expected += ['oddextensiontex.source']
     # We have to add the path to each of the above...yuck
@@ -53,3 +54,19 @@ def test_tex_plugin_scan_invalid():
     tdp = TexDiscoveryPlugin()
     tdp.scan(package, 'level')
     assert not package['tex']
+
+
+def test_tex_discovery_plugin_scan_exceptions():
+    """Test that the tex discovery plugin properly respects exceptions."""
+    tdp = TexDiscoveryPlugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
+                                         'exceptions.yaml'))
+    tdp.scan(package, 'level', exceptions)
+    expected_src = ['test.tex', 'test.bib', 'oddextensiontex.source']
+    # We have to add the path to each of the above...yuck
+    expected_src_fullpath = [os.path.join(package.path, filename)
+                             for filename in expected_src]
+    # Neat trick to verify that two unordered lists are the same
+    assert set(package['tex']) == set(expected_src_fullpath)
