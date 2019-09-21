@@ -7,6 +7,7 @@ python:
   - '3.5'
   - '3.6'
   - '3.7'
+  - '3.8-dev'
   - 'pypy'
   - 'pypy3'
 
@@ -34,7 +35,7 @@ install:
 script:
   - pip install tox
   # Borrowed from flask-mongoengine
-  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/')
+  - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/' | sed -e 's/-dev//')
 
 
 jobs:
@@ -54,10 +55,10 @@ jobs:
         - travis-sphinx build
         - travis-sphinx deploy
     - stage: deploy
-      python: '2.7'
       provider: pypi
       user: tdenewiler
       password:
         secure: t4ewjCNq1cFlWrdz+dapN1FlGSi7HHZVlErDuVFJuVFeuBxcVOyDLoRhbcZsX4/bAirM5DAWKfR+MiucZ/Ut8D0r3YFjvyaf9FfnXlKCt0Z3V/FxwADsy489dDjY7M7H+2563k4NyR03rXO/0qsU/An1fROv0buycLA2+PwuYPUeM0eRwuYPgSDyL+84AYPHVqwU8p0VKw4Z58iGVzyzpy3tZN4jxne+bO8tXf+qj7lC1Oi53/kJvhG5XvdI8lIPZv6KyO4t7lNzrniS6+SbNQqFSYrJ0zh28iXhoA3iM0u2YbKvRcc2CduwQzykwzIMWlCRrvrRBsePpuDT4k9VDXeOaNbu5ZxLY87bZWsld/549itidtqjF1So8tcgdAS5aO1O6G4BqfXXIhBdRHKxiUrm2h28ubXq4eHvDjxXpE7YLMN2jiXptTXX5zVRo9gkCv4UPk/Ugsk2XQ234UByq3aQjgiFDreBh5SCqzEQtUgY10neoKsG0kigrAYMJH0xMxhr00mPXMWJI9dumGilSI/Cz1uQmXuMqBxXg2IwAfulBDG6rsYCHSw0mFJvFEqt5ifnyP9WtHozc3PHWY2+1RLlzCpEnezHyRWZ4HrcPSWUKdHy9INczOQ9U2G1MH1cXOgZ0+rnHMdtsg+mbo+Y/A9mbiVyLcxgznoE1fSsYI0=
       on:
         tags: true
+      skip_existing: true
