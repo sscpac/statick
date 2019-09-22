@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Fixed:
 
+## v0.2.13 - 2019-09-22
+### Added:
+  - Python 3.8-dev is now part of the test matrix for Travis jobs.
+
 ## v0.2.12 - 2019-09-08
 ### Fixed:
   - Reverted method used by clang-format tool plugin to obtain output.
@@ -36,8 +40,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
       - config module
       - discovery module
       - exceptions module
-
-### Fixed:
 
 ### Removed:
   - Gauntlet tool removed due to perceived lack of use in community.
