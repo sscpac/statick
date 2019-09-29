@@ -17,6 +17,7 @@ MANIFEST
 docs/_build
 
 # From tests
+.cache
 .coverage
 .pytest_cache
 .tox
