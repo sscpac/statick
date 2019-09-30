@@ -1,6 +1,7 @@
 """Unit tests of statick.py."""
 
 import os
+import sys
 
 import mock
 import pytest
@@ -16,6 +17,26 @@ def init_statick():
 
     return Statick(args.get_user_paths(["--user-paths",
                                         os.path.dirname(__file__)]))
+
+
+def test_gather_args(init_statick):
+    """
+    Test setting and getting arguments.
+
+    Expected result: Arguments are set properly
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    args.parser.add_argument("--output_directory", help="Output directory")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = ["--output_directory", os.path.dirname(__file__),
+                "--path", os.path.dirname(__file__)]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args()
+    assert "path" in parsed_args
+    assert "output_directory" in parsed_args
 
 
 # The Profile module has more in-depth test cases, this test module is just
