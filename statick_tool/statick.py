@@ -206,21 +206,8 @@ class Statick(object):
             plugin_name = plugins_to_run[0]
 
             if plugin_name not in self.tool_plugins:
-                if plugin_name == "pep257":
-                    plugin_name = "pydocstyle"
-                    plugins_to_run.remove("pep257")
-                    plugins_to_run.insert(0, plugin_name)
-                    print("DEPRECATION WARNING: The pep257 tool has been renamed "
-                          "as the pydocstyle tool. Please update your configuration.")
-                elif plugin_name == "pep8":
-                    plugin_name = "pycodestyle"
-                    plugins_to_run.remove("pep8")
-                    plugins_to_run.insert(0, plugin_name)
-                    print("DEPRECATION WARNING: The pep8 tool has been renamed "
-                          "as the pycodestyle tool. Please update your configuration.")
-                else:
-                    print("Can't find specified tool plugin {}!".format(plugin_name))
-                    return None, False
+                print("Can't find specified tool plugin {}!".format(plugin_name))
+                return None, False
 
             if args.force_tool_list is not None:
                 force_tool_list = args.force_tool_list.split(",")
