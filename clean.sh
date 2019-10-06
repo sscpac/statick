@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rf build/ dist/ .tox/ output-py* statick.egg-info/ statick_output/*
+rm -rf build/ dist/ output-py* .pytest_cache statick.egg-info/ statick_output/* .tox/
