@@ -215,7 +215,7 @@ def test_run_force_tool_list(init_statick):
     statick.gather_args(args.parser)
     sys.argv = ["--output_directory", os.path.dirname(__file__),
                 "--path", os.path.dirname(__file__),
-                "--force-tool-list", "cppcheck"]
+                "--force-tool-list", "bandit"]
     args.output_directory = os.path.dirname(__file__)
     parsed_args = args.get_args()
     path = parsed_args.path
