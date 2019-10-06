@@ -20,17 +20,6 @@ class PycodestyleToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         flags = ["--format=pylint"]
         user_flags = self.get_user_flags(level)
-        # This check is done to support the switch from the pep8 package name
-        # to the pycodestyle package name. See:
-        # https://github.com/PyCQA/pycodestyle/issues/466
-        # We want to support the old tool name in configuration files for a
-        # while.
-        if not user_flags:
-            user_flags = self.get_user_flags(level, "pep8")
-            if user_flags:
-                print("DEPRECATION WARNING: The tool name changed from pep8 to "
-                      "pycodestyle. Please update your configuration file to "
-                      "use the new tool name.")
         flags += user_flags
 
         total_output = []
