@@ -81,7 +81,7 @@ class Statick(object):
         args.add_argument("--show-tool-output", dest="show_tool_output",
                           action="store_true", help="Show tool output")
         args.add_argument("--config", dest="config",
-                          type=str, help="Name of profile yaml file")
+                          type=str, help="Name of config yaml file")
         args.add_argument("--profile", dest="profile",
                           type=str, help="Name of profile yaml file")
         args.add_argument("--exceptions", dest="exceptions",
@@ -141,7 +141,7 @@ class Statick(object):
         package = Package(os.path.basename(path), path)
         level = self.get_level(path, args)
 
-        if not self.config.has_level(level):
+        if not self.config or not self.config.has_level(level):
             print("Can't find specified level {} in config!".format(level))
             return None, False
 

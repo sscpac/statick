@@ -128,3 +128,100 @@ def test_get_level_valueerror(mocked_profile_constructor, init_statick):
                              type=str, default="profile-test.yaml")
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level is None
+
+
+def test_run():
+    """Test running Statick."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    args.parser.add_argument("--output_directory", help="Output directory")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = ["--output_directory", os.path.dirname(__file__),
+                "--path", os.path.dirname(__file__)]
+    parsed_args = args.get_args()
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert not success
+
+
+def test_run_missing_path(init_statick):
+    """Test running Statick against a package that does not exist."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--output_directory", help="Output directory")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = ["--output_directory", os.path.dirname(__file__)]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args()
+    path = "/tmp/invalid"
+    statick.get_config(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    assert issues is None
+    assert not success
+
+
+def test_run_missing_config(init_statick):
+    """Test running Statick with a missing config file."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    args.parser.add_argument("--output_directory", help="Output directory")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = ["--output_directory", os.path.dirname(__file__),
+                "--path", os.path.dirname(__file__)]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args()
+    path = parsed_args.path
+    issues, success = statick.run(path, parsed_args)
+    assert issues is None
+    assert not success
+
+
+def test_run_output_is_not_directory(init_statick):
+    """Test running Statick against a missing directory."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    args.parser.add_argument("--output_directory", help="Output directory")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = ["--output_directory", "/tmp/not_a_directory",
+                "--path", os.path.dirname(__file__)]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args()
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    assert issues is None
+    assert not success
+
+
+def test_run_force_tool_list(init_statick):
+    """Test running Statick against a missing directory."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    args.parser.add_argument("--output_directory", help="Output directory")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = ["--output_directory", os.path.dirname(__file__),
+                "--path", os.path.dirname(__file__),
+                "--force-tool-list", "cppcheck"]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args()
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
