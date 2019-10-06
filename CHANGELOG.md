@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Fixed:
 
+### Removed:
+  - Removed support for previously deprecated pep8 and pep257 tools.
+    The pycodestyle and pydocstyle tools provide the same functionality, only the tool name needs to change in the configuration file.
+
 ## v0.2.13 - 2019-09-22
 ### Added:
   - Python 3.8-dev is now part of the test matrix for Travis jobs.
