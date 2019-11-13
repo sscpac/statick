@@ -1,0 +1,3 @@
+[Core]
+Name = TeX Discovery Plugin
+Module = tex_discovery_plugin

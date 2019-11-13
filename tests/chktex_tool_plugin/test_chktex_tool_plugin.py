@@ -64,7 +64,8 @@ def test_chktex_tool_plugin_scan_valid():
 def test_chktex_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of chktex."""
     cttp = setup_chktex_tool_plugin()
-    output = 'a\nb\nc\nd\nWarning 8 in /e line 13: Wrong length of dash may have been used.\nAdding intentional chktex warning -- for dashes --- should have three of them.\n^^\n'
+    output = 'a\nb\nc\nd\nWarning 8 in /e line 13: Wrong length of dash may have been used.\n' \
+             'Adding intentional chktex warning -- for dashes --- should have three of them.\n^^\n'
     issues = cttp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].line_number == '13'
@@ -89,7 +90,9 @@ def test_chktex_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output
 
     Expected result: issues is None
     """
-    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(0, '', output="mocked error")
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(0,
+                                                                             '',
+                                                                             output="mocked error")
     cttp = setup_chktex_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
@@ -98,7 +101,9 @@ def test_chktex_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output
     issues = cttp.scan(package, 'level')
     assert issues is None
 
-    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1,
+                                                                             '',
+                                                                             output="mocked error")
     issues = cttp.scan(package, 'level')
     assert not issues
 

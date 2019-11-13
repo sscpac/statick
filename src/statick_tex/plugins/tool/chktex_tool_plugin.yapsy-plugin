@@ -1,0 +1,3 @@
+[Core]
+Name = Chktex Tool Plugin
+Module = chktex_tool_plugin

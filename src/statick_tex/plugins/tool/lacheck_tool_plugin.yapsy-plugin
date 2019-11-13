@@ -1,0 +1,3 @@
+[Core]
+Name = Lacheck Tool Plugin
+Module = lacheck_tool_plugin
