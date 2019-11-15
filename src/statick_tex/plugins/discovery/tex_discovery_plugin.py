@@ -20,7 +20,7 @@ class TexDiscoveryPlugin(DiscoveryPlugin):
     def scan(self, package, level, exceptions=None):  # pylint: disable=too-many-locals
         """Scan package looking for TeX files."""
         tex_files = []
-        globs = ["*.tex"]
+        globs = ["*.tex", "*.bib"]
 
         file_cmd_exists = True
         if not DiscoveryPlugin.file_command_exists():
