@@ -63,15 +63,15 @@ def test_pyflakes_tool_plugin_scan_valid():
 def test_pyflakes_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of pyflakes."""
     pftp = setup_pyflakes_tool_plugin()
-    output = "pyflakes_test.py:4: 'json' imported but unused"
+    output = "pyflakes_test.py:39:34: invalid syntax\nprint 'No files in %s' " \
+             "% (source_dir)"
     issues = pftp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == 'pyflakes_test.py'
-    assert issues[0].line_number == '4'
+    assert issues[0].line_number == '39'
     assert issues[0].tool == 'pyflakes'
-    assert issues[0].issue_type == 'pyflakes'
+    assert issues[0].issue_type == 'invalid syntax'
     assert issues[0].severity == '5'
-    assert issues[0].message == "'json' imported but unused"
 
 
 def test_pyflakes_tool_plugin_parse_invalid():

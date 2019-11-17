@@ -55,18 +55,48 @@ class PyflakesToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output):  # pylint: disable=too-many-locals
         """Parse tool output and report issues."""
-        pyflakes_re = r"(.+):(\d+):\s(.+)"
-        parse = re.compile(pyflakes_re)
+        tool_re_first = r"(.+):(\d+):(\d+):\s(.+)"
+        parse_first = re.compile(tool_re_first)
+        tool_re_second = r"(.+):(\d+):\s(.+)"
+        parse_second = re.compile(tool_re_second)
+        tool_re_third = r"\s(.+)"
+        parse_third = re.compile(tool_re_third)
         issues = []
+        filename = ''
+        line_number = 0
+        issue_type = ''
+        message = ''
 
         for output in total_output:
+            first_line = True
+            found_match = False
             for line in output.splitlines():
-                match = parse.match(line)
-                if match:
-                    issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), self.get_name(),
-                                        "5", match.group(3), None))
+                if first_line:
+                    match = parse_first.match(line)
+                    first_line = False
+                    if match:
+                        found_match = True
+                        filename = match.group(1)
+                        line_number = match.group(2)
+                        issue_type = match.group(4)
+                    else:
+                        match = parse_second.match(line)
+                        if match:
+                            found_match = True
+                            filename = match.group(1)
+                            line_number = match.group(2)
+                            issue_type = match.group(3)
+                else:
+                    match = parse_third.match(line)
+                    first_line = True
+                    if match:
+                        found_match = True
+                        message = match.group(1)
+            if found_match:
+                issues.append(Issue(filename, line_number,
+                                    self.get_name(), issue_type,
+                                    "5", message, None))
 
         return issues
