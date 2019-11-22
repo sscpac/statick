@@ -6,9 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## Unreleased
 ### Added:
+
+### Fixed:
+
+### Removed:
+
+## v0.2.14 - 2019-11-21
+### Added:
+  - Support for Python 3.8 (build and unit tests on Travis).
   - Updated unit tests for main Statick module.
 
 ### Fixed:
+  - Install patterns updated to prevent picking up the `plugin_mapping` directory multiple times. (@kkredit)
+  - Handle more varied output from pyflakes tool.
 
 ### Removed:
   - Removed support for previously deprecated pep8 and pep257 tools.
@@ -59,8 +69,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## v0.2.9 - 2019-04-30
 ### Added:
-  - Started keeping a Changelog
+  - Started keeping a Changelog (@creffett)
   - Configuration support for tex tools (chktex and lacheck plugins in separate repository)
 
 ### Fixed:
-  - Fix backtrace when Statick is run with a nonexistent file as a profile
+  - Fix backtrace when Statick is run with a nonexistent file as a profile (@creffett)
