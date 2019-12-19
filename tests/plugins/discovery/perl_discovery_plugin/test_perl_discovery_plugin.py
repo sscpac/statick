@@ -17,6 +17,7 @@ from statick_tool.plugins.discovery.perl_discovery_plugin import \
 def modified_environ(*remove, **update):
     """
     Temporarily updates the ``os.environ`` dictionary in-place.
+
     The ``os.environ`` dictionary is updated in-place so that the modification
     is sure to work in all situations.
     :param remove: Environment variables to remove.
