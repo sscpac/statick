@@ -22,15 +22,18 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
 
-def setup_uncrustify_tool_plugin():
+def setup_uncrustify_tool_plugin(extra_path=None):
     """Initialize and return an instance of the uncrustify plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--uncrustify-bin", dest="uncrustify_bin")
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
                             action="store_false", help="Show tool output")
 
-    resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
-                                        'plugins')])
+    paths = []
+    if extra_path:
+        paths.append(extra_path)
+    paths.append(os.path.join(os.path.dirname(statick_tool.__file__), 'plugins'))
+    resources = Resources(paths)
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     utp = UncrustifyToolPlugin()
@@ -59,7 +62,8 @@ def test_uncrustify_tool_plugin_found():
 
 def test_uncrustify_tool_plugin_scan_valid():
     """Integration test: Make sure the uncrustify output hasn't changed."""
-    utp = setup_uncrustify_tool_plugin()
+    rsc_path = os.path.join(os.path.dirname(__file__), 'valid_package')
+    utp = setup_uncrustify_tool_plugin(rsc_path)
     if not utp.command_exists('cmake'):
         pytest.skip("Can't find CMake, unable to test uncrustify plugin")
     elif not utp.command_exists('uncrustify'):
@@ -70,7 +74,8 @@ def test_uncrustify_tool_plugin_scan_valid():
     # Need to actually run CMake to generate compile_commands.json
     with TemporaryDirectory() as bin_dir:
         try:
-            subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__), 'valid_package'),
+            subprocess.check_output(["cmake", os.path.join(os.path.dirname(__file__),
+                                                           'valid_package'),
                                      "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
                                      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
                                      "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=" + bin_dir],
@@ -153,7 +158,9 @@ def test_uncrustify_tool_plugin_scan_calledprocesserror(mock_subprocess_check_ou
 
     Expected result: issues is None
     """
-    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2,
+                                                                             '',
+                                                                             output="mocked error")
     utp = setup_uncrustify_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
