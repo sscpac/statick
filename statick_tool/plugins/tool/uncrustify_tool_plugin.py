@@ -62,10 +62,9 @@ class UncrustifyToolPlugin(ToolPlugin):
                             or line.isspace():
                         continue
                     # This is a bug I can't figure out yet.
-                    elif '#ifndef' in line or '#define' in line:
+                    if '#ifndef' in line or '#define' in line:
                         continue
-                    else:
-                        found_diff = True
+                    found_diff = True
                 if found_diff:
                     total_output.append(src)
 

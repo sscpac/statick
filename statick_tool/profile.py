@@ -17,7 +17,7 @@ class Profile(object):  # pylint: disable=too-few-public-methods
                 raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
             if self.profile is None:
                 raise ValueError("{} is empty, can't continue!".format(filename))
-            elif 'default' not in self.profile:
+            if 'default' not in self.profile:
                 raise ValueError("No 'default' key found in {}!".format(filename))
 
     def get_package_level(self, package):

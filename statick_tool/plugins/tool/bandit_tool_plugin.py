@@ -80,8 +80,7 @@ class BanditToolPlugin(ToolPlugin):
             if line.startswith('filename'):
                 # Found the CSV header, stop removing things
                 break
-            else:
-                output_minus_log.remove(line)
+            output_minus_log.remove(line)
 
         csvreader = csv.DictReader(output_minus_log)
         for line in csvreader:
