@@ -1,4 +1,4 @@
-"""Discover C files to analyze."""
+"""Discover Perl files to analyze."""
 
 from __future__ import print_function
 
