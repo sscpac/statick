@@ -11,6 +11,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed:
 
+## v0.2.15 - 2019-12-26
+### Added:
+  - Changed build and deploy Travis stages from Python 2.7 to Python 3.5.
+  - Unit tests for file dicovery now cover the case where the `file` command is not available.
+
+### Fixed:
+  - Bug found when using tool under Ubuntu 18.04 where the diff calculated for clang-format desired and actual
+    configurations would produce empty lines.
+    This caused the tool to throw an exception.
+    Fixed by checking that there is diff output before trying to read it.
+  - The uncrustify unit test now works on Ubuntu Bionic.
+  - Several pylint issues related to unnecessary elif and else after break/continue/raise lines were cleaned up.
+
+### Removed:
+
 ## v0.2.14 - 2019-11-21
 ### Added:
   - Support for Python 3.8 (build and unit tests on Travis).
