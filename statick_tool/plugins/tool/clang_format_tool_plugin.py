@@ -72,13 +72,13 @@ class ClangFormatToolPlugin(ToolPlugin):
             for line in diff:
                 if line.startswith("+ ") or line.startswith("- ") or \
                    line.startswith("! "):
-                    if line[2:].strip()[0] != "#":
+                    if line[2:].strip() and line[2:].strip()[0] != "#":
                         # pylint: disable=line-too-long
                         exc = subprocess.CalledProcessError(-1,
                                                             clang_format_bin,
                                                             ".clang-format style is not correct. There is one located in {}. Put this file in your home directory.".
                                                             format(format_file_name))
-# pylint: enable=line-too-long
+                        # pylint: enable=line-too-long
                         if self.plugin_context.args.clang_format_raise_exception:
                             raise exc
 
