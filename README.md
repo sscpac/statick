@@ -36,7 +36,7 @@ The exact package names may vary for other systems.
 These packages are for the tools used by the default configuration of Statick.
 Depending on your usage and configuration, you may not need these packages.
 
-    $ cat install.txt  | xargs sudo apt-get install
+    $ cat install.txt  | xargs sudo apt-get install -y
     $ pip install -r requirements.txt
 
 To run against ROS packages there are a few more system packages to get.
