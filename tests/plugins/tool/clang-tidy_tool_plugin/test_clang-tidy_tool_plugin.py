@@ -155,8 +155,6 @@ def test_clang_tidy_tool_plugin_scan_missing_fields():
     Expected result: issues is empty
     """
     cttp = setup_clang_tidy_tool_plugin()
-    if not cttp.command_exists('clang-tidy'):
-        pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     # Missing bin_dir
@@ -200,8 +198,6 @@ def test_clang_tidy_tool_plugin_scan_calledprocesserror(mock_subprocess_check_ou
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(2, '', output="mocked error")
     cttp = setup_clang_tidy_tool_plugin()
-    if not cttp.command_exists('clang-tidy'):
-        pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
     with TemporaryDirectory() as bin_dir:
         package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                         'valid_package'))
@@ -224,8 +220,6 @@ def test_clang_tidy_tool_plugin_scan_diagnosticerror(mock_subprocess_check_outpu
     """
     mock_subprocess_check_output.return_value = "clang-diagnostic-error"
     cttp = setup_clang_tidy_tool_plugin()
-    if not cttp.command_exists('clang-tidy'):
-        pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
     with TemporaryDirectory() as bin_dir:
         package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                         'valid_package'))
