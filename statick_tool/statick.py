@@ -77,7 +77,8 @@ class Statick(object):
 
     def gather_args(self, args):
         """Gather arguments."""
-        args.add_argument("output_directory", help="Output directory")
+        args.add_argument("--output-directory", dest="output_directory",
+                          type=str, help="Directory to write output files to")
         args.add_argument("--show-tool-output", dest="show_tool_output",
                           action="store_true", help="Show tool output")
         args.add_argument("--config", dest="config",
@@ -146,23 +147,24 @@ class Statick(object):
             return None, False
 
         orig_path = os.getcwd()
-        if not os.path.isdir(args.output_directory):
-            print("Output directory not found at {}!".
-                  format(args.output_directory))
-            return None, False
+        if args.output_directory:
+            if not os.path.isdir(args.output_directory):
+                print("Output directory not found at {}!".
+                      format(args.output_directory))
+                return None, False
 
-        output_dir = os.path.join(args.output_directory,
-                                  package.name + "-" + level)
+            output_dir = os.path.join(args.output_directory,
+                                      package.name + "-" + level)
 
-        if not os.path.isdir(output_dir):
-            os.mkdir(output_dir)
-        if not os.path.isdir(output_dir):
-            print("Unable to create output directory at {}!".format(
-                output_dir))
-            return None, False
-        print("Writing output to: {}".format(output_dir))
+            if not os.path.isdir(output_dir):
+                os.mkdir(output_dir)
+            if not os.path.isdir(output_dir):
+                print("Unable to create output directory at {}!".format(
+                    output_dir))
+                return None, False
+            print("Writing output to: {}".format(output_dir))
 
-        os.chdir(output_dir)
+            os.chdir(output_dir)
 
         print("------")
         print("Scanning package {} ({}) at level {}".format(package.name,

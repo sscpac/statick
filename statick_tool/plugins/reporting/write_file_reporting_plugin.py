@@ -26,6 +26,10 @@ class WriteFileReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan.
         """
+        # Do not write report to file if no output directory is given.
+        if not self.plugin_context.args.output_directory:
+            return None, True
+
         # We _should_ be in output_dir already, but let's be safe about it.
         output_dir = os.path.join(self.plugin_context.args.output_directory,
                                   package.name + "-" + level)

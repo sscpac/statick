@@ -27,14 +27,12 @@ def test_gather_args(init_statick):
     """
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
-    args.parser.add_argument("--output_directory", help="Output directory")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output_directory", os.path.dirname(__file__),
+    sys.argv = ["--output-directory", os.path.dirname(__file__),
                 "--path", os.path.dirname(__file__)]
-    args.output_directory = os.path.dirname(__file__)
-    parsed_args = args.get_args()
+    parsed_args = args.get_args(sys.argv)
     assert "path" in parsed_args
     assert "output_directory" in parsed_args
 
@@ -134,13 +132,12 @@ def test_run():
     """Test running Statick."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
-    args.parser.add_argument("--output_directory", help="Output directory")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output_directory", os.path.dirname(__file__),
+    sys.argv = ["--output-directory", os.path.dirname(__file__),
                 "--path", os.path.dirname(__file__)]
-    parsed_args = args.get_args()
+    parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
@@ -153,13 +150,11 @@ def test_run():
 def test_run_missing_path(init_statick):
     """Test running Statick against a package that does not exist."""
     args = Args("Statick tool")
-    args.parser.add_argument("--output_directory", help="Output directory")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output_directory", os.path.dirname(__file__)]
-    args.output_directory = os.path.dirname(__file__)
-    parsed_args = args.get_args()
+    sys.argv = ["--output-directory", os.path.dirname(__file__)]
+    parsed_args = args.get_args(sys.argv)
     path = "/tmp/invalid"
     statick.get_config(parsed_args)
     issues, success = statick.run(path, parsed_args)
@@ -171,14 +166,12 @@ def test_run_missing_config(init_statick):
     """Test running Statick with a missing config file."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
-    args.parser.add_argument("--output_directory", help="Output directory")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output_directory", os.path.dirname(__file__),
+    sys.argv = ["--output-directory", os.path.dirname(__file__),
                 "--path", os.path.dirname(__file__)]
-    args.output_directory = os.path.dirname(__file__)
-    parsed_args = args.get_args()
+    parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
     assert issues is None
@@ -189,14 +182,12 @@ def test_run_output_is_not_directory(init_statick):
     """Test running Statick against a missing directory."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
-    args.parser.add_argument("--output_directory", help="Output directory")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output_directory", "/tmp/not_a_directory",
+    sys.argv = ["--output-directory", "/tmp/not_a_directory",
                 "--path", os.path.dirname(__file__)]
-    args.output_directory = os.path.dirname(__file__)
-    parsed_args = args.get_args()
+    parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
@@ -209,15 +200,13 @@ def test_run_force_tool_list(init_statick):
     """Test running Statick against a missing directory."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
-    args.parser.add_argument("--output_directory", help="Output directory")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output_directory", os.path.dirname(__file__),
-                "--path", os.path.dirname(__file__),
+    sys.argv = ["--path", os.path.dirname(__file__),
                 "--force-tool-list", "bandit"]
     args.output_directory = os.path.dirname(__file__)
-    parsed_args = args.get_args()
+    parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
