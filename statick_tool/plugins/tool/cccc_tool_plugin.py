@@ -15,7 +15,6 @@ import csv
 import subprocess
 
 import xmltodict
-from six import string_types
 
 from statick_tool.issue import Issue
 from statick_tool.tool_plugin import ToolPlugin
@@ -86,7 +85,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         results = {}
         for module in output['CCCC_Project']['structural_summary']['module']:
-            if 'name' not in module or isinstance(module, string_types):
+            if 'name' not in module or isinstance(module, str):
                 break
             results[module['name']] = {}
             metrics = {}
@@ -96,7 +95,7 @@ class CCCCToolPlugin(ToolPlugin):
             results[module['name']] = metrics
 
         for module in output['CCCC_Project']['procedural_summary']['module']:
-            if 'name' not in module or isinstance(module, string_types):
+            if 'name' not in module or isinstance(module, str):
                 break
             metrics = results[module['name']]
             for field in module:
@@ -105,7 +104,7 @@ class CCCCToolPlugin(ToolPlugin):
             results[module['name']] = metrics
 
         for module in output['CCCC_Project']['oo_design']['module']:
-            if 'name' not in module or isinstance(module, string_types):
+            if 'name' not in module or isinstance(module, str):
                 break
             metrics = results[module['name']]
             for field in module:
