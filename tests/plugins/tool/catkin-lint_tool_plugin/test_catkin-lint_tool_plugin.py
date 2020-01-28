@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -53,6 +54,8 @@ def test_catkin_lint_tool_plugin_found():
 def test_catkin_lint_tool_plugin_scan_valid():
     """Integration test: Make sure the catkin_lint output hasn't changed."""
     cltp = setup_catkin_lint_tool_plugin()
+    if not cltp.command_exists('catkin_lint'):
+        pytest.skip('Missing catkin_lint executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['catkin'] = 'catkin'
@@ -76,6 +79,8 @@ def test_catkin_lint_tool_plugin_scan_missing_name():
 def test_catkin_lint_tool_plugin_scan_c0x():
     """Scan a package that sets compiler flags for c++0x"""
     cltp = setup_catkin_lint_tool_plugin()
+    if not cltp.command_exists('catkin_lint'):
+        pytest.skip('Missing catkin_lint executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'c0x_package'))
     package['catkin'] = 'catkin'
@@ -86,6 +91,8 @@ def test_catkin_lint_tool_plugin_scan_c0x():
 def test_catkin_lint_tool_plugin_scan_c11():
     """Scan a package that sets compiler flags for c++11"""
     cltp = setup_catkin_lint_tool_plugin()
+    if not cltp.command_exists('catkin_lint'):
+        pytest.skip('Missing catkin_lint executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'c11_package'))
     package['catkin'] = 'catkin'
@@ -96,6 +103,8 @@ def test_catkin_lint_tool_plugin_scan_c11():
 def test_catkin_lint_tool_plugin_scan_gnu99():
     """Scan a package that sets compiler flags for gnu99"""
     cltp = setup_catkin_lint_tool_plugin()
+    if not cltp.command_exists('catkin_lint'):
+        pytest.skip('Missing catkin_lint executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'gnu99_package'))
     package['catkin'] = 'catkin'
