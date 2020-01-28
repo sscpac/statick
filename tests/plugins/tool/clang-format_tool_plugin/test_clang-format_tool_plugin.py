@@ -5,6 +5,7 @@ import shutil
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -79,6 +80,8 @@ def test_clang_format_tool_plugin_found():
 # def test_clang_format_tool_plugin_scan_valid():
 #     """Integration test: Make sure the clang_format output hasn't changed."""
 #     cftp = setup_clang_format_tool_plugin()
+#     if not cftp.command_exists('clang-format'):
+#         pytest.skip('Missing clang-format executable.')
 #     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
 #                                                     'valid_package'))
 #     # Copy the latest clang_format over
@@ -97,6 +100,8 @@ def test_clang_format_tool_plugin_found():
 def test_clang_format_tool_plugin_scan_missing_fields():
     """Test that issues are empty when fields are missing from the package."""
     cftp = setup_clang_format_tool_plugin()
+    if not cftp.command_exists('clang-format'):
+        pytest.skip('Missing clang-format executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     # Issues should be empty until make_targets is added to the package.
@@ -107,6 +112,8 @@ def test_clang_format_tool_plugin_scan_missing_fields():
 def test_clang_format_tool_plugin_scan_missing_config_file():
     """Test that issues are None when configuration file is different."""
     cftp = setup_clang_format_tool_plugin()
+    if not cftp.command_exists('clang-format'):
+        pytest.skip('Missing clang-format executable.')
     with open(os.path.join(os.path.expanduser("~"), '.clang-format'), 'a') as fin:
         fin.write('invalid entry')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
@@ -124,6 +131,8 @@ def test_clang_format_tool_plugin_scan_missing_config_file():
 def test_clang_format_tool_plugin_scan_missing_config_file_non_default():
     """Test that issues is empty when configuration file is different."""
     cftp = setup_clang_format_tool_plugin_non_default()
+    if not cftp.command_exists('clang-format'):
+        pytest.skip('Missing clang-format executable.')
     with open(os.path.join(os.path.expanduser("~"), '.clang-format'), 'a') as fin:
         fin.write('invalid entry')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
@@ -173,6 +182,8 @@ def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
     cftp = setup_clang_format_tool_plugin()
+    if not cftp.command_exists('clang-format'):
+        pytest.skip('Missing clang-format executable.')
     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
                     os.path.join(os.path.expanduser("~"), '.clang-format'))
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
@@ -192,6 +203,8 @@ def test_clang_format_tool_plugin_scan_calledprocesserror_non_default(mock_subpr
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
     cftp = setup_clang_format_tool_plugin_non_default()
+    if not cftp.command_exists('clang-format'):
+        pytest.skip('Missing clang-format executable.')
     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
                     os.path.join(os.path.expanduser("~"), '.clang-format'))
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
