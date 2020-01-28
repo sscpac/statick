@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 import difflib
+import os
 import re
 import subprocess
 
@@ -60,18 +61,17 @@ class ClangFormatToolPlugin(ToolPlugin):
         total_output = []
 
         try:
-            output = subprocess.check_output([clang_format_bin,
-                                              "--dump-config"],
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
-            format_file_name = self.plugin_context.resources.get_file("_clang-format")
-            with open(format_file_name, "r") as format_file:
+            default_file_name = "_clang-format"
+            format_file_name = self.plugin_context.resources.get_file(default_file_name)
+            with open(os.path.expanduser("~/" + default_file_name), "r") as home_format_file, \
+                    open(format_file_name, "r") as format_file:
+                actual_format = home_format_file.read()
                 target_format = format_file.read()
-            diff = difflib.context_diff(output.splitlines(),
+            diff = difflib.context_diff(actual_format.splitlines(),
                                         target_format.splitlines())
             for line in diff:
-                if line.startswith("+ ") or line.startswith("- ") or \
-                   line.startswith("! "):
+                if (line.startswith("+ ") or line.startswith("- ") or
+                   line.startswith("! ")) and len(line) > 2:
                     if line[2:].strip() and line[2:].strip()[0] != "#":
                         # pylint: disable=line-too-long
                         exc = subprocess.CalledProcessError(-1,
@@ -91,6 +91,11 @@ class ClangFormatToolPlugin(ToolPlugin):
                 if self.plugin_context.args.clang_format_raise_exception:
                     total_output.append(output)
 
+        except IOError as ex:
+            print("clang-format failed! Error = {}".format(str(ex.strerror)))
+            if self.plugin_context.args.clang_format_raise_exception:
+                return None
+            return []
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("clang-format failed! Returncode = {}".format(str(ex.returncode)))

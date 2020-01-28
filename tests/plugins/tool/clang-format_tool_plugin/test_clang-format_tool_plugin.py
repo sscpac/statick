@@ -165,6 +165,40 @@ def test_clang_format_tool_plugin_parse_invalid():
 
 
 @mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
+def test_clang_format_tool_plugin_scan_ioerror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
+
+    Expected result: issues is empty
+    """
+    mock_subprocess_check_output.side_effect = IOError("~/_clang-format")
+    cftp = setup_clang_format_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['headers'] = []
+    issues = cftp.scan(package, 'level')
+    assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
+def test_clang_format_tool_plugin_scan_ioerror_non_default(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
+
+    Expected result: issues is empty
+    """
+    mock_subprocess_check_output.side_effect = IOError("~/_clang-format")
+    cftp = setup_clang_format_tool_plugin_non_default()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['headers'] = []
+    issues = cftp.scan(package, 'level')
+    assert not issues
+
+
+@mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
 def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
