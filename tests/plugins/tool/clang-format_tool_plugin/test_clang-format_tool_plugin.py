@@ -75,8 +75,6 @@ def test_clang_format_tool_plugin_found():
                plugin_info in manager.getPluginsOfCategory("Tool"))
 
 
-# Has issues with not finding the clang-format config correctly on Travis CI.
-# Plugin probably could use some touching up in this department.
 def test_clang_format_tool_plugin_scan_valid():
     """Integration test: Make sure the clang_format output hasn't changed."""
     cftp = setup_clang_format_tool_plugin()
