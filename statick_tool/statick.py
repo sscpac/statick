@@ -6,7 +6,6 @@ import copy
 import logging
 import os
 
-from six import iteritems
 from yapsy.PluginManager import PluginManager
 
 from statick_tool import __version__
@@ -100,7 +99,7 @@ class Statick(object):
         for _, plugin in list(self.tool_plugins.items()):
             plugin.gather_args(args)
 
-        for _, plugin in iteritems(self.reporting_plugins):
+        for _, plugin in list(self.reporting_plugins.items()):
             plugin.gather_args(args)
 
     def get_level(self, path, args):

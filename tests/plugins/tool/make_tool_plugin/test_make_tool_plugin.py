@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -54,6 +55,8 @@ def test_make_tool_plugin_found():
 def test_make_tool_plugin_scan_missing_tool_name():
     """Check that a missing tool name results in an empty list of issues."""
     mtp = setup_make_tool_plugin()
+    if not mtp.command_exists('make'):
+        pytest.skip('Missing make executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     issues = mtp.scan(package, 'level')
