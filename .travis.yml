@@ -35,6 +35,8 @@ script:
   - pip install tox
   # Borrowed from flask-mongoengine
   - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/' | sed -e 's/-dev//')
+  # Forces unit tests to take non-standard paths through code.
+  - cp tests/plugins/tool/clang-format_tool_plugin/different-clang-format.cfg ~/.clang-format
 
 
 jobs:

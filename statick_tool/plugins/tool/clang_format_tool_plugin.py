@@ -76,7 +76,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                         # pylint: disable=line-too-long
                         exc = subprocess.CalledProcessError(-1,
                                                             clang_format_bin,
-                                                            ".clang-format style is not correct. There is one located in {}. Put this file in your home directory.".
+                                                            "_clang-format style is not correct. There is one located in {}. Put this file in your home directory.".
                                                             format(format_file_name))
                         # pylint: enable=line-too-long
                         if self.plugin_context.args.clang_format_raise_exception:
@@ -91,11 +91,12 @@ class ClangFormatToolPlugin(ToolPlugin):
                 if self.plugin_context.args.clang_format_raise_exception:
                     total_output.append(output)
 
-        except IOError as ex:
+        except OSError as ex:
             print("clang-format failed! Error = {}".format(str(ex.strerror)))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             return []
+
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
@@ -103,10 +104,6 @@ class ClangFormatToolPlugin(ToolPlugin):
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             return []
-
-        except OSError as ex:
-            print("Couldn't find {}! ({})".format(clang_format_bin, ex))
-            return None
 
         if self.plugin_context.args.show_tool_output:
             for output in total_output:

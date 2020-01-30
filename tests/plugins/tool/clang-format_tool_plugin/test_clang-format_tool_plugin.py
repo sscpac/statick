@@ -76,22 +76,22 @@ def test_clang_format_tool_plugin_found():
 
 # Has issues with not finding the clang-format config correctly on Travis CI.
 # Plugin probably could use some touching up in this department.
-# def test_clang_format_tool_plugin_scan_valid():
-#     """Integration test: Make sure the clang_format output hasn't changed."""
-#     cftp = setup_clang_format_tool_plugin()
-#     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-#                                                     'valid_package'))
-#     # Copy the latest clang_format over
-#     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
-#                     os.path.join(os.path.expanduser("~"), '.clang-format'))
-#     package['make_targets'] = []
-#     package['make_targets'].append({})
-#     package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
-#                                                       'valid_package', 'indents.c')]
-#     package['headers'] = [os.path.join(os.path.dirname(__file__),
-#                                        'valid_package', 'indents.h')]
-#     issues = cftp.scan(package, 'level')
-#     assert len(issues) == 1
+def test_clang_format_tool_plugin_scan_valid():
+    """Integration test: Make sure the clang_format output hasn't changed."""
+    cftp = setup_clang_format_tool_plugin()
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    # Copy the latest clang_format over
+    shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
+                    os.path.join(os.path.expanduser("~"), '_clang-format'))
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'indents.c')]
+    package['headers'] = [os.path.join(os.path.dirname(__file__),
+                                       'valid_package', 'indents.h')]
+    issues = cftp.scan(package, 'level')
+    assert len(issues) == 1
 
 
 def test_clang_format_tool_plugin_scan_missing_fields():
@@ -107,7 +107,7 @@ def test_clang_format_tool_plugin_scan_missing_fields():
 def test_clang_format_tool_plugin_scan_missing_config_file():
     """Test that issues are None when configuration file is different."""
     cftp = setup_clang_format_tool_plugin()
-    with open(os.path.join(os.path.expanduser("~"), '.clang-format'), 'a') as fin:
+    with open(os.path.join(os.path.expanduser("~"), '_clang-format'), 'a') as fin:
         fin.write('invalid entry')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
@@ -124,7 +124,7 @@ def test_clang_format_tool_plugin_scan_missing_config_file():
 def test_clang_format_tool_plugin_scan_missing_config_file_non_default():
     """Test that issues is empty when configuration file is different."""
     cftp = setup_clang_format_tool_plugin_non_default()
-    with open(os.path.join(os.path.expanduser("~"), '.clang-format'), 'a') as fin:
+    with open(os.path.join(os.path.expanduser("~"), '_clang-format'), 'a') as fin:
         fin.write('invalid entry')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
@@ -164,36 +164,13 @@ def test_clang_format_tool_plugin_parse_invalid():
     assert not issues
 
 
-@mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
-def test_clang_format_tool_plugin_scan_ioerror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
-
-    Expected result: issues is empty
-    """
-    mock_subprocess_check_output.side_effect = IOError("~/_clang-format")
+def test_clang_format_tool_plugin_custom_config_diff():
+    """Verify that we can identify a diff between actual and target formats."""
     cftp = setup_clang_format_tool_plugin()
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
-    package['make_targets'] = []
-    package['headers'] = []
-    issues = cftp.scan(package, 'level')
-    assert not issues
-
-
-@mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
-def test_clang_format_tool_plugin_scan_ioerror_non_default(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
-
-    Expected result: issues is empty
-    """
-    mock_subprocess_check_output.side_effect = IOError("~/_clang-format")
-    cftp = setup_clang_format_tool_plugin_non_default()
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    package['make_targets'] = []
-    package['headers'] = []
+    cftp.plugin_context.resources
+    # Issues should be empty until make_targets is added to the package.
     issues = cftp.scan(package, 'level')
     assert not issues
 
@@ -208,7 +185,7 @@ def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
     cftp = setup_clang_format_tool_plugin()
     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
-                    os.path.join(os.path.expanduser("~"), '.clang-format'))
+                    os.path.join(os.path.expanduser("~"), '_clang-format'))
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['make_targets'] = []
@@ -227,7 +204,7 @@ def test_clang_format_tool_plugin_scan_calledprocesserror_non_default(mock_subpr
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(1, '', output="mocked error")
     cftp = setup_clang_format_tool_plugin_non_default()
     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
-                    os.path.join(os.path.expanduser("~"), '.clang-format'))
+                    os.path.join(os.path.expanduser("~"), '_clang-format'))
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['make_targets'] = []
@@ -246,7 +223,7 @@ def test_clang_format_tool_plugin_scan_oserror(mock_subprocess_check_output):
     mock_subprocess_check_output.side_effect = OSError('mocked error')
     cftp = setup_clang_format_tool_plugin()
     shutil.copyfile(cftp.plugin_context.resources.get_file("_clang-format"),
-                    os.path.join(os.path.expanduser("~"), '.clang-format'))
+                    os.path.join(os.path.expanduser("~"), '_clang-format'))
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['make_targets'] = []
