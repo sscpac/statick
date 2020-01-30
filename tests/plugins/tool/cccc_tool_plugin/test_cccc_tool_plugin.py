@@ -8,6 +8,7 @@ import shutil
 import subprocess
 
 import mock
+import pytest
 import xmltodict
 from yapsy.PluginManager import PluginManager
 
@@ -191,6 +192,8 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(0, '', output=b"mocked error")
     ctp = setup_cccc_tool_plugin()
+    if not ctp.command_exists('cccc'):
+        pytest.skip('Missing cccc executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['c_src'] = [os.path.join(os.path.dirname(__file__),
