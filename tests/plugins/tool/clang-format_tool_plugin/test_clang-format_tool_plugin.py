@@ -5,6 +5,7 @@ import shutil
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -79,6 +80,8 @@ def test_clang_format_tool_plugin_found():
 def test_clang_format_tool_plugin_scan_valid():
     """Integration test: Make sure the clang_format output hasn't changed."""
     cftp = setup_clang_format_tool_plugin()
+    if not cftp.command_exists('clang-format'):
+        pytest.skip('Missing clang-format executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     # Copy the latest clang_format over
