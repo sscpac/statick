@@ -71,7 +71,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                                         target_format.splitlines())
             for line in diff:
                 if (line.startswith("+ ") or line.startswith("- ") or
-                   line.startswith("! ")) and len(line) > 2:
+                        line.startswith("! ")) and len(line) > 2:
                     if line[2:].strip() and line[2:].strip()[0] != "#":
                         # pylint: disable=line-too-long
                         exc = subprocess.CalledProcessError(-1,
