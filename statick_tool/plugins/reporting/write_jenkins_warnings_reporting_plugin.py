@@ -6,16 +6,16 @@ import os
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
-class WriteFileReportingPlugin(ReportingPlugin):
+class WriteJenkinsWarningsReportingPlugin(ReportingPlugin):
     """Writes Statick results to a file."""
 
     def get_name(self):
         """Return the plugin name."""
-        return "write_file"
+        return "write_jenkins_warnings"
 
     def report(self, package, issues, level):
         """
-        Write the results to a file.
+        Write the results to a Jenkins Warnings plugin compatible file.
 
         Args:
             package (:obj:`Package`): The Package object that was analyzed.
