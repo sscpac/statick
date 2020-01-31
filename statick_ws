@@ -54,7 +54,7 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
                                       in fname.readlines()
                                       if package.strip() and
                                       package[0] != "#"]
-        except IOError:
+        except OSError:
             print("Packages file not found")
             sys.exit(1)
         packages = [package for package in packages if package[0] in packages_file_list]

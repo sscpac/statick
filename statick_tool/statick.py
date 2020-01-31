@@ -115,9 +115,9 @@ class Statick(object):
             return None
         try:
             profile = Profile(profile_resource)
-        except IOError as ex:
+        except OSError as ex:
             # This isn't quite redundant with the profile_resource check: it's possible
-            # that something else triggers an IOError, like permissions
+            # that something else triggers an OSError, like permissions
             print("Failed to access profile file {}: {}".format(profile_filename, ex))
             return None
         except ValueError as ex:

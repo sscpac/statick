@@ -21,9 +21,9 @@ def test_profile_nonexistent():
     """
     Test for when a Profile is initialized with a nonexistent YAML.
 
-    Expected result: IOError is thrown
+    Expected result: OSError is thrown
     """
-    with pytest.raises(IOError):
+    with pytest.raises(OSError):
         Profile(os.path.join(os.path.dirname(__file__), 'nope.yaml'))
 
 

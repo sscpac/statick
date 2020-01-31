@@ -21,11 +21,11 @@ def test_exceptions_init_valid():
 
 def test_exceptions_init_nonexistent():
     """
-    Test that the Exceptions module throws an IOError if a bad path is given.
+    Test that the Exceptions module throws an OSError if a bad path is given.
 
-    Expected result: IOError thrown.
+    Expected result: OSError thrown.
     """
-    with pytest.raises(IOError):
+    with pytest.raises(OSError):
         Exceptions(os.path.join(os.path.dirname(__file__),
                                 'nonexistent_exceptions.yaml'))
 
