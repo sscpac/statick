@@ -54,13 +54,13 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
                     if issue.severity > "4":
                         severity = "ERROR"
                     issue_dict = {
-                            "fileName": issue.filename,
-                            "severity": severity,
-                            "lineStart": issue.line_number,
-                            "message": issue.message,
-                            "category": issue.tool,
-                            "type": issue.issue_type
-                        }
+                        "fileName": issue.filename,
+                        "severity": severity,
+                        "lineStart": issue.line_number,
+                        "message": issue.message,
+                        "category": issue.tool,
+                        "type": issue.issue_type
+                    }
                     line = json.dumps(issue_dict, sort_keys=True) + "\n"
                     out.write(line)
 
