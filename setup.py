@@ -23,7 +23,7 @@ EXTRAS = {
 setup(
     author='SSC Pacific',
     name='statick',
-    description='Making code quality easier and tailored for you.',
+    description='Making code quality easier.',
     version=statick_tool.__version__,
     packages=['statick_tool'],
     package_data={'statick_tool': ['rsc/*.*', 'rsc/.clang-format',

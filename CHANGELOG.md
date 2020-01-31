@@ -11,6 +11,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed:
 
+## v0.3.0 - 2020-01-31
+
+Note that a breaking change was made to how the output directory is specified for writing results to a file.
+The default changed from always writing output files to only writing output files when the `--output-directory`
+argument is specified.
+The previous way to run Statick was:
+
+```
+statick my-project statick-output
+```
+
+With this update you can run with output files:
+
+```
+statick my-project --output-directory statick-output
+```
+
+or without output files:
+
+```
+statick my-project
+```
+
+### Added:
+  - Skipping integration tests for tool plugins where the tool is not available via pip.
+  - Statick works better on Ubuntu 18.04. (@kogut)
+
+### Fixed:
+  - Clang-format tool now supports multiple language specifications in the configuration file.
+    The fix also allowed for increased unit test coverage of the tool. (@xydesa)
+
+### Removed:
+  - Support for Python 2.7, Python 3.4, and pypy.
+  - Required argument for `output_directory`.
+    It is now an optional argument `output-directory` as described above.
+
 ## v0.2.15 - 2019-12-26
 ### Added:
   - Changed build and deploy Travis stages from Python 2.7 to Python 3.5.
