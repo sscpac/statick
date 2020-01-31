@@ -1,5 +1,8 @@
 levels:
   sei_cert:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       make:
         flags: "-Wcast-align -Wchar-subscripts -Wformat-security -Wformat -Wimplicit-int -Wincompatible-pointer-types -Wint-conversion -Wint-to-pointer-cast -Wparentheses -Winvalid-offsetof -Wsequence-point -Wdelete-incomplete -Wdelete-non-virtual-dtor -Winvalid-offsetof -Wreorder -Wreturn-type -Wuninitialized -Wunused-parameter -Wunreachable-code -Wunused-value -Wvarargs -Wtrigraphs -Wvarargs -Wformat -Wcast-qual"
@@ -18,6 +21,9 @@ levels:
         flags: "--brutal --theme='bugs || certrule || certrec'"
 
   threshold:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       pylint:
         flags: "--disable=R,I,C0200,C0302,C0330,C0411,C0412,W0141,W0142,W0511,W0703,W1202
@@ -84,6 +90,9 @@ levels:
         flags: ""
 
   rosm_threshold:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       clang-tidy:
         # These flags must remain on one line to not break the flag parsing
@@ -103,6 +112,9 @@ levels:
         flags: "-checks='*,-cert-dcl50-cpp,-Wreserved-id-macro,-Weverything,-Wuser-defined-literals,-Wvexing-parse,-Misc-new-delete-overloads,-Cert-dcl59-cpp,-Wunsequenced,-analyzer-checker=cplusplus,-Wunevaluated-expression,-Wuniinitialized,-clang-analyzer-core.UndefinedBinaryOperatorResult,-Wdangling-initializer-list,-Wdelete-incomplete,-Wvarargs,-Winvalid-offsetof,-Wdynamic-class-memaccess,-wparentheses,-Wint-to-pointer-cast,-Wint-conversion,-Wincompatible-pointer-types,Clang-analyzer-cplusplus.NewDelete clang-analyzer-alpha.security.ArrayBoundV2,Clang-analyzer-cplusplus.NewDeleteLeaks-Wmismatched-new-delete,clang-analyzer-unix.MismatchedDeallocator,Clang-analyzer-unix.Malloc,Misc-non-copyable-objects,Cert-err52-cpp,-Wexceptions,Cert-err58-cpp,Cert-err60-cpp,Cert-err34-c,Cert-err34-c,-Clang-analyzer-alpha.cplusplus.VirtualCall,-Wdelete-non-virtual-dtor,-Wreorder,Cert-msc50-cpp,-Wreturn-type,-Winvalid-noreturn,Cert-msc30-c,Cert-flp30-c,Cert-env33-c'"
 
   self_check:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       pydocstyle:
         flags: ""
@@ -123,6 +135,9 @@ levels:
                        line-length: disable}}'"
 
   ultimate:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       bandit:
         flags: ""
@@ -169,6 +184,9 @@ levels:
                        line-length: disable}}'"
 
   tex:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       chktex:
         flags: ""
