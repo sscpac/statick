@@ -82,8 +82,8 @@ def test_get_level_nonexistent_file(init_statick):
 
 @mock.patch('statick_tool.statick.Profile')
 def test_get_level_ioerror(mocked_profile_constructor, init_statick):
-    """Test the behavior when Profile throws an IOError."""
-    mocked_profile_constructor.side_effect = IOError("error")
+    """Test the behavior when Profile throws an OSError."""
+    mocked_profile_constructor.side_effect = OSError("error")
     args = Args("Statick tool")
     args.parser.add_argument("--profile", dest="profile",
                              type=str, default="profile-test.yaml")
