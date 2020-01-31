@@ -43,7 +43,7 @@ jobs:
       # the stage name) just to run statick
     - stage: test
       python: '3.5'
-      script: mkdir statick_output; ./statick . statick_output --profile self_check.yaml
+      script: ./statick . --profile self_check.yaml
       # Force this to only run for one Python version
     - stage: build
       python: '3.5'

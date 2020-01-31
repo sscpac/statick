@@ -75,11 +75,11 @@ For a description of all available arguments, pass the `--help` option to either
 
 ### For single packages
 
-    $ statick <path of package> <output path>
+    $ statick <path of package> --output-directory <output path>
 
 "Path of package" is the path of the package to be scanned.
 
-"Output path" is the path where build and output files are stored.
+"Output path" is optional and is the path where build and output files are stored.
 This should initially be an empty directory separate from your regular source and build directories.
 This directory must already exist before running the program.
 
@@ -87,11 +87,11 @@ If you are using this with a ROS Ament/Catkin workspace, you must have your work
 
 ### For a whole or partial ament/catkin workspace
 
-    $ statick_ws <path of src tree> <output path>
+    $ statick_ws <path of src tree> --output-directory <output path>
 
 "path of src tree" is the src directory underneath your ament/catkin workspace root or any directory under that.
 
-"Output path" is the path where build and output files are stored.
+"Output path" is optional and is the path where build and output files are stored.
 This should initially be an empty directory separate from your regular source and build directories.
 This directory must already exist before running the program.
 

@@ -31,7 +31,7 @@ pipeline {
 				sh '''#!/bin/bash -e
 				mkdir -p statick_output
 				echo "Starting statick runs"
-				./statick/statick . statick_output --profile sei_cert.yaml
+				./statick/statick . --output-directory statick_output --profile sei_cert.yaml
 				'''
 			}
 		}
