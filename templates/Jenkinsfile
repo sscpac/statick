@@ -41,7 +41,7 @@ pipeline {
 				recordIssues(
 				  enabledForFailure: true,
 				  qualityGates: [[threshold: 1, type: 'TOTAL']],
-				  tools: [issues(name: 'Statick', pattern: 'statick_output/*.statick')]
+				  tools: [issues(name: 'Statick', pattern: 'statick_output/*.json.statick')]
 				)
 			}
 		}

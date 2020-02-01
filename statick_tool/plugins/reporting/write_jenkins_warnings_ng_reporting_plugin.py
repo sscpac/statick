@@ -41,7 +41,7 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
             return None, False
 
         output_file = os.path.join(output_dir,
-                                   package.name + "-" + level + ".statick")
+                                   package.name + "-" + level + ".json.statick")
         print("Writing output to {}".format(output_file))
         with open(output_file, "w") as out:
             for _, value in issues.items():
