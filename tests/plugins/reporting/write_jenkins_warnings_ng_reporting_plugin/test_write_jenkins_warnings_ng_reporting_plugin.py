@@ -21,9 +21,7 @@ try:
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
-# output_regex = r"^\s*\[(.*)\]\[(\d+)\]\[(.*):(.*)\]\[(.*)\]\[(\d+)\]$"
 output_regex = r"^{\"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": (\d+), \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\"}"
-# \s*\[(.*)\]\[(\d+)\]\[(.*):(.*)\]\[(.*)\]\[(\d+)\]$"
 
 
 def setup_write_jenkins_warnings_ng_reporting_plugin(file_path):
