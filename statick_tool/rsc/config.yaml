@@ -114,7 +114,6 @@ levels:
   self_check:
     reporting:
       print_to_console:
-      write_jenkins_warnings_ng:
     tool:
       pydocstyle:
         flags: ""
@@ -186,7 +185,6 @@ levels:
   tex:
     reporting:
       print_to_console:
-      write_jenkins_warnings_ng:
     tool:
       chktex:
         flags: ""
