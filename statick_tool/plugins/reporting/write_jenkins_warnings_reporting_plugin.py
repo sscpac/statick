@@ -1,11 +1,14 @@
 """Write issue reports to a file."""
 from __future__ import print_function
 
+from deprecated import deprecated
+
 import os
 
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
+@deprecated(version="0.3.1", reason="Jenkins Warnings plugin has reached end-of-life")
 class WriteJenkinsWarningsReportingPlugin(ReportingPlugin):
     """Writes Statick results to a file."""
 
