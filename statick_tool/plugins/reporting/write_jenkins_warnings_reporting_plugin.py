@@ -1,9 +1,9 @@
 """Write issue reports to a file."""
 from __future__ import print_function
 
-from deprecated import deprecated
-
 import os
+
+from deprecated import deprecated
 
 from statick_tool.reporting_plugin import ReportingPlugin
 
