@@ -70,7 +70,7 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_nocert():
         issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', "1", 'This is a test', None)]}
         _, success = wfrp.report(package, issues, 'level')
         assert success
-        with open(os.path.join(tmp_dir, 'valid_package-level', 'valid_package-level.statick')) as outfile:
+        with open(os.path.join(tmp_dir, 'valid_package-level', 'valid_package-level.json.statick')) as outfile:
             line = outfile.readline().strip()
     expected_dict = {
         "fileName": "test.txt",
@@ -100,7 +100,7 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_severities():
                              ]}
         _, success = wfrp.report(package, issues, 'level')
         assert success
-        with open(os.path.join(tmp_dir, 'valid_package-level', 'valid_package-level.statick')) as outfile:
+        with open(os.path.join(tmp_dir, 'valid_package-level', 'valid_package-level.json.statick')) as outfile:
             for line in outfile:
                 line = line.strip()
                 assert re.match(output_regex, line)
