@@ -37,9 +37,12 @@ pipeline {
 		}
 		stage('Collect Statick Results') {
 			steps {
-				warnings canComputeNew: true, parserConfigurations: [[parserName: 'Statick', pattern: 'statick_output/*.statick']]
-
-				step([$class: 'AnalysisPublisher', defaultEncoding: '', healthy: '', unHealthy: ''])
+				// Options at https://jenkins.io/doc/pipeline/steps/warnings-ng/
+				recordIssues(
+				  enabledForFailure: true,
+				  qualityGates: [[threshold: 1, type: 'TOTAL']],
+				  tools: [issues(name: 'Statick', pattern: 'statick_output/*.json.statick')]
+				)
 			}
 		}
 		stage('Archive Results') {

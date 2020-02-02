@@ -260,8 +260,13 @@ See [examples/README.md](./examples/README.md) for more details.
 
 # Statick Jenkins Integration
 
-The output of Statick can be integrated with the Jenkins Warnings plug-in.
+The preferred method is to install the `Warnings Next Generation Plug-In` (https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin)
+and use the provided [pipeline template](./templates/Jenkinsfile).
 
+## Deprecated Method
+
+The output of Statick can also be integrated with the Jenkins Warnings plug-in.
+NOTE: This plugin has reached end-of-life and will be removed in the future.
 
   1. In Jenkins:
      Install `Warnings Plug-In` (https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin)

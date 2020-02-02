@@ -1,0 +1,3 @@
+[Core]
+Name = Write Jenkins Warnings NG Reporting Plugin
+Module = write_jenkins_warnings_ng_reporting_plugin

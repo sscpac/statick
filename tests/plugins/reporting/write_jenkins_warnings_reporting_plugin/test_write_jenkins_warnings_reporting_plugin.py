@@ -10,8 +10,8 @@ from statick_tool.config import Config
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.reporting.write_file_reporting_plugin import \
-    WriteFileReportingPlugin
+from statick_tool.plugins.reporting.write_jenkins_warnings_reporting_plugin import \
+    WriteJenkinsWarningsReportingPlugin
 from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 
@@ -23,7 +23,7 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 output_regex = r"^\s*\[(.*)\]\[(\d+)\]\[(.*):(.*)\]\[(.*)\]\[(\d+)\]$"
 
 
-def setup_write_file_reporting_plugin(file_path):
+def setup_write_jenkins_warnings_reporting_plugin(file_path):
     """Create an instance of the file writer plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("output_directory")
@@ -34,12 +34,12 @@ def setup_write_file_reporting_plugin(file_path):
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([file_path]), resources, config)
-    wfrp = WriteFileReportingPlugin()
+    wfrp = WriteJenkinsWarningsReportingPlugin()
     wfrp.set_plugin_context(plugin_context)
     return wfrp
 
 
-def test_write_file_reporting_plugin_found():
+def test_write_jenkins_warnings_reporting_plugin_found():
     """Test that the plugin manager finds the file writing plugin."""
     manager = PluginManager()
     # Get the path to statick_tool/__init__.py, get the directory part, and
@@ -51,17 +51,17 @@ def test_write_file_reporting_plugin_found():
     })
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "c"
-    assert any(plugin_info.plugin_object.get_name() == 'write_file' for
+    assert any(plugin_info.plugin_object.get_name() == 'write_jenkins_warnings' for
                plugin_info in manager.getPluginsOfCategory("Reporting"))
     # While we're at it, verify that a plugin is named C Discovery Plugin
-    assert any(plugin_info.name == 'Write File Reporting Plugin' for
+    assert any(plugin_info.name == 'Write Jenkins Warnings Reporting Plugin' for
                plugin_info in manager.getPluginsOfCategory("Reporting"))
 
 
-def test_write_file_reporting_plugin_report_cert():
+def test_write_jenkins_warnings_reporting_plugin_report_cert():
     """Test the output of the reporting plugin."""
     with TemporaryDirectory() as tmp_dir:
-        wfrp = setup_write_file_reporting_plugin(tmp_dir)
+        wfrp = setup_write_jenkins_warnings_reporting_plugin(tmp_dir)
         package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                         'valid_package'))
         issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', 'MEM50-CPP')]}
@@ -74,10 +74,10 @@ def test_write_file_reporting_plugin_report_cert():
     assert line == "[test.txt][1][tool_a:type][This is a test (MEM50-CPP)][1]"
 
 
-def test_write_file_reporting_plugin_report_nocert():
+def test_write_jenkins_warnings_reporting_plugin_report_nocert():
     """Test the output of the reporting plugin without a CERT reference."""
     with TemporaryDirectory() as tmp_dir:
-        wfrp = setup_write_file_reporting_plugin(tmp_dir)
+        wfrp = setup_write_jenkins_warnings_reporting_plugin(tmp_dir)
         package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                         'valid_package'))
         issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', 1, 'This is a test', None)]}
@@ -89,10 +89,10 @@ def test_write_file_reporting_plugin_report_nocert():
     assert line == "[test.txt][1][tool_a:type][This is a test][1]"
 
 
-def test_write_file_reporting_plugin_report_fileexists():
+def test_write_jenkins_warnings_reporting_plugin_report_fileexists():
     """Test the output of the reporting plugin if there's a file where the output dir should go."""
     with TemporaryDirectory() as tmp_dir:
-        wfrp = setup_write_file_reporting_plugin(tmp_dir)
+        wfrp = setup_write_jenkins_warnings_reporting_plugin(tmp_dir)
         package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                         'valid_package'))
         # Makes a file where we expect a dir
