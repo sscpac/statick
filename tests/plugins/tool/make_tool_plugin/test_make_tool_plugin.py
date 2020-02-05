@@ -52,6 +52,18 @@ def test_make_tool_plugin_found():
                plugin_info in manager.getPluginsOfCategory("Tool"))
 
 
+def test_make_tool_plugin_scan_valid():
+    """Integration test: Make sure the make output hasn't changed."""
+    mtp = setup_make_tool_plugin()
+    if not mtp.command_exists('make'):
+        pytest.skip('Missing make executable.')
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = 'make_targets'
+    issues = mtp.scan(package, 'level')
+    assert not issues
+
+
 def test_make_tool_plugin_scan_missing_tool_name():
     """Check that a missing tool name results in an empty list of issues."""
     mtp = setup_make_tool_plugin()
