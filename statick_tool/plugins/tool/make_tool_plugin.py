@@ -21,9 +21,8 @@ class MakeToolPlugin(ToolPlugin):
         if "make_targets" not in package:
             return []
 
-        extra_args = []
         output = None
-        make_args = ["make", "statick_cmake_target"] + extra_args
+        make_args = ["make", "statick_cmake_target"]
 
         try:
             output = subprocess.check_output(["make", "clean"],
@@ -33,10 +32,12 @@ class MakeToolPlugin(ToolPlugin):
                                              universal_newlines=True)
             if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
+
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("Make failed! Returncode = {}".format(ex.returncode))
-            print("{}".format(ex.output))
+            print("Exception output: {}".format(ex.output))
+            return None
 
         except OSError as ex:
             print("Couldn't find make executable! ({})".format(ex))
