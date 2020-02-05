@@ -58,13 +58,12 @@ class ClangFormatToolPlugin(ToolPlugin):
         if "headers" in package:
             files += package["headers"]
 
-        total_output = []
-        default_file_name = "_clang-format"
-        format_file_name = self.plugin_context.resources.get_file(default_file_name)
-        exc_msg = "_clang-format style is not correct. There is one located in {}. " \
-                  "Put this file in your home directory.".format(format_file_name)
-
         try:
+            default_file_name = "_clang-format"
+            format_file_name = self.plugin_context.resources.get_file(default_file_name)
+            exc_msg = "_clang-format style is not correct. There is one located in {}. " \
+                      "Put this file in your home directory.".format(format_file_name)
+
             with open(os.path.expanduser("~/" + default_file_name), "r") as home_format_file, \
                     open(format_file_name, "r") as format_file:
                 actual_format = home_format_file.read()
@@ -93,7 +92,8 @@ class ClangFormatToolPlugin(ToolPlugin):
             print("Error: {}".format(ex.output))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
-            return []
+
+        total_output = []
 
         try:
             for src in files:
