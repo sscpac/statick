@@ -42,8 +42,9 @@ class MakeToolPlugin(ToolPlugin):
             print("Couldn't find make executable! ({})".format(ex))
             return None
 
-        with open(self.get_name() + ".log", "w") as fname:
-            fname.write(output)
+        if self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as fname:
+                fname.write(output)
 
         issues = self.parse_output(package, output)
         return issues

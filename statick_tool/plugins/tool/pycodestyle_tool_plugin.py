@@ -50,9 +50,10 @@ class PycodestyleToolPlugin(ToolPlugin):
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as fname:
-            for output in total_output:
-                fname.write(output)
+        if self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as fname:
+                for output in total_output:
+                    fname.write(output)
 
         issues = self.parse_output(total_output)
         return issues
