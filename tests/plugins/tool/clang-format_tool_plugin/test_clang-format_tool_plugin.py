@@ -27,6 +27,7 @@ def setup_clang_format_tool_plugin():
     arg_parser.add_argument("--clang-format-raise-exception",
                             dest="clang_format_raise_exception",
                             action="store_false", default=True)
+    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
@@ -46,6 +47,7 @@ def setup_clang_format_tool_plugin_non_default():
     arg_parser.add_argument("--clang-format-raise-exception",
                             dest="clang_format_raise_exception",
                             action="store_true", default=False)
+    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])

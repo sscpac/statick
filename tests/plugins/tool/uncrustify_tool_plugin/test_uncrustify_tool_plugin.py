@@ -28,6 +28,7 @@ def setup_uncrustify_tool_plugin(extra_path=None):
     arg_parser.add_argument("--uncrustify-bin", dest="uncrustify_bin")
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
                             action="store_false", help="Show tool output")
+    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     paths = []
     if extra_path:
