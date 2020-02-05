@@ -90,13 +90,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 if self.plugin_context.args.clang_format_raise_exception:
                     total_output.append(output)
 
-        except IOError as ex:
-            print("{} Error = {}".format(exc_msg, str(ex.strerror)))
-            if self.plugin_context.args.clang_format_raise_exception:
-                return None
-            return []
-
-        except OSError as ex:
+        except (IOError, OSError) as ex:
             print("{} Error = {}".format(exc_msg, str(ex.strerror)))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
