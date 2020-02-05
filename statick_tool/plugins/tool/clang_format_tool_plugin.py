@@ -133,7 +133,6 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         except subprocess.CalledProcessError as ex:
             print("{} Returncode = {}".format(exc_msg, str(ex.returncode)))
-            print("Error: {}".format(ex.output))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
 
