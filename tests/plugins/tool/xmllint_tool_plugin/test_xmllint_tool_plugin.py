@@ -20,7 +20,6 @@ def setup_xmllint_tool_plugin():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
                             action="store_false", help="Show tool output")
-    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
