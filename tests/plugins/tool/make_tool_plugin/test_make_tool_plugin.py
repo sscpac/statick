@@ -23,12 +23,12 @@ def setup_make_tool_plugin():
                             action="store_false", help="Show tool output")
     arg_parser.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
                             type=str)
-    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     mtp = MakeToolPlugin()
     mtp.set_plugin_context(plugin_context)
     return mtp

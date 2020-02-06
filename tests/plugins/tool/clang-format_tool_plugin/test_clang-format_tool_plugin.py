@@ -27,12 +27,12 @@ def setup_clang_format_tool_plugin():
     arg_parser.add_argument("--clang-format-raise-exception",
                             dest="clang_format_raise_exception",
                             action="store_false", default=True)
-    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     cftp = ClangFormatToolPlugin()
     cftp.set_plugin_context(plugin_context)
     return cftp

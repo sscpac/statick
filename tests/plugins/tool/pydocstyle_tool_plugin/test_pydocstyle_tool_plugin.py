@@ -19,12 +19,12 @@ def setup_pydocstyle_tool_plugin():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
                             action="store_false", help="Show tool output")
-    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     pcstp = PydocstyleToolPlugin()
     pcstp.set_plugin_context(plugin_context)
     return pcstp

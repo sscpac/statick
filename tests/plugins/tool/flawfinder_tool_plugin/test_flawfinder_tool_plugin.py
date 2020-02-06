@@ -25,12 +25,12 @@ def setup_flawfinder_tool_plugin():
     arg_parser.add_argument("--flawfinder-bin", dest="flawfinder_bin")
     arg_parser.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
                             type=str)
-    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     fftp = FlawfinderToolPlugin()
     fftp.set_plugin_context(plugin_context)
     return fftp
