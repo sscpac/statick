@@ -34,7 +34,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                                "configuration file")
         args.set_defaults(clang_format_raise_exception=True)
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
+    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
@@ -58,30 +58,13 @@ class ClangFormatToolPlugin(ToolPlugin):
         if "headers" in package:
             files += package["headers"]
 
+        check = self.check_configuration(clang_format_bin)
+        if check is None or not check:
+            return check
+
         total_output = []
 
         try:
-            default_file_name = "_clang-format"
-            format_file_name = self.plugin_context.resources.get_file(default_file_name)
-            with open(os.path.expanduser("~/" + default_file_name), "r") as home_format_file, \
-                    open(format_file_name, "r") as format_file:
-                actual_format = home_format_file.read()
-                target_format = format_file.read()
-            diff = difflib.context_diff(actual_format.splitlines(),
-                                        target_format.splitlines())
-            for line in diff:
-                if (line.startswith("+ ") or line.startswith("- ") or
-                        line.startswith("! ")) and len(line) > 2:
-                    if line[2:].strip() and line[2:].strip()[0] != "#":
-                        # pylint: disable=line-too-long
-                        exc = subprocess.CalledProcessError(-1,
-                                                            clang_format_bin,
-                                                            "_clang-format style is not correct. There is one located in {}. Put this file in your home directory.".
-                                                            format(format_file_name))
-                        # pylint: enable=line-too-long
-                        if self.plugin_context.args.clang_format_raise_exception:
-                            raise exc
-
             for src in files:
                 output = subprocess.check_output([clang_format_bin, src,
                                                   "-output-replacements-xml"],
@@ -91,16 +74,17 @@ class ClangFormatToolPlugin(ToolPlugin):
                 if self.plugin_context.args.clang_format_raise_exception:
                     total_output.append(output)
 
-        except OSError as ex:
-            print("clang-format failed! Error = {}".format(str(ex.strerror)))
+        except (IOError, OSError) as ex:
+            print("clang-format binary failed: {}".format(clang_format_bin))
+            print("Error = {}".format(str(ex.strerror)))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             return []
 
         except subprocess.CalledProcessError as ex:
-            output = ex.output
-            print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
-            print("{}".format(ex.output))
+            print("clang-format binary failed: {}.".format(clang_format_bin))
+            print("Returncode: {}".format(str(ex.returncode)))
+            print("Error: {}".format(ex.output))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             return []
@@ -116,6 +100,44 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         issues = self.parse_output(total_output)
         return issues
+
+    def check_configuration(self, clang_format_bin):
+        """Check that configuration is configured properly."""
+        try:
+            default_file_name = "_clang-format"
+            format_file_name = self.plugin_context.resources.get_file(default_file_name)
+            exc_msg = "_clang-format style is not correct. There is one located in {}. " \
+                      "Put this file in your home directory.".format(format_file_name)
+
+            with open(os.path.expanduser("~/" + default_file_name), "r") as home_format_file, \
+                    open(format_file_name, "r") as format_file:
+                actual_format = home_format_file.read()
+                target_format = format_file.read()
+            diff = difflib.context_diff(actual_format.splitlines(),
+                                        target_format.splitlines())
+            for line in diff:
+                if (line.startswith("+ ") or line.startswith("- ") or
+                        line.startswith("! ")) and len(line) > 2:
+                    if line[2:].strip() and line[2:].strip()[0] != "#":
+                        exc = subprocess.CalledProcessError(-1,
+                                                            clang_format_bin,
+                                                            exc_msg)
+                        if self.plugin_context.args.clang_format_raise_exception:
+                            raise exc
+
+        except (IOError, OSError) as ex:
+            print("{}".format(exc_msg))
+            print("Error: {}".format(str(ex.strerror)))
+            if self.plugin_context.args.clang_format_raise_exception:
+                return None
+            return []
+
+        except subprocess.CalledProcessError as ex:
+            print("{} Returncode = {}".format(exc_msg, str(ex.returncode)))
+            if self.plugin_context.args.clang_format_raise_exception:
+                return None
+
+        return True
 
     def parse_output(self, total_output):
         """Parse tool output and report issues."""
