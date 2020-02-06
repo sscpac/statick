@@ -57,7 +57,8 @@ class SpotbugsToolPlugin(ToolPlugin):
                                                      universal_newlines=True)
                 except subprocess.CalledProcessError as ex:
                     output = ex.output
-                    f.write(output)
+                    if self.plugin_context.args.output_directory:
+                        f.write(output)
                     print("spotbugs failed! Returncode = {}".
                           format(str(ex.returncode)))
                     print("{}".format(ex.output))
@@ -69,7 +70,8 @@ class SpotbugsToolPlugin(ToolPlugin):
 
                 if self.plugin_context.args.show_tool_output:
                     print("{}".format(output))
-                f.write(output)
+                if self.plugin_context.args.output_directory:
+                    f.write(output)
             # The results will be output to (pom path)/target/spotbugs.xml for each pom
             for pom in package["all_poms"]:
                 if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):

@@ -47,9 +47,10 @@ class YamllintToolPlugin(ToolPlugin):
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as f:
-            for output in total_output:
-                f.write(output)
+        if self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as f:
+                for output in total_output:
+                    f.write(output)
 
         issues = self.parse_output(total_output)
         return issues

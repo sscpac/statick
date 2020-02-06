@@ -23,6 +23,7 @@ def test_tool_plugin_load_mapping_valid():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
                             type=str)
+    arg_parser.add_argument("--output-directory", dest="output_directory")
     resources = Resources([os.path.join(os.path.dirname(__file__), 'good_config')])
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, None)
     tp = ToolPlugin()

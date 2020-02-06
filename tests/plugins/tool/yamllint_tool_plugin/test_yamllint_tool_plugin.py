@@ -25,6 +25,7 @@ def setup_yamllint_tool_plugin():
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     yltp = YamllintToolPlugin()
     yltp.set_plugin_context(plugin_context)
     return yltp

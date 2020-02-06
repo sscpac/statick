@@ -36,6 +36,7 @@ def setup_uncrustify_tool_plugin(extra_path=None):
     resources = Resources(paths)
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     utp = UncrustifyToolPlugin()
     utp.set_plugin_context(plugin_context)
     return utp

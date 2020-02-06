@@ -42,8 +42,9 @@ class LizardToolPlugin(ToolPlugin):
         if self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        with open(self.get_name() + ".log", "w") as f:
-            f.write(output)
+        if self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as f:
+                f.write(output)
 
         issues = self.parse_output(output)
         return issues
