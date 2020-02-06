@@ -23,6 +23,7 @@ def setup_spotbugs_tool_plugin():
                             action="store_false", help="Show tool output")
     arg_parser.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
                             type=str)
+    arg_parser.add_argument("--output-directory", dest="output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
