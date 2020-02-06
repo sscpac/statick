@@ -1,0 +1,3 @@
+[Core]
+Name = HTMLLint Tool Plugin
+Module = htmllint_tool_plugin

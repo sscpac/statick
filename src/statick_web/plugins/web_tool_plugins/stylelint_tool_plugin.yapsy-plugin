@@ -1,0 +1,3 @@
+[Core]
+Name = stylelint Tool Plugin
+Module = stylelint_tool_plugin

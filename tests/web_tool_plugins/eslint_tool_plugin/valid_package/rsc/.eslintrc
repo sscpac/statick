@@ -1,0 +1,17 @@
+parserOptions:
+  ecmaVersion: 9
+  sourceType: script
+  ecmaFeatures:
+    jsx: false
+plugins:
+  - html
+  - prettier
+env:
+  browser: true
+extends:
+  - "eslint:recommended"
+  - "prettier"
+
+rules:
+  no-console: off
+  camelcase: warn
