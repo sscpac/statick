@@ -11,6 +11,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed:
 
+## v0.3.1 - 2020-02-06
+### Added:
+  - Reporting plugin for the [Jenkins Warnings Next Generation](https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin) plugin. (@axydes)
+    - Updated Jenkinsfile template to reflect usage of new plugin.
+  - Renamed file writing reporting plugin to write Jenkins warnings reporting plugin. (@axydes)
+  - More helpful, explicit error messages from the clang-format tool plugin.
+
+### Fixed:
+  - Not writing log files if no output directory is specified.
+  - The make tool plugin will now cause Statick to exit with error condition if the tool does not run successfully.
+
+### Removed:
+
 ## v0.3.0 - 2020-01-31
 
 Note that a breaking change was made to how the output directory is specified for writing results to a file.
