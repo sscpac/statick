@@ -1,6 +1,4 @@
-"""
-Apply markdownlint tool and gather results.
-"""
+"""Apply markdownlint tool and gather results."""
 
 from __future__ import print_function
 
@@ -12,19 +10,14 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 class MarkdownlintToolPlugin(ToolPlugin):
-    """
-    Apply Markdownlint tool and gather results.
-    """
+    """Apply markdownlint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "markdownlint"
 
-    def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals
+        """Run tool and gather output."""
         tool_bin = "markdownlint"
 
         tool_config = ".markdownlintrc"
@@ -78,9 +71,7 @@ class MarkdownlintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         markdownlint_re = r"(.+):(\d+)\s([^\s]+)\s(.+)"
         parse = re.compile(markdownlint_re)
         issues = []
@@ -95,5 +86,6 @@ class MarkdownlintToolPlugin(ToolPlugin):
                     issue_type = match.group(3)
                     severity = 3
                     message = match.group(4)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type, severity, message, None))
+                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
+                                        severity, message, None))
         return issues
