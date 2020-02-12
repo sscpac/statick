@@ -10,7 +10,7 @@ import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.stylelint_tool_plugin import stylelintToolPlugin
+from statick_tool.plugins.tool.stylelint_tool_plugin import StylelintToolPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
@@ -25,7 +25,7 @@ def setup_stylelint_tool_plugin():
                            os.path.join(os.path.dirname(__file__), 'valid_package')])
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
-    plugin = stylelintToolPlugin()
+    plugin = StylelintToolPlugin()
     plugin.set_plugin_context(plugin_context)
     return plugin
 

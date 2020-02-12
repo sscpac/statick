@@ -1,6 +1,4 @@
-"""
-Apply eslint tool and gather results.
-"""
+"""Apply eslint tool and gather results."""
 
 from __future__ import print_function
 
@@ -12,19 +10,14 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 class ESLintToolPlugin(ToolPlugin):
-    """
-    Apply eslint tool and gather results.
-    """
+    """Apply eslint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "eslint"
 
-    def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals
+        """Run tool and gather output."""
         tool_bin = "eslint"
 
         tool_config = ".eslintrc"
@@ -80,10 +73,8 @@ class ESLintToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+    def parse_output(self, total_output):  # pylint: disable=too-many-locals
+        """Parse tool output and report issues."""
         eslint_re = r"(.+):(\d+):(\d+):\s(.+)\s\[(.+)\/(.+)\]"
         parse = re.compile(eslint_re)
         issues = []
@@ -107,5 +98,6 @@ class ESLintToolPlugin(ToolPlugin):
                     line_number = match.group(2)
                     issue_type = match.group(6)
                     message = match.group(4)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type, severity, message, None))
+                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
+                                        severity, message, None))
         return issues

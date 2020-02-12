@@ -1,6 +1,4 @@
-"""
-Apply jshint tool and gather results.
-"""
+"""Apply jshint tool and gather results."""
 
 from __future__ import print_function
 
@@ -12,19 +10,14 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 class JSHintToolPlugin(ToolPlugin):
-    """
-    Apply jshint tool and gather results.
-    """
+    """Apply jshint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "jshint"
 
-    def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals
+        """Run tool and gather output."""
         tool_bin = "jshint"
 
         tool_config = ".jshintrc"
@@ -81,9 +74,7 @@ class JSHintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         jshint_re = r"(.+):(\d+):(\d+):\s(.+)"
         parse = re.compile(jshint_re)
         issues = []
@@ -98,5 +89,6 @@ class JSHintToolPlugin(ToolPlugin):
                     issue_type = "jshint"
                     severity = 5
                     message = match.group(4)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type, severity, message, None))
+                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
+                                        severity, message, None))
         return issues

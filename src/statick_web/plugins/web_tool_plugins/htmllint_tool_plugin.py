@@ -1,6 +1,4 @@
-"""
-Apply htmllint tool and gather results.
-"""
+"""Apply htmllint tool and gather results."""
 
 from __future__ import print_function
 
@@ -12,19 +10,14 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 class HTMLLintToolPlugin(ToolPlugin):
-    """
-    Apply HTML tidy tool and gather results.
-    """
+    """Apply HTML tidy tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "htmllint"
 
-    def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals
+        """Run tool and gather output."""
         tool_bin = "htmllint"
 
         tool_config = ".htmllintrc"
@@ -55,8 +48,8 @@ class HTMLLintToolPlugin(ToolPlugin):
                           format(tool_bin, str(ex.returncode)))
                     print("{}".format(ex.output))
                     return None
-                else:
-                    total_output.append(ex.output)
+
+                total_output.append(ex.output)
 
             except OSError as ex:
                 print("Couldn't find {}! ({})".format(tool_bin, ex))
@@ -74,9 +67,7 @@ class HTMLLintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         re_str = r"(.+):\s.+\s(\d+),\s.+,\s(.+)"
         parse = re.compile(re_str)
         issues = []
@@ -91,5 +82,6 @@ class HTMLLintToolPlugin(ToolPlugin):
                     issue_type = "format"
                     severity = 3
                     message = match.group(3)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type, severity, message, None))
+                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
+                                        severity, message, None))
         return issues
