@@ -1,6 +1,4 @@
-"""
-Apply stylelint tool and gather results.
-"""
+"""Apply stylelint tool and gather results."""
 
 from __future__ import print_function
 
@@ -11,20 +9,15 @@ from statick_tool.issue import Issue
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class stylelintToolPlugin(ToolPlugin):
-    """
-    Apply stylelint tool and gather results.
-    """
+class StylelintToolPlugin(ToolPlugin):
+    """Apply stylelint tool and gather results."""
+
     def get_name(self):
-        """
-        Get name of tool.
-        """
+        """Get name of tool."""
         return "stylelint"
 
-    def scan(self, package, level):
-        """
-        Run tool and gather output.
-        """
+    def scan(self, package, level):  # pylint: disable=too-many-locals
+        """Run tool and gather output."""
         tool_bin = "stylelint"
 
         tool_config = ".stylelintrc"
@@ -81,9 +74,7 @@ class stylelintToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(self, total_output):
-        """
-        Parse tool output and report issues.
-        """
+        """Parse tool output and report issues."""
         issues = []
 
         for output in total_output:
@@ -98,8 +89,8 @@ class stylelintToolPlugin(ToolPlugin):
                             severity = 3
                         elif severity_str == "error":
                             severity = 5
-                        issues.append(Issue(err_dict['source'], issue['line'], self.get_name(), issue['rule'],
-                                      severity, issue['text'], None))
+                        issues.append(Issue(err_dict['source'], issue['line'], self.get_name(),
+                                            issue['rule'], severity, issue['text'], None))
 
                 except ValueError as ex:
                     print("ValueError: {}".format(ex))
