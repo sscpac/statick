@@ -1,6 +1,4 @@
-"""
-Discover Markdown files to analyze.
-"""
+"""Discover Markdown files to analyze."""
 
 from __future__ import print_function
 
@@ -12,19 +10,14 @@ from statick_tool.discovery_plugin import DiscoveryPlugin
 
 
 class MarkdownDiscoveryPlugin(DiscoveryPlugin):
-    """
-    Discover Markdown files to analyze.
-    """
+    """Discover Markdown files to analyze."""
+
     def get_name(self):
-        """
-        Get name of discovery type.
-        """
+        """Get name of discovery type."""
         return "markdown"
 
     def scan(self, package, level, exceptions=None):
-        """
-        Scan package looking for Markdown files.
-        """
+        """Scan package looking for Markdown files."""
         src_files = []
 
         for root, _, files in os.walk(package.path):
