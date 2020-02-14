@@ -71,7 +71,7 @@ def test_markdownlint_tool_plugin_scan_valid_with_issues():
                                       'valid_package', 'test.md')]
     issues = plugin.scan(package, 'level')
     # We expect to have camelcase warnings and no-unused-var errors.
-    assert len(issues) == 1
+    assert len(issues) == 2
 
 
 def test_markdownlint_tool_plugin_parse_valid():
