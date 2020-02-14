@@ -72,7 +72,7 @@ class MarkdownlintToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output):
         """Parse tool output and report issues."""
-        markdownlint_re = r"(.+):(\d+)\s([^\s]+)\s(.+)"
+        markdownlint_re = r"(.+):(\d+):(\d+)\s([^\s]+)\s(.+)"
         parse = re.compile(markdownlint_re)
         issues = []
 
@@ -83,9 +83,9 @@ class MarkdownlintToolPlugin(ToolPlugin):
                 if match:
                     filename = match.group(1)
                     line_number = match.group(2)
-                    issue_type = match.group(3)
+                    issue_type = match.group(4)
                     severity = 3
-                    message = match.group(4)
+                    message = match.group(5)
                     issues.append(Issue(filename, line_number, self.get_name(), issue_type,
                                         severity, message, None))
         return issues
