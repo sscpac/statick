@@ -1,4 +1,4 @@
-name: Self check
+name: Self Check
 
 on: [pull_request, push]
 
