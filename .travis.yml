@@ -44,7 +44,7 @@ jobs:
       # the stage name) just to run statick
     - stage: self_check
       python: '3.5'
-      script: ./statick . --profile self_check.yaml
+      script: ./statick . --profile self_check.yaml --user-paths ./statick_tool
       # Force this to only run for one Python version
     - stage: documentation
       python: '3.5'
