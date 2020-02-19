@@ -11,6 +11,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed:
 
+## v0.3.2 - 2020-02-18
+### Added:
+  - Ability for Jenkins Warning NG reporting plugin to handle severity as int or string type. (@axydes)
+
+### Fixed:
+
+### Removed:
+
 ## v0.3.1 - 2020-02-06
 ### Added:
   - Reporting plugin for the [Jenkins Warnings Next Generation](https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin) plugin. (@axydes)
