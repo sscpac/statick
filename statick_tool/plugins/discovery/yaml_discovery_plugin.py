@@ -19,7 +19,7 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
     def scan(self, package, level, exceptions=None):
         """Scan package looking for YAML files."""
         yaml_files = []
-        globs = ["*.yaml"]
+        globs = ["*.yml", "*.yaml"]
 
         root = ''
         files = []

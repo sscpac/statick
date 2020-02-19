@@ -123,8 +123,6 @@ levels:
         flags: "--good-names=f,i,j,k,ex,_"
       uncrustify:
         flags: ""
-      xmllint:
-        flags: ""
       yamllint:
         flags: "-d '{extends: default,
                      rules: {
