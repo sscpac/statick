@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
