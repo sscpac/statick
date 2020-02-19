@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -53,6 +54,8 @@ def test_xmllint_tool_plugin_found():
 def test_xmllint_tool_plugin_scan_valid():
     """Integration test: Make sure the xmllint output hasn't changed."""
     xltp = setup_xmllint_tool_plugin()
+    if not xltp.command_exists('xmllint'):
+        pytest.skip('Missing xmllint executable.')
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['xml'] = [os.path.join(os.path.dirname(__file__),
