@@ -105,7 +105,7 @@ global:
         regex: ".+: Class .+ inherits from object, can be safely removed from bases in python3"
       # This doesn't work with Github Actions yaml files
       - tools: [yamllint]
-        regex: "truthy value should be one of [false, true]"
+        regex: "truthy value should be one of .+"
 
 packages:
 
