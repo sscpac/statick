@@ -103,6 +103,9 @@ global:
       # Python 2/3 compatibility requires inheriting from `object`.
       - tools: [pylint]
         regex: ".+: Class .+ inherits from object, can be safely removed from bases in python3"
+      # This doesn't work with Github Actions yaml files
+      - tools: [yamllint]
+        regex: "truthy value should be one of [false, true]"
 
 packages:
 

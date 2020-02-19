@@ -38,12 +38,12 @@ script:
 
 jobs:
   include:
-      # This adds a second parallel "test" stage (since we didn't specify
-      # the stage name) just to run statick
+    # This adds a second parallel "test" stage (since we didn't specify
+    # the stage name) just to run statick
     - stage: self_check
       python: '3.8'
       script: ./statick . --profile self_check.yaml
-      # Force this to only run for one Python version
+    # Force this to only run for one Python version
     - stage: documentation
       python: '3.8'
       install:
