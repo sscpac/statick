@@ -12,20 +12,28 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install tox tox-gh-actions
+
       - name: Test with tox
         run: |
           tox
+
+      - name: Gather coverage results
+        run: coverage xml
+
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          name: codecov-umbrella
+          name: ${{ runner.os }} Python ${{ matrix.python-version }}
+          file: ./coverage.xml
           fail_ci_if_error: true
