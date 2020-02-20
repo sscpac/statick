@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install tox tox-gh-actions
+          pip install codecov tox tox-gh-actions
 
       - name: Test with tox
         run: |
