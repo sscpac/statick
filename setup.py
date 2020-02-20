@@ -11,9 +11,6 @@ import statick_tool
 with open('README.md') as f:
     LONG_DESCRIPTION = f.read()
 
-with open('requirements.txt') as f:
-    REQUIREMENTS = f.read().splitlines()
-
 TEST_DEPS = [
     'backports.tempfile',
     'pylint-django',
@@ -21,14 +18,15 @@ TEST_DEPS = [
     'mock',
     'tox',
 ]
+
 EXTRAS = {
     'test': TEST_DEPS,
 }
 
 setup(
-    author='SSC Pacific',
     name='statick',
     description='Making code quality easier.',
+    author='SSC Pacific',
     version=statick_tool.__version__,
     packages=['statick_tool'],
     package_data={'statick_tool': ['rsc/*.*', 'rsc/.clang-format',
@@ -38,12 +36,16 @@ setup(
     scripts=['statick', 'statick_ws'],
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
-    install_requires=REQUIREMENTS,
+    install_requires=['bandit', 'cmakelint', 'cpplint', 'deprecated',
+                      'flawfinder', 'lizard', 'pycodestyle', 'pydocstyle',
+                      'pyflakes', 'pylint', 'PyYAML', 'xmltodict', 'yamllint',
+                      'yapsy'],
     tests_require=TEST_DEPS,
     extras_require=EXTRAS,
     url='https://github.com/sscpac/statick',
     classifiers=[
         "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
