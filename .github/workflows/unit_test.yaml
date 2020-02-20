@@ -26,9 +26,9 @@ jobs:
           tox
       - uses: codecov/codecov-action@v1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} #required
+          token: ${{ secrets.CODECOV_TOKEN }}  # required
           file: ./output-${{ matrix.python-version }}/coverage.xml
-          #flags: unittests #optional
-          name: codecov-umbrella #optional
-          #yml: ./codecov.yml #optional
-          fail_ci_if_error: true #optional (default = false)
+          # flags: unittests # optional
+          name: codecov-umbrella  # optional
+          # yml: ./codecov.yml  # optional
+          fail_ci_if_error: true  # optional (default = false)
