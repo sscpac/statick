@@ -20,7 +20,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install coveragepy tox tox-gh-actions
+          pip install tox tox-gh-actions
       - name: Test with tox
         run: |
           tox
@@ -28,4 +28,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: codecov-umbrella
+          file: output-${{ matrix.python-version }}/coverage.xml
           fail_ci_if_error: true
