@@ -9,12 +9,17 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 import statick_tool
 
 with open('README.md') as f:
-    long_description = f.read()  # pylint: disable=invalid-name
+    LONG_DESCRIPTION = f.read()
+
+with open('requirements.txt') as f:
+    REQUIREMENTS = f.read().splitlines()
 
 TEST_DEPS = [
     'backports.tempfile',
+    'pylint-django',
     'pytest',
     'mock',
+    'tox',
 ]
 EXTRAS = {
     'test': TEST_DEPS,
@@ -31,11 +36,9 @@ setup(
                                    'plugins/*.py', 'plugins/discovery/*',
                                    'plugins/tool/*', 'plugins/reporting/*']},
     scripts=['statick', 'statick_ws'],
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
-    install_requires=['bandit', 'cmakelint', 'flawfinder', 'lizard',
-                      'pycodestyle', 'pydocstyle', 'pyflakes', 'pylint',
-                      'PyYAML', 'xmltodict', 'yamllint', 'yapsy'],
+    install_requires=REQUIREMENTS,
     tests_require=TEST_DEPS,
     extras_require=EXTRAS,
     url='https://github.com/sscpac/statick',
