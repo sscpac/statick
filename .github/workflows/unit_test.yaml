@@ -27,7 +27,7 @@ jobs:
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }} #required
-          file: .output-${{ matrix.python-version }}/coverage.xml
+          file: ./output-${{ matrix.python-version }}/coverage.xml
           #flags: unittests #optional
           name: codecov-umbrella #optional
           #yml: ./codecov.yml #optional
