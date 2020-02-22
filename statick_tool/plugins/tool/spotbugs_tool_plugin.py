@@ -45,7 +45,7 @@ class SpotbugsToolPlugin(ToolPlugin):
                                                                .resources.get_file(exclude_file))]
 
         issues = []
-        total_output = []
+        total_output = ""
         for pom in package['top_poms']:
             try:
                 # The spotbugs:spotbugs-maven-plugin split is auto-concatenated
@@ -68,7 +68,7 @@ class SpotbugsToolPlugin(ToolPlugin):
 
             if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
-            total_output.append(output)
+            total_output += output
 
         # The results will be output to (pom path)/target/spotbugs.xml for each pom
         for pom in package["all_poms"]:
