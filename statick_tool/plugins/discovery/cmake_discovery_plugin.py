@@ -37,8 +37,12 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 
         extra_gcc_flags = self.plugin_context.config.get_tool_config("make", level, "flags", "")
 
-        subproc_args = ["cmake", ".", "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+        subproc_args = ["cmake", ".",
+                        "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                        "-DBUILD_GTEST=OFF",
                         "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                        "-DCATKIN_ENABLE_TESTING=OFF",
+                        "-DCATKIN_SKIP_TESTING=ON",
                         "-DINPUT_DIR=" + package.path,
                         "-DSTATICK_EXTRA_GCC_FLAGS=" + extra_gcc_flags]
 
@@ -58,8 +62,9 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             print("Couldn't find cmake executable!")
             return
 
-        with open("cmake.log", "w") as fname:
-            fname.write(output)
+        if self.plugin_context.args.output_directory:
+            with open("cmake.log", "w") as fname:
+                fname.write(output)
 
         self.process_output(output, package)
 
@@ -68,7 +73,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     @classmethod
     def process_output(cls, output, package):  # pylint: disable=too-many-locals
         """Parse the tool output."""
-# pylint: disable=anomalous-backslash-in-string
+        # pylint: disable=anomalous-backslash-in-string
         cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
         target_p = re.compile(cmake_target_re)
         cmake_headers_re = r"-- HEADERS: (.+)"
@@ -77,7 +82,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         roslint_p = re.compile(cmake_roslint_re)
         cmake_project_re = r"-- PROJECT: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[BIN_DIR:(.+)\]"  # NOQA: W605 # NOLINT
         project_p = re.compile(cmake_project_re)
-# pylint: enable=anomalous-backslash-in-string
+        # pylint: enable=anomalous-backslash-in-string
 
         qt_re = r".*build/.*(ui_|moc_|).*\.(h|cxx)"
         qt_p = re.compile(qt_re)
