@@ -45,39 +45,42 @@ class SpotbugsToolPlugin(ToolPlugin):
                                                                .resources.get_file(exclude_file))]
 
         issues = []
-        with open(self.get_name() + ".log", "w") as f:
-            for pom in package['top_poms']:
-                try:
-                    # The spotbugs:spotbugs-maven-plugin split is auto-concatenated
-                    output = subprocess.check_output(["mvn", "com.github.spotbugs:"
-                                                      "spotbugs-maven-plugin:spotbugs"] +
-                                                     flags,
-                                                     cwd=os.path.dirname(pom),
-                                                     stderr=subprocess.STDOUT,
-                                                     universal_newlines=True)
-                except subprocess.CalledProcessError as ex:
-                    output = ex.output
-                    if self.plugin_context.args.output_directory:
-                        f.write(output)
-                    print("spotbugs failed! Returncode = {}".
-                          format(str(ex.returncode)))
-                    print("{}".format(ex.output))
-                    return None
+        total_output = []
+        for pom in package['top_poms']:
+            try:
+                # The spotbugs:spotbugs-maven-plugin split is auto-concatenated
+                output = subprocess.check_output(["mvn", "com.github.spotbugs:"
+                                                  "spotbugs-maven-plugin:spotbugs"] +
+                                                 flags,
+                                                 cwd=os.path.dirname(pom),
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
+            except subprocess.CalledProcessError as ex:
+                output = ex.output
+                print("spotbugs failed! Returncode = {}".
+                      format(str(ex.returncode)))
+                print("{}".format(ex.output))
+                return None
 
-                except OSError as ex:
-                    print("Couldn't find maven! ({})".format(ex))
-                    return None
+            except OSError as ex:
+                print("Couldn't find maven! ({})".format(ex))
+                return None
 
-                if self.plugin_context.args.show_tool_output:
-                    print("{}".format(output))
-                if self.plugin_context.args.output_directory:
-                    f.write(output)
-            # The results will be output to (pom path)/target/spotbugs.xml for each pom
-            for pom in package["all_poms"]:
-                if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):
-                    with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) \
-                            as outfile:
-                        issues += self.parse_output(outfile.read())
+            if self.plugin_context.args.show_tool_output:
+                print("{}".format(output))
+            total_output.append(output)
+
+        # The results will be output to (pom path)/target/spotbugs.xml for each pom
+        for pom in package["all_poms"]:
+            if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):
+                with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) \
+                        as outfile:
+                    issues += self.parse_output(outfile.read())
+
+        if self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as f:
+                f.write(total_output)
+
         return issues
 
     def parse_output(self, output):
