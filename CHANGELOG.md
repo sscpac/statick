@@ -11,6 +11,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed:
 
+## v0.3.4 - 2020-02-26
+### Added:
+  - Using fewer CMake targets during build.
+
+### Fixed:
+  - Open issues filename with utf-8 encoding to avoid UnicodeDecodeError exception.
+  - CMake and Spotbugs plugins no longer write output logs if output directory is not specified.
+
+### Removed:
+
 ## v0.3.3 - 2020-02-19
 ### Added:
   - Github workflows for Actions.
