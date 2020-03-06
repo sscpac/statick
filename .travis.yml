@@ -48,7 +48,7 @@ jobs:
       python: '3.8'
       script:
         - ./statick . --profile self_check.yaml
-        - statick . --profile documentation.yaml
+        - statick . --user-paths statick_tool --profile documentation.yaml
       # Force this to only run for one Python version
     - stage: documentation
       python: '3.8'
