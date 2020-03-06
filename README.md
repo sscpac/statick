@@ -24,9 +24,9 @@ user-definable locations to run against software.
 
 The plugins for the statick scans are divided into three categories:
 
-  - Discovery plugins that find files to scan inside of a code package.
-  - Tool plugins to run analysis programs against the files discovered by the discovery plugins.
-  - Reporting plugins to output the analysis results in various formats.
+* Discovery plugins that find files to scan inside of a code package.
+* Tool plugins to run analysis programs against the files discovered by the discovery plugins.
+* Reporting plugins to output the analysis results in various formats.
 
 ## Install Required Tools
 
@@ -69,7 +69,8 @@ To install Statick on your system and make it part of your `$PATH`:
 ## Running
 
 If you are running from an installed version, you will use the `statick` or `statick_ws` command.
-If you are running job from a local version in your workspace, you can run it like `~/src/my_ws/src/ssc/statick/statick` or `~/src/my_ws/src/ssc/statick/statick_ws`.
+If you are running job from a local version in your workspace, you can run it like
+`~/src/my_ws/src/ssc/statick/statick` or `~/src/my_ws/src/ssc/statick/statick_ws`.
 
 For a description of all available arguments, pass the `--help` option to either program.
 
@@ -83,7 +84,8 @@ For a description of all available arguments, pass the `--help` option to either
 This should initially be an empty directory separate from your regular source and build directories.
 This directory must already exist before running the program.
 
-If you are using this with a ROS Ament/Catkin workspace, you must have your workspace `setup.bash` sourced before running the tool.
+If you are using this with a ROS Ament/Catkin workspace, you must have your workspace `setup.bash` sourced before
+running the tool.
 
 ### For a whole or partial ament/catkin workspace
 

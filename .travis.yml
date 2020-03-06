@@ -24,8 +24,12 @@ install:
   - cat install.txt | xargs sudo apt-get install -y
   - cat ros-deps.txt | xargs sudo apt-get install -y
   - pip install -r requirements.txt
+  - pip3 install -r requirements.txt
   - sudo rosdep init
   - rosdep update
+  - sudo apt-get install -y nodejs-dev npm
+  - sudo npm install -g n && sudo n stable
+  - sudo npm install -g markdownlint-cli@0.21.0
 
 # This stage is run against everything in the matrix (so every python version)
 script:
@@ -34,7 +38,7 @@ script:
   - tox -e $(echo py$TRAVIS_PYTHON_VERSION | tr -d . | sed -e 's/pypypy/pypy/' | sed -e 's/-dev//')
   # Forces unit tests to take non-standard paths through code.
   - cp tests/plugins/tool/clang-format_tool_plugin/different-clang-format.cfg ~/.clang-format
-
+  - cp statick_tool/rsc/.markdownlintrc ~/.markdownlintrc
 
 jobs:
   include:
@@ -42,7 +46,9 @@ jobs:
       # the stage name) just to run statick
     - stage: self_check
       python: '3.8'
-      script: ./statick . --profile self_check.yaml
+      script:
+        - ./statick . --profile self_check.yaml
+        - statick . --user-paths statick_tool --profile documentation.yaml
       # Force this to only run for one Python version
     - stage: documentation
       python: '3.8'
