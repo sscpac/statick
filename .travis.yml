@@ -27,6 +27,9 @@ install:
   - pip3 install -r requirements.txt
   - sudo rosdep init
   - rosdep update
+  - sudo apt-get install -y nodejs-dev npm
+  - npm install -g n && n stable
+  - npm install -g markdownlint-cli@0.21.0
 
 # This stage is run against everything in the matrix (so every python version)
 script:
