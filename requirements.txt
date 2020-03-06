@@ -10,6 +10,7 @@ pydocstyle
 pyflakes
 pylint
 pylint-django<2.0
+statick
 statick-md
 xmltodict
 yamllint

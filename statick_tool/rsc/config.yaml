@@ -115,8 +115,6 @@ levels:
     reporting:
       print_to_console:
     tool:
-      markdownlint:
-        flags: ""
       pydocstyle:
         flags: ""
       pyflakes:
@@ -134,6 +132,13 @@ levels:
                        commas: disable,
                        document-start: disable,
                        line-length: disable}}'"
+
+  documentation:
+    reporting:
+      print_to_console:
+    tool:
+      markdownlint:
+        flags: ""
 
   ultimate:
     reporting:
