@@ -92,8 +92,9 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_severities():
         package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                         'valid_package'))
         issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', "0", 'This is a test', None),
+                             Issue('test.txt', 1, 'tool_a', 'type', "invalid-severity", 'This is a test', None),
                              Issue('test.txt', 1, 'tool_a', 'type', "1", 'This is a test', None),
-                             Issue('test.txt', 1, 'tool_a', 'type', "3", 'This is a test', None),
+                             Issue('test.txt', 1, 'tool_a', 'type', 3, 'This is a test', None),
                              Issue('test.txt', 1, 'tool_a', 'type', "5", 'This is a test', None)
                              ]}
         _, success = wfrp.report(package, issues, 'level')

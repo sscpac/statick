@@ -12,6 +12,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.3.4 - 2020-02-26
+### Added:
+  - Using fewer CMake targets during build.
+
+### Fixed:
+  - Open issues filename with utf-8 encoding to avoid UnicodeDecodeError exception.
+  - CMake and Spotbugs plugins no longer write output logs if output directory is not specified.
+
+### Removed:
+
+## v0.3.3 - 2020-02-19
+### Added:
+  - Github workflows for Actions.
+    These are just starting but they may replace Travis CI in the future.
+  - Made 3.8 the default version for CI testing.
+
+### Fixed:
+  - Added needed `install_requires` entries in setup.py to allow Statick to work out of the box (in the pip sense).
+  - The `statick_ws` command now supports running without an output directory.
+  - The xmllint unit tests will be skipped if xmllint executable is not available.
+    This can happen when apt dependencies are not going to be installed.
+
+### Removed:
+  - Python 3.5 is no longer supported.
+    It is not getting updates any longer, and is not available on Github Actions.
+
+## v0.3.2 - 2020-02-18
+### Added:
+  - Ability for Jenkins Warning NG reporting plugin to handle severity as int or string type. (@axydes)
+
+### Fixed:
+
+### Removed:
+
 ## v0.3.1 - 2020-02-06
 
 ### Added

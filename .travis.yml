@@ -2,7 +2,6 @@ dist: xenial
 sudo: required
 language: python
 python:
-  - '3.5'
   - '3.6'
   - '3.7'
   - '3.8'
@@ -43,11 +42,11 @@ jobs:
       # This adds a second parallel "test" stage (since we didn't specify
       # the stage name) just to run statick
     - stage: self_check
-      python: '3.5'
-      script: ./statick . --profile self_check.yaml --user-paths ./statick_tool
+      python: '3.8'
+      script: ./statick . --profile self_check.yaml
       # Force this to only run for one Python version
     - stage: documentation
-      python: '3.5'
+      python: '3.8'
       install:
         - pip install -r requirements.txt
         - pip install -r requirements-docs.txt
