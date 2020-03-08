@@ -2,20 +2,21 @@
 
 For basic usage information, see the [README.md](README.md) file provided with Statick.
 
-# Basics
-
 ## Terminology
 
 `package` - A package is the basic unit of software scanned by Statick.
 When running the standalone `statick` command, it is the path passed as the first argument.
-When running the tree scanning `statick_ws`, it is any package under the path passed as the first argument that meets certain criteria (currently this criteria is that it contains a `CMakeLists.txt` and `package.xml`)
+When running the tree scanning `statick_ws`, it is any package under the path passed as the first argument that meets
+certain criteria (currently this criteria is that it contains a `CMakeLists.txt` and `package.xml`)
 
 `discovery plugin` - Discovery plugins are used to find files to scan under a package.
 This may involve running a program such as `cmake` or looking for certain file extensions.
 
 `tool plugin` - Tool plugins run code scanning tools against files discovered by a discovery plugin.
 
-`reporting plugin` - Reporting plugins output the results of the tool plugin to a location and in a method defined by the plugin. This could be anything from writing a file to uploading to a website.
+`reporting plugin` - Reporting plugins output the results of the tool plugin to a location and in a method defined by
+the plugin.
+This could be anything from writing a file to uploading to a website.
 
 `user paths` - User paths are a list of directories passed to the `--user-paths` argument.
 This is used to pass custom configuration and plugin files to Statick.
@@ -50,18 +51,19 @@ Files from paths earlier in the list will override files from paths later in the
 To run Statick with this set of configurations, you would do `statick src/my_pkg statick_output --user-paths my_project_config,my_org_config`.
 In this example, Statick would use the `config.yaml` from `my_org_config` and the `exceptions.yaml` from `my_project_config`.
 
-# Customization
+## Customization
 
 Statick allows for customization in two primary ways.
 
 1. Configuration files
 2. User-defined plugins
 
-It is encouraged to keep these files in version control either alongside your project or in a repository dedicated to build configuration.
+It is encouraged to keep these files in version control either alongside your project or in a repository dedicated to
+build configuration.
 
-## Configuration files
+### Configuration files
 
-### config.yaml
+#### config.yaml
 
 `config.yaml` is used to defined which plugins are run at certain levels, and what flags to use for those tools.
 
@@ -74,7 +76,8 @@ It is encouraged to keep these files in version control either alongside your pr
                     --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
                     --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
           make:
-            flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
+            flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast
+                    -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
           catkin_lint:
             flags: "-W2 --ignore DESCRIPTION_BOILERPLATE,DESCRIPTION_MEANINGLESS,GLOBAL_VAR_COLLISION,LINK_DIRECTORY,LITERAL_PROJECT_NAME,TARGET_NAME_COLLISION"
           cppcheck:
@@ -126,9 +129,10 @@ Tools are listed under the `tool` key.
 The name of the keys under `tool` key should match either a default Statick tool plugin or a user defined tool plugin.
 
 The `inherits_from` key can be used to inherit tools and flags from a different level.
-Flags from the inherited level can be overridden by listing the same tool under the level's `tools` key with a new set of flags.
+Flags from the inherited level can be overridden by listing the same tool under the level's `tools` key with a new set
+of flags.
 
-### profile.yaml
+#### profile.yaml
 
 `profile.yaml` defines what levels to run for packages.
 The levels listed in the profile must exist in the `config.yaml`.
@@ -147,7 +151,7 @@ The `default` key lists the level to be run if there is no specific level listed
 
 The `packages` key lists packages and override levels to run for those packages.
 
-### exceptions.yaml
+#### exceptions.yaml
 
 `exceptions.yaml` is used to ignore false positive warnings or warnings that will not be corrected.
 
@@ -171,7 +175,7 @@ The `packages` key lists packages and override levels to run for those packages.
           message_regex:
             - tools: [clang-tidy]
               regex: "header guard does not follow preferred style"
-		  file:
+          file:
             - tools: [cppcheck, clang-tidy]
             - globs: ["include/my_package/some_header.h"]
 
@@ -195,13 +199,15 @@ Information about the regex syntax used by Python can be found [here](https://do
 
 Exceptions can either be global or package specific.
 To make them global, place them under a key named `global` at the root of the yaml file.
-To make them package spefific, place them in a key named after the package under a key named `packages` at the root level of the yaml.
+To make them package spefific, place them in a key named after the package under a key named `packages` at the root
+level of the yaml.
 
 The `ignore_packages` key is a list of package names that should be skipped when running `static_ws`.
 
 ## Plugins
 
-Plugins allow you to implement file discovery, use tools, or output in formats/to locations that aren't provided builtin with Statick.
+Plugins allow you to implement file discovery, use tools, or output in formats/to locations that aren't provided
+builtin with Statick.
 
 Plugins consist of both a Python file and a `yapsy` file.
 For a description of how yapsy works, check out the [documentation](http://yapsy.sourceforge.net/).
@@ -223,16 +229,18 @@ A user path with some custom plugins may look like
          |- config.yaml
          |- exceptions.yaml
 
-For the actual implementation of a plugin, it is recommended to copy a suitable default plugin provided by Statick and modify as needed.
+For the actual implementation of a plugin, it is recommended to copy a suitable default plugin provided by Statick and
+modify as needed.
 
 For the contents of `setup.py`, it is recommended to copy a working external plugin.
 Some examples are [statick-fortify](https://github.com/soartech/statick-fortify) and [statick-tex](https://github.com/tdenewiler/statick-tex).
 Those plugins are both setup in such a way that they work when released on PyPI.
 
-# Tests
+## Tests
 
 Statick supports testing through the [tox](https://tox.readthedocs.io/en/latest) framework.
-Tox is used to run tests against multiple versions of python and supports running other tools, such as flake8, as part of the testing process.
+Tox is used to run tests against multiple versions of python and supports running other tools, such as flake8, as part
+of the testing process.
 To run tox, run the following commands from a git checkout of `statick`:
 
     `pip install tox`
@@ -241,35 +249,39 @@ To run tox, run the following commands from a git checkout of `statick`:
 This will run the test suites in Python virtual environments for each Python version.
 If your system does not have one of the Python versions listed in `tox.ini`, that version will be skipped.
 
-If running `tox` locally does not work, one thing to try is to remove the auto-generated output directories such as `output-py27`, `output-py35`, and `.tox`. 
+If running `tox` locally does not work, one thing to try is to remove the auto-generated output directories such as
+`output-py27`, `output-py35`, and `.tox`.
 There is an included `clean.sh` shell script that helps with removing auto-generated files.
 
-## Tests and Contributing
+### Tests and Contributing
 
 If you write a new feature for Statick or are fixing a bug, you are strongly encouraged to add unit tests for your contribution.
-In particular, it is much easier to test whether a bug is fixed (and identify future regressions) if you can add a small unit test which replicates the bug.
+In particular, it is much easier to test whether a bug is fixed (and identify future regressions) if you can add a small
+unit test which replicates the bug.
 
 For tool plugins that are not available via pip it is recommended to skip tests that fail when the tool is not installed.
 
-Before submitting a change, please run tox to check that you have not introduced any regressions or violated any code style guidelines. 
+Before submitting a change, please run tox to check that you have not introduced any regressions or violated any code
+style guidelines.
 
-# Examples
+## Examples
 
 A few examples are provided for some of the basic use cases of Statick.
 See [examples/README.md](./examples/README.md) for more details.
 
-# Statick Jenkins Integration
+## Statick Jenkins Integration
 
-The preferred method is to install the `Warnings Next Generation Plug-In` (https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin)
+The preferred method is to install the `Warnings Next Generation Plug-In`
+(<https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin>)
 and use the provided [pipeline template](./templates/Jenkinsfile).
 
-## Deprecated Method
+### Deprecated Method
 
 The output of Statick can also be integrated with the Jenkins Warnings plug-in.
 NOTE: This plugin has reached end-of-life and will be removed in the future.
 
   1. In Jenkins:
-     Install `Warnings Plug-In` (https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin)
+     Install `Warnings Plug-In` (<https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin>)
 
   1. Under `Jenkins > Manage Jenkins > Configure System`:
 
@@ -298,7 +310,8 @@ NOTE: This plugin has reached end-of-life and will be removed in the future.
            if(level >= 5) { priority = Priority.HIGH; }
            return new Warning(fileName, Integer.parseInt(lineNumber), type, type + ":" + category, message, priority);
          Example Log Message:
-           [/home/user/src/workspace/src/example_pkg/src/tools/converter.cpp][8][cppcheck:warning/uninitVar][Member variable 'Tools::init_' is not initialized in the constructor.][1]
+           [/home/user/src/workspace/src/example_pkg/src/tools/converter.cpp][8][cppcheck:warning/uninitVar]
+           [Member variable 'Tools::init_' is not initialized in the constructor.][1]
 
   1. Click save.
 
