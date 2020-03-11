@@ -21,7 +21,7 @@ import re
 import yaml
 
 
-class Exceptions(object):
+class Exceptions():
     """Interface for applying exceptions."""
 
     def __init__(self, filename):

@@ -22,7 +22,7 @@ from statick_tool.tool_plugin import ToolPlugin
 logging.basicConfig()
 
 
-class Statick(object):
+class Statick():
     """Code analysis front-end."""
 
     def __init__(self, user_paths):

@@ -9,7 +9,7 @@ from __future__ import print_function
 import os
 
 
-class Resources(object):
+class Resources():
     """
     Manages plugin and file lookup chaining.
 
