@@ -12,7 +12,7 @@ from collections import OrderedDict
 import yaml
 
 
-class Config(object):
+class Config():
     """
     Manages which plugins are run for each statick scan level.
 

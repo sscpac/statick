@@ -3,7 +3,7 @@
 import yaml
 
 
-class Profile(object):  # pylint: disable=too-few-public-methods
+class Profile():  # pylint: disable=too-few-public-methods
     """Manages which scan levels are run for packages."""
 
     def __init__(self, filename):

@@ -9,7 +9,7 @@ import argparse
 import os
 
 
-class Args(object):
+class Args():
     """
     Custom argument handling.
 
