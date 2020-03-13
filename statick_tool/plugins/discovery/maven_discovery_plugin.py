@@ -5,21 +5,24 @@ from __future__ import print_function
 import fnmatch
 import os
 from collections import OrderedDict
+from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 
 
 class MavenDiscoveryPlugin(DiscoveryPlugin):
     """Discover Maven files to analyze."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of discovery type."""
         return "maven"
 
-    def scan(self, package, level, exceptions=None):
+    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for maven files."""
-        top_poms = []
-        all_poms = []
+        top_poms: List[str] = []
+        all_poms: List[str] = []
         deepest_pom_level = 999999
 
         for root, _, files in os.walk(package.path):

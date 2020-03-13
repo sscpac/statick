@@ -4,25 +4,27 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class PylintToolPlugin(ToolPlugin):
     """Apply pylint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "pylint"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         flags = ["--msg-template='{abspath}:{line}: [{msg_id}({symbol}), "
                  "{obj}] {msg}'", "--reports=no"]
         flags += self.get_user_flags(level)
 
-        total_output = []
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             try:
@@ -56,30 +58,30 @@ class PylintToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         pylint_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse = re.compile(pylint_re)
+        parse: Pattern[str] = re.compile(pylint_re)
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)
+                match: Match[str] = parse.match(line)
                 if match:
                     if "," in match.group(3):
                         parts = match.group(3).split(",")
                         if parts[1].strip() == "":
                             issues.append(Issue(match.group(1), match.group(2),
-                                                self.get_name(), parts[0], "5",
+                                                self.get_name(), parts[0], '5',
                                                 match.group(4), None))
                         else:
                             issues.append(Issue(match.group(1), match.group(2),
-                                                self.get_name(), parts[0], "5",
+                                                self.get_name(), parts[0], '5',
                                                 parts[1].strip() + ": " +
                                                 match.group(4), None))
                     else:
                         issues.append(Issue(match.group(1), match.group(2),
                                             self.get_name(), match.group(3),
-                                            "5", match.group(4), None))
+                                            '5', match.group(4), None))
 
         return issues

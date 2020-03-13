@@ -2,23 +2,26 @@
 
 from __future__ import print_function
 
+import argparse
 import difflib
 import os
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangFormatToolPlugin(ToolPlugin):
     """Apply clang-format tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "clang-format"
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
@@ -34,7 +37,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                                "configuration file")
         args.set_defaults(clang_format_raise_exception=True)
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
+    def scan(self, package: Package, level: str) -> List[Issue]:  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
@@ -51,18 +54,20 @@ class ClangFormatToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        files = []
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        check = self.check_configuration(clang_format_bin)
-        if check is None or not check:
-            return check
+        check: Optional[List[bool]] = self.check_configuration(clang_format_bin)
+        if check is None:
+            return None
+        if not check:
+            return []
 
-        total_output = []
+        total_output: List[str] = []
 
         try:
             for src in files:
@@ -98,10 +103,10 @@ class ClangFormatToolPlugin(ToolPlugin):
                 for output in total_output:
                     fname.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
-    def check_configuration(self, clang_format_bin):
+    def check_configuration(self, clang_format_bin: str) -> Optional[List[bool]]:
         """Check that configuration is configured properly."""
         try:
             default_file_name = "_clang-format"
@@ -137,12 +142,12 @@ class ClangFormatToolPlugin(ToolPlugin):
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
 
-        return True
+        return [True]
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
-        parse = re.compile(clangformat_re)
+        parse: Pattern[str] = re.compile(clangformat_re)
         issues = []
 
         for output in total_output:
@@ -150,10 +155,10 @@ class ClangFormatToolPlugin(ToolPlugin):
             filename = lines[0]
             count = 0
             for line in lines:
-                match = parse.match(line)
+                match: Match[str] = parse.match(line)
                 if match:
                     count += 1
             if count > 0:
-                issues.append(Issue(filename, "0", self.get_name(), "format",
-                                    "1", str(count) + " replacements", None))
+                issues.append(Issue(filename, '0', self.get_name(), "format",
+                                    '1', str(count) + " replacements", None))
         return issues

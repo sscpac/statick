@@ -2,9 +2,11 @@
 
 from __future__ import print_function
 
+import argparse
 import copy
 import logging
 import os
+from typing import Any, Dict, List, Optional, Tuple
 
 from yapsy.PluginManager import PluginManager
 
@@ -12,6 +14,7 @@ from statick_tool import __version__
 from statick_tool.config import Config
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
+from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
@@ -25,7 +28,7 @@ logging.basicConfig()
 class Statick():
     """Code analysis front-end."""
 
-    def __init__(self, user_paths):
+    def __init__(self, user_paths: List[str]) -> None:
         """Initialize Statick."""
         self.resources = Resources(user_paths)
 
@@ -38,43 +41,43 @@ class Statick():
         })
         self.manager.collectPlugins()
 
-        self.discovery_plugins = {}
+        self.discovery_plugins: Dict = {}
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
             self.discovery_plugins[plugin_info.plugin_object.get_name()] = \
                 plugin_info.plugin_object
 
-        self.tool_plugins = {}
+        self.tool_plugins: Dict = {}
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
             self.tool_plugins[plugin_info.plugin_object.get_name()] = \
                 plugin_info.plugin_object
 
-        self.reporting_plugins = {}
+        self.reporting_plugins: Dict = {}
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
                     plugin_info.plugin_object
 
-        self.config = []
-        self.exceptions = []
+        self.config: Config = None
+        self.exceptions: Exceptions = None
 
-    def get_config(self, args):
+    def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
         config_filename = "config.yaml"
         if args.config is not None:
             config_filename = args.config
         self.config = Config(self.resources.get_file(config_filename))
 
-    def get_exceptions(self, args):
+    def get_exceptions(self, args: argparse.Namespace) -> None:
         """Get Statick exceptions."""
         exceptions_filename = "exceptions.yaml"
         if args.exceptions is not None:
             exceptions_filename = args.exceptions
         self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
 
-    def get_ignore_packages(self):
+    def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
         return self.exceptions.get_ignore_packages()
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--output-directory", dest="output_directory",
                           type=str, help="Directory to write output files to")
@@ -102,7 +105,7 @@ class Statick():
         for _, plugin in list(self.reporting_plugins.items()):
             plugin.gather_args(args)
 
-    def get_level(self, path, args):
+    def get_level(self, path: str, args: argparse.Namespace) -> Optional[str]:
         """Get level to scan package at."""
         path = os.path.abspath(path)
 
@@ -129,7 +132,7 @@ class Statick():
 
         return level
 
-    def run(self, path, args):  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+    def run(self, path: str, args: argparse.Namespace) -> Tuple[Optional[Dict], bool]:  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
         """Run scan tools against targets on path."""
         success = True
 
@@ -139,7 +142,7 @@ class Statick():
             return None, False
 
         package = Package(os.path.basename(path), path)
-        level = self.get_level(path, args)
+        level: str = self.get_level(path, args)
 
         if not self.config or not self.config.has_level(level):
             print("Can't find specified level {} in config!".format(level))
@@ -170,7 +173,7 @@ class Statick():
                                                             package.path,
                                                             level))
 
-        issues = {}
+        issues: Dict[str, List[Issue]] = {}
 
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
@@ -201,8 +204,8 @@ class Statick():
         print("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
         plugins_to_run = copy.copy(enabled_plugins)
-        plugins_ran = []
-        plugin_dependencies = []
+        plugins_ran: List[Any] = []
+        plugin_dependencies: List[str] = []
         while plugins_to_run:
             plugin_name = plugins_to_run[0]
 
@@ -256,7 +259,7 @@ class Statick():
         print("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
         if not reporting_plugins:
-            reporting_plugins = self.reporting_plugins.keys()
+            reporting_plugins = self.reporting_plugins.keys()  # type: ignore
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins.keys():
                 print("Can't find specified reporting plugin {}!".format(plugin_name))

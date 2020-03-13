@@ -2,18 +2,20 @@
 from __future__ import print_function
 
 from collections import OrderedDict
+from typing import Dict
 
+from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class PrintToConsoleReportingPlugin(ReportingPlugin):
     """Prints the Statick reports out to the terminal."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Return the name of the plugin."""
         return "print_to_console"
 
-    def report(self, package, issues, level):
+    def report(self, package: Package, issues: Dict, level: str) -> None:
         """
         Go through the issues list and print them to the console.
 
@@ -24,7 +26,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan
         """
-        total = 0
+        total: int = 0
         for key, value in issues.items():
             unique_issues = list(OrderedDict.fromkeys(value))
             print("Tool {}: {} unique issues".format(key, len(unique_issues)))

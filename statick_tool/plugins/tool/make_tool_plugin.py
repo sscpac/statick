@@ -4,19 +4,21 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class MakeToolPlugin(ToolPlugin):
     """Apply Make tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "make"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         if "make_targets" not in package:
             return []
@@ -51,12 +53,12 @@ class MakeToolPlugin(ToolPlugin):
         return issues
 
     @classmethod
-    def check_for_exceptions(cls, match):
+    def check_for_exceptions(cls, match: Match[str]) -> bool:
         """Manual exceptions."""
         return match.group(4) == "note"
 
     @classmethod
-    def filter_matches(cls, matches, package):
+    def filter_matches(cls, matches: List, package: Package) -> List:
         """Filter matches."""
         i = 0
         result = []
@@ -73,32 +75,32 @@ class MakeToolPlugin(ToolPlugin):
             i += 1
         return result
 
-    def parse_output(self, package, output):  # pylint: disable=too-many-locals, too-many-branches
+    def parse_output(self, package: Package, output: str) -> List[Issue]:  # pylint: disable=too-many-locals, too-many-branches
         """Parse tool output and report issues."""
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
-        parse = re.compile(make_re)
-        warning_parse = re.compile(make_warning_re)
-        matches = []
+        parse: Pattern[str] = re.compile(make_re)
+        warning_parse: Pattern[str] = re.compile(make_warning_re)
+        matches: List = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Match[str] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 matches.append(match.groups())
 
         matches = self.filter_matches(matches, package)
-        issues = []
+        issues: List[Issue] = []
         for match in matches:
             cert_reference = None
-            warning_list = warning_parse.match(match[4])
+            warning_list: Match = warning_parse.match(match[4])
             if warning_list is not None and warning_list.groups(1)[0] in warnings_mapping:
                 cert_reference = warnings_mapping[warning_list.groups(1)[0]]
 
             if warning_list is None:
                 # Something's gone wrong if we don't match the [warning] format
                 if "fatal error" in match[3]:
-                    warning_level = 5
+                    warning_level = '5'
                     category = "fatal-error"
                 else:
                     category = "unknown-error"
@@ -106,21 +108,21 @@ class MakeToolPlugin(ToolPlugin):
                 category = warning_list.groups(1)[0]
 
             if match[3].lower() == "warning":
-                warning_level = 3
+                warning_level = '3'
             elif match[3].lower() == "error":
-                warning_level = 5
+                warning_level = '5'
             elif match[3].lower() == "note":
-                warning_level = 1
+                warning_level = '1'
             else:
-                warning_level = 3
+                warning_level = '3'
 
-            issue = Issue(match[0], match[1], self.get_name(), category, warning_level,
-                          match[4], cert_reference)
+            issue = Issue(match[0], match[1], self.get_name(), category,
+                          warning_level, match[4], cert_reference)
             if issue not in issues:
                 issues.append(issue)
 
         lines = output.splitlines()
         if "collect2: ld returned 1 exit status" in lines:
-            issues.append(Issue("Linker", "0", self.get_name(), "linker", "5",
-                                "Linking failed"))
+            issues.append(Issue("Linker", '0', self.get_name(), "linker", '5',
+                                "Linking failed", None))
         return issues

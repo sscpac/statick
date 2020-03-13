@@ -2,11 +2,14 @@
 
 from __future__ import print_function
 
+import argparse
 import os
 import re
 import subprocess
+from typing import List, Match, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
@@ -14,26 +17,26 @@ class CppcheckToolPlugin(ToolPlugin):
     """Apply cppcheck tool and gather results."""
 
 # pylint: disable=super-init-not-called
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize cppcheck extensions."""
         self.valid_extensions = [".h", ".hpp", ".c", ".cc", ".cpp", ".cxx"]
 # pylint: enable=super-init-not-called
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "cppcheck"
 
-    def get_tool_dependencies(self):
+    def get_tool_dependencies(self) -> List[str]:  # type: ignore
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--cppcheck-bin", dest="cppcheck_bin", type=str,
                           help="cppcheck binary path")
 
 # pylint: disable=too-many-locals, too-many-branches
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
@@ -54,8 +57,8 @@ class CppcheckToolPlugin(ToolPlugin):
                                              stderr=subprocess.STDOUT,
                                              universal_newlines=True)
             ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
-            parse = re.compile(ver_re)
-            match = parse.match(output)
+            parse: Pattern[str] = re.compile(ver_re)
+            match: Match[str] = parse.match(output)
             if match:
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
@@ -68,8 +71,8 @@ class CppcheckToolPlugin(ToolPlugin):
             print("Cppcheck not found! ({})".format(ex))
             return None
 
-        files = []
-        include_dirs = []
+        files: List[str] = []
+        include_dirs: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -112,21 +115,21 @@ class CppcheckToolPlugin(ToolPlugin):
 # pylint: enable=too-many-locals, too-many-branches
 
     @classmethod
-    def check_for_exceptions(cls, match):
+    def check_for_exceptions(cls, match: Match[str]) -> bool:
         """Manual exceptions."""
         # Sometimes you can't fix variableScope in old c code
         if match.group(1).endswith(".c") and match.group(4) == "variableScope":
             return True
         return False
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
-        parse = re.compile(cppcheck_re)
+        parse: Pattern[str] = re.compile(cppcheck_re)
         issues = []
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Match[str] = parse.match(line)
             if match and line[1] != '*' and match.group(3) != \
                     "information" and not self.check_for_exceptions(match):
                 dummy, extension = os.path.splitext(match.group(1))
@@ -136,6 +139,6 @@ class CppcheckToolPlugin(ToolPlugin):
                         cert_reference = warnings_mapping[match.group(4)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(3) +
-                                        '/' + match.group(4), "5",
+                                        '/' + match.group(4), '5',
                                         match.group(5), cert_reference))
         return issues

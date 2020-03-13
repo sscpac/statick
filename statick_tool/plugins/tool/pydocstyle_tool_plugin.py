@@ -4,21 +4,23 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class PydocstyleToolPlugin(ToolPlugin):
     """Apply pydocstyle tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "pydocstyle"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
-        flags = []
+        flags: List[str] = []
         user_flags = self.get_user_flags(level)
         flags += user_flags
         total_output = []
@@ -57,15 +59,15 @@ class PydocstyleToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):  # pylint: disable=too-many-locals
+    def parse_output(self, total_output: List[str]) -> List[Issue]:  # pylint: disable=too-many-locals
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+)"
-        parse_first = re.compile(tool_re)
+        parse_first: Pattern[str] = re.compile(tool_re)
         tool_re_second = r"\s(.+):\s(.+)"
-        parse_second = re.compile(tool_re_second)
+        parse_second: Pattern[str] = re.compile(tool_re_second)
         issues = []
         filename = ''
-        line_number = 0
+        line_number = '0'
         issue_type = ''
         message = ''
 
@@ -73,19 +75,19 @@ class PydocstyleToolPlugin(ToolPlugin):
             first_line = True
             for line in output.splitlines():
                 if first_line:
-                    match = parse_first.match(line)
+                    match: Match[str] = parse_first.match(line)
                     first_line = False
                     if match:
                         filename = match.group(1)
                         line_number = match.group(2)
                 else:
-                    match = parse_second.match(line)
+                    match_second: Match[str] = parse_second.match(line)
                     first_line = True
-                    if match:
-                        issue_type = match.group(1)
-                        message = match.group(2)
+                    if match_second:
+                        issue_type = match_second.group(1)
+                        message = match_second.group(2)
                         issues.append(Issue(filename, line_number,
                                             self.get_name(), issue_type,
-                                            "5", message, None))
+                                            '5', message, None))
 
         return issues

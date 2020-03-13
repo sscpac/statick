@@ -4,21 +4,23 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class PyflakesToolPlugin(ToolPlugin):
     """Apply pyflakes tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "pyflakes"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
-        flags = []
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
         total_output = []
@@ -56,17 +58,17 @@ class PyflakesToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):  # pylint: disable=too-many-locals
+    def parse_output(self, total_output: List[str]) -> List[Issue]:  # pylint: disable=too-many-locals
         """Parse tool output and report issues."""
         tool_re_first = r"(.+):(\d+):(\d+):\s(.+)"
-        parse_first = re.compile(tool_re_first)
+        parse_first: Pattern[str] = re.compile(tool_re_first)
         tool_re_second = r"(.+):(\d+):\s(.+)"
-        parse_second = re.compile(tool_re_second)
+        parse_second: Pattern[str] = re.compile(tool_re_second)
         tool_re_third = r"\s(.+)"
-        parse_third = re.compile(tool_re_third)
+        parse_third: Pattern[str] = re.compile(tool_re_third)
         issues = []
         filename = ''
-        line_number = 0
+        line_number = '0'
         issue_type = ''
         message = ''
 
@@ -75,7 +77,7 @@ class PyflakesToolPlugin(ToolPlugin):
             found_match = False
             for line in output.splitlines():
                 if first_line:
-                    match = parse_first.match(line)
+                    match: Match[str] = parse_first.match(line)
                     first_line = False
                     if match:
                         found_match = True
@@ -83,21 +85,21 @@ class PyflakesToolPlugin(ToolPlugin):
                         line_number = match.group(2)
                         issue_type = match.group(4)
                     else:
-                        match = parse_second.match(line)
-                        if match:
+                        match_second: Match[str] = parse_second.match(line)
+                        if match_second:
                             found_match = True
-                            filename = match.group(1)
-                            line_number = match.group(2)
-                            issue_type = match.group(3)
+                            filename = match_second.group(1)
+                            line_number = match_second.group(2)
+                            issue_type = match_second.group(3)
                 else:
-                    match = parse_third.match(line)
+                    match_third: Match[str] = parse_third.match(line)
                     first_line = True
-                    if match:
+                    if match_third:
                         found_match = True
-                        message = match.group(1)
+                        message = match_third.group(1)
             if found_match:
                 issues.append(Issue(filename, line_number,
                                     self.get_name(), issue_type,
-                                    "5", message, None))
+                                    '5', message, None))
 
         return issues

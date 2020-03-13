@@ -5,24 +5,26 @@ from __future__ import print_function
 import os
 import re
 import subprocess
+from typing import List, Match, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class CMakelintToolPlugin(ToolPlugin):
     """Apply cmakelint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "cmakelint"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         if "cmake" not in package or not package["cmake"]:
             # Package is not cmake!
             return []
-        flags = []
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
         output = ""
@@ -55,20 +57,20 @@ class CMakelintToolPlugin(ToolPlugin):
         issues = self.parse_output(output)
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         cmakelint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]"
-        parse = re.compile(cmakelint_re)
+        parse: Pattern[str] = re.compile(cmakelint_re)
         issues = []
 
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Match[str] = parse.match(line)
             if match:
                 issue_type = match.group(4)
                 if issue_type == "syntax":
-                    level = "5"
+                    level = '5'
                 else:
-                    level = "3"
+                    level = '3'
                 issues.append(Issue(match.group(1), match.group(2),
                                     self.get_name(), match.group(4), level,
                                     match.group(3), None))

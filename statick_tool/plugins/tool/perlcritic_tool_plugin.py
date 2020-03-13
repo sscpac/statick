@@ -2,25 +2,28 @@
 
 from __future__ import print_function
 
+import argparse
 import subprocess
+from typing import List
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class PerlCriticToolPlugin(ToolPlugin):
     """Apply Perl::Critic tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "perlcritic"
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--perlcritic-bin", dest="perlcritic_bin", type=str,
                           help="perlcritic binary path")
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         if "perl_src" not in package:
             return []
@@ -34,7 +37,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
         flags += self.get_user_flags(level)
 
-        files = []
+        files: List[str] = []
         if "perl_src" in package:
             files += package["perl_src"]
 
@@ -66,7 +69,7 @@ class PerlCriticToolPlugin(ToolPlugin):
 
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible

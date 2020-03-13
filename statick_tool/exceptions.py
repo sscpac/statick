@@ -17,28 +17,32 @@ from __future__ import print_function
 import fnmatch
 import os
 import re
+from typing import Any, Dict, List, Match, Pattern
 
 import yaml
+
+from statick_tool.issue import Issue
+from statick_tool.package import Package
 
 
 class Exceptions():
     """Interface for applying exceptions."""
 
-    def __init__(self, filename):
+    def __init__(self, filename: str) -> None:
         """Initialize exceptions interface."""
         with open(filename) as fname:
-            self.exceptions = yaml.safe_load(fname)
+            self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
 
-    def get_ignore_packages(self):
+    def get_ignore_packages(self) -> List[str]:
         """Get list of packages to skip when scanning a workspace."""
-        ignore = []
+        ignore: List[str] = []
         if "ignore_packages" in self.exceptions and self.exceptions["ignore_packages"] is not None:
             ignore = self.exceptions["ignore_packages"]
         return ignore
 
-    def get_exceptions(self, package):
+    def get_exceptions(self, package: Package) -> Dict:
         """Get specific exceptions for given package."""
-        exceptions = {"file": [], "message_regex": []}
+        exceptions: Dict = {"file": [], "message_regex": []}
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
             global_exceptions = self.exceptions["global"]["exceptions"]
@@ -62,7 +66,7 @@ class Exceptions():
 
         return exceptions
 
-    def filter_file_exceptions_early(self, package, file_list):
+    def filter_file_exceptions_early(self, package: Package, file_list: List[str]) -> List[str]:
         """
         Filter files based on file pattern exceptions list.
 
@@ -70,7 +74,7 @@ class Exceptions():
         discovery plugins have been run (so that Statick doesn't run the tool
         plugins against files which will be ignored anyway).
         """
-        exceptions = self.get_exceptions(package)
+        exceptions: Dict = self.get_exceptions(package)
         to_remove = []
         for filename in file_list:
             removed = False
@@ -92,24 +96,25 @@ class Exceptions():
                      to_remove]
         return file_list
 
-    def filter_file_exceptions(self, package, exceptions, issues):
+    def filter_file_exceptions(self, package: Package, exceptions: List,
+                               issues: Dict) -> Dict:
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in list(issues.items()):  # pylint: disable=too-many-nested-blocks
             warning_printed = False
-            to_remove = []
+            to_remove: List[Issue] = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:
                         self.print_exception_warning(tool)
                         warning_printed = True
                     continue
-                rel_path = os.path.relpath(issue.filename, package.path)
+                rel_path: str = os.path.relpath(issue.filename, package.path)
                 for exception in exceptions:
                     if exception["tools"] == 'all' or tool in exception["tools"]:
                         for pattern in exception["globs"]:
                             # Hack to avoid exceptions for everything on Travis CI.
-                            fname = issue.filename
-                            prefix = '/home/travis/build/'
+                            fname: str = issue.filename
+                            prefix: str = '/home/travis/build/'
                             if pattern == '*/build/*' and fname.startswith(prefix):
                                 fname = fname[len(prefix):]
                             if fnmatch.fnmatch(fname, pattern) or \
@@ -121,24 +126,24 @@ class Exceptions():
         return issues
 
     @classmethod
-    def filter_regex_exceptions(cls, exceptions, issues):
+    def filter_regex_exceptions(cls, exceptions: List, issues: Dict) -> Dict:
         """Filter issues based on message regex exceptions list."""
         for exception in exceptions:
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
-            compiled_re = re.compile(exception_re)
+            compiled_re: Pattern = re.compile(exception_re)
             for tool, tool_issues in list(issues.items()):
                 to_remove = []
                 if exception_tools == "all" or tool in exception_tools:
                     for issue in tool_issues:
-                        match = compiled_re.match(issue.message)
+                        match: Match = compiled_re.match(issue.message)
                         if match:
                             to_remove.append(issue)
                 issues[tool] = [issue for issue in tool_issues if issue not in
                                 to_remove]
         return issues
 
-    def filter_nolint(self, issues):
+    def filter_nolint(self, issues: Dict) -> Dict:
         """
         Filter out lines that have an explicit NOLINT on them.
 
@@ -146,8 +151,8 @@ class Exceptions():
         there is a complex macro or something.
         """
         for tool, tool_issues in list(issues.items()):
-            warning_printed = False
-            to_remove = []
+            warning_printed: bool = False
+            to_remove: List[Issue] = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:
@@ -161,7 +166,7 @@ class Exceptions():
             issues[tool] = [issue for issue in tool_issues if issue not in to_remove]
         return issues
 
-    def filter_issues(self, package, issues):
+    def filter_issues(self, package: Package, issues: Dict) -> Dict:
         """Filter issues based on exceptions list."""
         exceptions = self.get_exceptions(package)
 
@@ -179,7 +184,7 @@ class Exceptions():
         return issues
 
     @classmethod
-    def print_exception_warning(cls, tool):
+    def print_exception_warning(cls, tool: str) -> None:
         """
         Print warning about exception not being applied for an issue.
 

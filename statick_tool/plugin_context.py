@@ -1,6 +1,12 @@
 """Plugin context interface."""
 
-from collections import namedtuple
+import argparse
+from typing import NamedTuple
 
-PluginContext = namedtuple("PluginContext",
-                           "args resources config")
+from statick_tool.config import Config
+from statick_tool.resources import Resources
+
+PluginContext = NamedTuple("PluginContext",
+                           [("args", argparse.Namespace),
+                            ("resources", Resources),
+                            ("config", Config)])

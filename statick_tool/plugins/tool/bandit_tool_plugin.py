@@ -2,40 +2,43 @@
 
 from __future__ import print_function
 
+import argparse
 import csv
 import subprocess
+from typing import List, Optional
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class BanditToolPlugin(ToolPlugin):
     """Apply bandit tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "bandit"
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--bandit-bin", dest="bandit_bin", type=str,
                           help="bandit binary path")
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         if "python_src" not in package:
             return []
         if not package["python_src"]:
             return []
 
-        bandit_bin = "bandit"
+        bandit_bin: str = "bandit"
         if self.plugin_context.args.bandit_bin is not None:
             bandit_bin = self.plugin_context.args.bandit_bin
 
-        flags = ["--format=csv"]
+        flags: List[str] = ["--format=csv"]
         flags += self.get_user_flags(level)
 
-        files = []
+        files: List[str] = []
         if "python_src" in package:
             files += package["python_src"]
 
@@ -66,7 +69,7 @@ class BanditToolPlugin(ToolPlugin):
         issues = self.parse_output(output.splitlines())
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible
@@ -84,17 +87,17 @@ class BanditToolPlugin(ToolPlugin):
             output_minus_log.remove(line)
 
         csvreader = csv.DictReader(output_minus_log)
-        for line in csvreader:
-            cert_reference = None
-            if line['test_id'] in warnings_mapping:
-                cert_reference = warnings_mapping[line['test_id']]
+        for csv_line in csvreader:
+            cert_reference: Optional[str] = None
+            if csv_line['test_id'] in warnings_mapping:
+                cert_reference = warnings_mapping[csv_line['test_id']]
             severity = '1'
-            if line['issue_confidence'] == "MEDIUM":
+            if csv_line['issue_confidence'] == "MEDIUM":
                 severity = '3'
-            elif line['issue_confidence'] == "HIGH":
+            elif csv_line['issue_confidence'] == "HIGH":
                 severity = '5'
-            issues.append(Issue(line['filename'], line['line_number'],
-                                self.get_name(), line['test_id'],
-                                severity, line['issue_text'], cert_reference))
+            issues.append(Issue(csv_line['filename'], csv_line['line_number'],
+                                self.get_name(), csv_line['test_id'],
+                                severity, csv_line['issue_text'], cert_reference))
 
         return issues

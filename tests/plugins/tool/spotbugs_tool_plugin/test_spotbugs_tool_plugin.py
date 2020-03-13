@@ -80,7 +80,7 @@ def test_spotbugs_tool_plugin_scan_valid():
     assert issues[0].line_number == '4'
     assert issues[0].tool == 'spotbugs'
     assert issues[0].issue_type == 'MS_MUTABLE_COLLECTION_PKGPROTECT'
-    assert issues[0].severity == 1
+    assert issues[0].severity == '1'
     assert issues[0].message == "Test.h is a mutable collection which should be package protected"
 
 
@@ -94,7 +94,7 @@ def test_spotbugs_tool_plugin_parse_valid():
     assert issues[0].line_number == '4'
     assert issues[0].tool == 'spotbugs'
     assert issues[0].issue_type == 'MS_MUTABLE_COLLECTION_PKGPROTECT'
-    assert issues[0].severity == 1
+    assert issues[0].severity == '1'
     assert issues[0].message == "Test.h is a mutable collection which should be package protected"
 
 

@@ -49,6 +49,7 @@ jobs:
       script:
         - ./statick . --profile self_check.yaml
         - statick . --user-paths statick_tool --profile documentation.yaml
+        - mypy --ignore-missing-imports statick_tool/
       # Force this to only run for one Python version
     - stage: documentation
       python: '3.8'

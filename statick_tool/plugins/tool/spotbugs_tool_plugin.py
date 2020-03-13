@@ -5,23 +5,25 @@ from __future__ import print_function
 import os
 import subprocess
 import xml.etree.ElementTree as etree
+from typing import List
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class SpotbugsToolPlugin(ToolPlugin):
     """Apply spotbugs tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "spotbugs"
 
-    def get_tool_dependencies(self):
+    def get_tool_dependencies(self) -> List[str]:  # type: ignore
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists('mvn'):
@@ -44,7 +46,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             flags += ["-Dspotbugs.excludeFilterFile={}".format(self.plugin_context
                                                                .resources.get_file(exclude_file))]
 
-        issues = []
+        issues: List[Issue] = []
         total_output = ""
         for pom in package['top_poms']:
             try:
@@ -83,9 +85,9 @@ class SpotbugsToolPlugin(ToolPlugin):
 
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         try:
@@ -107,16 +109,17 @@ class SpotbugsToolPlugin(ToolPlugin):
                 print("Couldn't find file for class {}".format(file_entry.attrib["classname"]))
                 file_path = java_path_string
             for issue in file_entry.findall("BugInstance"):
-                severity = 1
+                severity = '1'
                 if issue.attrib["priority"] == "Normal":
-                    severity = 3
+                    severity = '3'
                 elif issue.attrib["priority"] == "High":
-                    severity = 5
+                    severity = '5'
 
                 cert_reference = None
                 if issue.attrib["type"] in warnings_mapping:
                     cert_reference = warnings_mapping[issue.attrib["type"]]
-                issues.append(Issue(file_path, issue.attrib["lineNumber"], self.get_name(),
-                                    issue.attrib["type"], severity, issue.attrib["message"],
+                issues.append(Issue(file_path, issue.attrib["lineNumber"],
+                                    self.get_name(), issue.attrib["type"],
+                                    severity, issue.attrib["message"],
                                     cert_reference))
         return issues

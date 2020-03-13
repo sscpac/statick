@@ -3,18 +3,20 @@ from __future__ import print_function
 
 import json
 import os
+from typing import Dict, Tuple
 
+from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
     """Writes Statick results to Jenkins Warnings-NG plugin json-log compatible output."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Return the plugin name."""
         return "write_jenkins_warnings_ng"
 
-    def report(self, package, issues, level):
+    def report(self, package: Package, issues: Dict, level: str) -> Tuple[None, bool]:
         """
         Write the results to Jenkins Warnings-NG plugin compatible file.
 

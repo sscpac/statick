@@ -5,21 +5,24 @@ from __future__ import print_function
 import fnmatch
 import os
 from collections import OrderedDict
+from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 
 
 class JavaDiscoveryPlugin(DiscoveryPlugin):
     """Discover Java files to analyze."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of discovery type."""
         return "java"
 
-    def scan(self, package, level, exceptions=None):
+    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for java files."""
-        java_src_files = []
-        java_class_files = []
+        java_src_files: List[str] = []
+        java_class_files: List[str] = []
 
         for root, _, files in os.walk(package.path):
             for f in fnmatch.filter(files, "*.java"):

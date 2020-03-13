@@ -86,7 +86,7 @@ def test_make_tool_plugin_parse_valid():
     assert len(issues) == 1
     assert issues[0].filename == 'valid_package/hello.c'
     assert issues[0].line_number == '7'
-    assert issues[0].severity == 5
+    assert issues[0].severity == '5'
     assert issues[0].message == "expected ; before return"
 
 
