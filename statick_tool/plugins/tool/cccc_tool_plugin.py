@@ -14,7 +14,7 @@ from __future__ import print_function
 import argparse
 import csv
 import subprocess
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import xmltodict
 
@@ -35,11 +35,14 @@ class CCCCToolPlugin(ToolPlugin):
         args.add_argument("--cccc-bin", dest="cccc_bin", type=str,
                           help="cccc binary path")
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        log_output = None
+        log_output: bytes
 
         if "c_src" not in package.keys():
+            return []
+
+        if self.plugin_context is None:
             return []
 
         cccc_bin = "cccc"
@@ -49,6 +52,8 @@ class CCCCToolPlugin(ToolPlugin):
         config_file = self.plugin_context.resources.get_file("cccc.opt")
         if config_file is not None:
             opts = "--opt_infile=" + config_file
+        else:
+            return []
 
         for src in package["c_src"]:
             try:
@@ -68,7 +73,7 @@ class CCCCToolPlugin(ToolPlugin):
                 return None
 
             if self.plugin_context.args.show_tool_output:
-                print("{}".format(log_output))
+                print("{}".format(log_output))  # type: ignore
 
         if self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "wb") as flog:
@@ -83,7 +88,7 @@ class CCCCToolPlugin(ToolPlugin):
     def parse_output(self, output: Dict, package: Package, config_file: str) -> List[Issue]:  # pylint: disable=too-many-branches
         """Parse tool output and report issues."""
         if 'CCCC_Project' not in output:
-            return None
+            return []
 
         config = self.parse_config(config_file)
 
@@ -142,7 +147,7 @@ class CCCCToolPlugin(ToolPlugin):
                 if row['CCCC_FileExt'] == 'CCCC_MetTmnt':
                     config[row[".ADA"]] = {"warn": row['ada.95'],
                                            "error": row[''],
-                                           "name": row[None][3],
+                                           "name": row[None][3],  # type: ignore
                                            "key": row[".ADA"]}
 
         return config

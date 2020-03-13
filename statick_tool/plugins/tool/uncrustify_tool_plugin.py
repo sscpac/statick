@@ -5,7 +5,7 @@ from __future__ import print_function
 import argparse
 import difflib
 import subprocess
-from typing import List
+from typing import List, Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -24,10 +24,13 @@ class UncrustifyToolPlugin(ToolPlugin):
         args.add_argument("--uncrustify-bin", dest="uncrustify_bin",
                           type=str, help="uncrustify binary path")
 
-    def scan(self, package: Package, level: str) -> List[Issue]:  # pylint: disable=too-many-locals, too-many-branches
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:  # pylint: disable=too-many-locals, too-many-branches
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
+
+        if self.plugin_context is None:
+            return None
 
         uncrustify_bin = "uncrustify"
         if self.plugin_context.args.uncrustify_bin is not None:
@@ -49,9 +52,8 @@ class UncrustifyToolPlugin(ToolPlugin):
             format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
 
             for src in files:
-                format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
                 cmd = [uncrustify_bin, '-c', format_file_name, '-f', src]
-                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,
+                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,  # type: ignore
                                                  universal_newlines=True)
                 src_cmd = ['cat', src]
                 src_output = subprocess.check_output(src_cmd, stderr=subprocess.STDOUT,

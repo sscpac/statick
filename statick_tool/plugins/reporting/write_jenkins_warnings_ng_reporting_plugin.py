@@ -3,7 +3,7 @@ from __future__ import print_function
 
 import json
 import os
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
@@ -16,7 +16,7 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
         """Return the plugin name."""
         return "write_jenkins_warnings_ng"
 
-    def report(self, package: Package, issues: Dict, level: str) -> Tuple[None, bool]:
+    def report(self, package: Package, issues: Dict, level: str) -> Tuple[Optional[None], bool]:
         """
         Write the results to Jenkins Warnings-NG plugin compatible file.
 
@@ -27,6 +27,9 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan.
         """
+        if self.plugin_context is None:
+            return None, True
+
         # Do not write report to file if no output directory is given.
         if not self.plugin_context.args.output_directory:
             return None, True

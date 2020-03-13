@@ -2,7 +2,7 @@
 from __future__ import print_function
 
 import os
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 from deprecated import deprecated
 
@@ -18,7 +18,7 @@ class WriteJenkinsWarningsReportingPlugin(ReportingPlugin):
         """Return the plugin name."""
         return "write_jenkins_warnings"
 
-    def report(self, package: Package, issues: Dict, level: str) -> Tuple[None, bool]:
+    def report(self, package: Package, issues: Dict, level: str) -> Tuple[Optional[None], bool]:
         """
         Write the results to a Jenkins Warnings plugin compatible file.
 
@@ -29,6 +29,9 @@ class WriteJenkinsWarningsReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan.
         """
+        if self.plugin_context is None:
+            return None, True
+
         # Do not write report to file if no output directory is given.
         if not self.plugin_context.args.output_directory:
             return None, True

@@ -20,7 +20,7 @@ class Config():
     Sets what flags are used for each plugin at those levels.
     """
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: Optional[str]) -> None:
         """Initialize configuration."""
         if filename is None or not os.path.exists(filename):
             self.config: Any = []
@@ -28,7 +28,7 @@ class Config():
         with open(filename) as fname:
             self.config = yaml.safe_load(fname)
 
-    def has_level(self, level: str) -> bool:
+    def has_level(self, level: Optional[str]) -> bool:
         """Check if given level exists in config."""
         return "levels" in self.config and level in self.config["levels"]
 
@@ -57,7 +57,7 @@ class Config():
         return self.get_enabled_plugins(level, "reporting")
 
     def get_plugin_config(self, plugin_type: str, plugin: str, level: str,  # pylint: disable=too-many-arguments
-                          key: str, default=None) -> Optional[str]:
+                          key: str, default=None) -> str:
         """Get flags to use for a plugin at a certain level."""
         if level not in self.config["levels"].keys():
             return default
@@ -73,7 +73,7 @@ class Config():
             return self.get_plugin_config(plugin_type, plugin, inherited_level, key, default)
         return default
 
-    def get_tool_config(self, plugin, level, key, default=None) -> Optional[str]:
+    def get_tool_config(self, plugin, level, key, default=None) -> str:
         """Get tool flags to use for a plugin at a certain level."""
         return self.get_plugin_config("tool", plugin, level, key, default)
 

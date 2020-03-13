@@ -5,7 +5,7 @@ from __future__ import print_function
 import os
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -19,10 +19,11 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "catkin_lint"
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "catkin" not in package or not package["catkin"]:
             return []
+
         flags: List[str] = []
         flags += self.get_user_flags(level)
 
@@ -42,10 +43,10 @@ class CatkinLintToolPlugin(ToolPlugin):
             print("Couldn't find catkin_lint executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 fname.write(output)
 
@@ -90,7 +91,7 @@ class CatkinLintToolPlugin(ToolPlugin):
 
         issues = []
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 if self.check_for_exceptions_has_file(match, package):
                     continue
@@ -103,7 +104,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                                     self.get_level(match.group(4)),
                                     match.group(5), None))
             else:
-                match2: Match[str] = parse2.match(line)
+                match2: Optional[Match[str]] = parse2.match(line)
 
                 if match2:
                     norm_path = os.path.normpath(package.path + "/package.xml")

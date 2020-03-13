@@ -5,7 +5,7 @@ from __future__ import print_function
 import os
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -23,7 +23,7 @@ class CpplintToolPlugin(ToolPlugin):
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "cpplint" not in package:
             print("  cpplint not found!")
@@ -57,10 +57,10 @@ class CpplintToolPlugin(ToolPlugin):
             print("Couldn't find cpplint executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 f.write(output)
 
@@ -92,7 +92,7 @@ class CpplintToolPlugin(ToolPlugin):
         parse: Pattern[str] = re.compile(lint_re)
         issues = []
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 norm_path = os.path.normpath(match.group(1))
                 issues.append(Issue(norm_path, match.group(2), self.get_name(),

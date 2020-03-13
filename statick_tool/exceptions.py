@@ -17,7 +17,7 @@ from __future__ import print_function
 import fnmatch
 import os
 import re
-from typing import Any, Dict, List, Match, Pattern
+from typing import Any, Dict, List, Match, Optional, Pattern
 
 import yaml
 
@@ -28,10 +28,11 @@ from statick_tool.package import Package
 class Exceptions():
     """Interface for applying exceptions."""
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: Optional[str]) -> None:
         """Initialize exceptions interface."""
-        with open(filename) as fname:
-            self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
+        if filename is not None:
+            with open(filename) as fname:
+                self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
 
     def get_ignore_packages(self) -> List[str]:
         """Get list of packages to skip when scanning a workspace."""
@@ -136,7 +137,7 @@ class Exceptions():
                 to_remove = []
                 if exception_tools == "all" or tool in exception_tools:
                     for issue in tool_issues:
-                        match: Match = compiled_re.match(issue.message)
+                        match: Optional[Match] = compiled_re.match(issue.message)
                         if match:
                             to_remove.append(issue)
                 issues[tool] = [issue for issue in tool_issues if issue not in

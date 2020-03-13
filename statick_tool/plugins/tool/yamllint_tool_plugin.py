@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -18,7 +18,7 @@ class YamllintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "yamllint"
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         flags = ["-f", "parsable"]
         flags += self.get_user_flags(level)
@@ -44,12 +44,12 @@ class YamllintToolPlugin(ToolPlugin):
                 print("Couldn't find yamllint executable! ({})".format(ex))
                 return None
 
-            if self.plugin_context.args.show_tool_output:
+            if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
             total_output.append(output)
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 for output in total_output:
                     f.write(output)
@@ -65,7 +65,7 @@ class YamllintToolPlugin(ToolPlugin):
 
         for output in total_output:
             for line in output.splitlines():
-                match: Match[str] = parse.match(line)
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issue_type = match.group(4)
                     if issue_type == "error":

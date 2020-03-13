@@ -5,7 +5,7 @@ from __future__ import print_function
 import os
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -19,11 +19,12 @@ class CMakelintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cmakelint"
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "cmake" not in package or not package["cmake"]:
             # Package is not cmake!
             return []
+
         flags: List[str] = []
         flags += self.get_user_flags(level)
 
@@ -47,10 +48,10 @@ class CMakelintToolPlugin(ToolPlugin):
             print("Couldn't find cmakelint executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 f.write(output)
 
@@ -64,7 +65,7 @@ class CMakelintToolPlugin(ToolPlugin):
         issues = []
 
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 issue_type = match.group(4)
                 if issue_type == "syntax":

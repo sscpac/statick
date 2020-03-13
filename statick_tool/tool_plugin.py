@@ -5,7 +5,7 @@ from __future__ import print_function
 import argparse
 import os
 import shlex
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 from yapsy.IPlugin import IPlugin
 
@@ -31,7 +31,7 @@ class ToolPlugin(IPlugin):
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
@@ -41,12 +41,13 @@ class ToolPlugin(IPlugin):
     def load_mapping(self) -> Dict[str, str]:
         """Load a mapping between warnings and identifiers."""
         file_name: str = "plugin_mapping/{}.txt".format(self.get_name())
-        full_path: str = self.plugin_context.resources.get_file(file_name)
+        assert self.plugin_context is not None
+        full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(file_name)
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the file
             suffixed_file_name: str = "plugin_mapping/{}-{}.txt". \
                     format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
-            suffixed_full_path: str = self.plugin_context.resources.get_file(suffixed_file_name)
+            suffixed_full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(suffixed_file_name)
             if suffixed_full_path is not None:
                 # If there actually is a file with that suffix, use it.
                 # Else use the un-suffixed version.
@@ -69,6 +70,7 @@ class ToolPlugin(IPlugin):
         """Get the user-defined extra flags for a specific tool/level combination."""
         if name is None:
             name = self.get_name()  # pylint: disable=assignment-from-no-return
+        assert self.plugin_context is not None
         user_flags = self.plugin_context.config.get_tool_config(name, level,
                                                                 "flags")
         flags: List[str] = []

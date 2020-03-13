@@ -2,7 +2,7 @@
 from __future__ import print_function
 
 from collections import OrderedDict
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
@@ -15,7 +15,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
         """Return the name of the plugin."""
         return "print_to_console"
 
-    def report(self, package: Package, issues: Dict, level: str) -> None:
+    def report(self, package: Package, issues: Dict, level: str) -> Tuple[Optional[None], bool]:
         """
         Go through the issues list and print them to the console.
 
@@ -49,3 +49,5 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
 
             total += len(unique_issues)
         print("{} total unique issues".format(total))
+
+        return None, True

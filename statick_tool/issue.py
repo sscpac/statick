@@ -1,6 +1,6 @@
 """Issue interface."""
 
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 # It would be nice to change line_number and severity types to int.
 # We need to coordinate that change with other packages containing tool and
@@ -12,4 +12,4 @@ Issue = NamedTuple("Issue",
                     ("issue_type", str),
                     ("severity", str),
                     ("message", str),
-                    ("cert_reference", str)])
+                    ("cert_reference", Optional[str])])

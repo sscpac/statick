@@ -56,8 +56,8 @@ class Statick():
             self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
                     plugin_info.plugin_object
 
-        self.config: Config = None
-        self.exceptions: Exceptions = None
+        self.config: Optional[Config] = None
+        self.exceptions: Optional[Exceptions] = None
 
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
@@ -75,6 +75,7 @@ class Statick():
 
     def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
+        assert self.exceptions
         return self.exceptions.get_ignore_packages()
 
     def gather_args(self, args: argparse.Namespace) -> None:
@@ -142,8 +143,9 @@ class Statick():
             return None, False
 
         package = Package(os.path.basename(path), path)
-        level: str = self.get_level(path, args)
+        level: Optional[str] = self.get_level(path, args)
 
+        assert level
         if not self.config or not self.config.has_level(level):
             print("Can't find specified level {} in config!".format(level))
             return None, False
@@ -252,7 +254,8 @@ class Statick():
             plugins_ran.append(plugin_name)
         print("---Tools---")
 
-        issues = self.exceptions.filter_issues(package, issues)
+        if self.exceptions is not None:
+            issues = self.exceptions.filter_issues(package, issues)
 
         os.chdir(orig_path)
 

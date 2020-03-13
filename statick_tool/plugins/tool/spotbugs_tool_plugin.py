@@ -5,7 +5,7 @@ from __future__ import print_function
 import os
 import subprocess
 import xml.etree.ElementTree as etree
-from typing import List
+from typing import List, Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -23,11 +23,14 @@ class SpotbugsToolPlugin(ToolPlugin):
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists('mvn'):
             print("Couldn't find 'mvn' command, can't run Spotbugs Maven integration")
+            return None
+
+        if self.plugin_context is None:
             return None
 
         flags = ["-Dspotbugs.effort=Max", "-Dspotbugs.threshold=Low",
@@ -77,7 +80,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):
                 with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) \
                         as outfile:
-                    issues += self.parse_output(outfile.read())
+                    issues += self.parse_output(outfile.read())  # type: ignore
 
         if self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
@@ -85,7 +88,7 @@ class SpotbugsToolPlugin(ToolPlugin):
 
         return issues
 
-    def parse_output(self, output: str) -> List[Issue]:
+    def parse_output(self, output: str) -> Optional[List[Issue]]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
         # Load the plugin mapping if possible
@@ -101,7 +104,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             java_path_string = "{}.java".format(file_entry.attrib["classname"].replace('.', os.sep))
             file_path = ""
             for source_dir in output_xml.findall("Project/SrcDir"):
-                joined_path = os.path.join(os.path.normpath(source_dir.text), java_path_string)
+                joined_path = os.path.join(os.path.normpath(source_dir.text), java_path_string)  # type: ignore
                 if os.path.exists(joined_path):
                     file_path = joined_path
                     break

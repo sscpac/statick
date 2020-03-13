@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -18,9 +18,9 @@ class LizardToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "lizard"
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        output = None
+        output: str
 
         src_dir = '.'
         if "src_dir" in package:
@@ -41,12 +41,13 @@ class LizardToolPlugin(ToolPlugin):
             print("Couldn't find lizard executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        if self.plugin_context:
+            if self.plugin_context.args.show_tool_output:
+                print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(output)
+            if self.plugin_context.args.output_directory:
+                with open(self.get_name() + ".log", "w") as f:
+                    f.write(output)
 
         issues = self.parse_output(output)
         return issues
@@ -57,7 +58,7 @@ class LizardToolPlugin(ToolPlugin):
         parse: Pattern[str] = re.compile(lizard_re)
         matches = []
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 matches.append(match.groups())
 

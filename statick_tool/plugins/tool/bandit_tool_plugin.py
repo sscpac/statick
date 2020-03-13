@@ -24,7 +24,7 @@ class BanditToolPlugin(ToolPlugin):
         args.add_argument("--bandit-bin", dest="bandit_bin", type=str,
                           help="bandit binary path")
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "python_src" not in package:
             return []
@@ -32,7 +32,7 @@ class BanditToolPlugin(ToolPlugin):
             return []
 
         bandit_bin: str = "bandit"
-        if self.plugin_context.args.bandit_bin is not None:
+        if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
             bandit_bin = self.plugin_context.args.bandit_bin
 
         flags: List[str] = ["--format=csv"]
@@ -59,17 +59,17 @@ class BanditToolPlugin(ToolPlugin):
             print("Couldn't find {}! ({})".format(bandit_bin, ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 f.write(output)
 
         issues = self.parse_output(output.splitlines())
         return issues
 
-    def parse_output(self, output: str) -> List[Issue]:
+    def parse_output(self, output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible

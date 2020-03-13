@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -18,7 +18,7 @@ class PyflakesToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "pyflakes"
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         flags: List[str] = []
         flags += self.get_user_flags(level)
@@ -45,12 +45,12 @@ class PyflakesToolPlugin(ToolPlugin):
                 print("Couldn't find pyflakes executable! ({})".format(ex))
                 return None
 
-            if self.plugin_context.args.show_tool_output:
+            if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
             total_output.append(output)
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 for output in total_output:
                     fname.write(output)
@@ -77,7 +77,7 @@ class PyflakesToolPlugin(ToolPlugin):
             found_match = False
             for line in output.splitlines():
                 if first_line:
-                    match: Match[str] = parse_first.match(line)
+                    match: Optional[Match[str]] = parse_first.match(line)
                     first_line = False
                     if match:
                         found_match = True
@@ -85,14 +85,14 @@ class PyflakesToolPlugin(ToolPlugin):
                         line_number = match.group(2)
                         issue_type = match.group(4)
                     else:
-                        match_second: Match[str] = parse_second.match(line)
+                        match_second: Optional[Match[str]] = parse_second.match(line)
                         if match_second:
                             found_match = True
                             filename = match_second.group(1)
                             line_number = match_second.group(2)
                             issue_type = match_second.group(3)
                 else:
-                    match_third: Match[str] = parse_third.match(line)
+                    match_third: Optional[Match[str]] = parse_third.match(line)
                     first_line = True
                     if match_third:
                         found_match = True

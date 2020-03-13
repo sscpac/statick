@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -18,7 +18,7 @@ class MakeToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "make"
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package:
             return []
@@ -32,7 +32,7 @@ class MakeToolPlugin(ToolPlugin):
             output = subprocess.check_output(make_args,
                                              stderr=subprocess.STDOUT,
                                              universal_newlines=True)
-            if self.plugin_context.args.show_tool_output:
+            if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
         except subprocess.CalledProcessError as ex:
@@ -45,7 +45,7 @@ class MakeToolPlugin(ToolPlugin):
             print("Couldn't find make executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 fname.write(output)
 
@@ -85,21 +85,21 @@ class MakeToolPlugin(ToolPlugin):
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 matches.append(match.groups())
 
-        matches = self.filter_matches(matches, package)
+        filtered_matches = self.filter_matches(matches, package)
         issues: List[Issue] = []
-        for match in matches:
+        for item in filtered_matches:
             cert_reference = None
-            warning_list: Match = warning_parse.match(match[4])
+            warning_list: Match = warning_parse.match(item[4])  # type: ignore
             if warning_list is not None and warning_list.groups(1)[0] in warnings_mapping:
                 cert_reference = warnings_mapping[warning_list.groups(1)[0]]
 
             if warning_list is None:
                 # Something's gone wrong if we don't match the [warning] format
-                if "fatal error" in match[3]:
+                if "fatal error" in item[3]:
                     warning_level = '5'
                     category = "fatal-error"
                 else:
@@ -107,17 +107,17 @@ class MakeToolPlugin(ToolPlugin):
             else:
                 category = warning_list.groups(1)[0]
 
-            if match[3].lower() == "warning":
+            if item[3].lower() == "warning":
                 warning_level = '3'
-            elif match[3].lower() == "error":
+            elif item[3].lower() == "error":
                 warning_level = '5'
-            elif match[3].lower() == "note":
+            elif item[3].lower() == "note":
                 warning_level = '1'
             else:
                 warning_level = '3'
 
-            issue = Issue(match[0], match[1], self.get_name(), category,
-                          warning_level, match[4], cert_reference)
+            issue = Issue(item[0], item[1], self.get_name(), category,
+                          warning_level, item[4], cert_reference)
             if issue not in issues:
                 issues.append(issue)
 

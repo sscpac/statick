@@ -5,7 +5,7 @@ from __future__ import print_function
 import argparse
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -28,10 +28,13 @@ class ClangTidyToolPlugin(ToolPlugin):
         args.add_argument("--clang-tidy-bin", dest="clang_tidy_bin", type=str,
                           help="clang-tidy binary path")
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package or "src_dir" not in package or \
            "bin_dir" not in package:
+            return []
+
+        if self.plugin_context is None:
             return []
 
         clang_tidy_bin = "clang-tidy"
@@ -106,7 +109,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 if line[1] != '*' and match.group(3) != "information" \
                         and match.group(4) != "note":

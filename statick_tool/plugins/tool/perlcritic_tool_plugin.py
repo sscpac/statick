@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import argparse
 import subprocess
-from typing import List
+from typing import List, Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -23,7 +23,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         args.add_argument("--perlcritic-bin", dest="perlcritic_bin", type=str,
                           help="perlcritic binary path")
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "perl_src" not in package:
             return []
@@ -31,7 +31,7 @@ class PerlCriticToolPlugin(ToolPlugin):
             return []
 
         perlcritic_bin = "perlcritic"
-        if self.plugin_context.args.perlcritic_bin is not None:
+        if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:
             perlcritic_bin = self.plugin_context.args.perlcritic_bin
 
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
@@ -41,6 +41,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         if "perl_src" in package:
             files += package["perl_src"]
 
+        output: str
         try:
             output = subprocess.check_output([perlcritic_bin] + flags + files,
                                              stderr=subprocess.STDOUT,
@@ -58,10 +59,10 @@ class PerlCriticToolPlugin(ToolPlugin):
             print("Couldn't find {}! ({})".format(perlcritic_bin, ex))
             return []
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "wt") as f:
                 f.write(output)
 
@@ -69,7 +70,7 @@ class PerlCriticToolPlugin(ToolPlugin):
 
         return issues
 
-    def parse_output(self, output: str) -> List[Issue]:
+    def parse_output(self, output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []
         # Load the plugin mapping if possible

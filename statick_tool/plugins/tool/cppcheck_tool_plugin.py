@@ -6,7 +6,7 @@ import argparse
 import os
 import re
 import subprocess
-from typing import List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -36,9 +36,12 @@ class CppcheckToolPlugin(ToolPlugin):
                           help="cppcheck binary path")
 
 # pylint: disable=too-many-locals, too-many-branches
-    def scan(self, package: Package, level: str) -> List[Issue]:
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
+            return []
+
+        if self.plugin_context is None:
             return []
 
         flags = ["--report-progress", "--verbose", "--inline-suppr", "--language=c++",
@@ -58,7 +61,7 @@ class CppcheckToolPlugin(ToolPlugin):
                                              universal_newlines=True)
             ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
             parse: Pattern[str] = re.compile(ver_re)
-            match: Match[str] = parse.match(output)
+            match: Optional[Match[str]] = parse.match(output)
             if match:
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
@@ -129,7 +132,7 @@ class CppcheckToolPlugin(ToolPlugin):
         issues = []
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match: Match[str] = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match and line[1] != '*' and match.group(3) != \
                     "information" and not self.check_for_exceptions(match):
                 dummy, extension = os.path.splitext(match.group(1))
