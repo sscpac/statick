@@ -35,7 +35,7 @@ class CppcheckToolPlugin(ToolPlugin):
         args.add_argument("--cppcheck-bin", dest="cppcheck_bin", type=str,
                           help="cppcheck binary path")
 
-# pylint: disable=too-many-locals, too-many-branches
+# pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
@@ -86,14 +86,14 @@ class CppcheckToolPlugin(ToolPlugin):
         if "headers" in package:
             files += package["headers"]
 
+        if not files:
+            return []
+
         include_args = []
         for include_dir in include_dirs:
             if package.path in include_dir:
                 include_args.append("-I")
                 include_args.append(include_dir)
-
-        if not files:
-            return []
 
         try:
             output = subprocess.check_output([cppcheck_bin] + flags +
@@ -115,7 +115,7 @@ class CppcheckToolPlugin(ToolPlugin):
 
         issues = self.parse_output(output)
         return issues
-# pylint: enable=too-many-locals, too-many-branches
+# pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
 
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:

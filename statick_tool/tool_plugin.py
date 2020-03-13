@@ -47,7 +47,8 @@ class ToolPlugin(IPlugin):
             # If the user specified a suffix, try to get the suffixed version of the file
             suffixed_file_name: str = "plugin_mapping/{}-{}.txt". \
                     format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
-            suffixed_full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(suffixed_file_name)
+            suffixed_full_path: Union[Any, str, None] = \
+                self.plugin_context.resources.get_file(suffixed_file_name)
             if suffixed_full_path is not None:
                 # If there actually is a file with that suffix, use it.
                 # Else use the un-suffixed version.
