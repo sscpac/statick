@@ -73,14 +73,26 @@ class Config():
             return self.get_plugin_config(plugin_type, plugin, inherited_level, key, default)
         return default
 
-    def get_tool_config(self, plugin: str, level: str, key: str, default=None) -> str:
+    def get_tool_config(self,
+                        plugin: str,
+                        level: str,
+                        key: str,
+                        default=None) -> str:
         """Get tool flags to use for a plugin at a certain level."""
         return self.get_plugin_config("tool", plugin, level, key, default)
 
-    def get_discovery_config(self, plugin: str, level: str, key: str, default=None) -> Optional[str]:
+    def get_discovery_config(self,
+                             plugin: str,
+                             level: str,
+                             key: str,
+                             default=None) -> Optional[str]:
         """Get discovery flags to use for a plugin at a certain level."""
         return self.get_plugin_config("discovery", plugin, level, key, default)
 
-    def get_reporting_config(self, plugin: str, level: str, key: str, default=None) -> Optional[str]:
+    def get_reporting_config(self,
+                             plugin: str,
+                             level: str,
+                             key: str,
+                             default=None) -> Optional[str]:
         """Get reporting flags to use for a plugin at a certain level."""
         return self.get_plugin_config("reporting", plugin, level, key, default)
