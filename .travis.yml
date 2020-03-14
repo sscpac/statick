@@ -24,6 +24,7 @@ install:
   - cat ros-deps.txt | xargs sudo apt-get install -y
   - pip install -r requirements.txt
   - pip3 install -r requirements.txt
+  - pip3 install mypy
   - sudo rosdep init
   - rosdep update
   - sudo apt-get install -y nodejs-dev npm
@@ -45,8 +46,6 @@ jobs:
       # the stage name) just to run statick
     - stage: self_check
       python: '3.8'
-      install:
-        - pip install mypy
       script:
         - ./statick . --profile self_check.yaml
         - statick . --user-paths statick_tool --profile documentation.yaml
