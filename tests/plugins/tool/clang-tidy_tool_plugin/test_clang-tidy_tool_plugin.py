@@ -22,7 +22,7 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
 
-def setup_clang_tidy_tool_plugin():
+def setup_clang_tidy_tool_plugin(use_plugin_context=True):
     """Initialize and return an instance of the clang-tidy plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -37,7 +37,8 @@ def setup_clang_tidy_tool_plugin():
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     cttp = ClangTidyToolPlugin()
-    cttp.set_plugin_context(plugin_context)
+    if use_plugin_context:
+        cttp.set_plugin_context(plugin_context)
     return cttp
 
 
@@ -99,6 +100,27 @@ def test_clang_tidy_tool_plugin_scan_valid():
     assert issues[0].issue_type == 'warning/clang-analyzer-deadcode.DeadStores'
     assert issues[0].severity == '3'
     assert issues[0].message == "Value stored to 'si' is never read"
+
+
+def test_clang_tidy_tool_plugin_scan_no_plugin_context():
+    """Test that issues are None when no plugin context is provided."""
+    cttp = setup_clang_tidy_tool_plugin(False)
+    if not cttp.command_exists('cmake'):
+        pytest.skip("Can't find CMake, unable to test clang_tidy plugin")
+    elif not cttp.command_exists('clang-tidy'):
+        pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    with TemporaryDirectory() as bin_dir:
+        package['bin_dir'] = bin_dir
+    package['src_dir'] = os.path.join(os.path.dirname(__file__), 'valid_package')
+    issues = cttp.scan(package, 'level')
+    assert not issues
 
 
 def test_clang_tidy_tool_plugin_parse_valid():

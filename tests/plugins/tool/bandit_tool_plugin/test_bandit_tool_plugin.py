@@ -15,7 +15,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_bandit_tool_plugin():
+def setup_bandit_tool_plugin(binary=None):
     """Create an instance of the bandit plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -30,6 +30,8 @@ def setup_bandit_tool_plugin():
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     btp = BanditToolPlugin()
+    if binary:
+        plugin_context.args.bandit_bin = binary
     btp.set_plugin_context(plugin_context)
     return btp
 
@@ -89,6 +91,21 @@ def test_bandit_tool_plugin_scan_empty_src():
     package['python_src'] = []
     issues = btp.scan(package, 'level')
     assert len(issues) == 0
+
+
+def test_bandit_tool_plugin_scan_wrong_binary():
+    """
+    Test what happens when python_src is an empty list.
+
+    Expected result: issues is an empty list
+    """
+    btp = setup_bandit_tool_plugin("wrong_binary")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['python_src'] = [os.path.join(os.path.dirname(__file__),
+                                          'valid_package', 'b404.py')]
+    issues = btp.scan(package, 'level')
+    assert issues is None
 
 
 @mock.patch('statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output')

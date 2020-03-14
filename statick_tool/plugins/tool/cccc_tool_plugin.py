@@ -43,7 +43,7 @@ class CCCCToolPlugin(ToolPlugin):
             return []
 
         if self.plugin_context is None:
-            return []
+            return None
 
         cccc_bin = "cccc"
         if self.plugin_context.args.cccc_bin is not None:

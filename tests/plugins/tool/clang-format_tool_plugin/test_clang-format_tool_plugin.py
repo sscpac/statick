@@ -18,7 +18,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_clang_format_tool_plugin():
+def setup_clang_format_tool_plugin(use_plugin_context=True):
     """Initialize and return an instance of the clang-format plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -34,7 +34,8 @@ def setup_clang_format_tool_plugin():
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     cftp = ClangFormatToolPlugin()
-    cftp.set_plugin_context(plugin_context)
+    if use_plugin_context:
+        cftp.set_plugin_context(plugin_context)
     return cftp
 
 
@@ -95,6 +96,21 @@ def test_clang_format_tool_plugin_scan_valid():
                                        'valid_package', 'indents.h')]
     issues = cftp.scan(package, 'level')
     assert len(issues) == 1
+
+
+def test_clang_format_tool_plugin_scan_no_plugin_context():
+    """Test that issues are None when no plugin context is provided."""
+    cftp = setup_clang_format_tool_plugin(False)
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'indents.c')]
+    package['headers'] = [os.path.join(os.path.dirname(__file__),
+                                       'valid_package', 'indents.h')]
+    issues = cftp.scan(package, 'level')
+    assert not issues
 
 
 def test_clang_format_tool_plugin_scan_missing_fields():

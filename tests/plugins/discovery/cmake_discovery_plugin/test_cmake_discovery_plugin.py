@@ -16,7 +16,7 @@ from statick_tool.plugins.discovery.cmake_discovery_plugin import \
 from statick_tool.resources import Resources
 
 
-def setup_cmake_discovery_plugin():
+def setup_cmake_discovery_plugin(add_plugin_context=True):
     """Create an instance of the CMake discovery plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -25,10 +25,11 @@ def setup_cmake_discovery_plugin():
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
-    plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
-    plugin_context.args.output_directory = os.path.dirname(__file__)
     cmdp = CMakeDiscoveryPlugin()
-    cmdp.set_plugin_context(plugin_context)
+    if add_plugin_context:
+        plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+        plugin_context.args.output_directory = os.path.dirname(__file__)
+        cmdp.set_plugin_context(plugin_context)
     return cmdp
 
 
@@ -68,6 +69,16 @@ def test_cmake_discovery_plugin_scan_invalid():
                                    'invalid_package'))
     cmdp.scan(package, 'level')
     assert not package['cmake']
+
+
+def test_cmake_discovery_plugin_scan_no_plugin_context():
+    """Test the CMake discovery plugin with an invalid directory."""
+    cmdp = setup_cmake_discovery_plugin(False)
+    package = Package('invalid_package',
+                      os.path.join(os.path.dirname(__file__),
+                                   'invalid_package'))
+    cmdp.scan(package, 'level')
+    assert 'cmake' not in package
 
 
 @mock.patch('statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output')

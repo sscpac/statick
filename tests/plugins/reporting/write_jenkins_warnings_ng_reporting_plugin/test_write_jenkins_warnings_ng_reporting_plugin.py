@@ -24,7 +24,7 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 output_regex = r"^{\"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": (\d+), \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\"}"
 
 
-def setup_write_jenkins_warnings_ng_reporting_plugin(file_path):
+def setup_write_jenkins_warnings_ng_reporting_plugin(file_path, use_plugin_context=True):
     """Create an instance of the file writer plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("output_directory")
@@ -34,9 +34,10 @@ def setup_write_jenkins_warnings_ng_reporting_plugin(file_path):
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
-    plugin_context = PluginContext(arg_parser.parse_args([file_path]), resources, config)
     wfrp = WriteJenkinsWarningsNGReportingPlugin()
-    wfrp.set_plugin_context(plugin_context)
+    if use_plugin_context:
+        plugin_context = PluginContext(arg_parser.parse_args([file_path]), resources, config)
+        wfrp.set_plugin_context(plugin_context)
     return wfrp
 
 
@@ -57,6 +58,17 @@ def test_write_jenkins_warnings_ng_reporting_plugin_found():
     # While we're at it, verify that a plugin is named C Discovery Plugin
     assert any(plugin_info.name == 'Write Jenkins Warnings NG Reporting Plugin' for
                plugin_info in manager.getPluginsOfCategory("Reporting"))
+
+
+def test_write_jenkins_warnings_ng_reporting_plugin_report_no_plugin_context():
+    """Test the output of the reporting plugin without plugin context."""
+    with TemporaryDirectory() as tmp_dir:
+        wfrp = setup_write_jenkins_warnings_ng_reporting_plugin(tmp_dir, False)
+        package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                        'valid_package'))
+        issues = {'tool_a': [Issue('test.txt', 1, 'tool_a', 'type', "1", 'This is a test', None)]}
+        _, success = wfrp.report(package, issues, 'level')
+        assert not success
 
 
 def test_write_jenkins_warnings_ng_reporting_plugin_report_nocert():

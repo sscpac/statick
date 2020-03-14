@@ -22,7 +22,7 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
 
 
-def setup_uncrustify_tool_plugin(extra_path=None):
+def setup_uncrustify_tool_plugin(extra_path=None, use_plugin_context=True, binary=None):
     """Initialize and return an instance of the uncrustify plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--uncrustify-bin", dest="uncrustify_bin")
@@ -38,7 +38,10 @@ def setup_uncrustify_tool_plugin(extra_path=None):
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     utp = UncrustifyToolPlugin()
-    utp.set_plugin_context(plugin_context)
+    if binary:
+        plugin_context.args.uncrustify_bin = binary
+    if use_plugin_context:
+        utp.set_plugin_context(plugin_context)
     return utp
 
 
@@ -97,6 +100,46 @@ def test_uncrustify_tool_plugin_scan_valid():
         issues = utp.scan(package, 'level')
     assert len(issues) == 1
     assert issues[0].message == "Uncrustify mis-match"
+
+
+def test_uncrustify_tool_plugin_scan_no_plugin_context():
+    """Test that issues are None when no plugin context is provided."""
+    rsc_path = os.path.join(os.path.dirname(__file__), 'valid_package')
+    utp = setup_uncrustify_tool_plugin(extra_path=rsc_path, use_plugin_context=False)
+    if not utp.command_exists('cmake'):
+        pytest.skip("Can't find CMake, unable to test uncrustify plugin")
+    elif not utp.command_exists('uncrustify'):
+        pytest.skip("Can't find uncrustify, unable to test uncrustify plugin")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    package['headers'] = []
+    issues = utp.scan(package, 'level')
+    assert issues is None
+
+
+def test_uncrustify_tool_plugin_scan_wrong_binary():
+    """Test that issues are None when wrong binary is provided."""
+    rsc_path = os.path.join(os.path.dirname(__file__), 'valid_package')
+    utp = setup_uncrustify_tool_plugin(extra_path=rsc_path, binary="wrong_binary")
+    if not utp.command_exists('cmake'):
+        pytest.skip("Can't find CMake, unable to test uncrustify plugin")
+    elif not utp.command_exists('uncrustify'):
+        pytest.skip("Can't find uncrustify, unable to test uncrustify plugin")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = [os.path.join(os.path.dirname(__file__),
+                                                      'valid_package', 'test.c')]
+    package['headers'] = []
+    issues = utp.scan(package, 'level')
+    assert issues is None
 
 
 def test_uncrustify_tool_plugin_parse_valid():

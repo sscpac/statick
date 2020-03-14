@@ -28,7 +28,7 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
             level: (:obj:`str`): Name of the level used in the scan.
         """
         if self.plugin_context is None:
-            return None, True
+            return None, False
 
         # Do not write report to file if no output directory is given.
         if not self.plugin_context.args.output_directory:

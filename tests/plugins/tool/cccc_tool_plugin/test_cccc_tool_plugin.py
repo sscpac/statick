@@ -21,7 +21,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_cccc_tool_plugin():
+def setup_cccc_tool_plugin(use_plugin_context=True, binary=None):
     """Create an instance of the CCCC plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -31,10 +31,13 @@ def setup_cccc_tool_plugin():
     resources = Resources([os.path.join(os.path.dirname(statick_tool.__file__),
                                         'plugins')])
     config = Config(resources.get_file("config.yaml"))
+    ctp = CCCCToolPlugin()
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
-    ctp = CCCCToolPlugin()
-    ctp.set_plugin_context(plugin_context)
+    if binary:
+        plugin_context.args.cccc_bin = binary
+    if use_plugin_context:
+        ctp.set_plugin_context(plugin_context)
     return ctp
 
 
@@ -81,6 +84,30 @@ def test_cccc_tool_plugin_scan_missing_field():
     # Missing package["c_src"]
     issues = ctp.scan(package, 'level')
     assert not issues
+
+
+def test_cccc_tool_plugin_scan_no_plugin_context():
+    """Check that missing plugin context results in empty issues."""
+    ctp = setup_cccc_tool_plugin(use_plugin_context=False)
+
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['c_src'] = [os.path.join(os.path.dirname(__file__),
+                                     'valid_package', 'example.cpp')]
+    issues = ctp.scan(package, 'level')
+    assert issues is None
+
+
+def test_cccc_tool_plugin_scan_wrong_bin():
+    """Check that an invalid binary results in None."""
+    ctp = setup_cccc_tool_plugin(binary="wrong_binary")
+
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['c_src'] = [os.path.join(os.path.dirname(__file__),
+                                     'valid_package', 'example.cpp')]
+    issues = ctp.scan(package, 'level')
+    assert issues is None
 
 
 def test_cccc_tool_plugin_parse_valid():
