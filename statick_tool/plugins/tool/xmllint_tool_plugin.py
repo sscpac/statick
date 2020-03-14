@@ -67,7 +67,7 @@ class XmllintToolPlugin(ToolPlugin):
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), match.group(3), '5',
+                                        self.get_name(), match.group(3), "5",
                                         match.group(4), None))
 
         return issues

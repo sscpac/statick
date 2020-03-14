@@ -170,14 +170,14 @@ class CCCCToolPlugin(ToolPlugin):
                     if result > thresh_error:
                         msg += ' - value: {}, theshold: {}'.format(result,
                                                                    thresh_error)
-                        issues.append(Issue(package['c_src'][0], '0',
-                                            self.get_name(), 'error', '5',
+                        issues.append(Issue(package['c_src'][0], "0",
+                                            self.get_name(), 'error', "5",
                                             msg, None))
                     elif result > thresh_warn:
                         msg += ' - value: {}, theshold: {}'.format(result,
                                                                    thresh_warn)
-                        issues.append(Issue(package['c_src'][0], '0',
-                                            self.get_name(), 'warn', '3',
+                        issues.append(Issue(package['c_src'][0], "0",
+                                            self.get_name(), 'warn', "3",
                                             msg, None))
 
         return issues

@@ -67,7 +67,7 @@ class PydocstyleToolPlugin(ToolPlugin):
         parse_second: Pattern[str] = re.compile(tool_re_second)
         issues = []
         filename = ''
-        line_number = '0'
+        line_number = "0"
         issue_type = ''
         message = ''
 
@@ -88,6 +88,6 @@ class PydocstyleToolPlugin(ToolPlugin):
                         message = match_second.group(2)
                         issues.append(Issue(filename, line_number,
                                             self.get_name(), issue_type,
-                                            '5', message, None))
+                                            "5", message, None))
 
         return issues

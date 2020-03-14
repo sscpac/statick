@@ -100,7 +100,7 @@ class MakeToolPlugin(ToolPlugin):
             if warning_list is None:
                 # Something's gone wrong if we don't match the [warning] format
                 if "fatal error" in item[3]:
-                    warning_level = '5'
+                    warning_level = "5"
                     category = "fatal-error"
                 else:
                     category = "unknown-error"
@@ -108,13 +108,13 @@ class MakeToolPlugin(ToolPlugin):
                 category = warning_list.groups(1)[0]
 
             if item[3].lower() == "warning":
-                warning_level = '3'
+                warning_level = "3"
             elif item[3].lower() == "error":
-                warning_level = '5'
+                warning_level = "5"
             elif item[3].lower() == "note":
-                warning_level = '1'
+                warning_level = "1"
             else:
-                warning_level = '3'
+                warning_level = "3"
 
             issue = Issue(item[0], item[1], self.get_name(), category,
                           warning_level, item[4], cert_reference)
@@ -123,6 +123,6 @@ class MakeToolPlugin(ToolPlugin):
 
         lines = output.splitlines()
         if "collect2: ld returned 1 exit status" in lines:
-            issues.append(Issue("Linker", '0', self.get_name(), "linker", '5',
+            issues.append(Issue("Linker", "0", self.get_name(), "linker", "5",
                                 "Linking failed", None))
         return issues

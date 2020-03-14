@@ -69,9 +69,9 @@ class YamllintToolPlugin(ToolPlugin):
                 if match:
                     issue_type = match.group(4)
                     if issue_type == "error":
-                        level = '5'
+                        level = "5"
                     else:
-                        level = '3'
+                        level = "3"
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(6), level,
                                         match.group(5), None))

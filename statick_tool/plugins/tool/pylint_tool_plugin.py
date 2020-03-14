@@ -72,16 +72,16 @@ class PylintToolPlugin(ToolPlugin):
                         parts = match.group(3).split(",")
                         if parts[1].strip() == "":
                             issues.append(Issue(match.group(1), match.group(2),
-                                                self.get_name(), parts[0], '5',
+                                                self.get_name(), parts[0], "5",
                                                 match.group(4), None))
                         else:
                             issues.append(Issue(match.group(1), match.group(2),
-                                                self.get_name(), parts[0], '5',
+                                                self.get_name(), parts[0], "5",
                                                 parts[1].strip() + ": " +
                                                 match.group(4), None))
                     else:
                         issues.append(Issue(match.group(1), match.group(2),
                                             self.get_name(), match.group(3),
-                                            '5', match.group(4), None))
+                                            "5", match.group(4), None))
 
         return issues

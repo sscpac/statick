@@ -99,7 +99,7 @@ class UncrustifyToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         issues = []
         for output in total_output:
-            issues.append(Issue(output, '0', self.get_name(), "format",
-                                '1', "Uncrustify mis-match", None))
+            issues.append(Issue(output, "0", self.get_name(), "format",
+                                "1", "Uncrustify mis-match", None))
 
         return issues

@@ -164,6 +164,6 @@ class ClangFormatToolPlugin(ToolPlugin):
                 if match:
                     count += 1
             if count > 0:
-                issues.append(Issue(filename, '0', self.get_name(), "format",
-                                    '1', str(count) + " replacements", None))
+                issues.append(Issue(filename, "0", self.get_name(), "format",
+                                    "1", str(count) + " replacements", None))
         return issues

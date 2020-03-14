@@ -41,13 +41,12 @@ class LizardToolPlugin(ToolPlugin):
             print("Couldn't find lizard executable! ({})".format(ex))
             return None
 
-        if self.plugin_context:
-            if self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
+            print("{}".format(output))
 
-            if self.plugin_context.args.output_directory:
-                with open(self.get_name() + ".log", "w") as f:
-                    f.write(output)
+        if self.plugin_context and self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as f:
+                f.write(output)
 
         issues = self.parse_output(output)
         return issues

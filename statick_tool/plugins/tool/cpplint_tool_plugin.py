@@ -19,7 +19,8 @@ class CpplintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cpplint"
 
-    def get_tool_dependencies(self) -> List[str]:  # type: ignore
+    @classmethod
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 

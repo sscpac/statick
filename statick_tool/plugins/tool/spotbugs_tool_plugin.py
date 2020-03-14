@@ -19,7 +19,8 @@ class SpotbugsToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "spotbugs"
 
-    def get_tool_dependencies(self) -> List[str]:  # type: ignore
+    @classmethod
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
@@ -113,11 +114,11 @@ class SpotbugsToolPlugin(ToolPlugin):
                 print("Couldn't find file for class {}".format(file_entry.attrib["classname"]))
                 file_path = java_path_string
             for issue in file_entry.findall("BugInstance"):
-                severity = '1'
+                severity = "1"
                 if issue.attrib["priority"] == "Normal":
-                    severity = '3'
+                    severity = "3"
                 elif issue.attrib["priority"] == "High":
-                    severity = '5'
+                    severity = "5"
 
                 cert_reference = None
                 if issue.attrib["type"] in warnings_mapping:

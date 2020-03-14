@@ -19,7 +19,8 @@ class ClangTidyToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "clang-tidy"
 
-    def get_tool_dependencies(self) -> List[str]:  # type: ignore
+    @classmethod
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
@@ -118,6 +119,6 @@ class ClangTidyToolPlugin(ToolPlugin):
                         cert_reference = warnings_mapping[match.group(6)]
                     issues.append(Issue(match.group(1), match.group(2),
                                         self.get_name(), match.group(4) +
-                                        "/" + match.group(6), '3',
+                                        "/" + match.group(6), "3",
                                         match.group(5), cert_reference))
         return issues

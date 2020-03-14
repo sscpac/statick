@@ -77,10 +77,10 @@ class CatkinLintToolPlugin(ToolPlugin):
     def get_level(cls, issue_type: str) -> str:
         """Get level for given issue type."""
         if issue_type == "error":
-            return '5'
+            return "5"
         if issue_type == "warning":
-            return '3'
-        return '1'
+            return "3"
+        return "1"
 
     def parse_output(self, package: Package, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
@@ -99,7 +99,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                 norm_path = os.path.normpath(package.path + "/" +
                                              match.group(2))
 
-                issues.append(Issue(norm_path, (match.group(3)),
+                issues.append(Issue(norm_path, match.group(3),
                                     self.get_name(), match.group(4),
                                     self.get_level(match.group(4)),
                                     match.group(5), None))
@@ -121,7 +121,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                                "package.xml or CMakeLists.txt. Make sure to " \
                                "check both for this issue)"
 
-                    issues.append(Issue(norm_path, '1', self.get_name(),
+                    issues.append(Issue(norm_path, "1", self.get_name(),
                                         match2.group(2),
                                         self.get_level(match2.group(2)),
                                         message, None))
