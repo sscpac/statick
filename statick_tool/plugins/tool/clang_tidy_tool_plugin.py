@@ -2,33 +2,40 @@
 
 from __future__ import print_function
 
+import argparse
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangTidyToolPlugin(ToolPlugin):
     """Apply clang-tidy tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "clang-tidy"
 
-    def get_tool_dependencies(self):
+    @classmethod
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--clang-tidy-bin", dest="clang_tidy_bin", type=str,
                           help="clang-tidy binary path")
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package or "src_dir" not in package or \
            "bin_dir" not in package:
+            return []
+
+        if self.plugin_context is None:
             return []
 
         clang_tidy_bin = "clang-tidy"
@@ -44,12 +51,13 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
-        flags = ["-header-filter=" + package["src_dir"] + "/.*", "-p",
-                 package["bin_dir"] + "/compile_commands.json",
-                 "-extra-arg=-fopenmp=libomp"]
+        flags: List[str] = ["-header-filter=" + package["src_dir"] + "/.*",
+                            "-p",
+                            package["bin_dir"] + "/compile_commands.json",
+                            "-extra-arg=-fopenmp=libomp"]
         flags += self.get_user_flags(level)
 
-        files = []
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -81,11 +89,11 @@ class ClangTidyToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fname:
                 fname.write(output)
 
-        issues = self.parse_output(output)
+        issues: List[Issue] = self.parse_output(output)
         return issues
 
     @classmethod
-    def check_for_exceptions(cls, match):
+    def check_for_exceptions(cls, match: Match[str]) -> bool:
         """Manual exceptions."""
         # You are allowed to have 'using namespace' in source files
         if (match.group(1).endswith(".cpp") or
@@ -94,15 +102,15 @@ class ClangTidyToolPlugin(ToolPlugin):
             return True
         return False
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         clang_tidy_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)\]"
-        parse = re.compile(clang_tidy_re)
+        parse: Pattern[str] = re.compile(clang_tidy_re)
         issues = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 if line[1] != '*' and match.group(3) != "information" \
                         and match.group(4) != "note":

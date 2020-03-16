@@ -2,9 +2,11 @@
 from __future__ import print_function
 
 import os
+from typing import Dict, Optional, Tuple
 
 from deprecated import deprecated
 
+from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
@@ -12,11 +14,11 @@ from statick_tool.reporting_plugin import ReportingPlugin
 class WriteJenkinsWarningsReportingPlugin(ReportingPlugin):
     """Writes Statick results to a file."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Return the plugin name."""
         return "write_jenkins_warnings"
 
-    def report(self, package, issues, level):
+    def report(self, package: Package, issues: Dict, level: str) -> Tuple[Optional[None], bool]:
         """
         Write the results to a Jenkins Warnings plugin compatible file.
 
@@ -27,6 +29,9 @@ class WriteJenkinsWarningsReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan.
         """
+        if self.plugin_context is None:
+            return None, False
+
         # Do not write report to file if no output directory is given.
         if not self.plugin_context.args.output_directory:
             return None, True

@@ -2,53 +2,58 @@
 
 from __future__ import print_function
 
+import argparse
 import difflib
 import subprocess
+from typing import List, Optional
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class UncrustifyToolPlugin(ToolPlugin):
     """Apply uncrustify tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "uncrustify"
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--uncrustify-bin", dest="uncrustify_bin",
                           type=str, help="uncrustify binary path")
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:  # pylint: disable=too-many-locals, too-many-branches
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
+
+        if self.plugin_context is None:
+            return None
 
         uncrustify_bin = "uncrustify"
         if self.plugin_context.args.uncrustify_bin is not None:
             uncrustify_bin = self.plugin_context.args.uncrustify_bin
 
-        flags = []
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
-        files = []
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        total_output = []
+        total_output: List[str] = []
 
         try:
             format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
 
             for src in files:
-                format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
                 cmd = [uncrustify_bin, '-c', format_file_name, '-f', src]
-                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,
+                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,  # type: ignore
                                                  universal_newlines=True)
                 src_cmd = ['cat', src]
                 src_output = subprocess.check_output(src_cmd, stderr=subprocess.STDOUT,
@@ -90,7 +95,7 @@ class UncrustifyToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []
         for output in total_output:

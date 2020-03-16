@@ -16,7 +16,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_cppcheck_tool_plugin():
+def setup_cppcheck_tool_plugin(use_plugin_context=True, binary=None):
     """Initialize and return an instance of the cppcheck plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -31,7 +31,10 @@ def setup_cppcheck_tool_plugin():
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     cctp = CppcheckToolPlugin()
-    cctp.set_plugin_context(plugin_context)
+    if binary:
+        plugin_context.args.cppcheck_bin = binary
+    if use_plugin_context:
+        cctp.set_plugin_context(plugin_context)
     return cctp
 
 
@@ -78,6 +81,36 @@ def test_cppcheck_tool_plugin_scan_valid():
     assert issues[0].issue_type == 'error/uninitvar'
     assert issues[0].severity == '5'
     assert issues[0].message == "Uninitialized variable: si"
+
+
+def test_cppcheck_tool_plugin_scan_no_plugin_context():
+    """Test that issues are None when no plugin context is provided."""
+    cctp = setup_cppcheck_tool_plugin(use_plugin_context=False)
+    if not cctp.command_exists('cppcheck'):
+        pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = []
+    package['headers'] = []
+    issues = cctp.scan(package, 'level')
+    assert not issues
+
+
+def test_cppcheck_tool_plugin_scan_wrong_binary():
+    """Test that issues are None when wrong binary is provided."""
+    cctp = setup_cppcheck_tool_plugin(binary="wrong_binary")
+    if not cctp.command_exists('cppcheck'):
+        pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    package['make_targets'] = []
+    package['make_targets'].append({})
+    package['make_targets'][0]['src'] = []
+    package['headers'] = []
+    issues = cctp.scan(package, 'level')
+    assert not issues
 
 
 def test_cppcheck_tool_plugin_scan_no_files():

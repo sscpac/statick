@@ -11,33 +11,39 @@ in a web browser.
 
 from __future__ import print_function
 
+import argparse
 import csv
 import subprocess
+from typing import Dict, List, Optional
 
 import xmltodict
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class CCCCToolPlugin(ToolPlugin):
     """Apply CCCC tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "cccc"
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--cccc-bin", dest="cccc_bin", type=str,
                           help="cccc binary path")
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        log_output = None
+        log_output: bytes
 
         if "c_src" not in package.keys():
             return []
+
+        if self.plugin_context is None:
+            return None
 
         cccc_bin = "cccc"
         if self.plugin_context.args.cccc_bin is not None:
@@ -46,10 +52,12 @@ class CCCCToolPlugin(ToolPlugin):
         config_file = self.plugin_context.resources.get_file("cccc.opt")
         if config_file is not None:
             opts = "--opt_infile=" + config_file
+        else:
+            return []
 
         for src in package["c_src"]:
             try:
-                subproc_args = [cccc_bin] + [opts] + [src]
+                subproc_args: List[str] = [cccc_bin] + [opts] + [src]
                 log_output = subprocess.check_output(subproc_args,
                                                      stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as ex:
@@ -65,26 +73,26 @@ class CCCCToolPlugin(ToolPlugin):
                 return None
 
             if self.plugin_context.args.show_tool_output:
-                print("{}".format(log_output))
+                print("{}".format(log_output))  # type: ignore
 
         if self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "wb") as f:
-                f.write(log_output)
+            with open(self.get_name() + ".log", "wb") as flog:
+                flog.write(log_output)
 
-        with open('.cccc/cccc.xml') as f:
-            tool_output = xmltodict.parse(f.read())
+        with open('.cccc/cccc.xml') as fconfig:
+            tool_output = xmltodict.parse(fconfig.read())
 
         issues = self.parse_output(tool_output, package, config_file)
         return issues
 
-    def parse_output(self, output, package, config_file):  # pylint: disable=too-many-branches
+    def parse_output(self, output: Dict, package: Package, config_file: str) -> List[Issue]:  # pylint: disable=too-many-branches
         """Parse tool output and report issues."""
         if 'CCCC_Project' not in output:
-            return None
+            return []
 
         config = self.parse_config(config_file)
 
-        results = {}
+        results: Dict = {}
         for module in output['CCCC_Project']['structural_summary']['module']:
             if 'name' not in module or isinstance(module, str):
                 break
@@ -118,7 +126,7 @@ class CCCCToolPlugin(ToolPlugin):
         return issues
 
     @classmethod
-    def parse_config(cls, config_file):
+    def parse_config(cls, config_file: str) -> Dict:
         """
         Parse CCCC configuration file.
 
@@ -128,7 +136,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         `cccc --opt_outfile=cccc.opt`
         """
-        config = {}
+        config: Dict = {}
 
         if config_file is None:
             return config
@@ -139,12 +147,12 @@ class CCCCToolPlugin(ToolPlugin):
                 if row['CCCC_FileExt'] == 'CCCC_MetTmnt':
                     config[row[".ADA"]] = {"warn": row['ada.95'],
                                            "error": row[''],
-                                           "name": row[None][3],
+                                           "name": row[None][3],  # type: ignore
                                            "key": row[".ADA"]}
 
         return config
 
-    def find_issues(self, config, results, package):
+    def find_issues(self, config: Dict, results: Dict, package: Package) -> List[Issue]:
         """Identify issues by comparing tool results with tool configuration."""
         issues = []
 
@@ -162,20 +170,20 @@ class CCCCToolPlugin(ToolPlugin):
                     if result > thresh_error:
                         msg += ' - value: {}, theshold: {}'.format(result,
                                                                    thresh_error)
-                        issues.append(Issue(package['c_src'][0], 0,
-                                            self.get_name(), 'error', 5,
+                        issues.append(Issue(package['c_src'][0], "0",
+                                            self.get_name(), 'error', "5",
                                             msg, None))
                     elif result > thresh_warn:
                         msg += ' - value: {}, theshold: {}'.format(result,
                                                                    thresh_warn)
-                        issues.append(Issue(package['c_src'][0], 0,
-                                            self.get_name(), 'warn', 3,
+                        issues.append(Issue(package['c_src'][0], "0",
+                                            self.get_name(), 'warn', "3",
                                             msg, None))
 
         return issues
 
     @classmethod
-    def convert_name_to_id(cls, name):  # pylint: disable=too-many-branches
+    def convert_name_to_id(cls, name: str) -> str:  # pylint: disable=too-many-branches
         """
         Convert result name to configuration name.
 

@@ -6,22 +6,25 @@ import fnmatch
 import os
 import subprocess
 from collections import OrderedDict
+from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 
 
 class PythonDiscoveryPlugin(DiscoveryPlugin):
     """Discover python files to analyze."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of discovery type."""
         return "python"
 
-    def scan(self, package, level, exceptions=None):
+    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for python files."""
-        python_files = []
+        python_files: List[str] = []
 
-        file_cmd_exists = True
+        file_cmd_exists: bool = True
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
 
@@ -33,8 +36,8 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
             if file_cmd_exists:
                 for f in files:
                     full_path = os.path.join(root, f)
-                    output = subprocess.check_output(["file", full_path],
-                                                     universal_newlines=True)
+                    output: str = subprocess.check_output(["file", full_path],
+                                                          universal_newlines=True)
                     # pylint: disable=unsupported-membership-test
                     if ("python script" in output or
                             "Python script" in output) and not \

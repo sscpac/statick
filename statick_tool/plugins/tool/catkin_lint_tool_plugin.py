@@ -5,23 +5,26 @@ from __future__ import print_function
 import os
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class CatkinLintToolPlugin(ToolPlugin):
     """Apply catkin_lint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "catkin_lint"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "catkin" not in package or not package["catkin"]:
             return []
-        flags = []
+
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
         try:
@@ -40,10 +43,10 @@ class CatkinLintToolPlugin(ToolPlugin):
             print("Couldn't find catkin_lint executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 fname.write(output)
 
@@ -51,7 +54,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         return issues
 
     @classmethod
-    def check_for_exceptions_has_file(cls, match, package):
+    def check_for_exceptions_has_file(cls, match: Match[str], package: Package) -> bool:
         """Manual exceptions."""
         message = match.group(5)
         norm_path = os.path.normpath(package.path + "/" + match.group(2))
@@ -71,7 +74,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         return False
 
     @classmethod
-    def get_level(cls, issue_type):
+    def get_level(cls, issue_type: str) -> str:
         """Get level for given issue type."""
         if issue_type == "error":
             return "5"
@@ -79,16 +82,16 @@ class CatkinLintToolPlugin(ToolPlugin):
             return "3"
         return "1"
 
-    def parse_output(self, package, output):
+    def parse_output(self, package: Package, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):\s(.+)\((\d+)\):\s(.+):\s(.+)"
         lint2_re = r"(.+):\s(.+):\s(.+)"
-        parse = re.compile(lint_re)
-        parse2 = re.compile(lint2_re)
+        parse: Pattern[str] = re.compile(lint_re)
+        parse2: Pattern[str] = re.compile(lint2_re)
 
         issues = []
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 if self.check_for_exceptions_has_file(match, package):
                     continue
@@ -101,7 +104,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                                     self.get_level(match.group(4)),
                                     match.group(5), None))
             else:
-                match2 = parse2.match(line)
+                match2: Optional[Match[str]] = parse2.match(line)
 
                 if match2:
                     norm_path = os.path.normpath(package.path + "/package.xml")

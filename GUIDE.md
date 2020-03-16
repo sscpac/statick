@@ -264,6 +264,19 @@ For tool plugins that are not available via pip it is recommended to skip tests 
 Before submitting a change, please run tox to check that you have not introduced any regressions or violated any code
 style guidelines.
 
+### Mypy
+
+Statick uses [mypy](http://mypy-lang.org/) to check that type hints are being followed properly.
+Type hints are described in [PEP 484](https://www.python.org/dev/peps/pep-0484/) and allow for static typing in Python.
+To determine if proper types are being used in Statick the following command will show any errors, and create several
+types of reports that can be viewed with a text editor or web browser.
+
+    pip install mypy
+    mkdir report
+    mypy --ignore-missing-imports --html-report report/ --txt-report report statick statick_tool/
+
+It is hoped that in the future we will generate coverage reports from mypy and use those to check for regressions.
+
 ## Examples
 
 A few examples are provided for some of the basic use cases of Statick.

@@ -4,24 +4,26 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class YamllintToolPlugin(ToolPlugin):
     """Apply yamllint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "yamllint"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         flags = ["-f", "parsable"]
         flags += self.get_user_flags(level)
 
-        total_output = []
+        total_output: List[str] = []
 
         for yaml_file in package["yaml"]:
             try:
@@ -42,12 +44,12 @@ class YamllintToolPlugin(ToolPlugin):
                 print("Couldn't find yamllint executable! ({})".format(ex))
                 return None
 
-            if self.plugin_context.args.show_tool_output:
+            if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
             total_output.append(output)
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 for output in total_output:
                     f.write(output)
@@ -55,15 +57,15 @@ class YamllintToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         yamllint_re = r"(.+):(\d+):(\d+):\s\[(.+)\]\s(.+)\s\((.+)\)"
-        parse = re.compile(yamllint_re)
+        parse: Pattern[str] = re.compile(yamllint_re)
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issue_type = match.group(4)
                     if issue_type == "error":

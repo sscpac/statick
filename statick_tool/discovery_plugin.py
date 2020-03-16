@@ -1,8 +1,11 @@
 """Discovery plugin."""
 import os
 import sys
+from typing import Union
 
 from yapsy.IPlugin import IPlugin
+
+from statick_tool.plugin_context import PluginContext
 
 
 class DiscoveryPlugin(IPlugin):
@@ -24,12 +27,12 @@ class DiscoveryPlugin(IPlugin):
         use it to filter which files the plugin detects.
         """
 
-    def set_plugin_context(self, plugin_context):
+    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
         self.plugin_context = plugin_context
 
     @staticmethod
-    def file_command_exists():
+    def file_command_exists() -> bool:
         """Return whether the 'file' command is available on $PATH."""
         if sys.platform == 'win32':
             command_name = 'file.exe'

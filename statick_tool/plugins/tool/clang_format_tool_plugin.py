@@ -2,23 +2,26 @@
 
 from __future__ import print_function
 
+import argparse
 import difflib
 import os
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangFormatToolPlugin(ToolPlugin):
     """Apply clang-format tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "clang-format"
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument("--clang-format-bin", dest="clang_format_bin",
                           type=str, help="clang-format binary path")
@@ -34,35 +37,39 @@ class ClangFormatToolPlugin(ToolPlugin):
                                "configuration file")
         args.set_defaults(clang_format_raise_exception=True)
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        user_version = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                  level,
-                                                                  "version")
+        user_version = None
+        if self.plugin_context:
+            user_version = self.plugin_context.config.get_tool_config(self.get_name(),
+                                                                      level,
+                                                                      "version")
 
         clang_format_bin = "clang-format"
         if user_version is not None:
             clang_format_bin = "{}-{}".format(clang_format_bin, user_version)
 
         # If the user explicitly specifies a binary, let that override the user_version
-        if self.plugin_context.args.clang_format_bin is not None:
+        if self.plugin_context and self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        files = []
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        check = self.check_configuration(clang_format_bin)
-        if check is None or not check:
-            return check
+        check: Optional[bool] = self.check_configuration(clang_format_bin)
+        if check is None:
+            return None
+        if not check:
+            return []
 
-        total_output = []
+        total_output: List[str] = []
 
         try:
             for src in files:
@@ -71,13 +78,13 @@ class ClangFormatToolPlugin(ToolPlugin):
                                                  stderr=subprocess.STDOUT,
                                                  universal_newlines=True)
                 output = src + "\n" + output
-                if self.plugin_context.args.clang_format_raise_exception:
+                if self.plugin_context and self.plugin_context.args.clang_format_raise_exception:
                     total_output.append(output)
 
         except (IOError, OSError) as ex:
             print("clang-format binary failed: {}".format(clang_format_bin))
             print("Error = {}".format(str(ex.strerror)))
-            if self.plugin_context.args.clang_format_raise_exception:
+            if self.plugin_context and self.plugin_context.args.clang_format_raise_exception:
                 return None
             return []
 
@@ -85,24 +92,27 @@ class ClangFormatToolPlugin(ToolPlugin):
             print("clang-format binary failed: {}.".format(clang_format_bin))
             print("Returncode: {}".format(str(ex.returncode)))
             print("Error: {}".format(ex.output))
-            if self.plugin_context.args.clang_format_raise_exception:
+            if self.plugin_context and self.plugin_context.args.clang_format_raise_exception:
                 return None
             return []
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             for output in total_output:
                 print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 for output in total_output:
                     fname.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
-    def check_configuration(self, clang_format_bin):
+    def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
         """Check that configuration is configured properly."""
+        if self.plugin_context is None:
+            return False
+
         try:
             default_file_name = "_clang-format"
             format_file_name = self.plugin_context.resources.get_file(default_file_name)
@@ -110,7 +120,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                       "Put this file in your home directory.".format(format_file_name)
 
             with open(os.path.expanduser("~/" + default_file_name), "r") as home_format_file, \
-                    open(format_file_name, "r") as format_file:
+                    open(format_file_name, "r") as format_file:  # type: ignore
                 actual_format = home_format_file.read()
                 target_format = format_file.read()
             diff = difflib.context_diff(actual_format.splitlines(),
@@ -130,7 +140,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             print("Error: {}".format(str(ex.strerror)))
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
-            return []
+            return False
 
         except subprocess.CalledProcessError as ex:
             print("{} Returncode = {}".format(exc_msg, str(ex.returncode)))
@@ -139,10 +149,10 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         return True
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
-        parse = re.compile(clangformat_re)
+        parse: Pattern[str] = re.compile(clangformat_re)
         issues = []
 
         for output in total_output:
@@ -150,7 +160,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             filename = lines[0]
             count = 0
             for line in lines:
-                match = parse.match(line)
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     count += 1
             if count > 0:

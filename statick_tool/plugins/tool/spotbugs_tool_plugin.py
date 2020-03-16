@@ -5,27 +5,33 @@ from __future__ import print_function
 import os
 import subprocess
 import xml.etree.ElementTree as etree
+from typing import List, Optional
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class SpotbugsToolPlugin(ToolPlugin):
     """Apply spotbugs tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "spotbugs"
 
-    def get_tool_dependencies(self):
+    @classmethod
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists('mvn'):
             print("Couldn't find 'mvn' command, can't run Spotbugs Maven integration")
+            return None
+
+        if self.plugin_context is None:
             return None
 
         flags = ["-Dspotbugs.effort=Max", "-Dspotbugs.threshold=Low",
@@ -44,7 +50,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             flags += ["-Dspotbugs.excludeFilterFile={}".format(self.plugin_context
                                                                .resources.get_file(exclude_file))]
 
-        issues = []
+        issues: List[Issue] = []
         total_output = ""
         for pom in package['top_poms']:
             try:
@@ -75,7 +81,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):
                 with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) \
                         as outfile:
-                    issues += self.parse_output(outfile.read())
+                    issues += self.parse_output(outfile.read())  # type: ignore
 
         if self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
@@ -83,9 +89,9 @@ class SpotbugsToolPlugin(ToolPlugin):
 
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> Optional[List[Issue]]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         try:
@@ -99,7 +105,8 @@ class SpotbugsToolPlugin(ToolPlugin):
             java_path_string = "{}.java".format(file_entry.attrib["classname"].replace('.', os.sep))
             file_path = ""
             for source_dir in output_xml.findall("Project/SrcDir"):
-                joined_path = os.path.join(os.path.normpath(source_dir.text), java_path_string)
+                joined_path = os.path.join(os.path.normpath(source_dir.text),  # type: ignore
+                                           java_path_string)
                 if os.path.exists(joined_path):
                     file_path = joined_path
                     break
@@ -107,16 +114,17 @@ class SpotbugsToolPlugin(ToolPlugin):
                 print("Couldn't find file for class {}".format(file_entry.attrib["classname"]))
                 file_path = java_path_string
             for issue in file_entry.findall("BugInstance"):
-                severity = 1
+                severity = "1"
                 if issue.attrib["priority"] == "Normal":
-                    severity = 3
+                    severity = "3"
                 elif issue.attrib["priority"] == "High":
-                    severity = 5
+                    severity = "5"
 
                 cert_reference = None
                 if issue.attrib["type"] in warnings_mapping:
                     cert_reference = warnings_mapping[issue.attrib["type"]]
-                issues.append(Issue(file_path, issue.attrib["lineNumber"], self.get_name(),
-                                    issue.attrib["type"], severity, issue.attrib["message"],
+                issues.append(Issue(file_path, issue.attrib["lineNumber"],
+                                    self.get_name(), issue.attrib["type"],
+                                    severity, issue.attrib["message"],
                                     cert_reference))
         return issues

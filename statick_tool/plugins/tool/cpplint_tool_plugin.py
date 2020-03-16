@@ -5,23 +5,26 @@ from __future__ import print_function
 import os
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class CpplintToolPlugin(ToolPlugin):
     """Apply Cpplint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "cpplint"
 
-    def get_tool_dependencies(self):
+    @classmethod
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "cpplint" not in package:
             print("  cpplint not found!")
@@ -30,11 +33,11 @@ class CpplintToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        flags = []
+        flags: List[str] = []
         flags += self.get_user_flags(level)
         cpplint = package["cpplint"]
 
-        files = []
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -55,10 +58,10 @@ class CpplintToolPlugin(ToolPlugin):
             print("Couldn't find cpplint executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 f.write(output)
 
@@ -66,7 +69,7 @@ class CpplintToolPlugin(ToolPlugin):
         return issues
 
     @classmethod
-    def check_for_exceptions(cls, match):
+    def check_for_exceptions(cls, match: Match[str]) -> bool:
         """Manual exceptions."""
         if (match.group(1).endswith(".cpp") or
                 match.group(1).endswith(".cc")) and \
@@ -84,13 +87,13 @@ class CpplintToolPlugin(ToolPlugin):
             return True
         return False
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
-        parse = re.compile(lint_re)
+        parse: Pattern[str] = re.compile(lint_re)
         issues = []
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 norm_path = os.path.normpath(match.group(1))
                 issues.append(Issue(norm_path, match.group(2), self.get_name(),

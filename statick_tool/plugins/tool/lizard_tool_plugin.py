@@ -4,21 +4,23 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class LizardToolPlugin(ToolPlugin):
     """Apply Lizard tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "lizard"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        output = None
+        output: str
 
         src_dir = '.'
         if "src_dir" in package:
@@ -39,30 +41,30 @@ class LizardToolPlugin(ToolPlugin):
             print("Couldn't find lizard executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
                 f.write(output)
 
         issues = self.parse_output(output)
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
-        parse = re.compile(lizard_re)
+        parse: Pattern[str] = re.compile(lizard_re)
         matches = []
         for line in output.splitlines():
-            match = parse.match(line)
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 matches.append(match.groups())
 
-        issues = []
-        for match in matches:
-            issue = Issue(match[0], match[1], self.get_name(), match[2], "5",
-                          match[3], None)
+        issues: List[Issue] = []
+        for item in matches:
+            issue = Issue(item[0], item[1], self.get_name(), item[2], '5',
+                          item[3], None)
             if issue not in issues:
                 issues.append(issue)
 

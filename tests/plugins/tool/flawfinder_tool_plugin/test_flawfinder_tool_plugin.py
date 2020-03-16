@@ -67,6 +67,17 @@ def test_flawfinder_tool_plugin_scan_valid():
     assert len(issues) == 1
 
 
+def test_flawfinder_tool_plugin_scan_missing_c_src():
+    """Check what happens if the plugin isn't passed any source files."""
+    fftp = setup_flawfinder_tool_plugin()
+    if not fftp.command_exists("flawfinder"):
+        pytest.skip("Flawfinder binary not found, can't run the integration test")
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    issues = fftp.scan(package, 'level')
+    assert not issues
+
+
 @mock.patch('statick_tool.plugins.tool.flawfinder_tool_plugin.subprocess.check_output')
 def test_flawfinder_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """

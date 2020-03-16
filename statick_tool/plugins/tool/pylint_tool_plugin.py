@@ -4,25 +4,27 @@ from __future__ import print_function
 
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
 class PylintToolPlugin(ToolPlugin):
     """Apply pylint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "pylint"
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         flags = ["--msg-template='{abspath}:{line}: [{msg_id}({symbol}), "
                  "{obj}] {msg}'", "--reports=no"]
         flags += self.get_user_flags(level)
 
-        total_output = []
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             try:
@@ -43,12 +45,12 @@ class PylintToolPlugin(ToolPlugin):
                 print("Couldn't find pylint executable! ({})".format(ex))
                 return None
 
-            if self.plugin_context.args.show_tool_output:
+            if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
             total_output.append(output)
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 for output in total_output:
                     fname.write(output)
@@ -56,15 +58,15 @@ class PylintToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output):
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         pylint_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse = re.compile(pylint_re)
+        parse: Pattern[str] = re.compile(pylint_re)
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     if "," in match.group(3):
                         parts = match.group(3).split(",")

@@ -7,6 +7,7 @@ Handles chaining user directories and the default statick resource directory.
 from __future__ import print_function
 
 import os
+from typing import List, Optional
 
 
 class Resources():
@@ -17,9 +18,9 @@ class Resources():
     directory.
     """
 
-    def __init__(self, paths):
+    def __init__(self, paths: List[str]) -> None:
         """Initialize resource handling."""
-        self.paths = []
+        self.paths: List[str] = []
 
         for path in paths:
             if os.path.exists(path) and os.path.isdir(path):
@@ -32,7 +33,7 @@ class Resources():
         default_path = os.path.dirname(__file__)
         self.paths.append(default_path)
 
-    def get_plugin_paths(self):
+    def get_plugin_paths(self) -> List[str]:
         """Get paths where plugins are located."""
         plugin_paths = []
         for path in self.paths:
@@ -41,7 +42,7 @@ class Resources():
                 plugin_paths.append(full_path)
         return plugin_paths
 
-    def get_file(self, filename):
+    def get_file(self, filename: str) -> Optional[str]:
         """Get full path to file for default and user-defined resource paths."""
         for path in self.paths:
             full_filename = os.path.join(path, "rsc", filename)

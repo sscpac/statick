@@ -16,7 +16,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_spotbugs_tool_plugin():
+def setup_spotbugs_tool_plugin(use_plugin_context=True):
     """Initialize and return a spotbugs plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--show-tool-output", dest="show_tool_output",
@@ -30,7 +30,8 @@ def setup_spotbugs_tool_plugin():
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     sbtp = SpotbugsToolPlugin()
-    sbtp.set_plugin_context(plugin_context)
+    if use_plugin_context:
+        sbtp.set_plugin_context(plugin_context)
     return sbtp
 
 
@@ -80,8 +81,34 @@ def test_spotbugs_tool_plugin_scan_valid():
     assert issues[0].line_number == '4'
     assert issues[0].tool == 'spotbugs'
     assert issues[0].issue_type == 'MS_MUTABLE_COLLECTION_PKGPROTECT'
-    assert issues[0].severity == 1
+    assert issues[0].severity == "1"
     assert issues[0].message == "Test.h is a mutable collection which should be package protected"
+
+
+def test_spotbugs_tool_plugin_scan_no_plugin_context():
+    """Test that issues are None when no plugin context is provided."""
+    sbtp = setup_spotbugs_tool_plugin(False)
+    # Sanity check - make sure mvn exists
+    if not sbtp.command_exists('mvn'):
+        pytest.skip("Couldn't find 'mvn' command, can't run Spotbugs tests")
+
+    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
+                                                    'valid_package'))
+    # Have to compile the package first
+    try:
+        subprocess.check_output(["mvn", "clean", "compile"],
+                                universal_newlines=True,
+                                cwd=package.path)
+    except subprocess.CalledProcessError as ex:
+        print("Problem running Maven! Returncode = {}".
+              format(str(ex.returncode)))
+        print("{}".format(ex.output))
+        pytest.fail("Failed running Maven")
+
+    package['top_poms'] = [os.path.join(package.path, 'pom.xml')]
+    package['all_poms'] = [os.path.join(package.path, 'pom.xml')]
+    issues = sbtp.scan(package, 'level')
+    assert issues is None
 
 
 def test_spotbugs_tool_plugin_parse_valid():
@@ -94,7 +121,7 @@ def test_spotbugs_tool_plugin_parse_valid():
     assert issues[0].line_number == '4'
     assert issues[0].tool == 'spotbugs'
     assert issues[0].issue_type == 'MS_MUTABLE_COLLECTION_PKGPROTECT'
-    assert issues[0].severity == 1
+    assert issues[0].severity == '1'
     assert issues[0].message == "Test.h is a mutable collection which should be package protected"
 
 

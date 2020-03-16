@@ -2,10 +2,16 @@
 
 from __future__ import print_function
 
+import argparse
 import os
 import shlex
+from typing import Any, Dict, List, Optional, Union
 
 from yapsy.IPlugin import IPlugin
+
+from statick_tool.issue import Issue
+from statick_tool.package import Package
+from statick_tool.plugin_context import PluginContext
 
 
 class ToolPlugin(IPlugin):
@@ -13,34 +19,36 @@ class ToolPlugin(IPlugin):
 
     plugin_context = None
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         pass  # pylint: disable=unnecessary-pass
 
     @classmethod
-    def get_tool_dependencies(cls):
+    def get_tool_dependencies(cls) -> List[str]:
         """Get a list of tools that must run before this one."""
         return []
 
-    def gather_args(self, args):
+    def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
 
-    def scan(self, package, level):
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
 
-    def set_plugin_context(self, plugin_context):
+    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
         self.plugin_context = plugin_context
 
-    def load_mapping(self):
+    def load_mapping(self) -> Dict[str, str]:
         """Load a mapping between warnings and identifiers."""
-        file_name = "plugin_mapping/{}.txt".format(self.get_name())
-        full_path = self.plugin_context.resources.get_file(file_name)
+        file_name: str = "plugin_mapping/{}.txt".format(self.get_name())
+        assert self.plugin_context is not None
+        full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(file_name)
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the file
-            suffixed_file_name = "plugin_mapping/{}-{}.txt". \
+            suffixed_file_name: str = "plugin_mapping/{}-{}.txt". \
                     format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
-            suffixed_full_path = self.plugin_context.resources.get_file(suffixed_file_name)
+            suffixed_full_path: Union[Any, str, None] = \
+                self.plugin_context.resources.get_file(suffixed_file_name)
             if suffixed_full_path is not None:
                 # If there actually is a file with that suffix, use it.
                 # Else use the un-suffixed version.
@@ -48,7 +56,7 @@ class ToolPlugin(IPlugin):
 
         if full_path is None:
             return {}
-        warning_mapping = {}
+        warning_mapping: Dict[str, str] = {}
         with open(full_path, 'r') as mapping_file:
             for line in mapping_file.readlines():
                 split_line = line.strip().split(':')
@@ -59,21 +67,24 @@ class ToolPlugin(IPlugin):
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping
 
-    def get_user_flags(self, level, name=None):
+    def get_user_flags(self, level: str, name: str = None) -> List[str]:
         """Get the user-defined extra flags for a specific tool/level combination."""
         if name is None:
             name = self.get_name()  # pylint: disable=assignment-from-no-return
+        assert self.plugin_context is not None
         user_flags = self.plugin_context.config.get_tool_config(name, level,
                                                                 "flags")
-        flags = []
+        flags: List[str] = []
         if user_flags:
-            lex = shlex.shlex(user_flags, posix=True)
+            # See https://github.com/python/typeshed/issues/1476 for
+            # justification to ignore.
+            lex = shlex.shlex(user_flags, posix=True)  # type: ignore
             lex.whitespace_split = True
             flags = list(lex)
         return flags
 
     @staticmethod
-    def is_valid_executable(path):
+    def is_valid_executable(path: str) -> bool:
         """
         Return whether a provided command exists and is executable.
 
@@ -98,7 +109,7 @@ class ToolPlugin(IPlugin):
         return False
 
     @staticmethod
-    def command_exists(command):
+    def command_exists(command: str) -> bool:
         """Return whether a particular command is available on $PATH."""
         fpath, _ = os.path.split(command)
 
