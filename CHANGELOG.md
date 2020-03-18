@@ -12,6 +12,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.3.5 - 2020-03-18
+
+### Added
+
+- Using type hints as introduced in Python 3.5 and improved in Python 3.6.
+  Type hints are described in [PEP 438](https://www.python.org/dev/peps/pep-0483/)
+  and [PEP 484](https://www.python.org/dev/peps/pep-0484/).
+  They provide static typing for methods and variables.
+  The use of mypy is encouraged to look for errors in expected types.
+- Using [statick-md](https://github.com/sscpac/statick-md) plugin to check Markdown files.
+
+### Fixed
+
+### Removed
+
+- No longer supporting pypy3 due to issues with type hints and mypy.
+
 ## v0.3.4 - 2020-02-26
 
 ### Added
