@@ -6,28 +6,30 @@ import fnmatch
 import os
 import subprocess
 from collections import OrderedDict
+from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 
 
 class TexDiscoveryPlugin(DiscoveryPlugin):
     """Discover TeX files to analyze."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of discovery type."""
         return "tex"
 
-    def scan(self, package, level, exceptions=None):  # pylint: disable=too-many-locals
+    def scan(self, package: Package, level: str, exceptions: Exceptions = None):  # pylint: disable=too-many-locals
         """Scan package looking for TeX files."""
-        tex_files = []
-        globs = ["*.tex", "*.bib"]
+        tex_files: List[str] = []
+        globs: List[str] = ["*.tex", "*.bib"]
 
-        file_cmd_exists = True
+        file_cmd_exists: bool = True
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
 
-        root = ''
-        files = []
+        root: str = ''
         for root, _, files in os.walk(package.path):
             for glob in globs:
                 for f in fnmatch.filter(files, glob):
@@ -53,7 +55,7 @@ class TexDiscoveryPlugin(DiscoveryPlugin):
 
         print("  {} TeX files found.".format(len(tex_files)))
         if exceptions:
-            original_file_count = len(tex_files)
+            original_file_count: int = len(tex_files)
             tex_files = exceptions.filter_file_exceptions_early(package,
                                                                 tex_files)
             if original_file_count > len(tex_files):
