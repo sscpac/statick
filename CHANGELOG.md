@@ -12,6 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.3.6 - 2020-03-18
+
+### Fixed
+
+- A bug in how type hints were applied caused issues with Python 3.5, which is the
+  default on Ubuntu 16.04-based operating systems.
+  Switching to comment-style type hints for variables made Statick work with Python 3.5 again.
+  Thanks to @kogut for discovering the issue.
+
 ## v0.3.5 - 2020-03-18
 
 ### Added
