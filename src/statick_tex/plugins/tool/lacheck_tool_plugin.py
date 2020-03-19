@@ -20,15 +20,15 @@ class LacheckToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags: List[str] = []
-        user_flags: List[str] = self.get_user_flags(level)
+        flags = []  # type: List[str]
+        user_flags = self.get_user_flags(level)  # type: List[str]
         flags += user_flags
-        total_output: List[str] = []
+        total_output = []  # type: List[str]
 
-        tool_bin: str = "lacheck"
+        tool_bin = "lacheck"  # type: str
         for src in package["tex"]:
             try:
-                subproc_args: List[str] = [tool_bin, src] + flags
+                subproc_args = [tool_bin, src] + flags  # type: List[str]
                 output = subprocess.check_output(subproc_args,
                                                  stderr=subprocess.STDOUT,
                                                  universal_newlines=True)
@@ -54,22 +54,22 @@ class LacheckToolPlugin(ToolPlugin):
             for output in total_output:
                 fname.write(output)
 
-        issues: List[Issue] = self.parse_output(total_output)
+        issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        tool_re: str = r"(.+)\s(.+)\s(\d+):\s(.+)"
-        parse: Pattern[str] = re.compile(tool_re)
-        issues: List[Issue] = []
-        filename: str = ''
-        line_number: str = "0"
-        issue_type: str = ''
-        message: str = ''
+        tool_re = r"(.+)\s(.+)\s(\d+):\s(.+)"  # type: str
+        parse = re.compile(tool_re)  # type: Pattern[str]
+        issues = []  # type: List[Issue]
+        filename = ''  # type: str
+        line_number = "0"  # type: str
+        issue_type = ''  # type: str
+        message = ''  # type: str
 
         for output in total_output:
             for line in output.splitlines():
-                match: Optional[Match[str]] = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     filename = match.group(1)[1:-2]
                     issue_type = "lacheck"

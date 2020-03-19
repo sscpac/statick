@@ -22,14 +22,14 @@ class TexDiscoveryPlugin(DiscoveryPlugin):
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None):  # pylint: disable=too-many-locals
         """Scan package looking for TeX files."""
-        tex_files: List[str] = []
-        globs: List[str] = ["*.tex", "*.bib"]
+        tex_files = []  # type: List[str]
+        globs = ["*.tex", "*.bib"]  # type: List[str]
 
-        file_cmd_exists: bool = True
+        file_cmd_exists = True  # type: bool
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
 
-        root: str = ''
+        root = ''  # type: str
         for root, _, files in os.walk(package.path):
             for glob in globs:
                 for f in fnmatch.filter(files, glob):
@@ -55,7 +55,7 @@ class TexDiscoveryPlugin(DiscoveryPlugin):
 
         print("  {} TeX files found.".format(len(tex_files)))
         if exceptions:
-            original_file_count: int = len(tex_files)
+            original_file_count = len(tex_files)  # type: int
             tex_files = exceptions.filter_file_exceptions_early(package,
                                                                 tex_files)
             if original_file_count > len(tex_files):
