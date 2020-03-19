@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip3 install -r requirements.txt
-        pip3 install mypy tox tox-gh-actions wheel
+        pip3 install mypy tox tox-gh-actions
 
     - name: Test with tox
       run: |
