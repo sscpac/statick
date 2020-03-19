@@ -37,11 +37,10 @@ class PerlCriticToolPlugin(ToolPlugin):
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
+        files = []  # type: List[str]
         if "perl_src" in package:
             files += package["perl_src"]
 
-        output: str
         try:
             output = subprocess.check_output([perlcritic_bin] + flags + files,
                                              stderr=subprocess.STDOUT,

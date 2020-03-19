@@ -32,18 +32,18 @@ class Exceptions():
         """Initialize exceptions interface."""
         if filename is not None:
             with open(filename) as fname:
-                self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
+                self.exceptions = yaml.safe_load(fname)  # type: Dict[Any, Any]
 
     def get_ignore_packages(self) -> List[str]:
         """Get list of packages to skip when scanning a workspace."""
-        ignore: List[str] = []
+        ignore = []  # type: List[str]
         if "ignore_packages" in self.exceptions and self.exceptions["ignore_packages"] is not None:
             ignore = self.exceptions["ignore_packages"]
         return ignore
 
     def get_exceptions(self, package: Package) -> Dict:
         """Get specific exceptions for given package."""
-        exceptions: Dict = {"file": [], "message_regex": []}
+        exceptions = {"file": [], "message_regex": []}  # type: Dict
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
             global_exceptions = self.exceptions["global"]["exceptions"]
@@ -75,7 +75,7 @@ class Exceptions():
         discovery plugins have been run (so that Statick doesn't run the tool
         plugins against files which will be ignored anyway).
         """
-        exceptions: Dict = self.get_exceptions(package)
+        exceptions = self.get_exceptions(package)  # type: Dict
         to_remove = []
         for filename in file_list:
             removed = False
@@ -102,20 +102,20 @@ class Exceptions():
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in list(issues.items()):  # pylint: disable=too-many-nested-blocks
             warning_printed = False
-            to_remove: List[Issue] = []
+            to_remove = []  # type: List[Issue]
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:
                         self.print_exception_warning(tool)
                         warning_printed = True
                     continue
-                rel_path: str = os.path.relpath(issue.filename, package.path)
+                rel_path = os.path.relpath(issue.filename, package.path)  # type: str
                 for exception in exceptions:
                     if exception["tools"] == 'all' or tool in exception["tools"]:
                         for pattern in exception["globs"]:
                             # Hack to avoid exceptions for everything on Travis CI.
-                            fname: str = issue.filename
-                            prefix: str = '/home/travis/build/'
+                            fname = issue.filename  # type: str
+                            prefix = '/home/travis/build/'  # type: str
                             if pattern == '*/build/*' and fname.startswith(prefix):
                                 fname = fname[len(prefix):]
                             if fnmatch.fnmatch(fname, pattern) or \
@@ -132,12 +132,12 @@ class Exceptions():
         for exception in exceptions:
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
-            compiled_re: Pattern = re.compile(exception_re)
+            compiled_re = re.compile(exception_re)  # type: Pattern
             for tool, tool_issues in list(issues.items()):
                 to_remove = []
                 if exception_tools == "all" or tool in exception_tools:
                     for issue in tool_issues:
-                        match: Optional[Match] = compiled_re.match(issue.message)
+                        match = compiled_re.match(issue.message)  # type: Optional[Match]
                         if match:
                             to_remove.append(issue)
                 issues[tool] = [issue for issue in tool_issues if issue not in
@@ -152,8 +152,8 @@ class Exceptions():
         there is a complex macro or something.
         """
         for tool, tool_issues in list(issues.items()):
-            warning_printed: bool = False
-            to_remove: List[Issue] = []
+            warning_printed = False  # type: bool
+            to_remove = []  # type: List[Issue]
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:

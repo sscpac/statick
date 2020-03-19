@@ -23,7 +23,7 @@ class YamllintToolPlugin(ToolPlugin):
         flags = ["-f", "parsable"]
         flags += self.get_user_flags(level)
 
-        total_output: List[str] = []
+        total_output = []  # type: List[str]
 
         for yaml_file in package["yaml"]:
             try:
@@ -60,12 +60,12 @@ class YamllintToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         yamllint_re = r"(.+):(\d+):(\d+):\s\[(.+)\]\s(.+)\s\((.+)\)"
-        parse: Pattern[str] = re.compile(yamllint_re)
+        parse = re.compile(yamllint_re)  # type: Pattern[str]
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
-                match: Optional[Match[str]] = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     issue_type = match.group(4)
                     if issue_type == "error":

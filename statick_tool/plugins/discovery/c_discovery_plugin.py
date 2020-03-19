@@ -5,7 +5,7 @@ from __future__ import print_function
 import os
 import subprocess
 from collections import OrderedDict
-from typing import List, Tuple
+from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -21,10 +21,10 @@ class CDiscoveryPlugin(DiscoveryPlugin):
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for C files."""
-        c_files: List[str] = []
-        c_extensions: Tuple[str, str, str, str, str, str, str] = \
+        c_files = []  # type: List[str]
+        c_extensions = \
             ('.c', '.cc', '.cpp', '.cxx', '.h', '.hxx', '.hpp')
-        file_cmd_exists: bool = True
+        file_cmd_exists = True  # type: bool
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
 
@@ -35,8 +35,8 @@ class CDiscoveryPlugin(DiscoveryPlugin):
                     c_files.append(os.path.abspath(full_path))
                 elif file_cmd_exists:
                     full_path = os.path.join(root, f)
-                    output: str = subprocess.check_output(["file", full_path],
-                                                          universal_newlines=True)
+                    output = subprocess.check_output(["file", full_path],
+                                                     universal_newlines=True)  # type: str
                     if ("c source" in output.lower() or
                             "c++ source" in output.lower()) and not \
                             f.endswith(".cfg"):

@@ -50,7 +50,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             flags += ["-Dspotbugs.excludeFilterFile={}".format(self.plugin_context
                                                                .resources.get_file(exclude_file))]
 
-        issues: List[Issue] = []
+        issues = []  # type: List[Issue]
         total_output = ""
         for pom in package['top_poms']:
             try:
@@ -91,7 +91,7 @@ class SpotbugsToolPlugin(ToolPlugin):
 
     def parse_output(self, output: str) -> Optional[List[Issue]]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues = []  # type: List[Issue]
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         try:
@@ -103,11 +103,11 @@ class SpotbugsToolPlugin(ToolPlugin):
         for file_entry in output_xml.findall("file"):
             # Generate the filename
             java_path_string = "{}.java".format(file_entry.attrib["classname"].replace('.', os.sep))
-            file_path = ""
+            file_path = ""  # type: Optional[str]
             for source_dir in output_xml.findall("Project/SrcDir"):
                 joined_path = os.path.join(os.path.normpath(source_dir.text),  # type: ignore
                                            java_path_string)
-                if os.path.exists(joined_path):
+                if os.path.exists(joined_path):  # type: ignore
                     file_path = joined_path
                     break
             if not file_path:

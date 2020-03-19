@@ -40,14 +40,14 @@ class ToolPlugin(IPlugin):
 
     def load_mapping(self) -> Dict[str, str]:
         """Load a mapping between warnings and identifiers."""
-        file_name: str = "plugin_mapping/{}.txt".format(self.get_name())
+        file_name = "plugin_mapping/{}.txt".format(self.get_name())  # type: str
         assert self.plugin_context is not None
-        full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(file_name)
+        full_path = self.plugin_context.resources.get_file(file_name)  # type: Union[Any, str, None]
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the file
-            suffixed_file_name: str = "plugin_mapping/{}-{}.txt". \
+            suffixed_file_name = "plugin_mapping/{}-{}.txt". \
                     format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
-            suffixed_full_path: Union[Any, str, None] = \
+            suffixed_full_path = \
                 self.plugin_context.resources.get_file(suffixed_file_name)
             if suffixed_full_path is not None:
                 # If there actually is a file with that suffix, use it.
@@ -56,7 +56,7 @@ class ToolPlugin(IPlugin):
 
         if full_path is None:
             return {}
-        warning_mapping: Dict[str, str] = {}
+        warning_mapping = {}  # type: Dict[str, str]
         with open(full_path, 'r') as mapping_file:
             for line in mapping_file.readlines():
                 split_line = line.strip().split(':')
@@ -74,7 +74,7 @@ class ToolPlugin(IPlugin):
         assert self.plugin_context is not None
         user_flags = self.plugin_context.config.get_tool_config(name, level,
                                                                 "flags")
-        flags: List[str] = []
+        flags = []  # type: List[str]
         if user_flags:
             # See https://github.com/python/typeshed/issues/1476 for
             # justification to ignore.

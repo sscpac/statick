@@ -23,7 +23,7 @@ class Config():
     def __init__(self, filename: Optional[str]) -> None:
         """Initialize configuration."""
         if filename is None or not os.path.exists(filename):
-            self.config: Any = []
+            self.config = []  # type: Any
             return
         with open(filename) as fname:
             self.config = yaml.safe_load(fname)
@@ -35,7 +35,7 @@ class Config():
     def get_enabled_plugins(self, level: str, plugin_type: str) -> List:
         """Get what plugins are enabled for a certain level."""
         level_config = self.config["levels"][level]
-        plugins: List = []
+        plugins = []  # type: List
         if plugin_type in level_config:
             plugins += list(level_config[plugin_type])
         if "inherits_from" in level_config:

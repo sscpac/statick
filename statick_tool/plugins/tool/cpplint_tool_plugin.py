@@ -33,11 +33,11 @@ class CpplintToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        flags: List[str] = []
+        flags = []  # type: List[str]
         flags += self.get_user_flags(level)
         cpplint = package["cpplint"]
 
-        files: List[str] = []
+        files = []  # type: List[str]
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -90,10 +90,10 @@ class CpplintToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
-        parse: Pattern[str] = re.compile(lint_re)
+        parse = re.compile(lint_re)  # type: Pattern[str]
         issues = []
         for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
+            match = parse.match(line)  # type: Optional[Match[str]]
             if match and not self.check_for_exceptions(match):
                 norm_path = os.path.normpath(match.group(1))
                 issues.append(Issue(norm_path, match.group(2), self.get_name(),

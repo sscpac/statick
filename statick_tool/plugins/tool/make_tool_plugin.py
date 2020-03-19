@@ -79,23 +79,23 @@ class MakeToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
-        parse: Pattern[str] = re.compile(make_re)
-        warning_parse: Pattern[str] = re.compile(make_warning_re)
-        matches: List = []
+        parse = re.compile(make_re)  # type: Pattern[str]
+        warning_parse = re.compile(make_warning_re)  # type: Pattern[str]
+        matches = []  # type: List
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
+            match = parse.match(line)  # type: Optional[Match[str]]
             if match and not self.check_for_exceptions(match):
                 matches.append(match.groups())
 
         filtered_matches = self.filter_matches(matches, package)
-        issues: List[Issue] = []
+        issues = []  # type: List[Issue]
         for item in filtered_matches:
             cert_reference = None
-            warning_list: Match = warning_parse.match(item[4])  # type: ignore
-            if warning_list is not None and warning_list.groups(1)[0] in warnings_mapping:
-                cert_reference = warnings_mapping[warning_list.groups(1)[0]]
+            warning_list = warning_parse.match(item[4])  # type: ignore
+            if warning_list is not None and warning_list.groups("1")[0] in warnings_mapping:
+                cert_reference = warnings_mapping[warning_list.groups("1")[0]]
 
             if warning_list is None:
                 # Something's gone wrong if we don't match the [warning] format
@@ -105,7 +105,7 @@ class MakeToolPlugin(ToolPlugin):
                 else:
                     category = "unknown-error"
             else:
-                category = warning_list.groups(1)[0]
+                category = warning_list.groups("1")[0]
 
             if item[3].lower() == "warning":
                 warning_level = "3"

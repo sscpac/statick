@@ -63,12 +63,12 @@ class PycodestyleToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse: Pattern[str] = re.compile(tool_re)
+        parse = re.compile(tool_re)  # type: Pattern[str]
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
-                match: Optional[Match[str]] = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     if "," in match.group(3):
                         parts = match.group(3).split(",")

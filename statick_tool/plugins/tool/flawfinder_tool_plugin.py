@@ -58,14 +58,14 @@ class FlawfinderToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s*(.+)"
-        parse: Pattern[str] = re.compile(flawfinder_re)
+        parse = re.compile(flawfinder_re)  # type: Pattern[str]
         issues = []
 
         warnings_mapping = self.load_mapping()
 
         for output in total_output:
             for line in output.splitlines():
-                match: Optional[Match[str]] = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     cert_reference = None
                     if match.group(4) in warnings_mapping:

@@ -31,14 +31,14 @@ class BanditToolPlugin(ToolPlugin):
         if not package["python_src"]:
             return []
 
-        bandit_bin: str = "bandit"
+        bandit_bin = "bandit"  # type: str
         if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
             bandit_bin = self.plugin_context.args.bandit_bin
 
-        flags: List[str] = ["--format=csv"]
+        flags = ["--format=csv"]  # type: List[str]
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
+        files = []  # type: List[str]
         if "python_src" in package:
             files += package["python_src"]
 
@@ -88,7 +88,7 @@ class BanditToolPlugin(ToolPlugin):
 
         csvreader = csv.DictReader(output_minus_log)
         for csv_line in csvreader:
-            cert_reference: Optional[str] = None
+            cert_reference = None  # type: Optional[str]
             if csv_line['test_id'] in warnings_mapping:
                 cert_reference = warnings_mapping[csv_line['test_id']]
             severity = '1'

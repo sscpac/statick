@@ -21,8 +21,8 @@ class MavenDiscoveryPlugin(DiscoveryPlugin):
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for maven files."""
-        top_poms: List[str] = []
-        all_poms: List[str] = []
+        top_poms = []  # type: List[str]
+        all_poms = []  # type: List[str]
         deepest_pom_level = 999999
 
         for root, _, files in os.walk(package.path):

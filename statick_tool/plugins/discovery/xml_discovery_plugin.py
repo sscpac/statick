@@ -21,8 +21,8 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for XML files."""
-        xml_files: List[str] = []
-        globs: List[str] = ["*.xml", "*.launch"]
+        xml_files = []  # type: List[str]
+        globs = ["*.xml", "*.launch"]  # type: List[str]
 
         root = ''
         for root, _, files in os.walk(package.path):

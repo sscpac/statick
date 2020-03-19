@@ -37,8 +37,6 @@ class CCCCToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        log_output: bytes
-
         if "c_src" not in package.keys():
             return []
 
@@ -57,9 +55,9 @@ class CCCCToolPlugin(ToolPlugin):
 
         for src in package["c_src"]:
             try:
-                subproc_args: List[str] = [cccc_bin] + [opts] + [src]
+                subproc_args = [cccc_bin] + [opts] + [src]  # type: List[str]
                 log_output = subprocess.check_output(subproc_args,
-                                                     stderr=subprocess.STDOUT)
+                                                     stderr=subprocess.STDOUT)  # type: bytes
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:
                     log_output = ex.output
@@ -92,7 +90,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         config = self.parse_config(config_file)
 
-        results: Dict = {}
+        results = {}  # type: Dict
         for module in output['CCCC_Project']['structural_summary']['module']:
             if 'name' not in module or isinstance(module, str):
                 break
@@ -136,7 +134,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         `cccc --opt_outfile=cccc.opt`
         """
-        config: Dict = {}
+        config = {}  # type: Dict
 
         if config_file is None:
             return config

@@ -22,9 +22,9 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for Perl files."""
-        perl_files: List[str] = []
+        perl_files = []  # type: List[str]
 
-        file_cmd_exists: bool = True
+        file_cmd_exists = True  # type: bool
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
 
@@ -36,8 +36,8 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
             if file_cmd_exists:
                 for f in files:
                     full_path = os.path.join(root, f)
-                    output: str = subprocess.check_output(["file", full_path],
-                                                          universal_newlines=True)
+                    output = subprocess.check_output(["file", full_path],
+                                                     universal_newlines=True)  # type: str
                     if "perl script" in output.lower():
                         perl_files.append(os.path.abspath(full_path))
 

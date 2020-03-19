@@ -41,23 +41,23 @@ class Statick():
         })
         self.manager.collectPlugins()
 
-        self.discovery_plugins: Dict = {}
+        self.discovery_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
             self.discovery_plugins[plugin_info.plugin_object.get_name()] = \
                 plugin_info.plugin_object
 
-        self.tool_plugins: Dict = {}
+        self.tool_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
             self.tool_plugins[plugin_info.plugin_object.get_name()] = \
                 plugin_info.plugin_object
 
-        self.reporting_plugins: Dict = {}
+        self.reporting_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
                     plugin_info.plugin_object
 
-        self.config: Optional[Config] = None
-        self.exceptions: Optional[Exceptions] = None
+        self.config = None  # type: Optional[Config]
+        self.exceptions = None  # type: Optional[Exceptions]
 
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
@@ -121,7 +121,7 @@ class Statick():
             profile = Profile(profile_resource)
         except OSError as ex:
             # This isn't quite redundant with the profile_resource check: it's possible
-            # that something else triggers an OSError, like permissions
+            # that something else triggers an OSError, like permissions.
             print("Failed to access profile file {}: {}".format(profile_filename, ex))
             return None
         except ValueError as ex:
@@ -143,7 +143,7 @@ class Statick():
             return None, False
 
         package = Package(os.path.basename(path), path)
-        level: Optional[str] = self.get_level(path, args)
+        level = self.get_level(path, args)  # type: Optional[str]
 
         assert level
         if not self.config or not self.config.has_level(level):
@@ -175,7 +175,7 @@ class Statick():
                                                             package.path,
                                                             level))
 
-        issues: Dict[str, List[Issue]] = {}
+        issues = {}  # type: Dict[str, List[Issue]]
 
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
@@ -206,8 +206,8 @@ class Statick():
         print("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
         plugins_to_run = copy.copy(enabled_plugins)
-        plugins_ran: List[Any] = []
-        plugin_dependencies: List[str] = []
+        plugins_ran = []  # type: List[Any]
+        plugin_dependencies = []  # type: List[str]
         while plugins_to_run:
             plugin_name = plugins_to_run[0]
 
