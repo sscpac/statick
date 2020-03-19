@@ -61,8 +61,8 @@ class CppcheckToolPlugin(ToolPlugin):
                                              stderr=subprocess.STDOUT,
                                              universal_newlines=True)
             ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
-            parse: Pattern[str] = re.compile(ver_re)
-            match: Optional[Match[str]] = parse.match(output)
+            parse = re.compile(ver_re)  # type: Pattern[str]
+            match = parse.match(output)  # type: Optional[Match[str]]
             if match:
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
@@ -75,8 +75,8 @@ class CppcheckToolPlugin(ToolPlugin):
             print("Cppcheck not found! ({})".format(ex))
             return None
 
-        files: List[str] = []
-        include_dirs: List[str] = []
+        files = []  # type: List[str]
+        include_dirs = []  # type: List[str]
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -129,11 +129,11 @@ class CppcheckToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
-        parse: Pattern[str] = re.compile(cppcheck_re)
+        parse = re.compile(cppcheck_re)  # type: Pattern[str]
         issues = []
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
+            match = parse.match(line)  # type: Optional[Match[str]]
             if match and line[1] != '*' and match.group(3) != \
                     "information" and not self.check_for_exceptions(match):
                 dummy, extension = os.path.splitext(match.group(1))

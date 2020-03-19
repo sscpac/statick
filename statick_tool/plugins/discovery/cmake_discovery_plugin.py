@@ -38,27 +38,27 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 
         print("  Found cmake package {}".format(cmake_file))
 
-        cmake_template: Optional[str] = self.plugin_context.resources.get_file("CMakeLists.txt.in")
+        cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
 
-        extra_gcc_flags: str = self.plugin_context.config.get_tool_config("make",
-                                                                          level,
-                                                                          "flags",
-                                                                          "")
+        extra_gcc_flags = self.plugin_context.config.get_tool_config("make",
+                                                                     level,
+                                                                     "flags",
+                                                                     "")  # type: str
 
-        subproc_args: List[str] = ["cmake", ".",
-                                   "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-                                   "-DBUILD_GTEST=OFF",
-                                   "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-                                   "-DCATKIN_ENABLE_TESTING=OFF",
-                                   "-DCATKIN_SKIP_TESTING=ON",
-                                   "-DINPUT_DIR=" + package.path,
-                                   "-DSTATICK_EXTRA_GCC_FLAGS=" + extra_gcc_flags]
+        subproc_args = ["cmake", ".",
+                        "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                        "-DBUILD_GTEST=OFF",
+                        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+                        "-DCATKIN_ENABLE_TESTING=OFF",
+                        "-DCATKIN_SKIP_TESTING=ON",
+                        "-DINPUT_DIR=" + package.path,
+                        "-DSTATICK_EXTRA_GCC_FLAGS=" + extra_gcc_flags]  # type: List[str]
 
         try:
-            output: str = subprocess.check_output(subproc_args,
-                                                  stderr=subprocess.STDOUT,
-                                                  universal_newlines=True)
+            output = subprocess.check_output(subproc_args,
+                                             stderr=subprocess.STDOUT,
+                                             universal_newlines=True)  # type: str
             if self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
         except subprocess.CalledProcessError as ex:
@@ -84,20 +84,20 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Parse the tool output."""
         # pylint: disable=anomalous-backslash-in-string
         cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
-        target_p: Pattern[str] = re.compile(cmake_target_re)
+        target_p = re.compile(cmake_target_re)  # type: Pattern[str]
         cmake_headers_re = r"-- HEADERS: (.+)"
-        headers_p: Pattern[str] = re.compile(cmake_headers_re)
+        headers_p = re.compile(cmake_headers_re)  # type: Pattern[str]
         cmake_roslint_re = r"-- ROSLINT: (.+)"
-        roslint_p: Pattern[str] = re.compile(cmake_roslint_re)
+        roslint_p = re.compile(cmake_roslint_re)  # type: Pattern[str]
         cmake_project_re = r"-- PROJECT: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[BIN_DIR:(.+)\]"  # NOQA: W605 # NOLINT
-        project_p: Pattern[str] = re.compile(cmake_project_re)
+        project_p = re.compile(cmake_project_re)  # type: Pattern[str]
         # pylint: enable=anomalous-backslash-in-string
 
         qt_re = r".*build/.*(ui_|moc_|).*\.(h|cxx)"
-        qt_p: Pattern[str] = re.compile(qt_re)
+        qt_p = re.compile(qt_re)  # type: Pattern[str]
 
         for line in output.splitlines():
-            match_target: Optional[Match[str]] = target_p.match(line)
+            match_target = target_p.match(line)  # type: Optional[Match[str]]
             if match_target:
                 name = match_target.group(1)
                 src_dir = match_target.group(2)
@@ -111,14 +111,14 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                           "include_dirs": include_dirs, "src": src}
                 package["make_targets"].append(target)
 
-            match_headers: Optional[Match[str]] = headers_p.match(line)
+            match_headers = headers_p.match(line)  # type: Optional[Match[str]]
             if match_headers:
                 headers = match_headers.group(1).split(";")
                 headers = [header for header in headers
                            if not qt_p.match(header)]
                 package["headers"] += headers
 
-            match_lint: Optional[Match[str]] = roslint_p.match(line)
+            match_lint = roslint_p.match(line)  # type: Optional[Match[str]]
             if match_lint:
                 roslint = os.path.normpath(match_lint.group(1))
                 cpplint = os.path.join(roslint, "cpplint")
@@ -127,7 +127,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                           format(cpplint))
                     package["cpplint"] = cpplint
 
-            match_project: Optional[Match[str]] = project_p.match(line)
+            match_project = project_p.match(line)  # type: Optional[Match[str]]
             if match_project:
                 package["src_dir"] = match_project.group(2)
                 package["bin_dir"] = match_project.group(3)

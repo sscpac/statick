@@ -21,8 +21,8 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for YAML files."""
-        yaml_files: List[str] = []
-        globs: List[str] = ["*.yaml"]
+        yaml_files = []  # type: List[str]
+        globs = ["*.yaml"]  # type: List[str]
 
         root = ''
         for root, _, files in os.walk(package.path):

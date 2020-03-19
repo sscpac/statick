@@ -1,13 +1,11 @@
 """Run grep."""
 
-from __future__ import print_function
-
 import re
 import shlex
 import subprocess
 
 from statick_tool.issue import Issue  # pylint: disable=import-error
-from statick_tool.tool_plugin import ToolPlugin  # pylint: disable=import-error
+from statick_tool.tool_plugin import ToolPlugin  # pylint: disable=import-error,no-name-in-module,syntax-error
 
 
 class MyCustomToolPlugin(ToolPlugin):

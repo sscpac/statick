@@ -20,7 +20,7 @@ class PydocstyleToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags: List[str] = []
+        flags = []  # type: List[str]
         user_flags = self.get_user_flags(level)
         flags += user_flags
         total_output = []
@@ -62,9 +62,9 @@ class PydocstyleToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str]) -> List[Issue]:  # pylint: disable=too-many-locals
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+)"
-        parse_first: Pattern[str] = re.compile(tool_re)
+        parse_first = re.compile(tool_re)  # type: Pattern[str]
         tool_re_second = r"\s(.+):\s(.+)"
-        parse_second: Pattern[str] = re.compile(tool_re_second)
+        parse_second = re.compile(tool_re_second)  # type: Pattern[str]
         issues = []
         filename = ''
         line_number = "0"
@@ -75,13 +75,13 @@ class PydocstyleToolPlugin(ToolPlugin):
             first_line = True
             for line in output.splitlines():
                 if first_line:
-                    match: Optional[Match[str]] = parse_first.match(line)
+                    match = parse_first.match(line)  # type: Optional[Match[str]]
                     first_line = False
                     if match:
                         filename = match.group(1)
                         line_number = match.group(2)
                 else:
-                    match_second: Optional[Match[str]] = parse_second.match(line)
+                    match_second = parse_second.match(line)  # type: Optional[Match[str]]
                     first_line = True
                     if match_second:
                         issue_type = match_second.group(1)

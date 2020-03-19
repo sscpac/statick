@@ -20,8 +20,6 @@ class LizardToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        output: str
-
         src_dir = '.'
         if "src_dir" in package:
             src_dir = package["src_dir"]
@@ -54,14 +52,14 @@ class LizardToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
-        parse: Pattern[str] = re.compile(lizard_re)
+        parse = re.compile(lizard_re)  # type: Pattern[str]
         matches = []
         for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
+            match = parse.match(line)  # type: Optional[Match[str]]
             if match:
                 matches.append(match.groups())
 
-        issues: List[Issue] = []
+        issues = []  # type: List[Issue]
         for item in matches:
             issue = Issue(item[0], item[1], self.get_name(), item[2], '5',
                           item[3], None)

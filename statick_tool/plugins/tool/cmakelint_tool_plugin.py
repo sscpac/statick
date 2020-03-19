@@ -25,7 +25,7 @@ class CMakelintToolPlugin(ToolPlugin):
             # Package is not cmake!
             return []
 
-        flags: List[str] = []
+        flags = []  # type: List[str]
         flags += self.get_user_flags(level)
 
         output = ""
@@ -61,11 +61,11 @@ class CMakelintToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         cmakelint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]"
-        parse: Pattern[str] = re.compile(cmakelint_re)
+        parse = re.compile(cmakelint_re)  # type: Pattern[str]
         issues = []
 
         for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
+            match = parse.match(line)  # type: Optional[Match[str]]
             if match:
                 issue_type = match.group(4)
                 if issue_type == "syntax":

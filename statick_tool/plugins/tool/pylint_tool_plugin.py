@@ -24,7 +24,7 @@ class PylintToolPlugin(ToolPlugin):
                  "{obj}] {msg}'", "--reports=no"]
         flags += self.get_user_flags(level)
 
-        total_output: List[str] = []
+        total_output = []  # type: List[str]
 
         for src in package["python_src"]:
             try:
@@ -61,12 +61,12 @@ class PylintToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         pylint_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse: Pattern[str] = re.compile(pylint_re)
+        parse = re.compile(pylint_re)  # type: Pattern[str]
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
-                match: Optional[Match[str]] = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     if "," in match.group(3):
                         parts = match.group(3).split(",")

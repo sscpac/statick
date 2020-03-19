@@ -56,20 +56,20 @@ class ClangFormatToolPlugin(ToolPlugin):
         if self.plugin_context and self.plugin_context.args.clang_format_bin is not None:
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        files: List[str] = []
+        files = []  # type: List[str]
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        check: Optional[bool] = self.check_configuration(clang_format_bin)
+        check = self.check_configuration(clang_format_bin)  # type: Optional[bool]
         if check is None:
             return None
         if not check:
             return []
 
-        total_output: List[str] = []
+        total_output = []  # type: List[str]
 
         try:
             for src in files:
@@ -105,7 +105,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 for output in total_output:
                     fname.write(output)
 
-        issues: List[Issue] = self.parse_output(total_output)
+        issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
 
     def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
@@ -152,7 +152,7 @@ class ClangFormatToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
-        parse: Pattern[str] = re.compile(clangformat_re)
+        parse = re.compile(clangformat_re)  # type: Pattern[str]
         issues = []
 
         for output in total_output:
@@ -160,7 +160,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             filename = lines[0]
             count = 0
             for line in lines:
-                match: Optional[Match[str]] = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     count += 1
             if count > 0:

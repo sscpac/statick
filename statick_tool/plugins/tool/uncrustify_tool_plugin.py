@@ -36,17 +36,17 @@ class UncrustifyToolPlugin(ToolPlugin):
         if self.plugin_context.args.uncrustify_bin is not None:
             uncrustify_bin = self.plugin_context.args.uncrustify_bin
 
-        flags: List[str] = []
+        flags = []  # type: List[str]
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
+        files = []  # type: List[str]
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        total_output: List[str] = []
+        total_output = []  # type: List[str]
 
         try:
             format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
