@@ -57,12 +57,7 @@ class Config:
         return self.get_enabled_plugins(level, "reporting")
 
     def get_plugin_config(  # pylint: disable=too-many-arguments
-        self,
-        plugin_type: str,
-        plugin: str,
-        level: str,
-        key: str,
-        default=None,
+        self, plugin_type: str, plugin: str, level: str, key: str, default=None,
     ) -> str:
         """Get flags to use for a plugin at a certain level."""
         if level not in self.config["levels"].keys():
