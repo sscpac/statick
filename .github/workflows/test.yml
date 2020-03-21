@@ -31,3 +31,8 @@ jobs:
     - name: Test with mypy
       run: |
         mypy --ignore-missing-imports statick statick_tool/
+
+    - name: Test with black
+      run: |
+        black --check statick statick_tool
+        black --check statick_ws statick_tool
