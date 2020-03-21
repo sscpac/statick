@@ -13,7 +13,7 @@ def test_profile_init():
 
     Expected result: profile is initialized
     """
-    profile = Profile(os.path.join(os.path.dirname(__file__), 'profile.yaml'))
+    profile = Profile(os.path.join(os.path.dirname(__file__), "profile.yaml"))
     assert profile.profile
 
 
@@ -24,7 +24,7 @@ def test_profile_nonexistent():
     Expected result: OSError is thrown
     """
     with pytest.raises(OSError):
-        Profile(os.path.join(os.path.dirname(__file__), 'nope.yaml'))
+        Profile(os.path.join(os.path.dirname(__file__), "nope.yaml"))
 
 
 def test_profile_file_empty_string():
@@ -44,7 +44,7 @@ def test_profile_empty():
     Expected result: ValueError is thrown
     """
     with pytest.raises(ValueError):
-        Profile(os.path.join(os.path.dirname(__file__), 'empty.yaml'))
+        Profile(os.path.join(os.path.dirname(__file__), "empty.yaml"))
 
 
 def test_profile_nodefault():
@@ -54,7 +54,7 @@ def test_profile_nodefault():
     Expected result: ValueError is thrown
     """
     with pytest.raises(ValueError):
-        Profile(os.path.join(os.path.dirname(__file__), 'nodefault.yaml'))
+        Profile(os.path.join(os.path.dirname(__file__), "nodefault.yaml"))
 
 
 def test_profile_bad_yaml():
@@ -64,7 +64,7 @@ def test_profile_bad_yaml():
     Expected result: ValueError is thrown
     """
     with pytest.raises(ValueError):
-        Profile(os.path.join(os.path.dirname(__file__), 'bad.yaml'))
+        Profile(os.path.join(os.path.dirname(__file__), "bad.yaml"))
 
 
 def test_profile_get_package_level_nopackage():
@@ -73,8 +73,8 @@ def test_profile_get_package_level_nopackage():
 
     Expected result: default is returned
     """
-    package = Package('test',  os.path.dirname(__file__))
-    profile = Profile(os.path.join(os.path.dirname(__file__), 'profile-nopackage.yaml'))
+    package = Package("test", os.path.dirname(__file__))
+    profile = Profile(os.path.join(os.path.dirname(__file__), "profile-nopackage.yaml"))
     assert profile.get_package_level(package) == "default_value"
 
 
@@ -84,8 +84,8 @@ def test_profile_get_package_level_invalidpackage():
 
     Expected result: default is returned
     """
-    package = Package('nopackage',  os.path.dirname(__file__))
-    profile = Profile(os.path.join(os.path.dirname(__file__), 'profile.yaml'))
+    package = Package("nopackage", os.path.dirname(__file__))
+    profile = Profile(os.path.join(os.path.dirname(__file__), "profile.yaml"))
     assert profile.get_package_level(package) == "default_value"
 
 
@@ -95,6 +95,6 @@ def test_profile_get_package_level_validpackage():
 
     Expected result: the package-specific value is returned
     """
-    package = Package('package',  os.path.dirname(__file__))
-    profile = Profile(os.path.join(os.path.dirname(__file__), 'profile.yaml'))
+    package = Package("package", os.path.dirname(__file__))
+    profile = Profile(os.path.join(os.path.dirname(__file__), "profile.yaml"))
     assert profile.get_package_level(package) == "package_specific"

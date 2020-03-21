@@ -26,13 +26,20 @@ class ClangTidyToolPlugin(ToolPlugin):
 
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
-        args.add_argument("--clang-tidy-bin", dest="clang_tidy_bin", type=str,
-                          help="clang-tidy binary path")
+        args.add_argument(
+            "--clang-tidy-bin",
+            dest="clang_tidy_bin",
+            type=str,
+            help="clang-tidy binary path",
+        )
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        if "make_targets" not in package or "src_dir" not in package or \
-           "bin_dir" not in package:
+        if (
+            "make_targets" not in package
+            or "src_dir" not in package
+            or "bin_dir" not in package
+        ):
             return []
 
         if self.plugin_context is None:
@@ -40,9 +47,9 @@ class ClangTidyToolPlugin(ToolPlugin):
 
         clang_tidy_bin = "clang-tidy"
 
-        user_version = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                  level,
-                                                                  "version")
+        user_version = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "version"
+        )
 
         if user_version is not None:
             clang_tidy_bin = "{}-{}".format(clang_tidy_bin, user_version)
@@ -51,10 +58,12 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
-        flags = ["-header-filter=" + package["src_dir"] + "/.*",
-                 "-p",
-                 package["bin_dir"] + "/compile_commands.json",
-                 "-extra-arg=-fopenmp=libomp"]  # type: List[str]
+        flags = [
+            "-header-filter=" + package["src_dir"] + "/.*",
+            "-p",
+            package["bin_dir"] + "/compile_commands.json",
+            "-extra-arg=-fopenmp=libomp",
+        ]  # type: List[str]
         flags += self.get_user_flags(level)
 
         files = []  # type: List[str]
@@ -63,18 +72,19 @@ class ClangTidyToolPlugin(ToolPlugin):
                 files += target["src"]
 
         try:
-            output = subprocess.check_output([clang_tidy_bin] + flags + files,
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
-            if "clang-diagnostic-error" in output:  # pylint: disable=unsupported-membership-test
-                raise subprocess.CalledProcessError(-1,
-                                                    clang_tidy_bin,
-                                                    output)
+            output = subprocess.check_output(
+                [clang_tidy_bin] + flags + files,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            )
+            if (
+                "clang-diagnostic-error" in output
+            ):  # pylint: disable=unsupported-membership-test
+                raise subprocess.CalledProcessError(-1, clang_tidy_bin, output)
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("clang-tidy failed! Returncode = {}".
-                      format(str(ex.returncode)))
+                print("clang-tidy failed! Returncode = {}".format(str(ex.returncode)))
                 print("{}".format(ex.output))
                 return None
 
@@ -96,9 +106,9 @@ class ClangTidyToolPlugin(ToolPlugin):
     def check_for_exceptions(cls, match: Match[str]) -> bool:
         """Manual exceptions."""
         # You are allowed to have 'using namespace' in source files
-        if (match.group(1).endswith(".cpp") or
-                match.group(1).endswith(".cc")) and \
-                match.group(6) == "google-build-using-namespace":
+        if (
+            match.group(1).endswith(".cpp") or match.group(1).endswith(".cc")
+        ) and match.group(6) == "google-build-using-namespace":
             return True
         return False
 
@@ -112,13 +122,23 @@ class ClangTidyToolPlugin(ToolPlugin):
         for line in output.splitlines():
             match = parse.match(line)  # type: Optional[Match[str]]
             if match and not self.check_for_exceptions(match):
-                if line[1] != '*' and match.group(3) != "information" \
-                        and match.group(4) != "note":
+                if (
+                    line[1] != "*"
+                    and match.group(3) != "information"
+                    and match.group(4) != "note"
+                ):
                     cert_reference = None
                     if match.group(6) in warnings_mapping:
                         cert_reference = warnings_mapping[match.group(6)]
-                    issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), match.group(4) +
-                                        "/" + match.group(6), "3",
-                                        match.group(5), cert_reference))
+                    issues.append(
+                        Issue(
+                            match.group(1),
+                            match.group(2),
+                            self.get_name(),
+                            match.group(4) + "/" + match.group(6),
+                            "3",
+                            match.group(5),
+                            cert_reference,
+                        )
+                    )
         return issues

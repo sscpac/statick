@@ -15,7 +15,9 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
         """Return the name of the plugin."""
         return "print_to_console"
 
-    def report(self, package: Package, issues: Dict, level: str) -> Tuple[Optional[None], bool]:
+    def report(
+        self, package: Package, issues: Dict, level: str
+    ) -> Tuple[Optional[None], bool]:
         """
         Go through the issues list and print them to the console.
 
@@ -32,20 +34,28 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
             print("Tool {}: {} unique issues".format(key, len(unique_issues)))
             for issue in unique_issues:
                 if issue.cert_reference:
-                    print("  {}:{}: {}:{}: {} ({}) [{}]".format(issue.filename,
-                                                                issue.line_number,
-                                                                issue.tool,
-                                                                issue.issue_type,
-                                                                issue.message,
-                                                                issue.cert_reference,
-                                                                issue.severity))
+                    print(
+                        "  {}:{}: {}:{}: {} ({}) [{}]".format(
+                            issue.filename,
+                            issue.line_number,
+                            issue.tool,
+                            issue.issue_type,
+                            issue.message,
+                            issue.cert_reference,
+                            issue.severity,
+                        )
+                    )
                 else:
-                    print("  {}:{}: {}:{}: {} [{}]".format(issue.filename,
-                                                           issue.line_number,
-                                                           issue.tool,
-                                                           issue.issue_type,
-                                                           issue.message,
-                                                           issue.severity))
+                    print(
+                        "  {}:{}: {}:{}: {} [{}]".format(
+                            issue.filename,
+                            issue.line_number,
+                            issue.tool,
+                            issue.issue_type,
+                            issue.message,
+                            issue.severity,
+                        )
+                    )
 
             total += len(unique_issues)
         print("{} total unique issues".format(total))

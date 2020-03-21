@@ -27,11 +27,10 @@ class MakeToolPlugin(ToolPlugin):
         make_args = ["make", "statick_cmake_target"]
 
         try:
-            output = subprocess.check_output(["make", "clean"],
-                                             universal_newlines=True)
-            output = subprocess.check_output(make_args,
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
+            output = subprocess.check_output(["make", "clean"], universal_newlines=True)
+            output = subprocess.check_output(
+                make_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
             if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
 
@@ -67,15 +66,24 @@ class MakeToolPlugin(ToolPlugin):
             if "overloaded-virtual" in cur_match[4] and i + 1 < len(matches):
                 next_match = matches[i + 1]
                 if next_match[0].startswith(package.path):
-                    result.append((next_match[0], next_match[1], next_match[2],
-                                   cur_match[3], cur_match[4] + next_match[4]))
+                    result.append(
+                        (
+                            next_match[0],
+                            next_match[1],
+                            next_match[2],
+                            cur_match[3],
+                            cur_match[4] + next_match[4],
+                        )
+                    )
                 i += 1  # Skip next match.
             else:
                 result.append(cur_match)
             i += 1
         return result
 
-    def parse_output(self, package: Package, output: str) -> List[Issue]:  # pylint: disable=too-many-locals, too-many-branches
+    def parse_output(  # pylint: disable=too-many-locals, too-many-branches
+        self, package: Package, output: str
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
@@ -94,7 +102,10 @@ class MakeToolPlugin(ToolPlugin):
         for item in filtered_matches:
             cert_reference = None
             warning_list = warning_parse.match(item[4])  # type: ignore
-            if warning_list is not None and warning_list.groups("1")[0] in warnings_mapping:
+            if (
+                warning_list is not None
+                and warning_list.groups("1")[0] in warnings_mapping
+            ):
                 cert_reference = warnings_mapping[warning_list.groups("1")[0]]
 
             if warning_list is None:
@@ -116,13 +127,29 @@ class MakeToolPlugin(ToolPlugin):
             else:
                 warning_level = "3"
 
-            issue = Issue(item[0], item[1], self.get_name(), category,
-                          warning_level, item[4], cert_reference)
+            issue = Issue(
+                item[0],
+                item[1],
+                self.get_name(),
+                category,
+                warning_level,
+                item[4],
+                cert_reference,
+            )
             if issue not in issues:
                 issues.append(issue)
 
         lines = output.splitlines()
         if "collect2: ld returned 1 exit status" in lines:
-            issues.append(Issue("Linker", "0", self.get_name(), "linker", "5",
-                                "Linking failed", None))
+            issues.append(
+                Issue(
+                    "Linker",
+                    "0",
+                    self.get_name(),
+                    "linker",
+                    "5",
+                    "Linking failed",
+                    None,
+                )
+            )
         return issues

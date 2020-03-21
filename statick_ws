@@ -16,10 +16,18 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     """Run statick_ws."""
     args = Args("Statick workspace tool")
     args.parser.add_argument("path", help="Path of workspace to scan")
-    args.parser.add_argument("--packages-file", dest="packages_file", type=str,
-                             help="File listing packages to scan")
-    args.parser.add_argument("--list-packages", dest="list_packages",
-                             action="store_true", help="List packages and levels")
+    args.parser.add_argument(
+        "--packages-file",
+        dest="packages_file",
+        type=str,
+        help="File listing packages to scan",
+    )
+    args.parser.add_argument(
+        "--list-packages",
+        dest="list_packages",
+        action="store_true",
+        help="List packages and levels",
+    )
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
@@ -40,8 +48,12 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
         for sub_dir in dirs:
             full_dir = os.path.join(root, sub_dir)
             files = os.listdir(full_dir)
-            if "CMakeLists.txt" in files and "CATKIN_IGNORE" not in files and \
-                    "AMENT_IGNORE" not in files and "package.xml" in files:
+            if (
+                "CMakeLists.txt" in files
+                and "CATKIN_IGNORE" not in files
+                and "AMENT_IGNORE" not in files
+                and "package.xml" in files
+            ):
                 if ignore_packages and sub_dir in ignore_packages:
                     continue
                 packages.append((sub_dir, full_dir))
@@ -51,10 +63,11 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
         try:
             packages_file = os.path.abspath(parsed_args.packages_file)
             with open(packages_file, "r") as fname:
-                packages_file_list = [package.strip() for package
-                                      in fname.readlines()
-                                      if package.strip() and
-                                      package[0] != "#"]
+                packages_file_list = [
+                    package.strip()
+                    for package in fname.readlines()
+                    if package.strip() and package[0] != "#"
+                ]
         except OSError:
             print("Packages file not found")
             sys.exit(1)
@@ -65,20 +78,36 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     issues = {}
     for package in packages:
         if parsed_args.list_packages:
-            print("%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args)))
+            print(
+                "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
+            )
             continue
 
         count += 1
-        print("-- Scanning package " + package[0] + " (" + str(count) +
-              " of " + str(len(packages)) + ") --")
+        print(
+            "-- Scanning package "
+            + package[0]
+            + " ("
+            + str(count)
+            + " of "
+            + str(len(packages))
+            + ") --"
+        )
         issues, dummy = statick.run(package[1], parsed_args)
         if issues is not None:
             total_issues.append(issues)
         else:
             print("Failed to run statick on package " + package[0] + "!")
             sys.exit(1)
-        print("-- Done scanning package " + package[0] + " (" + str(count) +
-              " of " + str(len(packages)) + ") --")
+        print(
+            "-- Done scanning package "
+            + package[0]
+            + " ("
+            + str(count)
+            + " of "
+            + str(len(packages))
+            + ") --"
+        )
 
     if parsed_args.list_packages:
         sys.exit(0)
@@ -94,13 +123,14 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
                 issues[key] = value
 
     # Make a fake 'all' package for reporting
-    dummy_all_package = Package('all_packages', parsed_args.path)
+    dummy_all_package = Package("all_packages", parsed_args.path)
     level = statick.get_level(dummy_all_package.path, parsed_args)
     enabled_reporting_plugins = statick.config.get_enabled_reporting_plugins(level)
     available_reporting_plugins = {}
     for plugin_info in statick.manager.getPluginsOfCategory("Reporting"):
-        available_reporting_plugins[plugin_info.plugin_object.get_name()] = \
-            plugin_info.plugin_object
+        available_reporting_plugins[
+            plugin_info.plugin_object.get_name()
+        ] = plugin_info.plugin_object
 
     # Make a dummy plugincontext as well
     plugin_context = PluginContext(args, None, None)

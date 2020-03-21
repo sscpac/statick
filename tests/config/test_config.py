@@ -13,10 +13,10 @@ def test_config_init():
     config = Config(None)
     assert not config.config
 
-    config = Config('not_a_file.yaml')
+    config = Config("not_a_file.yaml")
     assert not config.config
 
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
     assert config.config
 
@@ -27,7 +27,7 @@ def test_config_enabled_plugins():
 
     Expected result: plugins listed in example config file are returned
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     plugins = config.get_enabled_plugins("sei_cert", "tool")
@@ -46,7 +46,7 @@ def test_config_enabled_plugins_inherits():
 
     Expected result: plugins listed in example config file are returned
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     plugins = config.get_enabled_plugins("objective_minus_pylint", "tool")
@@ -66,7 +66,7 @@ def test_config_enabled_tool_plugins():
 
     Expected result: plugins listed in example config file are returned
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     plugins = config.get_enabled_tool_plugins("sei_cert")
@@ -85,7 +85,7 @@ def test_config_enabled_discovery_plugins():
 
     Expected result: plugins listed in example config file are returned
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     plugins = config.get_enabled_discovery_plugins("example")
@@ -98,7 +98,7 @@ def test_config_enabled_reporting_plugins():
 
     Expected result: plugins listed in example config file are returned
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     plugins = config.get_enabled_reporting_plugins("example")
@@ -111,7 +111,7 @@ def test_config_get_tool_config():
 
     Expected result: tool plugin configuration matches config file
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     tool_config = config.get_tool_config("make", "example", "flags")
@@ -124,7 +124,7 @@ def test_config_get_discovery_config():
 
     Expected result: discovery plugin configuration matches config file
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     discovery_config = config.get_discovery_config("cmake", "example", "flags")
@@ -137,7 +137,7 @@ def test_config_get_reporintg_config():
 
     Expected result: reporting plugin configuration matches config file
     """
-    config_file = os.path.join(os.path.dirname(__file__), 'rsc', 'config.yaml')
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
 
     reporting_config = config.get_reporting_config("write_to_file", "example", "flags")

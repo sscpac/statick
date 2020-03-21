@@ -27,44 +27,55 @@ class SpotbugsToolPlugin(ToolPlugin):
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
-        if not self.command_exists('mvn'):
+        if not self.command_exists("mvn"):
             print("Couldn't find 'mvn' command, can't run Spotbugs Maven integration")
             return None
 
         if self.plugin_context is None:
             return None
 
-        flags = ["-Dspotbugs.effort=Max", "-Dspotbugs.threshold=Low",
-                 "-Dspotbugs.xmlOutput=true"]
+        flags = [
+            "-Dspotbugs.effort=Max",
+            "-Dspotbugs.threshold=Low",
+            "-Dspotbugs.xmlOutput=true",
+        ]
         flags += self.get_user_flags(level)
 
-        include_file = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                  level, "include")
-        exclude_file = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                  level, "exclude")
+        include_file = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "include"
+        )
+        exclude_file = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "exclude"
+        )
         if include_file is not None:
-            flags += ["-Dspotbugs.includeFilterFile={}".format(self.plugin_context
-                                                               .resources.get_file(include_file))]
+            flags += [
+                "-Dspotbugs.includeFilterFile={}".format(
+                    self.plugin_context.resources.get_file(include_file)
+                )
+            ]
 
         if exclude_file is not None:
-            flags += ["-Dspotbugs.excludeFilterFile={}".format(self.plugin_context
-                                                               .resources.get_file(exclude_file))]
+            flags += [
+                "-Dspotbugs.excludeFilterFile={}".format(
+                    self.plugin_context.resources.get_file(exclude_file)
+                )
+            ]
 
         issues = []  # type: List[Issue]
         total_output = ""
-        for pom in package['top_poms']:
+        for pom in package["top_poms"]:
             try:
                 # The spotbugs:spotbugs-maven-plugin split is auto-concatenated
-                output = subprocess.check_output(["mvn", "com.github.spotbugs:"
-                                                  "spotbugs-maven-plugin:spotbugs"] +
-                                                 flags,
-                                                 cwd=os.path.dirname(pom),
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    ["mvn", "com.github.spotbugs:spotbugs-maven-plugin:spotbugs"]
+                    + flags,
+                    cwd=os.path.dirname(pom),
+                    stderr=subprocess.STDOUT,
+                    universal_newlines=True,
+                )
             except subprocess.CalledProcessError as ex:
                 output = ex.output
-                print("spotbugs failed! Returncode = {}".
-                      format(str(ex.returncode)))
+                print("spotbugs failed! Returncode = {}".format(str(ex.returncode)))
                 print("{}".format(ex.output))
                 return None
 
@@ -78,9 +89,12 @@ class SpotbugsToolPlugin(ToolPlugin):
 
         # The results will be output to (pom path)/target/spotbugs.xml for each pom
         for pom in package["all_poms"]:
-            if os.path.exists(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")):
-                with open(os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")) \
-                        as outfile:
+            if os.path.exists(
+                os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")
+            ):
+                with open(
+                    os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")
+                ) as outfile:
                     issues += self.parse_output(outfile.read())  # type: ignore
 
         if self.plugin_context.args.output_directory:
@@ -97,21 +111,32 @@ class SpotbugsToolPlugin(ToolPlugin):
         try:
             output_xml = etree.fromstring(output)
         except etree.ParseError as ex:
-            print("Couldn't parse Spotbugs output ({})! Provided output was:\n{}"
-                  .format(ex, output))
+            print(
+                "Couldn't parse Spotbugs output ({})! Provided output was:\n{}".format(
+                    ex, output
+                )
+            )
             return None
         for file_entry in output_xml.findall("file"):
             # Generate the filename
-            java_path_string = "{}.java".format(file_entry.attrib["classname"].replace('.', os.sep))
+            java_path_string = "{}.java".format(
+                file_entry.attrib["classname"].replace(".", os.sep)
+            )
             file_path = ""  # type: Optional[str]
             for source_dir in output_xml.findall("Project/SrcDir"):
-                joined_path = os.path.join(os.path.normpath(source_dir.text),  # type: ignore
-                                           java_path_string)
+                joined_path = os.path.join(
+                    os.path.normpath(source_dir.text),  # type: ignore
+                    java_path_string,
+                )
                 if os.path.exists(joined_path):  # type: ignore
                     file_path = joined_path
                     break
             if not file_path:
-                print("Couldn't find file for class {}".format(file_entry.attrib["classname"]))
+                print(
+                    "Couldn't find file for class {}".format(
+                        file_entry.attrib["classname"]
+                    )
+                )
                 file_path = java_path_string
             for issue in file_entry.findall("BugInstance"):
                 severity = "1"
@@ -123,8 +148,15 @@ class SpotbugsToolPlugin(ToolPlugin):
                 cert_reference = None
                 if issue.attrib["type"] in warnings_mapping:
                     cert_reference = warnings_mapping[issue.attrib["type"]]
-                issues.append(Issue(file_path, issue.attrib["lineNumber"],
-                                    self.get_name(), issue.attrib["type"],
-                                    severity, issue.attrib["message"],
-                                    cert_reference))
+                issues.append(
+                    Issue(
+                        file_path,
+                        issue.attrib["lineNumber"],
+                        self.get_name(),
+                        issue.attrib["type"],
+                        severity,
+                        issue.attrib["message"],
+                        cert_reference,
+                    )
+                )
         return issues

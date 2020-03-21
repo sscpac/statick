@@ -43,14 +43,15 @@ class CpplintToolPlugin(ToolPlugin):
                 files += target["src"]
 
         try:
-            output = subprocess.check_output([cpplint] + flags + files,
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
+            output = subprocess.check_output(
+                [cpplint] + flags + files,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            )
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("cpplint failed! Returncode = {}".
-                      format(str(ex.returncode)))
+                print("cpplint failed! Returncode = {}".format(str(ex.returncode)))
                 print("{}".format(ex.output))
                 return None
 
@@ -71,18 +72,19 @@ class CpplintToolPlugin(ToolPlugin):
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:
         """Manual exceptions."""
-        if (match.group(1).endswith(".cpp") or
-                match.group(1).endswith(".cc")) and \
-                match.group(4) == "build/namespaces":
+        if (
+            match.group(1).endswith(".cpp") or match.group(1).endswith(".cc")
+        ) and match.group(4) == "build/namespaces":
             # allow using namespace inside source files
             return True
-        if match.group(4) == "build/namespaces" and \
-                "unnamed" in match.group(3):
+        if match.group(4) == "build/namespaces" and "unnamed" in match.group(3):
             # ignore anonymous namespace warning
             return True
-        if "cfg/cpp" in match.group(1) and \
-                match.group(1).endswith("Config.h") and \
-                match.group(4) == "build/storage_class":
+        if (
+            "cfg/cpp" in match.group(1)
+            and match.group(1).endswith("Config.h")
+            and match.group(4) == "build/storage_class"
+        ):
             # ignoring issue in auto-generated ROS code
             return True
         return False
@@ -96,7 +98,15 @@ class CpplintToolPlugin(ToolPlugin):
             match = parse.match(line)  # type: Optional[Match[str]]
             if match and not self.check_for_exceptions(match):
                 norm_path = os.path.normpath(match.group(1))
-                issues.append(Issue(norm_path, match.group(2), self.get_name(),
-                                    match.group(4), match.group(5),
-                                    match.group(3), None))
+                issues.append(
+                    Issue(
+                        norm_path,
+                        match.group(2),
+                        self.get_name(),
+                        match.group(4),
+                        match.group(5),
+                        match.group(3),
+                        None,
+                    )
+                )
         return issues

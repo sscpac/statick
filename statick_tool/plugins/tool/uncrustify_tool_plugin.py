@@ -21,10 +21,16 @@ class UncrustifyToolPlugin(ToolPlugin):
 
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
-        args.add_argument("--uncrustify-bin", dest="uncrustify_bin",
-                          type=str, help="uncrustify binary path")
+        args.add_argument(
+            "--uncrustify-bin",
+            dest="uncrustify_bin",
+            type=str,
+            help="uncrustify binary path",
+        )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:  # pylint: disable=too-many-locals, too-many-branches
+    def scan(  # pylint: disable=too-many-locals, too-many-branches
+        self, package: Package, level: str
+    ) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
@@ -52,22 +58,32 @@ class UncrustifyToolPlugin(ToolPlugin):
             format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
 
             for src in files:
-                cmd = [uncrustify_bin, '-c', format_file_name, '-f', src]
-                output = subprocess.check_output(cmd, stderr=subprocess.STDOUT,  # type: ignore
-                                                 universal_newlines=True)
-                src_cmd = ['cat', src]
-                src_output = subprocess.check_output(src_cmd, stderr=subprocess.STDOUT,
-                                                     universal_newlines=True)
-                diff = difflib.context_diff(output.splitlines(), src_output.splitlines())
+                cmd = [uncrustify_bin, "-c", format_file_name, "-f", src]
+                output = subprocess.check_output(
+                    cmd,  # type: ignore
+                    stderr=subprocess.STDOUT,
+                    universal_newlines=True,
+                )
+                src_cmd = ["cat", src]
+                src_output = subprocess.check_output(
+                    src_cmd, stderr=subprocess.STDOUT, universal_newlines=True
+                )
+                diff = difflib.context_diff(
+                    output.splitlines(), src_output.splitlines()
+                )
                 found_diff = False
-                output = output.split('\n', 1)[1]
+                output = output.split("\n", 1)[1]
                 for line in diff:
-                    if line.startswith('---') or line.startswith('***') \
-                            or line.startswith('! Parsing') or src in line \
-                            or line.isspace():
+                    if (
+                        line.startswith("---")
+                        or line.startswith("***")
+                        or line.startswith("! Parsing")
+                        or src in line
+                        or line.isspace()
+                    ):
                         continue
                     # This is a bug I can't figure out yet.
-                    if '#ifndef' in line or '#define' in line:
+                    if "#ifndef" in line or "#define" in line:
                         continue
                     found_diff = True
                 if found_diff:
@@ -99,7 +115,16 @@ class UncrustifyToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         issues = []
         for output in total_output:
-            issues.append(Issue(output, "0", self.get_name(), "format",
-                                "1", "Uncrustify mis-match", None))
+            issues.append(
+                Issue(
+                    output,
+                    "0",
+                    self.get_name(),
+                    "format",
+                    "1",
+                    "Uncrustify mis-match",
+                    None,
+                )
+            )
 
         return issues

@@ -9,7 +9,9 @@ from statick_tool.resources import Resources
 try:
     from tempfile import TemporaryDirectory
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import TemporaryDirectory  # pylint: disable=wrong-import-order
+    from backports.tempfile import (
+        TemporaryDirectory,
+    )  # pylint: disable=wrong-import-order
 
 
 def test_resources_init():
@@ -44,7 +46,7 @@ def test_resources_init_invalid(capsys):
     Expected results: resources.paths should have the directory which resources.py lives in
     and should print an error for the invalid directory
     """
-    resources = Resources(['invalid_directory'])
+    resources = Resources(["invalid_directory"])
     output = capsys.readouterr().out
     assert resources.paths
     assert resources.paths[0] == os.path.dirname(statick_tool.resources.__file__)
@@ -76,11 +78,12 @@ def test_resources_get_plugin_paths_dirs_exist():
     """
     with TemporaryDirectory() as tmp_dir:
         resources = Resources([tmp_dir])
-        os.mkdir(os.path.join(tmp_dir, 'plugins'))
+        os.mkdir(os.path.join(tmp_dir, "plugins"))
         plugin_paths = resources.get_plugin_paths()
-        assert plugin_paths[0] == os.path.join(tmp_dir, 'plugins')
-        assert plugin_paths[1] == os.path.join(os.path.dirname(
-                                               statick_tool.resources.__file__), 'plugins')
+        assert plugin_paths[0] == os.path.join(tmp_dir, "plugins")
+        assert plugin_paths[1] == os.path.join(
+            os.path.dirname(statick_tool.resources.__file__), "plugins"
+        )
 
 
 def test_resources_get_plugin_paths_dirs_dont_exist():
@@ -93,8 +96,9 @@ def test_resources_get_plugin_paths_dirs_dont_exist():
     with TemporaryDirectory() as tmp_dir:
         resources = Resources([tmp_dir])
         plugin_paths = resources.get_plugin_paths()
-        assert plugin_paths[0] == os.path.join(os.path.dirname(
-                                               statick_tool.resources.__file__), 'plugins')
+        assert plugin_paths[0] == os.path.join(
+            os.path.dirname(statick_tool.resources.__file__), "plugins"
+        )
 
 
 def test_resources_get_file_exists():
@@ -105,9 +109,11 @@ def test_resources_get_file_exists():
     """
     with TemporaryDirectory() as tmp_dir:
         resources = Resources([tmp_dir])
-        os.mkdir(os.path.join(tmp_dir, 'rsc'))
-        with tempfile.NamedTemporaryFile(dir=os.path.join(tmp_dir, 'rsc')) as tmpfile:
-            assert resources.get_file(tmpfile.name) == os.path.join(tmp_dir, 'rsc', tmpfile.name)
+        os.mkdir(os.path.join(tmp_dir, "rsc"))
+        with tempfile.NamedTemporaryFile(dir=os.path.join(tmp_dir, "rsc")) as tmpfile:
+            assert resources.get_file(tmpfile.name) == os.path.join(
+                tmp_dir, "rsc", tmpfile.name
+            )
 
 
 def test_resources_get_file_doesnt_exist():
@@ -118,5 +124,5 @@ def test_resources_get_file_doesnt_exist():
     """
     with TemporaryDirectory() as tmp_dir:
         resources = Resources([tmp_dir])
-        os.mkdir(os.path.join(tmp_dir, 'rsc'))
-        assert resources.get_file('nope') is None
+        os.mkdir(os.path.join(tmp_dir, "rsc"))
+        assert resources.get_file("nope") is None

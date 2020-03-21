@@ -119,8 +119,13 @@ levels:
         flags: ""
       pyflakes:
         flags: ""
+      # Disabling bad-continuation so black formatting will work.
+      # https://github.com/psf/black/blob/master/README.md#how-black-wraps-lines
+      # https://github.com/psf/black/issues/48
       pylint:
-        flags: "--good-names=f,i,j,k,ex,_"
+        flags: "--good-names=f,i,j,k,ex,_
+                --disable=bad-continuation
+               "
       uncrustify:
         flags: ""
       xmllint:

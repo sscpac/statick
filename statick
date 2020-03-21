@@ -27,8 +27,9 @@ def main():
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
     if issues is None:
-        print("Something went wrong, issues do not exist. Statick exiting "
-              "with errors.")
+        print(
+            "Something went wrong, no information about issues. Statick exiting with errors."
+        )
         sys.exit(1)
     for tool in issues:
         if issues[tool]:

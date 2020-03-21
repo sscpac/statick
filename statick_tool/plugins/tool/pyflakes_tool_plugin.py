@@ -28,9 +28,9 @@ class PyflakesToolPlugin(ToolPlugin):
         for src in package["python_src"]:
             try:
                 subproc_args = ["pyflakes", src] + flags
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
 
             except subprocess.CalledProcessError as ex:
                 # Return code 1 just means "found problems"
@@ -58,7 +58,9 @@ class PyflakesToolPlugin(ToolPlugin):
         issues = self.parse_output(total_output)
         return issues
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:  # pylint: disable=too-many-locals
+    def parse_output(  # pylint: disable=too-many-locals
+        self, total_output: List[str]
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re_first = r"(.+):(\d+):(\d+):\s(.+)"
         parse_first = re.compile(tool_re_first)  # type: Pattern[str]
@@ -67,10 +69,10 @@ class PyflakesToolPlugin(ToolPlugin):
         tool_re_third = r"\s(.+)"
         parse_third = re.compile(tool_re_third)  # type: Pattern[str]
         issues = []
-        filename = ''
+        filename = ""
         line_number = "0"
-        issue_type = ''
-        message = ''
+        issue_type = ""
+        message = ""
 
         for output in total_output:
             first_line = True
@@ -85,7 +87,9 @@ class PyflakesToolPlugin(ToolPlugin):
                         line_number = match.group(2)
                         issue_type = match.group(4)
                     else:
-                        match_second = parse_second.match(line)  # type: Optional[Match[str]]
+                        match_second = parse_second.match(
+                            line
+                        )  # type: Optional[Match[str]]
                         if match_second:
                             found_match = True
                             filename = match_second.group(1)
@@ -98,8 +102,16 @@ class PyflakesToolPlugin(ToolPlugin):
                         found_match = True
                         message = match_third.group(1)
             if found_match:
-                issues.append(Issue(filename, line_number,
-                                    self.get_name(), issue_type,
-                                    "5", message, None))
+                issues.append(
+                    Issue(
+                        filename,
+                        line_number,
+                        self.get_name(),
+                        issue_type,
+                        "5",
+                        message,
+                        None,
+                    )
+                )
 
         return issues

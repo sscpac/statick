@@ -34,10 +34,10 @@ class DiscoveryPlugin(IPlugin):
     @staticmethod
     def file_command_exists() -> bool:
         """Return whether the 'file' command is available on $PATH."""
-        if sys.platform == 'win32':
-            command_name = 'file.exe'
+        if sys.platform == "win32":
+            command_name = "file.exe"
         else:
-            command_name = 'file'
+            command_name = "file"
 
         for path in os.environ["PATH"].split(os.pathsep):
             exe_path = os.path.join(path, command_name)

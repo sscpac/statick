@@ -22,8 +22,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for C files."""
         c_files = []  # type: List[str]
-        c_extensions = \
-            ('.c', '.cc', '.cpp', '.cxx', '.h', '.hxx', '.hpp')
+        c_extensions = (".c", ".cc", ".cpp", ".cxx", ".h", ".hxx", ".hpp")
         file_cmd_exists = True  # type: bool
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
@@ -35,11 +34,12 @@ class CDiscoveryPlugin(DiscoveryPlugin):
                     c_files.append(os.path.abspath(full_path))
                 elif file_cmd_exists:
                     full_path = os.path.join(root, f)
-                    output = subprocess.check_output(["file", full_path],
-                                                     universal_newlines=True)  # type: str
-                    if ("c source" in output.lower() or
-                            "c++ source" in output.lower()) and not \
-                            f.endswith(".cfg"):
+                    output = subprocess.check_output(
+                        ["file", full_path], universal_newlines=True
+                    )  # type: str
+                    if (
+                        "c source" in output.lower() or "c++ source" in output.lower()
+                    ) and not f.endswith(".cfg"):
                         c_files.append(os.path.abspath(full_path))
 
         c_files = list(OrderedDict.fromkeys(c_files))
@@ -49,6 +49,10 @@ class CDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(c_files)
             c_files = exceptions.filter_file_exceptions_early(package, c_files)
             if original_file_count > len(c_files):
-                print("  After filtering, {} C/C++ files will be scanned.".format(len(c_files)))
+                print(
+                    "  After filtering, {} C/C++ files will be scanned.".format(
+                        len(c_files)
+                    )
+                )
 
         package["c_src"] = c_files

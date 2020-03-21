@@ -13,7 +13,7 @@ from typing import Any, List, Optional
 import yaml
 
 
-class Config():
+class Config:
     """
     Manages which plugins are run for each statick scan level.
 
@@ -56,8 +56,14 @@ class Config():
         """Get what reporting plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "reporting")
 
-    def get_plugin_config(self, plugin_type: str, plugin: str, level: str,  # pylint: disable=too-many-arguments
-                          key: str, default=None) -> str:
+    def get_plugin_config(  # pylint: disable=too-many-arguments
+        self,
+        plugin_type: str,
+        plugin: str,
+        level: str,
+        key: str,
+        default=None,
+    ) -> str:
         """Get flags to use for a plugin at a certain level."""
         if level not in self.config["levels"].keys():
             return default
@@ -70,29 +76,23 @@ class Config():
                     return plugin_config[key]
         if "inherits_from" in level_config:
             inherited_level = level_config["inherits_from"]
-            return self.get_plugin_config(plugin_type, plugin, inherited_level, key, default)
+            return self.get_plugin_config(
+                plugin_type, plugin, inherited_level, key, default
+            )
         return default
 
-    def get_tool_config(self,
-                        plugin: str,
-                        level: str,
-                        key: str,
-                        default=None) -> str:
+    def get_tool_config(self, plugin: str, level: str, key: str, default=None) -> str:
         """Get tool flags to use for a plugin at a certain level."""
         return self.get_plugin_config("tool", plugin, level, key, default)
 
-    def get_discovery_config(self,
-                             plugin: str,
-                             level: str,
-                             key: str,
-                             default=None) -> Optional[str]:
+    def get_discovery_config(
+        self, plugin: str, level: str, key: str, default=None
+    ) -> Optional[str]:
         """Get discovery flags to use for a plugin at a certain level."""
         return self.get_plugin_config("discovery", plugin, level, key, default)
 
-    def get_reporting_config(self,
-                             plugin: str,
-                             level: str,
-                             key: str,
-                             default=None) -> Optional[str]:
+    def get_reporting_config(
+        self, plugin: str, level: str, key: str, default=None
+    ) -> Optional[str]:
         """Get reporting flags to use for a plugin at a certain level."""
         return self.get_plugin_config("reporting", plugin, level, key, default)
