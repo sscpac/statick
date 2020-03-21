@@ -1,11 +1,9 @@
-workflow "Black Workflow"
-{
+workflow "Black Workflow" {
   on = "push"
   resolves = ["Black"]
 }
 
-action "Black"
-{
+action "Black" {
   uses = "lgeiger/black-action@master"
   args = ". --check"
 }
