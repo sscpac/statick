@@ -280,7 +280,6 @@ It is hoped that in the future we will generate coverage reports from mypy and u
 ### Formatting
 
 Statick code is formatted using [black](https://github.com/psf/black).
-When testing with tox there is a configuration that will check that the current code is formatted correctly.
 To fix locally use
 
     pip install black
