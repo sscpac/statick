@@ -31,9 +31,3 @@ jobs:
     - name: Test with mypy
       run: |
         mypy --ignore-missing-imports statick statick_tool/
-    
-    - name: Test black formatting
-      uses: lgeiger/black-action@master
-      run: |
-        black --check statick statick_tool
-
