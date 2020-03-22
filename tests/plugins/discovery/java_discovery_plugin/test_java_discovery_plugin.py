@@ -7,8 +7,7 @@ import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
-from statick_tool.plugins.discovery.java_discovery_plugin import \
-    JavaDiscoveryPlugin
+from statick_tool.plugins.discovery.java_discovery_plugin import JavaDiscoveryPlugin
 
 
 def test_java_discovery_plugin_found():

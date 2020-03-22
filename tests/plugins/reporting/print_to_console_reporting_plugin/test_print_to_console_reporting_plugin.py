@@ -6,8 +6,9 @@ from yapsy.PluginManager import PluginManager
 import statick_tool
 from statick_tool.issue import Issue
 from statick_tool.package import Package
-from statick_tool.plugins.reporting.print_to_console_reporting_plugin import \
-    PrintToConsoleReportingPlugin
+from statick_tool.plugins.reporting.print_to_console_reporting_plugin import (
+    PrintToConsoleReportingPlugin,
+)
 from statick_tool.reporting_plugin import ReportingPlugin
 
 
