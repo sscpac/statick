@@ -11,8 +11,7 @@ from statick_tool.config import Config
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.discovery.cmake_discovery_plugin import \
-    CMakeDiscoveryPlugin
+from statick_tool.plugins.discovery.cmake_discovery_plugin import CMakeDiscoveryPlugin
 from statick_tool.resources import Resources
 
 

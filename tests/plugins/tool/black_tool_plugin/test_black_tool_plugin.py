@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -53,6 +54,8 @@ def test_black_tool_plugin_found():
 def test_black_tool_plugin_scan_valid():
     """Integration test: Make sure the black output hasn't changed."""
     btp = setup_black_tool_plugin()
+    if not btp.command_exists('black'):
+        pytest.skip("Can't find black, unable to test black plugin.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['python_src'] = [os.path.join(os.path.dirname(__file__),

@@ -54,7 +54,7 @@ class Statick():
         self.reporting_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
-                    plugin_info.plugin_object
+                plugin_info.plugin_object
 
         self.config = None  # type: Optional[Config]
         self.exceptions = None  # type: Optional[Exceptions]

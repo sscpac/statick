@@ -8,8 +8,7 @@ import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
-from statick_tool.plugins.discovery.perl_discovery_plugin import \
-    PerlDiscoveryPlugin
+from statick_tool.plugins.discovery.perl_discovery_plugin import PerlDiscoveryPlugin
 
 
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment

@@ -46,7 +46,7 @@ class ToolPlugin(IPlugin):
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the file
             suffixed_file_name = "plugin_mapping/{}-{}.txt". \
-                    format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
+                format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
             suffixed_full_path = \
                 self.plugin_context.resources.get_file(suffixed_file_name)
             if suffixed_full_path is not None:

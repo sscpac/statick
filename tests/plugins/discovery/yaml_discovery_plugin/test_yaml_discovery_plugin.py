@@ -7,8 +7,7 @@ import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
-from statick_tool.plugins.discovery.yaml_discovery_plugin import \
-    YAMLDiscoveryPlugin
+from statick_tool.plugins.discovery.yaml_discovery_plugin import YAMLDiscoveryPlugin
 
 
 def test_yaml_discovery_plugin_found():
