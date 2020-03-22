@@ -115,12 +115,16 @@ levels:
     reporting:
       print_to_console:
     tool:
+      mypy:
+        flags: "--ignore-missing-imports"
       pydocstyle:
         flags: ""
       pyflakes:
         flags: ""
       pylint:
-        flags: "--good-names=f,i,j,k,ex,_"
+        flags: "--good-names=f,i,j,k,ex,_
+                --disable=bad-continuation
+               "
       uncrustify:
         flags: ""
       xmllint:
