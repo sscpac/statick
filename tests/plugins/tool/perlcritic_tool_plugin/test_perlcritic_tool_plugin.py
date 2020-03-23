@@ -11,8 +11,7 @@ import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.perlcritic_tool_plugin import \
-    PerlCriticToolPlugin
+from statick_tool.plugins.tool.perlcritic_tool_plugin import PerlCriticToolPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 

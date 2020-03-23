@@ -7,8 +7,7 @@ import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
-from statick_tool.plugins.discovery.xml_discovery_plugin import \
-    XMLDiscoveryPlugin
+from statick_tool.plugins.discovery.xml_discovery_plugin import XMLDiscoveryPlugin
 
 
 def test_xml_discovery_plugin_found():

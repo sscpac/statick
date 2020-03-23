@@ -10,8 +10,9 @@ from statick_tool.config import Config
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.reporting.write_jenkins_warnings_reporting_plugin import \
-    WriteJenkinsWarningsReportingPlugin
+from statick_tool.plugins.reporting.write_jenkins_warnings_reporting_plugin import (
+    WriteJenkinsWarningsReportingPlugin,
+)
 from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 

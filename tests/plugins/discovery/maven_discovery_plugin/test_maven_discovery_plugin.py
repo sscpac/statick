@@ -6,8 +6,7 @@ from yapsy.PluginManager import PluginManager
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
-from statick_tool.plugins.discovery.maven_discovery_plugin import \
-    MavenDiscoveryPlugin
+from statick_tool.plugins.discovery.maven_discovery_plugin import MavenDiscoveryPlugin
 
 
 def test_maven_discovery_plugin_found():
