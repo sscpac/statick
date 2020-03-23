@@ -29,9 +29,9 @@ class CatkinLintToolPlugin(ToolPlugin):
 
         try:
             subproc_args = ["catkin_lint", package.path] + flags
-            output = subprocess.check_output(subproc_args,
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
+            output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
@@ -96,13 +96,19 @@ class CatkinLintToolPlugin(ToolPlugin):
                 if self.check_for_exceptions_has_file(match, package):
                     continue
 
-                norm_path = os.path.normpath(package.path + "/" +
-                                             match.group(2))
+                norm_path = os.path.normpath(package.path + "/" + match.group(2))
 
-                issues.append(Issue(norm_path, match.group(3),
-                                    self.get_name(), match.group(4),
-                                    self.get_level(match.group(4)),
-                                    match.group(5), None))
+                issues.append(
+                    Issue(
+                        norm_path,
+                        match.group(3),
+                        self.get_name(),
+                        match.group(4),
+                        self.get_level(match.group(4)),
+                        match.group(5),
+                        None,
+                    )
+                )
             else:
                 match2 = parse2.match(line)  # type: Optional[Match[str]]
 
@@ -113,16 +119,27 @@ class CatkinLintToolPlugin(ToolPlugin):
                     if message == "missing build_depend on 'rostest'":
                         message = "missing test_depend on 'rostest'"
                     elif message.startswith("unconfigured build_depend on"):
-                        message += " (Make sure you aren't missing " \
-                                   "COMPONENTS in find_package(catkin ...) " \
-                                   "in CMakeLists.txt)"
+                        message += (
+                            " (Make sure you aren't missing "
+                            "COMPONENTS in find_package(catkin ...) "
+                            "in CMakeLists.txt)"
+                        )
 
-                    message += " (I can't really tell if this applies for " \
-                               "package.xml or CMakeLists.txt. Make sure to " \
-                               "check both for this issue)"
+                    message += (
+                        " (I can't really tell if this applies for "
+                        "package.xml or CMakeLists.txt. Make sure to "
+                        "check both for this issue)"
+                    )
 
-                    issues.append(Issue(norm_path, "1", self.get_name(),
-                                        match2.group(2),
-                                        self.get_level(match2.group(2)),
-                                        message, None))
+                    issues.append(
+                        Issue(
+                            norm_path,
+                            "1",
+                            self.get_name(),
+                            match2.group(2),
+                            self.get_level(match2.group(2)),
+                            message,
+                            None,
+                        )
+                    )
         return issues

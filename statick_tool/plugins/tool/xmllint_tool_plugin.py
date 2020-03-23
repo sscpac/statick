@@ -28,9 +28,9 @@ class XmllintToolPlugin(ToolPlugin):
         for xml_file in package["xml"]:
             try:
                 subproc_args = ["xmllint", xml_file] + flags
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:
                     output = ex.output
@@ -66,8 +66,16 @@ class XmllintToolPlugin(ToolPlugin):
             for line in output.splitlines():
                 match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
-                    issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), match.group(3), "5",
-                                        match.group(4), None))
+                    issues.append(
+                        Issue(
+                            match.group(1),
+                            match.group(2),
+                            self.get_name(),
+                            match.group(3),
+                            "5",
+                            match.group(4),
+                            None,
+                        )
+                    )
 
         return issues

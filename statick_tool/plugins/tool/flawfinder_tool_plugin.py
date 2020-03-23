@@ -30,9 +30,9 @@ class FlawfinderToolPlugin(ToolPlugin):
         for src in package["c_src"]:
             try:
                 subproc_args = ["flawfinder"] + flags + [src]
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
             except subprocess.CalledProcessError as ex:
                 print("Problem {}".format(ex.returncode))
                 print("{}".format(ex.output))
@@ -70,9 +70,16 @@ class FlawfinderToolPlugin(ToolPlugin):
                     cert_reference = None
                     if match.group(4) in warnings_mapping:
                         cert_reference = warnings_mapping[match.group(4)]
-                    issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), match.group(4),
-                                        match.group(3), match.group(5),
-                                        cert_reference))
+                    issues.append(
+                        Issue(
+                            match.group(1),
+                            match.group(2),
+                            self.get_name(),
+                            match.group(4),
+                            match.group(3),
+                            match.group(5),
+                            cert_reference,
+                        )
+                    )
 
         return issues

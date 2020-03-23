@@ -14,8 +14,9 @@ def test_exceptions_init_valid():
 
     Expected result: exceptions.exceptions is initialized.
     """
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'valid_exceptions.yaml'))
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
     assert exceptions.exceptions
 
 
@@ -26,8 +27,9 @@ def test_exceptions_init_nonexistent():
     Expected result: OSError thrown.
     """
     with pytest.raises(OSError):
-        Exceptions(os.path.join(os.path.dirname(__file__),
-                                'nonexistent_exceptions.yaml'))
+        Exceptions(
+            os.path.join(os.path.dirname(__file__), "nonexistent_exceptions.yaml")
+        )
 
 
 def test_filter_file_exceptions_early():
@@ -36,12 +38,12 @@ def test_filter_file_exceptions_early():
 
     Expected result: Empty files list.
     """
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'early_exceptions.yaml'))
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "early_exceptions.yaml")
+    )
 
-    package = Package('test', os.path.dirname(__file__))
-    files = [os.path.join(os.path.dirname(__file__),
-                          'unlikelystring')]
+    package = Package("test", os.path.dirname(__file__))
+    files = [os.path.join(os.path.dirname(__file__), "unlikelystring")]
 
     filtered_files = exceptions.filter_file_exceptions_early(package, files)
 
@@ -54,12 +56,12 @@ def test_filter_file_exceptions_early_onlyall():
 
     Expected result: No change to the files list
     """
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'early_exceptions.yaml'))
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "early_exceptions.yaml")
+    )
 
-    package = Package('test', os.path.dirname(__file__))
-    files = [os.path.join(os.path.dirname(__file__),
-                          'uncommontext')]
+    package = Package("test", os.path.dirname(__file__))
+    files = [os.path.join(os.path.dirname(__file__), "uncommontext")]
 
     filtered_files = exceptions.filter_file_exceptions_early(package, files)
 
@@ -73,14 +75,15 @@ def test_filter_file_exceptions_early_dupes():
     I have no idea why one might have duplicate files, but might as well test it!
     Expected result: Empty file list.
     """
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'early_exceptions.yaml'))
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "early_exceptions.yaml")
+    )
 
-    package = Package('test', os.path.dirname(__file__))
-    files = [os.path.join(os.path.dirname(__file__),
-                          'unlikelystring'),
-             os.path.join(os.path.dirname(__file__),
-                          'unlikelystring')]
+    package = Package("test", os.path.dirname(__file__))
+    files = [
+        os.path.join(os.path.dirname(__file__), "unlikelystring"),
+        os.path.join(os.path.dirname(__file__), "unlikelystring"),
+    ]
 
     filtered_files = exceptions.filter_file_exceptions_early(package, files)
 
@@ -93,10 +96,12 @@ def test_global_exceptions():
 
     Expected result: one global exception each for file and message_regex.
     """
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'valid_exceptions.yaml'))
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
     global_exceptions = exceptions.get_exceptions(package)
 
     assert len(global_exceptions["file"]) == 1
@@ -109,10 +114,12 @@ def test_package_exceptions():
 
     Expected result: no issues found
     """
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'package_exceptions.yaml'))
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "package_exceptions.yaml")
+    )
     package_exceptions = exceptions.get_exceptions(package)
 
     assert len(package_exceptions["file"]) == 1
@@ -125,23 +132,25 @@ def test_filter_issues():
 
     Expected result: all but one non-excepted issue is filtered
     """
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'valid_exceptions.yaml'))
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
 
-    filename = 'x.py'
-    line_number = '4'
-    tool = 'pylint'
-    issue_type = 'R0205(useless-object-inheritance)'
-    severity = '5'
+    filename = "x.py"
+    line_number = "4"
+    tool = "pylint"
+    issue_type = "R0205(useless-object-inheritance)"
+    severity = "5"
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
-    issues['pylint'] = [tool_issue]
+    issues["pylint"] = [tool_issue]
 
     issues = exceptions.filter_issues(package, issues)
-    assert not issues['pylint']
+    assert not issues["pylint"]
 
 
 def test_filter_issues_filename_abs_path():
@@ -150,23 +159,25 @@ def test_filter_issues_filename_abs_path():
 
     Expected result: no issues found
     """
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'valid_exceptions.yaml'))
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
 
-    filename = '/home/travis/build/x.py'
-    line_number = '4'
-    tool = 'pylint'
-    issue_type = 'R0205(useless-object-inheritance)'
-    severity = '5'
+    filename = "/home/travis/build/x.py"
+    line_number = "4"
+    tool = "pylint"
+    issue_type = "R0205(useless-object-inheritance)"
+    severity = "5"
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
-    issues['pylint'] = [tool_issue]
+    issues["pylint"] = [tool_issue]
 
     issues = exceptions.filter_issues(package, issues)
-    assert not issues['pylint']
+    assert not issues["pylint"]
 
 
 def test_filter_issues_nolint():
@@ -175,23 +186,25 @@ def test_filter_issues_nolint():
 
     Expected result: no issues found
     """
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'valid_exceptions.yaml'))
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
 
-    filename = os.path.join(os.path.dirname(__file__), 'valid_package') + '/x.py'
-    line_number = '3'
-    tool = 'pylint'
-    issue_type = 'missing-docstring'
-    severity = '3'
-    message = 'C0111: Missing module docstring'
+    filename = os.path.join(os.path.dirname(__file__), "valid_package") + "/x.py"
+    line_number = "3"
+    tool = "pylint"
+    issue_type = "missing-docstring"
+    severity = "3"
+    message = "C0111: Missing module docstring"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
-    issues['pylint'] = [tool_issue]
+    issues["pylint"] = [tool_issue]
 
     issues = exceptions.filter_issues(package, issues)
-    assert not issues['pylint']
+    assert not issues["pylint"]
 
 
 def test_filter_issues_nolint_not_abs_path():
@@ -200,20 +213,22 @@ def test_filter_issues_nolint_not_abs_path():
 
     Expected result: one issue found
     """
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__),
-                                         'valid_exceptions.yaml'))
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
 
-    filename = 'valid_package/x.py'
-    line_number = '3'
-    tool = 'pylint'
-    issue_type = 'missing-docstring'
-    severity = '3'
-    message = 'C0111: Missing module docstring'
+    filename = "valid_package/x.py"
+    line_number = "3"
+    tool = "pylint"
+    issue_type = "missing-docstring"
+    severity = "3"
+    message = "C0111: Missing module docstring"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
-    issues['pylint'] = [tool_issue]
+    issues["pylint"] = [tool_issue]
 
     issues = exceptions.filter_issues(package, issues)
-    assert len(issues['pylint']) == 1
+    assert len(issues["pylint"]) == 1

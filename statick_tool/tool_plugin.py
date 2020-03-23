@@ -42,13 +42,17 @@ class ToolPlugin(IPlugin):
         """Load a mapping between warnings and identifiers."""
         file_name = "plugin_mapping/{}.txt".format(self.get_name())  # type: str
         assert self.plugin_context is not None
-        full_path = self.plugin_context.resources.get_file(file_name)  # type: Union[Any, str, None]
+        full_path = self.plugin_context.resources.get_file(
+            file_name
+        )  # type: Union[Any, str, None]
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the file
-            suffixed_file_name = "plugin_mapping/{}-{}.txt". \
-                format(self.get_name(), self.plugin_context.args.mapping_file_suffix)
-            suffixed_full_path = \
-                self.plugin_context.resources.get_file(suffixed_file_name)
+            suffixed_file_name = "plugin_mapping/{}-{}.txt".format(
+                self.get_name(), self.plugin_context.args.mapping_file_suffix
+            )
+            suffixed_full_path = self.plugin_context.resources.get_file(
+                suffixed_file_name
+            )
             if suffixed_full_path is not None:
                 # If there actually is a file with that suffix, use it.
                 # Else use the un-suffixed version.
@@ -57,12 +61,11 @@ class ToolPlugin(IPlugin):
         if full_path is None:
             return {}
         warning_mapping = {}  # type: Dict[str, str]
-        with open(full_path, 'r') as mapping_file:
+        with open(full_path, "r") as mapping_file:
             for line in mapping_file.readlines():
-                split_line = line.strip().split(':')
+                split_line = line.strip().split(":")
                 if len(split_line) != 2:
-                    print("Warning: invalid line {} in file {}"
-                          .format(line, file_name))
+                    print("Warning: invalid line {} in file {}".format(line, file_name))
                     continue
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping
@@ -72,8 +75,7 @@ class ToolPlugin(IPlugin):
         if name is None:
             name = self.get_name()  # pylint: disable=assignment-from-no-return
         assert self.plugin_context is not None
-        user_flags = self.plugin_context.config.get_tool_config(name, level,
-                                                                "flags")
+        user_flags = self.plugin_context.config.get_tool_config(name, level, "flags")
         flags = []  # type: List[str]
         if user_flags:
             # See https://github.com/python/typeshed/issues/1476 for
@@ -93,12 +95,12 @@ class ToolPlugin(IPlugin):
         """
         # On Windows, PATHEXT contains a list of extensions which can be
         # appended to a program name when searching PATH.
-        extensions = os.environ.get('PATHEXT', None)
+        extensions = os.environ.get("PATHEXT", None)
         _, path_ext = os.path.splitext(path)
         if path_ext or not extensions:
             return os.path.isfile(path) and os.access(path, os.X_OK)
 
-        extensions_list = extensions.split(';')
+        extensions_list = extensions.split(";")
         # Add "" (no extension) as a possibility.
         extensions_list.insert(0, "")
         for ext in extensions_list:

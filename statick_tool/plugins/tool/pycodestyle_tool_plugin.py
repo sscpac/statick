@@ -30,9 +30,9 @@ class PycodestyleToolPlugin(ToolPlugin):
         for src in package["python_src"]:
             try:
                 subproc_args = [tool_bin, src] + flags
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
 
             except subprocess.CalledProcessError as ex:
                 # Return code 1 just means "found problems"
@@ -73,17 +73,40 @@ class PycodestyleToolPlugin(ToolPlugin):
                     if "," in match.group(3):
                         parts = match.group(3).split(",")
                         if parts[1].strip() == "":
-                            issues.append(Issue(match.group(1), match.group(2),
-                                                self.get_name(), parts[0], "5",
-                                                match.group(4), None))
+                            issues.append(
+                                Issue(
+                                    match.group(1),
+                                    match.group(2),
+                                    self.get_name(),
+                                    parts[0],
+                                    "5",
+                                    match.group(4),
+                                    None,
+                                )
+                            )
                         else:
-                            issues.append(Issue(match.group(1), match.group(2),
-                                                self.get_name(), parts[0], "5",
-                                                parts[1].strip() + ": " +
-                                                match.group(4), None))
+                            issues.append(
+                                Issue(
+                                    match.group(1),
+                                    match.group(2),
+                                    self.get_name(),
+                                    parts[0],
+                                    "5",
+                                    parts[1].strip() + ": " + match.group(4),
+                                    None,
+                                )
+                            )
                     else:
-                        issues.append(Issue(match.group(1), match.group(2),
-                                            self.get_name(), match.group(3),
-                                            "5", match.group(4), None))
+                        issues.append(
+                            Issue(
+                                match.group(1),
+                                match.group(2),
+                                self.get_name(),
+                                match.group(3),
+                                "5",
+                                match.group(4),
+                                None,
+                            )
+                        )
 
         return issues

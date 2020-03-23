@@ -3,14 +3,12 @@ Custom argument handling.
 
 Enable usage of user-paths argument before parsing other arguments.
 """
-from __future__ import print_function
-
 import argparse
 import os
 from typing import List
 
 
-class Args():
+class Args:
     """
     Custom argument handling.
 
@@ -19,11 +17,13 @@ class Args():
 
     def __init__(self, name: str) -> None:
         """Initialize arguments."""
-        self.pre_parser = argparse.ArgumentParser(description=name,
-                                                  add_help=False)
-        user_path_args = {"dest": "user_paths", "type": str,
-                          "help": "Comma separated list of paths containing "
-                                  "configuration or plugins"}
+        self.pre_parser = argparse.ArgumentParser(description=name, add_help=False)
+        user_path_args = {
+            "dest": "user_paths",
+            "type": str,
+            "help": "Comma separated list of paths containing "
+            "configuration or plugins",
+        }
         self.pre_parser.add_argument("--user-paths", **user_path_args)  # type: ignore
 
         self.parser = argparse.ArgumentParser(description=name)

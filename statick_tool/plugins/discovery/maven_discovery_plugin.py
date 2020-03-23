@@ -30,7 +30,9 @@ class MavenDiscoveryPlugin(DiscoveryPlugin):
                 full_path = os.path.join(root, f)
                 # Kind of an ugly hack, but it makes sure long paths don't
                 # mess up our depth tracking
-                if exceptions and not exceptions.filter_file_exceptions_early(package, [full_path]):
+                if exceptions and not exceptions.filter_file_exceptions_early(
+                    package, [full_path]
+                ):
                     continue
                 depth = full_path.count(os.sep)
                 if depth < deepest_pom_level:

@@ -24,7 +24,7 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
         yaml_files = []  # type: List[str]
         globs = ["*.yaml"]  # type: List[str]
 
-        root = ''
+        root = ""
         for root, _, files in os.walk(package.path):
             for glob in globs:
                 for f in fnmatch.filter(files, glob):
@@ -38,6 +38,10 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(yaml_files)
             yaml_files = exceptions.filter_file_exceptions_early(package, yaml_files)
             if original_file_count > len(yaml_files):
-                print("  After filtering, {} YAML files will be scanned.".format(len(yaml_files)))
+                print(
+                    "  After filtering, {} YAML files will be scanned.".format(
+                        len(yaml_files)
+                    )
+                )
 
         package["yaml"] = yaml_files

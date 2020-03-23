@@ -121,7 +121,8 @@ levels:
         flags: ""
       pyflakes:
         flags: ""
-      # Disabling bad-continuation so that we can use output of black without change.
+      # Disabling bad-continuation so black formatting will work.
+      # https://github.com/psf/black/blob/master/README.md#how-black-wraps-lines
       # https://github.com/psf/black/issues/48
       # https://github.com/PyCQA/pylint/issues/289
       pylint:

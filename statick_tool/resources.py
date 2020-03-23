@@ -10,7 +10,7 @@ import os
 from typing import List, Optional
 
 
-class Resources():
+class Resources:
     """
     Manages plugin and file lookup chaining.
 

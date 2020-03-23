@@ -47,63 +47,83 @@ def test_c_discovery_plugin_found():
     manager = PluginManager()
     # Get the path to statick_tool/__init__.py, get the directory part, and
     # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces([os.path.join(os.path.dirname(statick_tool.__file__),
-                                          'plugins')])
-    manager.setCategoriesFilter({
-        "Discovery": DiscoveryPlugin,
-    })
+    manager.setPluginPlaces(
+        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
+    )
+    manager.setCategoriesFilter(
+        {"Discovery": DiscoveryPlugin,}
+    )
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "c"
-    assert any(plugin_info.plugin_object.get_name() == 'C' for
-               plugin_info in manager.getPluginsOfCategory("Discovery"))
+    assert any(
+        plugin_info.plugin_object.get_name() == "C"
+        for plugin_info in manager.getPluginsOfCategory("Discovery")
+    )
     # While we're at it, verify that a plugin is named C Discovery Plugin
-    assert any(plugin_info.name == 'C/C++ Discovery Plugin' for
-               plugin_info in manager.getPluginsOfCategory("Discovery"))
+    assert any(
+        plugin_info.name == "C/C++ Discovery Plugin"
+        for plugin_info in manager.getPluginsOfCategory("Discovery")
+    )
 
 
 def test_c_discovery_plugin_scan_valid():
     """Test that the C discovery plugin finds valid C source/header files."""
     cdp = CDiscoveryPlugin()
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    cdp.scan(package, 'level')
-    expected = ['test.c', 'test.cpp', 'test.cc', 'test.cxx', 'test.h',
-                'test.hxx', 'test.hpp', os.path.join('ignore_this', 'ignoreme.c')]
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    cdp.scan(package, "level")
+    expected = [
+        "test.c",
+        "test.cpp",
+        "test.cc",
+        "test.cxx",
+        "test.h",
+        "test.hxx",
+        "test.hpp",
+        os.path.join("ignore_this", "ignoreme.c"),
+    ]
     if cdp.file_command_exists():
-        expected += ['oddextensioncpp.source', 'oddextensionc.source']
+        expected += ["oddextensioncpp.source", "oddextensionc.source"]
     # We have to add the path to each of the above...yuck
-    expected_fullpath = [os.path.join(package.path, filename)
-                         for filename in expected]
+    expected_fullpath = [os.path.join(package.path, filename) for filename in expected]
     # Neat trick to verify that two unordered lists are the same
-    assert set(package['c_src']) == set(expected_fullpath)
+    assert set(package["c_src"]) == set(expected_fullpath)
 
 
 def test_c_discovery_plugin_scan_invalid():
     """Test that the C discovery plugin doesn't find non-C files."""
     cdp = CDiscoveryPlugin()
-    package = Package('invalid_package',
-                      os.path.join(os.path.dirname(__file__),
-                                   'invalid_package'))
-    cdp.scan(package, 'level')
-    assert not package['c_src']
+    package = Package(
+        "invalid_package", os.path.join(os.path.dirname(__file__), "invalid_package")
+    )
+    cdp.scan(package, "level")
+    assert not package["c_src"]
 
 
 def test_c_discovery_plugin_scan_exceptions():
     """Test that the C discovery plugin finds valid C source/header files."""
     cdp = CDiscoveryPlugin()
-    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
-                                                    'valid_package'))
-    exceptions = Exceptions(os.path.join(os.path.dirname(__file__), 'exceptions.yaml'))
-    cdp.scan(package, 'level', exceptions)
-    expected = ['test.c', 'test.cpp', 'test.cc', 'test.cxx', 'test.h',
-                'test.hxx', 'test.hpp']
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(os.path.join(os.path.dirname(__file__), "exceptions.yaml"))
+    cdp.scan(package, "level", exceptions)
+    expected = [
+        "test.c",
+        "test.cpp",
+        "test.cc",
+        "test.cxx",
+        "test.h",
+        "test.hxx",
+        "test.hpp",
+    ]
     if cdp.file_command_exists():
-        expected += ['oddextensioncpp.source', 'oddextensionc.source']
+        expected += ["oddextensioncpp.source", "oddextensionc.source"]
     # We have to add the path to each of the above
-    expected_fullpath = [os.path.join(package.path, filename)
-                         for filename in expected]
+    expected_fullpath = [os.path.join(package.path, filename) for filename in expected]
     # Neat trick to verify that two unordered lists are the same
-    assert set(package['c_src']) == set(expected_fullpath)
+    assert set(package["c_src"]) == set(expected_fullpath)
 
 
 def test_c_discovery_plugin_no_file_cmd():
@@ -113,16 +133,25 @@ def test_c_discovery_plugin_no_file_cmd():
     Test that files are not discovered with file command output if file
     command does not exist.
     """
-    with modified_environ(PATH=''):
+    with modified_environ(PATH=""):
         cdp = CDiscoveryPlugin()
-        package = Package('valid_package',
-                          os.path.join(os.path.dirname(__file__),
-                                       'valid_package'))
-        cdp.scan(package, 'level')
-        expected = ['test.c', 'test.cpp', 'test.cc', 'test.cxx', 'test.h',
-                    'test.hxx', 'test.hpp', os.path.join('ignore_this', 'ignoreme.c')]
+        package = Package(
+            "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+        )
+        cdp.scan(package, "level")
+        expected = [
+            "test.c",
+            "test.cpp",
+            "test.cc",
+            "test.cxx",
+            "test.h",
+            "test.hxx",
+            "test.hpp",
+            os.path.join("ignore_this", "ignoreme.c"),
+        ]
         # We have to add the path to each of the above...yuck
-        expected_fullpath = [os.path.join(package.path, filename)
-                             for filename in expected]
+        expected_fullpath = [
+            os.path.join(package.path, filename) for filename in expected
+        ]
         # Neat trick to verify that two unordered lists are the same
-        assert set(package['c_src']) == set(expected_fullpath)
+        assert set(package["c_src"]) == set(expected_fullpath)

@@ -24,7 +24,7 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
         xml_files = []  # type: List[str]
         globs = ["*.xml", "*.launch"]  # type: List[str]
 
-        root = ''
+        root = ""
         for root, _, files in os.walk(package.path):
             for glob in globs:
                 for f in fnmatch.filter(files, glob):
@@ -38,6 +38,10 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(xml_files)
             xml_files = exceptions.filter_file_exceptions_early(package, xml_files)
             if original_file_count > len(xml_files):
-                print("  After filtering, {} XML files will be scanned.".format(len(xml_files)))
+                print(
+                    "  After filtering, {} XML files will be scanned.".format(
+                        len(xml_files)
+                    )
+                )
 
         package["xml"] = xml_files

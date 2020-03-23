@@ -64,7 +64,7 @@ def test_mypy_tool_plugin_found():
 def test_mypy_tool_plugin_scan_valid():
     """Integration test: Make sure the mypy output hasn't changed."""
     mtp = setup_mypy_tool_plugin()
-    if not mtp.command_exists('mypy'):
+    if not mtp.command_exists("mypy"):
         pytest.skip("Can't find mypy, unable to test mypy plugin")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -79,7 +79,7 @@ def test_mypy_tool_plugin_scan_valid():
 def test_mypy_tool_plugin_scan_invalid():
     """Make sure no issues are found when no Python source files are available."""
     mtp = setup_mypy_tool_plugin()
-    if not mtp.command_exists('mypy'):
+    if not mtp.command_exists("mypy"):
         pytest.skip("Can't find mypy, unable to test mypy plugin")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")

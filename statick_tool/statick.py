@@ -25,7 +25,7 @@ from statick_tool.tool_plugin import ToolPlugin
 logging.basicConfig()
 
 
-class Statick():
+class Statick:
     """Code analysis front-end."""
 
     def __init__(self, user_paths: List[str]) -> None:
@@ -34,27 +34,32 @@ class Statick():
 
         self.manager = PluginManager()
         self.manager.setPluginPlaces(self.resources.get_plugin_paths())
-        self.manager.setCategoriesFilter({
-            "Discovery": DiscoveryPlugin,
-            "Tool": ToolPlugin,
-            "Reporting": ReportingPlugin
-        })
+        self.manager.setCategoriesFilter(
+            {
+                "Discovery": DiscoveryPlugin,
+                "Tool": ToolPlugin,
+                "Reporting": ReportingPlugin,
+            }
+        )
         self.manager.collectPlugins()
 
         self.discovery_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
-            self.discovery_plugins[plugin_info.plugin_object.get_name()] = \
-                plugin_info.plugin_object
+            self.discovery_plugins[
+                plugin_info.plugin_object.get_name()
+            ] = plugin_info.plugin_object
 
         self.tool_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
-            self.tool_plugins[plugin_info.plugin_object.get_name()] = \
-                plugin_info.plugin_object
+            self.tool_plugins[
+                plugin_info.plugin_object.get_name()
+            ] = plugin_info.plugin_object
 
         self.reporting_plugins = {}  # type: Dict
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
-            self.reporting_plugins[plugin_info.plugin_object.get_name()] = \
-                plugin_info.plugin_object
+            self.reporting_plugins[
+                plugin_info.plugin_object.get_name()
+            ] = plugin_info.plugin_object
 
         self.config = None  # type: Optional[Config]
         self.exceptions = None  # type: Optional[Exceptions]
@@ -80,22 +85,47 @@ class Statick():
 
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
-        args.add_argument("--output-directory", dest="output_directory",
-                          type=str, help="Directory to write output files to")
-        args.add_argument("--show-tool-output", dest="show_tool_output",
-                          action="store_true", help="Show tool output")
-        args.add_argument("--config", dest="config",
-                          type=str, help="Name of config yaml file")
-        args.add_argument("--profile", dest="profile",
-                          type=str, help="Name of profile yaml file")
-        args.add_argument("--exceptions", dest="exceptions",
-                          type=str, help="Name of exceptions yaml file")
-        args.add_argument("--force-tool-list", dest="force_tool_list",
-                          type=str, help="Force only the given list of tools to run")
-        args.add_argument('--version', action='version',
-                          version='%(prog)s {version}'.format(version=__version__))
-        args.add_argument('--mapping-file-suffix', dest="mapping_file_suffix",
-                          type=str, help="Suffix to use when searching for CERT mapping files")
+        args.add_argument(
+            "--output-directory",
+            dest="output_directory",
+            type=str,
+            help="Directory to write output files to",
+        )
+        args.add_argument(
+            "--show-tool-output",
+            dest="show_tool_output",
+            action="store_true",
+            help="Show tool output",
+        )
+        args.add_argument(
+            "--config", dest="config", type=str, help="Name of config yaml file"
+        )
+        args.add_argument(
+            "--profile", dest="profile", type=str, help="Name of profile yaml file"
+        )
+        args.add_argument(
+            "--exceptions",
+            dest="exceptions",
+            type=str,
+            help="Name of exceptions yaml file",
+        )
+        args.add_argument(
+            "--force-tool-list",
+            dest="force_tool_list",
+            type=str,
+            help="Force only the given list of tools to run",
+        )
+        args.add_argument(
+            "--version",
+            action="version",
+            version="%(prog)s {version}".format(version=__version__),
+        )
+        args.add_argument(
+            "--mapping-file-suffix",
+            dest="mapping_file_suffix",
+            type=str,
+            help="Suffix to use when searching for CERT mapping files",
+        )
 
         for _, plugin in list(self.discovery_plugins.items()):
             plugin.gather_args(args)
@@ -133,7 +163,9 @@ class Statick():
 
         return level
 
-    def run(self, path: str, args: argparse.Namespace) -> Tuple[Optional[Dict], bool]:  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+    def run(  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+        self, path: str, args: argparse.Namespace
+    ) -> Tuple[Optional[Dict], bool]:
         """Run scan tools against targets on path."""
         success = True
 
@@ -153,40 +185,45 @@ class Statick():
         orig_path = os.getcwd()
         if args.output_directory:
             if not os.path.isdir(args.output_directory):
-                print("Output directory not found at {}!".
-                      format(args.output_directory))
+                print("Output directory not found at {}!".format(args.output_directory))
                 return None, False
 
-            output_dir = os.path.join(args.output_directory,
-                                      package.name + "-" + level)
+            output_dir = os.path.join(args.output_directory, package.name + "-" + level)
 
             if not os.path.isdir(output_dir):
                 os.mkdir(output_dir)
             if not os.path.isdir(output_dir):
-                print("Unable to create output directory at {}!".format(
-                    output_dir))
+                print("Unable to create output directory at {}!".format(output_dir))
                 return None, False
             print("Writing output to: {}".format(output_dir))
 
             os.chdir(output_dir)
 
         print("------")
-        print("Scanning package {} ({}) at level {}".format(package.name,
-                                                            package.path,
-                                                            level))
+        print(
+            "Scanning package {} ({}) at level {}".format(
+                package.name, package.path, level
+            )
+        )
 
         issues = {}  # type: Dict[str, List[Issue]]
 
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
-            print("Package {} is configured to be ignored by Statick.".format(package.name))
+            print(
+                "Package {} is configured to be ignored by Statick.".format(
+                    package.name
+                )
+            )
             return issues, True
 
         plugin_context = PluginContext(args, self.resources, self.config)
 
         print("---Discovery---")
         if not DiscoveryPlugin.file_command_exists():
-            print("file command isn't available, discovery plugins will be less effective")
+            print(
+                "file command isn't available, discovery plugins will be less effective"
+            )
 
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
@@ -217,7 +254,10 @@ class Statick():
 
             if args.force_tool_list is not None:
                 force_tool_list = args.force_tool_list.split(",")
-                if plugin_name not in force_tool_list and plugin_name not in plugin_dependencies:
+                if (
+                    plugin_name not in force_tool_list
+                    and plugin_name not in plugin_dependencies
+                ):
                     print("Skipping plugin not in force list {}!".format(plugin_name))
                     plugins_to_run.remove(plugin_name)
                     continue
@@ -230,8 +270,10 @@ class Statick():
             for dependency_name in dependencies:
                 if dependency_name not in plugins_ran:
                     if dependency_name not in enabled_plugins:
-                        print("Plugin {} depends on plugin {} which isn't "
-                              "enabled!".format(plugin_name, dependency_name))
+                        print(
+                            "Plugin {} depends on plugin {} which isn't "
+                            "enabled!".format(plugin_name, dependency_name)
+                        )
                         return None, False
                     plugin_dependencies.append(dependency_name)
                     plugins_to_run.remove(dependency_name)

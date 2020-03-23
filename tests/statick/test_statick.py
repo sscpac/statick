@@ -15,8 +15,7 @@ def init_statick():
     """Fixture to initialize a Statick instance."""
     args = Args("Statick tool")
 
-    return Statick(args.get_user_paths(["--user-paths",
-                                        os.path.dirname(__file__)]))
+    return Statick(args.get_user_paths(["--user-paths", os.path.dirname(__file__)]))
 
 
 def test_gather_args(init_statick):
@@ -30,8 +29,12 @@ def test_gather_args(init_statick):
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output-directory", os.path.dirname(__file__),
-                "--path", os.path.dirname(__file__)]
+    sys.argv = [
+        "--output-directory",
+        os.path.dirname(__file__),
+        "--path",
+        os.path.dirname(__file__),
+    ]
     parsed_args = args.get_args(sys.argv)
     assert "path" in parsed_args
     assert "output_directory" in parsed_args
@@ -46,8 +49,9 @@ def test_get_level(init_statick):
     Expected result: Some level is returned
     """
     args = Args("Statick tool")
-    args.parser.add_argument("--profile", dest="profile",
-                             type=str, default="profile-test.yaml")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="profile-test.yaml"
+    )
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level == "default_value"
 
@@ -59,8 +63,9 @@ def test_get_level_non_default(init_statick):
     Expected result: Some level is returned
     """
     args = Args("Statick tool")
-    args.parser.add_argument("--profile", dest="profile",
-                             type=str, default="profile-test.yaml")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="profile-test.yaml"
+    )
     level = init_statick.get_level("package", args.get_args([]))
     assert level == "package_specific"
 
@@ -72,19 +77,21 @@ def test_get_level_nonexistent_file(init_statick):
     Expected result: None is returned
     """
     args = Args("Statick tool")
-    args.parser.add_argument("--profile", dest="profile",
-                             type=str, default="nonexistent.yaml")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="nonexistent.yaml"
+    )
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level is None
 
 
-@mock.patch('statick_tool.statick.Profile')
+@mock.patch("statick_tool.statick.Profile")
 def test_get_level_ioerror(mocked_profile_constructor, init_statick):
     """Test the behavior when Profile throws an OSError."""
     mocked_profile_constructor.side_effect = OSError("error")
     args = Args("Statick tool")
-    args.parser.add_argument("--profile", dest="profile",
-                             type=str, default="profile-test.yaml")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="profile-test.yaml"
+    )
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level is None
 
@@ -96,11 +103,12 @@ def test_custom_exceptions_file(init_statick):
     Expected result: Some ignored package is returned
     """
     args = Args("Statick tool")
-    args.parser.add_argument("--exceptions", dest="exceptions",
-                             type=str, default="exceptions-test.yaml")
+    args.parser.add_argument(
+        "--exceptions", dest="exceptions", type=str, default="exceptions-test.yaml"
+    )
     init_statick.get_exceptions(args.get_args([]))
     ignore_packages = init_statick.get_ignore_packages()
-    assert ignore_packages == ['test_package']
+    assert ignore_packages == ["test_package"]
 
 
 def test_custom_config_file(init_statick):
@@ -110,20 +118,22 @@ def test_custom_config_file(init_statick):
     Expected result: Some ignored package is returned
     """
     args = Args("Statick tool")
-    args.parser.add_argument("--config", dest="config",
-                             type=str, default="config-test.yaml")
+    args.parser.add_argument(
+        "--config", dest="config", type=str, default="config-test.yaml"
+    )
     init_statick.get_config(args.get_args([]))
     has_level = init_statick.config.has_level("default_value")
     assert has_level
 
 
-@mock.patch('statick_tool.statick.Profile')
+@mock.patch("statick_tool.statick.Profile")
 def test_get_level_valueerror(mocked_profile_constructor, init_statick):
     """Test the behavior when Profile throws a ValueError."""
     mocked_profile_constructor.side_effect = ValueError("error")
     args = Args("Statick tool")
-    args.parser.add_argument("--profile", dest="profile",
-                             type=str, default="profile-test.yaml")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="profile-test.yaml"
+    )
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level is None
 
@@ -135,8 +145,12 @@ def test_run():
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output-directory", os.path.dirname(__file__),
-                "--path", os.path.dirname(__file__)]
+    sys.argv = [
+        "--output-directory",
+        os.path.dirname(__file__),
+        "--path",
+        os.path.dirname(__file__),
+    ]
     parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     statick.get_config(parsed_args)
@@ -169,8 +183,12 @@ def test_run_missing_config(init_statick):
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output-directory", os.path.dirname(__file__),
-                "--path", os.path.dirname(__file__)]
+    sys.argv = [
+        "--output-directory",
+        os.path.dirname(__file__),
+        "--path",
+        os.path.dirname(__file__),
+    ]
     parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
@@ -185,8 +203,12 @@ def test_run_output_is_not_directory(init_statick):
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--output-directory", "/tmp/not_a_directory",
-                "--path", os.path.dirname(__file__)]
+    sys.argv = [
+        "--output-directory",
+        "/tmp/not_a_directory",
+        "--path",
+        os.path.dirname(__file__),
+    ]
     parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     statick.get_config(parsed_args)
@@ -203,8 +225,7 @@ def test_run_force_tool_list(init_statick):
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
-    sys.argv = ["--path", os.path.dirname(__file__),
-                "--force-tool-list", "bandit"]
+    sys.argv = ["--path", os.path.dirname(__file__), "--force-tool-list", "bandit"]
     args.output_directory = os.path.dirname(__file__)
     parsed_args = args.get_args(sys.argv)
     path = parsed_args.path

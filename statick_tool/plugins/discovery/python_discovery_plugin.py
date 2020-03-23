@@ -36,12 +36,13 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
             if file_cmd_exists:
                 for f in files:
                     full_path = os.path.join(root, f)
-                    output = subprocess.check_output(["file", full_path],
-                                                     universal_newlines=True)  # type: str
+                    output = subprocess.check_output(
+                        ["file", full_path], universal_newlines=True
+                    )  # type: str
                     # pylint: disable=unsupported-membership-test
-                    if ("python script" in output or
-                            "Python script" in output) and not \
-                            f.endswith(".cfg"):
+                    if (
+                        "python script" in output or "Python script" in output
+                    ) and not f.endswith(".cfg"):
                         # pylint: enable=unsupported-membership-test
                         python_files.append(os.path.abspath(full_path))
 
@@ -50,9 +51,14 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         print("  {} python files found.".format(len(python_files)))
         if exceptions:
             original_file_count = len(python_files)
-            python_files = exceptions.filter_file_exceptions_early(package, python_files)
+            python_files = exceptions.filter_file_exceptions_early(
+                package, python_files
+            )
             if original_file_count > len(python_files):
-                print("  After filtering, {} python files will be scanned.".
-                      format(len(python_files)))
+                print(
+                    "  After filtering, {} python files will be scanned.".format(
+                        len(python_files)
+                    )
+                )
 
         package["python_src"] = python_files

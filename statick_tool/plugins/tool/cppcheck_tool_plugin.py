@@ -16,11 +16,12 @@ from statick_tool.tool_plugin import ToolPlugin
 class CppcheckToolPlugin(ToolPlugin):
     """Apply cppcheck tool and gather results."""
 
-# pylint: disable=super-init-not-called
+    # pylint: disable=super-init-not-called
     def __init__(self) -> None:
         """Initialize cppcheck extensions."""
         self.valid_extensions = [".h", ".hpp", ".c", ".cc", ".cpp", ".cxx"]
-# pylint: enable=super-init-not-called
+
+    # pylint: enable=super-init-not-called
 
     def get_name(self) -> str:
         """Get name of tool."""
@@ -33,10 +34,11 @@ class CppcheckToolPlugin(ToolPlugin):
 
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
-        args.add_argument("--cppcheck-bin", dest="cppcheck_bin", type=str,
-                          help="cppcheck binary path")
+        args.add_argument(
+            "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
+        )
 
-# pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
+    # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
@@ -45,21 +47,28 @@ class CppcheckToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return []
 
-        flags = ["--report-progress", "--verbose", "--inline-suppr", "--language=c++",
-                 "--template=[{file}:{line}]: ({severity} {id}) {message}"]
+        flags = [
+            "--report-progress",
+            "--verbose",
+            "--inline-suppr",
+            "--language=c++",
+            "--template=[{file}:{line}]: ({severity} {id}) {message}",
+        ]
         flags += self.get_user_flags(level)
-        user_version = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                  level,
-                                                                  "version")
+        user_version = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "version"
+        )
 
         cppcheck_bin = "cppcheck"
         if self.plugin_context.args.cppcheck_bin is not None:
             cppcheck_bin = self.plugin_context.args.cppcheck_bin
 
         try:
-            output = subprocess.check_output([cppcheck_bin, "--version"],
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
+            output = subprocess.check_output(
+                [cppcheck_bin, "--version"],
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            )
             ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
             parse = re.compile(ver_re)  # type: Pattern[str]
             match = parse.match(output)  # type: Optional[Match[str]]
@@ -67,9 +76,11 @@ class CppcheckToolPlugin(ToolPlugin):
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
                 if user_version is not None and ver != float(user_version):
-                    print("You need version {} of cppcheck, but you have {}. "
-                          "See README.md for instuctions on how to install the "
-                          "proper version".format(user_version, match.group(2)))
+                    print(
+                        "You need version {} of cppcheck, but you have {}. "
+                        "See README.md for instuctions on how to install the "
+                        "proper version".format(user_version, match.group(2))
+                    )
                     return None
         except OSError as ex:
             print("Cppcheck not found! ({})".format(ex))
@@ -97,10 +108,11 @@ class CppcheckToolPlugin(ToolPlugin):
                 include_args.append(include_dir)
 
         try:
-            output = subprocess.check_output([cppcheck_bin] + flags +
-                                             include_args + files,
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
+            output = subprocess.check_output(
+                [cppcheck_bin] + flags + include_args + files,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            )
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("cppcheck failed! Returncode = {}".format(ex.returncode))
@@ -116,7 +128,8 @@ class CppcheckToolPlugin(ToolPlugin):
 
         issues = self.parse_output(output)
         return issues
-# pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
+
+    # pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
 
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:
@@ -134,15 +147,26 @@ class CppcheckToolPlugin(ToolPlugin):
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
             match = parse.match(line)  # type: Optional[Match[str]]
-            if match and line[1] != '*' and match.group(3) != \
-                    "information" and not self.check_for_exceptions(match):
+            if (
+                match
+                and line[1] != "*"
+                and match.group(3) != "information"
+                and not self.check_for_exceptions(match)
+            ):
                 dummy, extension = os.path.splitext(match.group(1))
                 if extension in self.valid_extensions:
                     cert_reference = None
                     if match.group(4) in warnings_mapping:
                         cert_reference = warnings_mapping[match.group(4)]
-                    issues.append(Issue(match.group(1), match.group(2),
-                                        self.get_name(), match.group(3) +
-                                        '/' + match.group(4), "5",
-                                        match.group(5), cert_reference))
+                    issues.append(
+                        Issue(
+                            match.group(1),
+                            match.group(2),
+                            self.get_name(),
+                            match.group(3) + "/" + match.group(4),
+                            "5",
+                            match.group(5),
+                            cert_reference,
+                        )
+                    )
         return issues

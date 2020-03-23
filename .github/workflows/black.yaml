@@ -1,6 +1,6 @@
-name: Statick
+name: Black Formatting
 
-on: [pull_request, push]
+on: [pull_request, push]  # NOLINT
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
         python-version: [3.6, 3.7, 3.8]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2  # NOLINT
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
@@ -22,12 +22,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip3 install -r requirements.txt
-        pip3 install mypy tox tox-gh-actions wheel
+        pip3 install black
 
-    - name: Test with tox
-      run: |
-        tox
-
-    - name: Test with mypy
-      run: |
-        mypy --ignore-missing-imports statick statick_tool/
+    - name: Test with black
+      run: >-
+        black --check --diff
+        --exclude tests/plugins/tool/black_tool_plugin/valid_package/format_errors.py
+        statick statick_ws statick_tool tests

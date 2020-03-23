@@ -33,9 +33,9 @@ class CMakelintToolPlugin(ToolPlugin):
 
         try:
             subproc_args = ["cmakelint"] + flags + [cmake_file]
-            output = subprocess.check_output(subproc_args,
-                                             stderr=subprocess.STDOUT,
-                                             universal_newlines=True)
+            output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 1:
                 output = ex.output
@@ -72,8 +72,16 @@ class CMakelintToolPlugin(ToolPlugin):
                     level = "5"
                 else:
                     level = "3"
-                issues.append(Issue(match.group(1), match.group(2),
-                                    self.get_name(), match.group(4), level,
-                                    match.group(3), None))
+                issues.append(
+                    Issue(
+                        match.group(1),
+                        match.group(2),
+                        self.get_name(),
+                        match.group(4),
+                        level,
+                        match.group(3),
+                        None,
+                    )
+                )
 
         return issues
