@@ -12,6 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.3.7 - 2020-03-23
+
+### Added
+
+- Formatted all code using black.
+  Added Github Action to ensure future commits are consistent with black formatting.
+- Added a tool plugin for [black](https://github.com/psf/black).
+- Added a tool plugin for [mypy](http://mypy-lang.org/).
+
 ## v0.3.6 - 2020-03-18
 
 ### Fixed
