@@ -26,4 +26,6 @@ jobs:
 
     - name: Test with black
       run: |
-        black --check --diff statick statick_ws statick_tool tests
+        black --check --diff
+              --exclude tests/plugins/tool/black_tool_plugin/valid_package/format_errors.py
+              statick statick_ws statick_tool tests
