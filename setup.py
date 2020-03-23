@@ -2,7 +2,7 @@
 
 
 try:
-    from setuptools import setup
+    from setuptools import setup  # NOLINT
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from distutils.core import setup  # pylint: disable=wrong-import-order
 
