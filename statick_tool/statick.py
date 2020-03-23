@@ -163,11 +163,11 @@ class Statick:
 
         return level
 
-    def run(
+    def run(  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
         self, path: str, args: argparse.Namespace
     ) -> Tuple[
         Optional[Dict], bool
-    ]:  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+    ]:
         """Run scan tools against targets on path."""
         success = True
 
