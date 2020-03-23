@@ -25,7 +25,7 @@ jobs:
         pip3 install black
 
     - name: Test with black
-      run: |
+      run: >-
         black --check --diff
-              --exclude tests/plugins/tool/black_tool_plugin/valid_package/format_errors.py
-              statick statick_ws statick_tool tests
+        --exclude tests/plugins/tool/black_tool_plugin/valid_package/format_errors.py
+        statick statick_ws statick_tool tests
