@@ -165,9 +165,7 @@ class Statick:
 
     def run(  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
         self, path: str, args: argparse.Namespace
-    ) -> Tuple[
-        Optional[Dict], bool
-    ]:
+    ) -> Tuple[Optional[Dict], bool]:
         """Run scan tools against targets on path."""
         success = True
 

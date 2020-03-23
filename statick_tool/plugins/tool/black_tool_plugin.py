@@ -30,9 +30,9 @@ class BlackToolPlugin(ToolPlugin):
         for src in package["python_src"]:
             try:
                 subproc_args = [tool_bin, src] + flags
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
 
             except subprocess.CalledProcessError as ex:
                 # Return code 1 just means "found problems"
@@ -71,8 +71,16 @@ class BlackToolPlugin(ToolPlugin):
                 if line.startswith("would reformat"):
                     match = parse.match(line)  # type: Optional[Match[str]]
                     if match:
-                        issues.append(Issue(match.group(3), "0",
-                                            self.get_name(), "format", "3",
-                                            "would reformat", None))
+                        issues.append(
+                            Issue(
+                                match.group(3),
+                                "0",
+                                self.get_name(),
+                                "format",
+                                "3",
+                                "would reformat",
+                                None,
+                            )
+                        )
 
         return issues
