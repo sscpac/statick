@@ -33,9 +33,9 @@ class ChktexToolPlugin(ToolPlugin):
         for src in package["tex"]:
             try:
                 subproc_args = [tool_bin, src] + flags  # type: List[str]
-                output = subprocess.check_output(subproc_args,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
 
             except subprocess.CalledProcessError as ex:
                 # Return code 1 just means "found problems"
@@ -66,10 +66,10 @@ class ChktexToolPlugin(ToolPlugin):
         tool_re = r"(.+)\s(\d+)\s(.+)\s(.+)\s(.+)\s(\d+):\s(.+)"  # type: str
         parse = re.compile(tool_re)  # type: Pattern[str]
         issues = []  # type: List[Issue]
-        filename = ''  # type: str
+        filename = ""  # type: str
         line_number = "0"  # type: str
-        issue_type = ''  # type: str
-        message = ''  # type: str
+        issue_type = ""  # type: str
+        message = ""  # type: str
 
         for output in total_output:
             for line in output.splitlines():
@@ -80,8 +80,16 @@ class ChktexToolPlugin(ToolPlugin):
                         issue_type = match.group(2)
                         line_number = match.group(6)
                         message = match.group(7)
-                        issues.append(Issue(filename, line_number,
-                                            self.get_name(), issue_type,
-                                            "3", message, None))
+                        issues.append(
+                            Issue(
+                                filename,
+                                line_number,
+                                self.get_name(),
+                                issue_type,
+                                "3",
+                                message,
+                                None,
+                            )
+                        )
 
         return issues
