@@ -8,9 +8,6 @@ To run the CCCC tool locally (without Statick) one way to do so is:
 That will generate several reports, including HTML. The results can be viewd
 in a web browser.
 """
-
-from __future__ import print_function
-
 import argparse
 import csv
 import subprocess

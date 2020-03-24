@@ -1,7 +1,4 @@
 """Apply spotbugs tool and gather results."""
-
-from __future__ import print_function
-
 import os
 import subprocess
 import xml.etree.ElementTree as etree

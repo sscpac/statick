@@ -11,9 +11,6 @@ reported issue contain the absolute path to the file containing the issue
 to be ignored. The path for the issue is set in the tool plugin that
 generates the issues.
 """
-
-from __future__ import print_function
-
 import fnmatch
 import os
 import re

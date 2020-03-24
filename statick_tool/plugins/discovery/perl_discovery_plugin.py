@@ -1,7 +1,4 @@
 """Discover Perl files to analyze."""
-
-from __future__ import print_function
-
 import fnmatch
 import os
 import subprocess

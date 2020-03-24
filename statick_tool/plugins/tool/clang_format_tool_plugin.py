@@ -1,7 +1,4 @@
 """Apply clang-format tool and gather results."""
-
-from __future__ import print_function
-
 import argparse
 import difflib
 import os

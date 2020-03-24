@@ -1,7 +1,4 @@
 """Code analysis front-end."""
-
-from __future__ import print_function
-
 import argparse
 import copy
 import logging

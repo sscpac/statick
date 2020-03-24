@@ -1,7 +1,4 @@
 """Apply clang-tidy tool and gather results."""
-
-from __future__ import print_function
-
 import argparse
 import re
 import subprocess

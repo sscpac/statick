@@ -1,7 +1,4 @@
 """Apply Perl::Critic tool and gather results."""
-
-from __future__ import print_function
-
 import argparse
 import subprocess
 from typing import List, Optional

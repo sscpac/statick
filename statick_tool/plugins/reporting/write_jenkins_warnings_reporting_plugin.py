@@ -1,6 +1,4 @@
 """Write issue reports to a file."""
-from __future__ import print_function
-
 import os
 from typing import Dict, Optional, Tuple
 
