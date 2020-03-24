@@ -1,7 +1,4 @@
 """Discovery plugin to find catkin packages."""
-
-from __future__ import print_function
-
 import os
 
 from statick_tool.discovery_plugin import DiscoveryPlugin

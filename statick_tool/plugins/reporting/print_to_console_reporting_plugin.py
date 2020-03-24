@@ -1,6 +1,4 @@
 """Write issue reports to the console."""
-from __future__ import print_function
-
 from collections import OrderedDict
 from typing import Dict, Optional, Tuple
 

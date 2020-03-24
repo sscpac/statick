@@ -1,6 +1,4 @@
 """Write Statick results to Jenkins Warnings-NG plugin json-log compatible output."""
-from __future__ import print_function
-
 import json
 import os
 from typing import Dict, Optional, Tuple

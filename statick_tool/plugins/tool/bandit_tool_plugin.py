@@ -1,7 +1,4 @@
 """Apply bandit tool and gather results."""
-
-from __future__ import print_function
-
 import argparse
 import csv
 import subprocess
