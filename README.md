@@ -131,16 +131,14 @@ If you are running statick against a ROS package and get an error that there is 
 and that the package is not CMake, it usually means that you did not specify a single package.
 Instead, this is what happens when you tell statick to analyze a ROS workspace and do not use `statick_ws`.
 
-```shell
-Running cmake discovery plugin...
-  Package is not cmake.
-cmake discovery plugin done.
-.
-.
-.
-Running make tool plugin...
-make: *** No rule to make target 'clean'.  Stop.
-Make failed! Returncode = 2
-Exception output:
-make tool plugin failed
-```
+    Running cmake discovery plugin...
+      Package is not cmake.
+    cmake discovery plugin done.
+    .
+    .
+    .
+    Running make tool plugin...
+    make: *** No rule to make target 'clean'.  Stop.
+    Make failed! Returncode = 2
+    Exception output:
+    make tool plugin failed
