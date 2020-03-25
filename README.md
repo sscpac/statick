@@ -122,3 +122,25 @@ Here are some example use cases for the level of compliance we are enforcing for
     $ . devel/setup.bash
     $ mkdir statick_output
     $ statick_ws src statick_output
+
+## Troubleshooting
+
+### Make plugin
+
+If you are running statick against a ROS package and get an error that there is no rule to make target `clean`,
+and that the package is not CMake, it usually means that you did not specify a single package.
+Instead, this is what happens when you tell statick to analyze a ROS workspace and do not use `statick_ws`.
+
+```shell
+Running cmake discovery plugin...
+  Package is not cmake.
+cmake discovery plugin done.
+.
+.
+.
+Running make tool plugin...
+make: *** No rule to make target 'clean'.  Stop.
+Make failed! Returncode = 2
+Exception output:
+make tool plugin failed
+```
