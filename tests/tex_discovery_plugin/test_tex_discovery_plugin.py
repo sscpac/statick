@@ -43,7 +43,7 @@ def modified_environ(*remove, **update):
         [env.pop(k) for k in remove_after]
 
 
-def test_tex_plugin_found():
+def test_tex_discovery_plugin_found():
     """Test that the plugin manager finds the TeX discovery plugin."""
     manager = PluginManager()
     # Get the path to statick_tool/__init__.py, get the directory part, and
@@ -67,14 +67,14 @@ def test_tex_plugin_found():
     )
 
 
-def test_tex_plugin_scan_valid():
+def test_tex_discovery_plugin_scan_valid():
     """Test that the TeX discovery plugin finds valid TeX source and bib files."""
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     tdp = TexDiscoveryPlugin()
     tdp.scan(package, "level")
-    expected = ["test.tex", "test.bib", "ignore_this/ignoreme.tex"]
+    expected = ["test.tex", "test.bib", os.path.join("ignore_this", "ignoreme.tex")]
     if tdp.file_command_exists():
         expected += ["oddextensiontex.source"]
     # We have to add the path to each of the above...yuck
@@ -83,7 +83,7 @@ def test_tex_plugin_scan_valid():
     assert set(package["tex"]) == set(expected_fullpath)
 
 
-def test_tex_plugin_scan_invalid():
+def test_tex_discovery_plugin_scan_invalid():
     """Test that the TeX discovery plugin doesn't find non-TeX files."""
     package = Package(
         "invalid_package", os.path.join(os.path.dirname(__file__), "invalid_package")
@@ -123,7 +123,7 @@ def test_tex_discovery_plugin_no_file_cmd():
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
         tdp.scan(package, "level")
-        expected = ["test.tex", "test.bib", "ignore_this/ignoreme.tex"]
+        expected = ["test.tex", "test.bib", os.path.join("ignore_this", "ignoreme.tex")]
         # We have to add the path to each of the above...yuck
         expected_fullpath = [
             os.path.join(package.path, filename) for filename in expected
