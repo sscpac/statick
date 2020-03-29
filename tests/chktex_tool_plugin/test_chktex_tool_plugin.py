@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -62,6 +63,8 @@ def test_chktex_tool_plugin_found():
 def test_chktex_tool_plugin_scan_valid():
     """Integration test: Make sure the chktex output hasn't changed."""
     cttp = setup_chktex_tool_plugin()
+    if not cttp.command_exists("chktex"):
+        pytest.skip("Missing chktex executable.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )

@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -61,26 +62,28 @@ def test_lacheck_tool_plugin_found():
 
 def test_lacheck_tool_plugin_scan_valid():
     """Integration test: Make sure the lacheck output hasn't changed."""
-    cttp = setup_lacheck_tool_plugin()
+    ltp = setup_lacheck_tool_plugin()
+    if not ltp.command_exists("lacheck"):
+        pytest.skip("Missing lacheck executable.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["tex"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "test.tex")
     ]
-    issues = cttp.scan(package, "level")
+    issues = ltp.scan(package, "level")
     # We expect to have space before punctuation mark warning.
     assert len(issues) == 1
 
 
 def test_lacheck_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of lacheck."""
-    cttp = setup_lacheck_tool_plugin()
+    ltp = setup_lacheck_tool_plugin()
     # Note that misspelled punctation matches actual tool output.
     output = (
         "'valid_package/test.tex', line 13: Whitespace before punctation mark in ' .'"
     )
-    issues = cttp.parse_output([output])
+    issues = ltp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/test.tex"
     assert issues[0].line_number == "13"
@@ -92,9 +95,9 @@ def test_lacheck_tool_plugin_parse_valid():
 
 def test_lacheck_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of lacheck."""
-    cttp = setup_lacheck_tool_plugin()
+    ltp = setup_lacheck_tool_plugin()
     output = "invalid text"
-    issues = cttp.parse_output(output)
+    issues = ltp.parse_output(output)
     assert not issues
 
 
@@ -108,20 +111,20 @@ def test_lacheck_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outpu
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
         0, "", output="mocked error"
     )
-    cttp = setup_lacheck_tool_plugin()
+    ltp = setup_lacheck_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["tex"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "test.tex")
     ]
-    issues = cttp.scan(package, "level")
+    issues = ltp.scan(package, "level")
     assert issues is None
 
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
         1, "", output="mocked error"
     )
-    issues = cttp.scan(package, "level")
+    issues = ltp.scan(package, "level")
     assert not issues
 
 
@@ -133,12 +136,12 @@ def test_lacheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
     Expected result: issues is None
     """
     mock_subprocess_check_output.side_effect = OSError("mocked error")
-    cttp = setup_lacheck_tool_plugin()
+    ltp = setup_lacheck_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["tex"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "test.tex")
     ]
-    issues = cttp.scan(package, "level")
+    issues = ltp.scan(package, "level")
     assert issues is None
