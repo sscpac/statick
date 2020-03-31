@@ -5,6 +5,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -54,6 +55,8 @@ def test_markdownlint_tool_plugin_found():
 def test_markdownlint_tool_plugin_scan_valid():
     """Integration test: Make sure the markdownlint output hasn't changed."""
     plugin = setup_markdownlint_tool_plugin()
+    if not plugin.command_exists("markdownlint"):
+        pytest.skip("Missing markdownlint executable.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['md_src'] = [os.path.join(os.path.dirname(__file__),
@@ -65,6 +68,8 @@ def test_markdownlint_tool_plugin_scan_valid():
 def test_markdownlint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the markdownlint output hasn't changed."""
     plugin = setup_markdownlint_tool_plugin()
+    if not plugin.command_exists("markdownlint"):
+        pytest.skip("Missing markdownlint executable.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['md_src'] = [os.path.join(os.path.dirname(__file__),
