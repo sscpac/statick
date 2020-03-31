@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -52,6 +53,8 @@ def test_jshint_tool_plugin_found():
 def test_jshint_tool_plugin_scan_valid():
     """Integration test: Make sure the jshint output hasn't changed."""
     plugin = setup_jshint_tool_plugin()
+    if not plugin.command_exists("jshint"):
+        pytest.skip("Missing jshint executable.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['javascript_src'] = [os.path.join(os.path.dirname(__file__),
@@ -63,6 +66,8 @@ def test_jshint_tool_plugin_scan_valid():
 def test_jshint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the jshint output hasn't changed."""
     plugin = setup_jshint_tool_plugin()
+    if not plugin.command_exists("jshint"):
+        pytest.skip("Missing jshint executable.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['html_src'] = [os.path.join(os.path.dirname(__file__),

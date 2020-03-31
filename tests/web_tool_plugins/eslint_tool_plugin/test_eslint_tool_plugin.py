@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -52,6 +53,8 @@ def test_eslint_tool_plugin_found():
 def test_eslint_tool_plugin_scan_valid():
     """Integration test: Make sure the eslint output hasn't changed."""
     plugin = setup_eslint_tool_plugin()
+    if not plugin.command_exists("eslint"):
+        pytest.skip("Missing eslint executable.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['javascript_src'] = [os.path.join(os.path.dirname(__file__),
@@ -63,6 +66,8 @@ def test_eslint_tool_plugin_scan_valid():
 def test_eslint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the eslint output hasn't changed."""
     plugin = setup_eslint_tool_plugin()
+    if not plugin.command_exists("eslint"):
+        pytest.skip("Missing eslint executable.")
     package = Package('valid_package', os.path.join(os.path.dirname(__file__),
                                                     'valid_package'))
     package['html_src'] = [os.path.join(os.path.dirname(__file__),
