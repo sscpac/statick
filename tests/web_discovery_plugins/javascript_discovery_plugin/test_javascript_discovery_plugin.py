@@ -36,7 +36,7 @@ def test_javascript_plugin_scan_valid():
                                                     'valid_package'))
     discovery_plugin = JavaScriptDiscoveryPlugin()
     discovery_plugin.scan(package, 'level')
-    expected = ['test.js', 'ignore_this/ignoreme.js']
+    expected = ['test.js', os.path.join('ignore_this', 'ignoreme.js')]
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename)
                          for filename in expected]

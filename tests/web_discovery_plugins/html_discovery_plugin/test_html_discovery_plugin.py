@@ -42,7 +42,7 @@ def test_html_plugin_no_file_cmd():
                                                         'valid_package'))
         discovery_plugin = HTMLDiscoveryPlugin()
         discovery_plugin.scan(package, 'level')
-        expected = ['test.html', 'ignore_this/ignoreme.html']
+        expected = ['test.html', os.path.join('ignore_this', 'ignoreme.html')]
         assert not discovery_plugin.file_command_exists()
         # We have to add the path to each of the above...yuck
         expected_fullpath = [os.path.join(package.path, filename)
@@ -60,7 +60,7 @@ def test_html_plugin_scan_valid():
                                                     'valid_package'))
     discovery_plugin = HTMLDiscoveryPlugin()
     discovery_plugin.scan(package, 'level')
-    expected = ['test.html', 'ignore_this/ignoreme.html']
+    expected = ['test.html', os.path.join('ignore_this', 'ignoreme.html')]
     if discovery_plugin.file_command_exists():
         expected += ['oddextensionhtml.source']
     # We have to add the path to each of the above...yuck

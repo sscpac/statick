@@ -36,7 +36,7 @@ def test_css_plugin_scan_valid():
                                                     'valid_package'))
     discovery_plugin = CSSDiscoveryPlugin()
     discovery_plugin.scan(package, 'level')
-    expected = ['test.css', 'ignore_this/ignoreme.css']
+    expected = ['test.css', os.path.join('ignore_this', 'ignoreme.css')]
     # if discovery_plugin.file_command_exists():
     #     expected += ['oddextensioncss.source']
     # We have to add the path to each of the above...yuck
