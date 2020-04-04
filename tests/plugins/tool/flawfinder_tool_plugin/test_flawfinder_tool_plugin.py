@@ -2,6 +2,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
 import pytest
@@ -70,6 +71,8 @@ def test_flawfinder_tool_plugin_scan_valid():
     fftp = setup_flawfinder_tool_plugin()
     if not fftp.command_exists("flawfinder"):
         pytest.skip("Flawfinder binary not found, can't run the integration test")
+    if sys.platform == "win32":
+        pytest.skip("Flawfinder needs Cygwin on Windows, skipping test.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -83,6 +86,8 @@ def test_flawfinder_tool_plugin_scan_missing_c_src():
     fftp = setup_flawfinder_tool_plugin()
     if not fftp.command_exists("flawfinder"):
         pytest.skip("Flawfinder binary not found, can't run the integration test")
+    if sys.platform == "win32":
+        pytest.skip("Flawfinder needs Cygwin on Windows, skipping test.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )

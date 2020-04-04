@@ -1,6 +1,7 @@
 """Apply mypy tool and gather results."""
 import re
 import subprocess
+import sys
 from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
@@ -65,7 +66,7 @@ class MypyToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        # file:line: type: msg type
+        # file:line: severity: msg type
         tool_re = r"(.+):(\d+):\s(.+):\s(.+)\s(.+)"
         parse = re.compile(tool_re)  # type: Pattern[str]
         issues = []
@@ -73,7 +74,7 @@ class MypyToolPlugin(ToolPlugin):
         for output in total_output:
             lines = output.splitlines()
             for line in lines:
-                if not line.startswith("/"):
+                if sys.platform != "win32" and not line.startswith("/"):
                     continue
                 match = parse.match(line)  # type: Optional[Match[str]]
                 if match:

@@ -41,7 +41,7 @@ def test_xml_discovery_plugin_scan_valid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     xmldp.scan(package, "level")
-    expected = ["test.xml", "test.launch", "ignore_this/ignoreme.xml"]
+    expected = ["test.xml", "test.launch", os.path.join("ignore_this", "ignoreme.xml")]
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename) for filename in expected]
     # Neat trick to verify that two unordered lists are the same

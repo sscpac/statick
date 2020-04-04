@@ -35,7 +35,9 @@ class CDiscoveryPlugin(DiscoveryPlugin):
                         ["file", full_path], universal_newlines=True
                     )  # type: str
                     if (
-                        "c source" in output.lower() or "c++ source" in output.lower()
+                        "c source" in output.lower()
+                        or "c program" in output.lower()
+                        or "c++ source" in output.lower()
                     ) and not f.endswith(".cfg"):
                         c_files.append(os.path.abspath(full_path))
 

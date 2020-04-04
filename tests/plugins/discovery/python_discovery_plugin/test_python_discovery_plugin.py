@@ -73,7 +73,7 @@ def test_python_discovery_plugin_scan_valid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     pydp.scan(package, "level")
-    expected = ["test.py", "ignore_this/ignoreme.py"]
+    expected = ["test.py", os.path.join("ignore_this", "ignoreme.py")]
     if pydp.file_command_exists():
         expected += ["oddextensionpy.source"]
     # We have to add the path to each of the above...yuck
@@ -122,7 +122,7 @@ def test_python_discovery_plugin_no_file_cmd():
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
         pydp.scan(package, "level")
-        expected = ["test.py", "ignore_this/ignoreme.py"]
+        expected = ["test.py", os.path.join("ignore_this", "ignoreme.py")]
         # We have to add the path to each of the above...yuck
         expected_fullpath = [
             os.path.join(package.path, filename) for filename in expected
