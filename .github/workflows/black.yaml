@@ -27,5 +27,5 @@ jobs:
     - name: Test with black
       run: >-
         black --check --diff
-              --exclude tests/*/valid_package/*.py
+              --exclude tests/.*/valid_package/*
               statick statick_ws statick_tool tests
