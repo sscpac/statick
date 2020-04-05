@@ -91,10 +91,10 @@ def test_docformatter_tool_plugin_scan_invalid():
 def test_docformatter_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of docformatter."""
     dtp = setup_docformatter_tool_plugin()
-    output = "valid_package/wrong.py"
+    output = os.path.join("valid_package", "wrong.py")
     issues = dtp.parse_output([output])
     assert len(issues) == 1
-    assert issues[0].filename == "valid_package/wrong.py"
+    assert issues[0].filename == os.path.join("valid_package", "wrong.py")
     assert issues[0].line_number == "0"
     assert issues[0].tool == "docformatter"
     assert issues[0].issue_type == "format"
@@ -110,7 +110,9 @@ def test_docformatter_tool_plugin_parse_invalid():
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.docformatter_tool_plugin.subprocess.check_output")
+@mock.patch(
+    "statick_tool.plugins.tool.docformatter_tool_plugin.subprocess.check_output"
+)
 def test_docformatter_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     Test what happens when an OSError is raised (usually means docformatter doesn't exist).
@@ -129,7 +131,9 @@ def test_docformatter_tool_plugin_scan_oserror(mock_subprocess_check_output):
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.docformatter_tool_plugin.subprocess.check_output")
+@mock.patch(
+    "statick_tool.plugins.tool.docformatter_tool_plugin.subprocess.check_output"
+)
 def test_docformatter_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised (usually means docformatter hit an error).
