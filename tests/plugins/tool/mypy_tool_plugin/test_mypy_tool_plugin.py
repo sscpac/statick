@@ -126,7 +126,7 @@ def test_mypy_tool_plugin_scan_oserror(mock_subprocess_check_output):
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "e501.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "wrong_mypy.py")
     ]
     issues = mtp.scan(package, "level")
     assert not issues
@@ -147,7 +147,7 @@ def test_mypy_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "e501.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "wrong_mypy.py")
     ]
     issues = mtp.scan(package, "level")
     assert not issues
