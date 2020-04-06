@@ -49,6 +49,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r requirements.txt
           python -m pip install --upgrade mypy
+          python -m pip install --upgrade setuptools
           python -m pip install --upgrade tox
           python -m pip install --upgrade tox-gh-actions
           python -m pip install --upgrade wheel
