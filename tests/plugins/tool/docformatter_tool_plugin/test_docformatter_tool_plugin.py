@@ -76,18 +76,6 @@ def test_docformatter_tool_plugin_scan_valid():
     assert len(issues) == 1
 
 
-def test_docformatter_tool_plugin_scan_no_src():
-    """Verify no issues found without source files."""
-    dtp = setup_docformatter_tool_plugin()
-    if not dtp.command_exists("docformatter"):
-        pytest.skip("Can't find docformatter, unable to test docformatter plugin")
-    package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    )
-    issues = dtp.scan(package, "level")
-    assert not issues
-
-
 def test_docformatter_tool_plugin_scan_invalid():
     """Make sure no issues are found when no Python source files are available."""
     dtp = setup_docformatter_tool_plugin()

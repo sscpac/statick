@@ -3,6 +3,7 @@ bandit
 cmakelint
 cpplint
 deprecated
+docformatter
 flawfinder
 lizard
 pycodestyle
