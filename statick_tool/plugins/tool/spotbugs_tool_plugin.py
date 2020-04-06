@@ -121,8 +121,8 @@ class SpotbugsToolPlugin(ToolPlugin):
             )
             file_path = ""  # type: Optional[str]
             for source_dir in output_xml.findall("Project/SrcDir"):
-                joined_path = os.path.join(  # type: ignore
-                    os.path.normpath(source_dir.text), java_path_string,
+                joined_path = os.path.join(
+                    os.path.normpath(source_dir.text), java_path_string,  # type: ignore
                 )
                 if os.path.exists(joined_path):  # type: ignore
                     file_path = joined_path
