@@ -1,0 +1,193 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>statick_tool.config &#8212; Statick  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for statick_tool.config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Manages which plugins are run for each statick scan level.</span>
+
+<span class="sd">Sets what flags are used for each plugin at those levels.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages which plugins are run for each statick scan level.</span>
+
+<span class="sd">    Sets what flags are used for each plugin at those levels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Initialize configuration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">filename</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Any</span>
+            <span class="k">return</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">fname</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Config.has_level"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.has_level">[docs]</a>    <span class="k">def</span> <span class="nf">has_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Check if given level exists in config.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;levels&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="ow">and</span> <span class="n">level</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;levels&quot;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Config.get_enabled_plugins"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_enabled_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">get_enabled_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plugin_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get what plugins are enabled for a certain level.&quot;&quot;&quot;</span>
+        <span class="n">level_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;levels&quot;</span><span class="p">][</span><span class="n">level</span><span class="p">]</span>
+        <span class="n">plugins</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List</span>
+        <span class="k">if</span> <span class="n">plugin_type</span> <span class="ow">in</span> <span class="n">level_config</span><span class="p">:</span>
+            <span class="n">plugins</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">level_config</span><span class="p">[</span><span class="n">plugin_type</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;inherits_from&quot;</span> <span class="ow">in</span> <span class="n">level_config</span><span class="p">:</span>
+            <span class="n">inherited_level</span> <span class="o">=</span> <span class="n">level_config</span><span class="p">[</span><span class="s2">&quot;inherits_from&quot;</span><span class="p">]</span>
+            <span class="n">plugins</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_enabled_plugins</span><span class="p">(</span><span class="n">inherited_level</span><span class="p">,</span> <span class="n">plugin_type</span><span class="p">)</span>
+        <span class="n">plugins</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">OrderedDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">plugins</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">plugins</span></div>
+
+<div class="viewcode-block" id="Config.get_enabled_tool_plugins"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_enabled_tool_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">get_enabled_tool_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get what tool plugins are enabled for a certain level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_enabled_plugins</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;tool&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_enabled_discovery_plugins"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_enabled_discovery_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">get_enabled_discovery_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get what discovery plugins are enabled for a certain level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_enabled_plugins</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;discovery&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_enabled_reporting_plugins"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_enabled_reporting_plugins">[docs]</a>    <span class="k">def</span> <span class="nf">get_enabled_reporting_plugins</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get what reporting plugins are enabled for a certain level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_enabled_plugins</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;reporting&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_plugin_config"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_plugin_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_plugin_config</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">plugin_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">plugin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get flags to use for a plugin at a certain level.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">level</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;levels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">default</span>
+        <span class="n">level_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;levels&quot;</span><span class="p">][</span><span class="n">level</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">plugin_type</span> <span class="ow">in</span> <span class="n">level_config</span><span class="p">:</span>
+            <span class="n">type_config</span> <span class="o">=</span> <span class="n">level_config</span><span class="p">[</span><span class="n">plugin_type</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">plugin</span> <span class="ow">in</span> <span class="n">type_config</span><span class="p">:</span>
+                <span class="n">plugin_config</span> <span class="o">=</span> <span class="n">type_config</span><span class="p">[</span><span class="n">plugin</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">plugin_config</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">plugin_config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;inherits_from&quot;</span> <span class="ow">in</span> <span class="n">level_config</span><span class="p">:</span>
+            <span class="n">inherited_level</span> <span class="o">=</span> <span class="n">level_config</span><span class="p">[</span><span class="s2">&quot;inherits_from&quot;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugin_config</span><span class="p">(</span>
+                <span class="n">plugin_type</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">inherited_level</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">default</span></div>
+
+<div class="viewcode-block" id="Config.get_tool_config"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_tool_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_tool_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Get tool flags to use for a plugin at a certain level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugin_config</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_discovery_config"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_discovery_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_discovery_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">plugin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get discovery flags to use for a plugin at a certain level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugin_config</span><span class="p">(</span><span class="s2">&quot;discovery&quot;</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Config.get_reporting_config"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.config.Config.get_reporting_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_reporting_config</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">plugin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Get reporting flags to use for a plugin at a certain level.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_plugin_config</span><span class="p">(</span><span class="s2">&quot;reporting&quot;</span><span class="p">,</span> <span class="n">plugin</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Statick</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../statick_tool.html">statick_tool package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, SSC Pacific.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.9</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
