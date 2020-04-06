@@ -30,10 +30,12 @@ class MarkdownDiscoveryPlugin(DiscoveryPlugin):
         print("  {} markdown files found.".format(len(src_files)))
         if exceptions:
             original_file_count = len(src_files)
-            src_files = exceptions.filter_file_exceptions_early(package,
-                                                                src_files)
+            src_files = exceptions.filter_file_exceptions_early(package, src_files)
             if original_file_count > len(src_files):
-                print("  After filtering, {} markdown files will be scanned.".
-                      format(len(src_files)))
+                print(
+                    "  After filtering, {} markdown files will be scanned.".format(
+                        len(src_files)
+                    )
+                )
 
         package["md_src"] = src_files
