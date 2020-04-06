@@ -30,10 +30,12 @@ class CSSDiscoveryPlugin(DiscoveryPlugin):
         print("  {} CSS source files found.".format(len(src_files)))
         if exceptions:
             original_file_count = len(src_files)
-            src_files = exceptions.filter_file_exceptions_early(package,
-                                                                src_files)
+            src_files = exceptions.filter_file_exceptions_early(package, src_files)
             if original_file_count > len(src_files):
-                print("  After filtering, {} CSS files will be scanned.".
-                      format(len(src_files)))
+                print(
+                    "  After filtering, {} CSS files will be scanned.".format(
+                        len(src_files)
+                    )
+                )
 
         package["css_src"] = src_files

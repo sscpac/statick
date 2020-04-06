@@ -21,7 +21,9 @@ class StylelintToolPlugin(ToolPlugin):
         tool_bin = "stylelint"
 
         tool_config = ".stylelintrc"
-        user_config = self.plugin_context.config.get_tool_config(self.get_name(), level, "config")
+        user_config = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "config"
+        )
         if user_config is not None:
             tool_config = user_config
 
@@ -44,17 +46,20 @@ class StylelintToolPlugin(ToolPlugin):
         for src in files:
             try:
                 exe = [tool_bin] + flags + [src]
-                output = subprocess.check_output(exe,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    exe, stderr=subprocess.STDOUT, universal_newlines=True
+                )
                 total_output.append(output.strip())
 
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 2:  # returns 2 upon linting errors
                     total_output.append(ex.output.strip())
                 else:
-                    print("{} failed! Returncode = {}".
-                          format(tool_bin, str(ex.returncode)))
+                    print(
+                        "{} failed! Returncode = {}".format(
+                            tool_bin, str(ex.returncode)
+                        )
+                    )
                     print("{}".format(ex.output))
                     return None
 
@@ -78,19 +83,28 @@ class StylelintToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            lines = output.split('\n')
+            lines = output.split("\n")
             for line in lines:
                 try:
                     err_dict = json.loads(line)[0]
-                    for issue in err_dict['warnings']:
-                        severity_str = issue['severity']
+                    for issue in err_dict["warnings"]:
+                        severity_str = issue["severity"]
                         severity = 3
                         if severity_str == "warning":
                             severity = 3
                         elif severity_str == "error":
                             severity = 5
-                        issues.append(Issue(err_dict['source'], issue['line'], self.get_name(),
-                                            issue['rule'], severity, issue['text'], None))
+                        issues.append(
+                            Issue(
+                                err_dict["source"],
+                                issue["line"],
+                                self.get_name(),
+                                issue["rule"],
+                                severity,
+                                issue["text"],
+                                None,
+                            )
+                        )
 
                 except ValueError as ex:
                     print("ValueError: {}".format(ex))

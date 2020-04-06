@@ -21,7 +21,9 @@ class JSHintToolPlugin(ToolPlugin):
         tool_bin = "jshint"
 
         tool_config = ".jshintrc"
-        user_config = self.plugin_context.config.get_tool_config(self.get_name(), level, "config")
+        user_config = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "config"
+        )
         if user_config is not None:
             tool_config = user_config
 
@@ -44,17 +46,20 @@ class JSHintToolPlugin(ToolPlugin):
         for src in files:
             try:
                 exe = [tool_bin] + flags + [src]
-                output = subprocess.check_output(exe,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    exe, stderr=subprocess.STDOUT, universal_newlines=True
+                )
                 total_output.append(output)
 
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 2:  # jshint returns 2 upon linting errors
                     total_output.append(ex.output)
                 else:
-                    print("{} failed! Returncode = {}".
-                          format(tool_bin, str(ex.returncode)))
+                    print(
+                        "{} failed! Returncode = {}".format(
+                            tool_bin, str(ex.returncode)
+                        )
+                    )
                     print("{}".format(ex.output))
                     return None
 
@@ -80,7 +85,7 @@ class JSHintToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            lines = output.split('\n')
+            lines = output.split("\n")
             for line in lines:
                 match = parse.match(line)
                 if match:
@@ -89,6 +94,15 @@ class JSHintToolPlugin(ToolPlugin):
                     issue_type = "jshint"
                     severity = 5
                     message = match.group(4)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
-                                        severity, message, None))
+                    issues.append(
+                        Issue(
+                            filename,
+                            line_number,
+                            self.get_name(),
+                            issue_type,
+                            severity,
+                            message,
+                            None,
+                        )
+                    )
         return issues

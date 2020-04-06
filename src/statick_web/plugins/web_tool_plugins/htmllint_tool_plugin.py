@@ -21,7 +21,9 @@ class HTMLLintToolPlugin(ToolPlugin):
         tool_bin = "htmllint"
 
         tool_config = ".htmllintrc"
-        user_config = self.plugin_context.config.get_tool_config(self.get_name(), level, "config")
+        user_config = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "config"
+        )
         if user_config is not None:
             tool_config = user_config
 
@@ -37,15 +39,19 @@ class HTMLLintToolPlugin(ToolPlugin):
         for src in package["html_src"]:
             try:
                 exe = [tool_bin] + flags + [src]
-                output = subprocess.check_output(exe,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    exe, stderr=subprocess.STDOUT, universal_newlines=True
+                )
                 total_output.append(output)
 
             except subprocess.CalledProcessError as ex:
-                if ex.returncode not in [1, 2]:  # tool returns 1 upon warnings and 2 upon errors
-                    print("{} failed! Returncode = {}".
-                          format(tool_bin, str(ex.returncode)))
+                # tool returns 1 upon warnings and 2 upon errors
+                if ex.returncode not in [1, 2]:
+                    print(
+                        "{} failed! Returncode = {}".format(
+                            tool_bin, str(ex.returncode)
+                        )
+                    )
                     print("{}".format(ex.output))
                     return None
 
@@ -73,7 +79,7 @@ class HTMLLintToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            lines = output.split('\n')
+            lines = output.split("\n")
             for line in lines:
                 match = parse.match(line)
                 if match:
@@ -82,6 +88,15 @@ class HTMLLintToolPlugin(ToolPlugin):
                     issue_type = "format"
                     severity = 3
                     message = match.group(3)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
-                                        severity, message, None))
+                    issues.append(
+                        Issue(
+                            filename,
+                            line_number,
+                            self.get_name(),
+                            issue_type,
+                            severity,
+                            message,
+                            None,
+                        )
+                    )
         return issues

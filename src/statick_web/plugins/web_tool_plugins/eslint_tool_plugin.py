@@ -21,7 +21,9 @@ class ESLintToolPlugin(ToolPlugin):
         tool_bin = "eslint"
 
         tool_config = ".eslintrc"
-        user_config = self.plugin_context.config.get_tool_config(self.get_name(), level, "config")
+        user_config = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "config"
+        )
         if user_config is not None:
             tool_config = user_config
 
@@ -44,17 +46,20 @@ class ESLintToolPlugin(ToolPlugin):
         for src in files:
             try:
                 exe = [tool_bin] + flags + [src]
-                output = subprocess.check_output(exe,
-                                                 stderr=subprocess.STDOUT,
-                                                 universal_newlines=True)
+                output = subprocess.check_output(
+                    exe, stderr=subprocess.STDOUT, universal_newlines=True
+                )
                 total_output.append(output)
 
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:  # eslint returns 1 upon linting errors
                     total_output.append(ex.output)
                 else:
-                    print("{} failed! Returncode = {}".
-                          format(tool_bin, str(ex.returncode)))
+                    print(
+                        "{} failed! Returncode = {}".format(
+                            tool_bin, str(ex.returncode)
+                        )
+                    )
                     print("{}".format(ex.output))
                     return None
 
@@ -80,7 +85,7 @@ class ESLintToolPlugin(ToolPlugin):
         issues = []
 
         for output in total_output:
-            lines = output.split('\n')
+            lines = output.split("\n")
             count = 0
             for line in lines:
                 match = parse.match(line)
@@ -98,6 +103,15 @@ class ESLintToolPlugin(ToolPlugin):
                     line_number = match.group(2)
                     issue_type = match.group(6)
                     message = match.group(4)
-                    issues.append(Issue(filename, line_number, self.get_name(), issue_type,
-                                        severity, message, None))
+                    issues.append(
+                        Issue(
+                            filename,
+                            line_number,
+                            self.get_name(),
+                            issue_type,
+                            severity,
+                            message,
+                            None,
+                        )
+                    )
         return issues

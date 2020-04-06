@@ -31,10 +31,12 @@ class JavaScriptDiscoveryPlugin(DiscoveryPlugin):
         print("  {} JavaScript source files found.".format(len(src_files)))
         if exceptions:
             original_file_count = len(src_files)
-            src_files = exceptions.filter_file_exceptions_early(package,
-                                                                src_files)
+            src_files = exceptions.filter_file_exceptions_early(package, src_files)
             if original_file_count > len(src_files):
-                print("  After filtering, {} Javascript files will be scanned.".
-                      format(len(src_files)))
+                print(
+                    "  After filtering, {} Javascript files will be scanned.".format(
+                        len(src_files)
+                    )
+                )
 
         package["javascript_src"] = src_files
