@@ -137,7 +137,7 @@ def test_catkin_lint_tool_plugin_parse_valid():
     package["catkin"] = "catkin"
     issues = cltp.parse_output(package, output)
     assert len(issues) == 1
-    assert issues[0].filename == package.path + "/package.xml"
+    assert issues[0].filename == os.path.join(package.path, "package.xml")
     assert issues[0].line_number == "1"
     assert issues[0].tool == "catkin_lint"
     assert issues[0].issue_type == "notice"

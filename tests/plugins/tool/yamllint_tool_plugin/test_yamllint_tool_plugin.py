@@ -2,6 +2,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
 from yapsy.PluginManager import PluginManager
@@ -70,7 +71,10 @@ def test_yamllint_tool_plugin_scan_valid():
         os.path.join(os.path.dirname(__file__), "valid_package", "document-start.yaml")
     ]
     issues = yltp.scan(package, "level")
-    assert len(issues) == 1
+    if sys.platform == "win32":
+        assert len(issues) == 2  # additional error about newline character
+    else:
+        assert len(issues) == 1
 
 
 def test_yamllint_tool_plugin_parse_valid():

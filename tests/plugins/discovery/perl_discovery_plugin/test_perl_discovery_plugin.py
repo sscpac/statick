@@ -73,7 +73,7 @@ def test_perl_discovery_plugin_scan_valid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     pldp.scan(package, "level", None)
-    expected = ["test.pl", "ignore_this/ignoreme.pl"]
+    expected = ["test.pl", os.path.join("ignore_this", "ignoreme.pl")]
     if pldp.file_command_exists():
         expected += ["oddextensionpl.source"]
     # We have to add the path to each of the above...yuck
@@ -112,7 +112,7 @@ def test_perl_discovery_plugin_no_file_cmd():
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
         pldp.scan(package, "level")
-        expected = ["test.pl", "ignore_this/ignoreme.pl"]
+        expected = ["test.pl", os.path.join("ignore_this", "ignoreme.pl")]
         # We have to add the path to each of the above...yuck
         expected_fullpath = [
             os.path.join(package.path, filename) for filename in expected

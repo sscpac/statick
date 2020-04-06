@@ -2,6 +2,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
 import pytest
@@ -71,6 +72,8 @@ def test_spotbugs_tool_plugin_scan_valid():
     # Sanity check - make sure mvn exists
     if not sbtp.command_exists("mvn"):
         pytest.skip("Couldn't find 'mvn' command, can't run Spotbugs tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run spotbugs on Windows.")
 
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -105,6 +108,8 @@ def test_spotbugs_tool_plugin_scan_no_plugin_context():
     # Sanity check - make sure mvn exists
     if not sbtp.command_exists("mvn"):
         pytest.skip("Couldn't find 'mvn' command, can't run Spotbugs tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run spotbugs on Windows.")
 
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")

@@ -2,6 +2,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
 import pytest
@@ -75,6 +76,8 @@ def test_cpplint_tool_plugin_scan_valid():
         pytest.skip("Can't find CMake, unable to test cpplint plugin")
     elif not ctp.command_exists("cpplint"):
         pytest.skip("Can't find cpplint, unable to test cpplint plugin")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run cpplint on Windows.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )

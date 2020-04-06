@@ -144,6 +144,9 @@ levels:
   documentation:
     reporting:
       print_to_console:
+    discovery:
+      markdown:
+        flags: ""
     tool:
       markdownlint:
         flags: ""
