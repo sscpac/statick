@@ -54,6 +54,13 @@ jobs:
           python -m pip install --upgrade tox-gh-actions
           python -m pip install --upgrade wheel
 
+      # Remove apt repos that are known to break from time to time.
+      # See https://github.com/actions/virtual-environments/issues/323
+      - name: Remove broken apt repos [Ubuntu]
+        if: matrix.os == 'ubuntu-16.04' || matrix.os == 'ubuntu-18.04'
+        run: |
+          for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+
       - name: Install tools (Linux)
         if: matrix.os == 'ubuntu-18.04'
         run: |
