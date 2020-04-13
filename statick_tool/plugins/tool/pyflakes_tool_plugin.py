@@ -59,7 +59,6 @@ class PyflakesToolPlugin(ToolPlugin):
         self, total_output: List[str]
     ) -> List[Issue]:
         """Parse tool output and report issues."""
-        print("output: {}".format(total_output))
         tool_re_first = r"(.+):(\d+):(\d+):\s(.+)"
         parse_first = re.compile(tool_re_first)  # type: Pattern[str]
         tool_re_second = r"(.+):(\d+):( \'.*?\'|'.*?')\s(.+)"
