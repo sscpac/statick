@@ -1,15 +1,13 @@
 # Statick
 
-| Service | Status |
-| ------- | ------ |
-| Build   | [![Travis-CI](https://api.travis-ci.org/sscpac/statick.svg?branch=master)](https://travis-ci.org/sscpac/statick/branches) |
-| PyPI    | [![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick) |
-| Codecov | [![Codecov](https://codecov.io/gh/sscpac/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/sscpac/statick/) |
-
+![Unit Tests](https://github.com/sscpac/statick/workflows/Statick/badge.svg)
+[![Codecov](https://codecov.io/gh/sscpac/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/sscpac/statick/)
+[![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick)
 ![Python Versions](https://img.shields.io/pypi/pyversions/statick.svg)
 ![License](https://img.shields.io/pypi/l/statick.svg)
 [![Doc](https://readthedocs.org/projects/statick/badge/?version=latest)](https://statick.readthedocs.io/en/latest/?badge=latest)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+![Black](https://github.com/sscpac/statick/workflows/Black%20Formatting/badge.svg)
 ![Daily Downloads](https://img.shields.io/pypi/dd/statick.svg)
 ![Weekly Downloads](https://img.shields.io/pypi/dw/statick.svg)
 ![Monthly Downloads](https://img.shields.io/pypi/dm/statick.svg)
