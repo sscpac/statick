@@ -12,6 +12,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.3.8 - 2020-04-13
+
+### Added
+
+- New tool plugin for [docformatter](https://github.com/myint/docformatter).
+- New troubleshooting section in README.
+  - Started with make tool plugin.
+- Switched from pep257 in tox to pycodestyle and pydocstyle.
+- Switched continuous integration from Travis CI to Github Actions.
+- Package is published to PyPI automatically from Actions when new tags are created.
+
+### Fixed
+
+- Improved regular expressions in setup.py for installing resource files.
+- Updated parsing in pyflakes tool to handle what seems like new formats for the tool output.
+  - Unit tests were added to ensure new output format can be parsed.
+  - Previous formats are still parsed properly.
+- Using installed `.markdownlintrc` from statick-md instead of using custom one.
+  - The statick-md plugin had a new release that installed the configuration file properly.
+
+### Removed
+
+- No longer using `from __future__ import print_function`.
+  - This is possible due to the move to Python 3.5+, where Python 2.7 support was dropped.
+
 ## v0.3.7 - 2020-03-23
 
 ### Added
