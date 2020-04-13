@@ -59,19 +59,22 @@ class PyflakesToolPlugin(ToolPlugin):
         self, total_output: List[str]
     ) -> List[Issue]:
         """Parse tool output and report issues."""
+        print("output: {}".format(total_output))
         tool_re_first = r"(.+):(\d+):(\d+):\s(.+)"
         parse_first = re.compile(tool_re_first)  # type: Pattern[str]
-        tool_re_second = r"(.+):(\d+):\s(.+)"
+        tool_re_second = r"(.+):(\d+):( \'.*?\'|'.*?')\s(.+)"
         parse_second = re.compile(tool_re_second)  # type: Pattern[str]
         tool_re_third = r"\s(.+)"
         parse_third = re.compile(tool_re_third)  # type: Pattern[str]
+        tool_re_fourth = r"(.+):(\d+):(\d+)( \'.*?\'|'.*?')\s(.+)"
+        parse_fourth = re.compile(tool_re_fourth)  # type: Pattern[str]
         issues = []
         filename = ""
         line_number = "0"
         issue_type = ""
         message = ""
 
-        for output in total_output:
+        for output in total_output:  # pylint: disable=too-many-nested-blocks
             first_line = True
             found_match = False
             for line in output.splitlines():
@@ -91,7 +94,16 @@ class PyflakesToolPlugin(ToolPlugin):
                             found_match = True
                             filename = match_second.group(1)
                             line_number = match_second.group(2)
-                            issue_type = match_second.group(3)
+                            issue_type = match_second.group(4)
+                        else:
+                            match_fourth = parse_fourth.match(
+                                line
+                            )  # type: Optional[Match[str]]
+                            if match_fourth:
+                                found_match = True
+                                filename = match_fourth.group(1)
+                                line_number = match_fourth.group(2)
+                                issue_type = match_fourth.group(5)
                 else:
                     match_third = parse_third.match(line)  # type: Optional[Match[str]]
                     first_line = True
