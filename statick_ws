@@ -115,12 +115,15 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
     print("-- All packages run --")
     print("-- overall report --")
 
+    success = True
     for issue in total_issues:
         for key, value in list(issue.items()):
             if key in issues:
                 issues[key] += value
+                success = False
             else:
                 issues[key] = value
+                success = False
 
     # Make a fake 'all' package for reporting
     dummy_all_package = Package("all_packages", parsed_args.path)
@@ -147,6 +150,13 @@ def main():  # pylint: disable=too-many-locals, too-many-branches, too-many-stat
         print("Running {} reporting plugin...".format(plugin.get_name()))
         plugin.report(dummy_all_package, issues, level)
         print("{} reporting plugin done.".format(plugin.get_name()))
+
+    if parsed_args.check and not success:
+        print("Statick exiting with errors.")
+        sys.exit(1)
+    else:
+        print("Statick exiting with success.")
+        sys.exit(0)
 
 
 if __name__ == "__main__":

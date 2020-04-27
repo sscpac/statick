@@ -95,6 +95,12 @@ class Statick:
             help="Show tool output",
         )
         args.add_argument(
+            "--check",
+            dest="check",
+            action="store_true",
+            help="Return the status. Return code 0 means there were no issues. Return code 1 means there were issues.",
+        )
+        args.add_argument(
             "--config", dest="config", type=str, help="Name of config yaml file"
         )
         args.add_argument(
