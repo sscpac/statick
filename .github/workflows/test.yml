@@ -99,6 +99,7 @@ jobs:
 
       - name: Test with mypy
         run: |
+          mypy --ignore-missing-imports statick_ws
           mypy --ignore-missing-imports statick statick_tool/
 
       - name: Statick markdown
