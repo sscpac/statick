@@ -34,7 +34,7 @@ def main():
     for tool in issues:
         if issues[tool]:
             success = False
-    if not success:
+    if parsed_args.check and not success:
         print("Statick exiting with errors.")
         sys.exit(1)
     else:
