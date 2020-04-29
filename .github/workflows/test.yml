@@ -79,10 +79,10 @@ jobs:
       - name: Install node
         if: matrix.os == 'ubuntu-18.04'
         run: |
-          sudo apt install -y curl
+          sudo apt install curl
           curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
           sudo bash nodesource_setup.sh
-          sudo apt install -y nodejs
+          sudo apt install nodejs
           sudo npm install -g n
           sudo n stable
           sudo npm install -g markdownlint-cli@0.21.0
