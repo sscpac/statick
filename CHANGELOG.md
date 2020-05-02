@@ -12,6 +12,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.0 - 2020-05-01
+
+### Added
+
+- Exit code is now based only on whether internal workings of Statick are successful.
+  This is a change from previous versions, where the presence of detected issues would trigger an error code when exiting.
+  To have the previous behavior use the newly introduced `--check` argument when running Statick.
+  This behavior was standardized between `statick` and `statick_ws`.
+- Documentation for new tool plugins (black, docformatter).
+
+### Fixed
+
+- Using more reliable way of installing nodejs on Ubuntu 18.04 in Actions.
+  This is needed to install and run markdownlint as part of statick-md.
+
 ## v0.3.8 - 2020-04-13
 
 ### Added
