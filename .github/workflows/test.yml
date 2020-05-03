@@ -105,10 +105,10 @@ jobs:
       - name: Statick markdown
         if: matrix.os == 'ubuntu-18.04'
         run: |
-          statick . --profile documentation.yaml
+          statick . --check --profile documentation.yaml
 
       - name: Self check
         if: matrix.os == 'ubuntu-18.04'
         run: |
           mkdir statick-output
-          statick . --output-directory statick-output --profile self_check.yaml
+          statick . --output-directory statick-output --check --profile self_check.yaml
