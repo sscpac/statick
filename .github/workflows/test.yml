@@ -89,9 +89,6 @@ jobs:
 
       - name: Test with tox
         run: |
-          find . -name \*.pyc -delete
-          find . -name __pycache__ -delete
-          export PY_IGNORE_IMPORTMISMATCH=1
           python -m tox
 
       - name: Upload coverage to Codecov
