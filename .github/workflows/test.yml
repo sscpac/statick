@@ -89,7 +89,7 @@ jobs:
 
       - name: Test with tox
         run: |
-          PY_IGNORE_IMPORTMISMATCH=1 python -m tox
+          python -m tox
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-18.04'
