@@ -89,6 +89,8 @@ jobs:
 
       - name: Test with tox
         run: |
+          find . -name \*.pyc -delete
+          find . -name __pycache__ -delete
           python -m tox
 
       - name: Upload coverage to Codecov
