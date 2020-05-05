@@ -5,7 +5,7 @@ Sets what flags are used for each plugin at those levels.
 """
 import os
 from collections import OrderedDict
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -23,7 +23,10 @@ class Config:
             self.config = []  # type: Any
             return
         with open(filename) as fname:
-            self.config = yaml.safe_load(fname)
+            try:
+                self.config = yaml.safe_load(fname)  # type: Dict[Any, Any]
+            except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
+                raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
 
     def has_level(self, level: Optional[str]) -> bool:
         """Check if given level exists in config."""
