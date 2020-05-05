@@ -68,6 +68,8 @@ class Statick:
             config_filename = args.config
         try:
             self.config = Config(self.resources.get_file(config_filename))
+        except OSError as ex:
+            print("Failed to access config file {}: {}".format(config_filename, ex))
         except ValueError as ex:
             print("Config file {} has errors: {}".format(config_filename, ex))
 
@@ -78,6 +80,8 @@ class Statick:
             exceptions_filename = args.exceptions
         try:
             self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
+        except OSError as ex:
+            print("Failed to access exceptions file {}: {}".format(exceptions_filename, ex))
         except ValueError as ex:
             print("Exceptions file {} has errors: {}".format(exceptions_filename, ex))
 
