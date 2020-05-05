@@ -5,7 +5,7 @@ Sets what flags are used for each plugin at those levels.
 """
 import os
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 import yaml
 
@@ -24,7 +24,7 @@ class Config:
             return
         with open(filename) as fname:
             try:
-                self.config = yaml.safe_load(fname)  # type: Dict[Any, Any]
+                self.config = yaml.safe_load(fname)
             except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
                 raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
 
