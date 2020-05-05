@@ -1,6 +1,8 @@
 """Unit tests for the Config module."""
 import os
 
+import pytest
+
 from statick_tool.config import Config
 
 
@@ -19,6 +21,16 @@ def test_config_init():
     config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     config = Config(config_file)
     assert config.config
+
+
+def test_config_file_invalid_yaml():
+    """
+    Test for when a Config is initialized with an invalid yaml file.
+
+    Expected result: ValueError is thrown
+    """
+    with pytest.raises(ValueError):
+        Config(os.path.join(os.path.dirname(__file__), "rsc", "bad.yaml"))
 
 
 def test_config_enabled_plugins():

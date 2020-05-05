@@ -32,6 +32,26 @@ def test_exceptions_init_nonexistent():
         )
 
 
+def test_exceptions_file_empty_string():
+    """
+    Test for when a Exceptions is initialized with an empty string.
+
+    Expected result: ValueError is thrown
+    """
+    with pytest.raises(ValueError):
+        Exceptions(os.path.join(""))
+
+
+def test_exceptions_file_invalid_yaml():
+    """
+    Test for when a Exceptions is initialized with an invalid yaml file.
+
+    Expected result: ValueError is thrown
+    """
+    with pytest.raises(ValueError):
+        Exceptions(os.path.join(os.path.dirname(__file__), "bad.yaml"))
+
+
 def test_filter_file_exceptions_early():
     """
     Test that filter_file_exceptions_early excludes files.
