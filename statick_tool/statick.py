@@ -81,7 +81,11 @@ class Statick:
         try:
             self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
         except OSError as ex:
-            print("Failed to access exceptions file {}: {}".format(exceptions_filename, ex))
+            print(
+                "Failed to access exceptions file {}: {}".format(
+                    exceptions_filename, ex
+                )
+            )
         except ValueError as ex:
             print("Exceptions file {} has errors: {}".format(exceptions_filename, ex))
 
