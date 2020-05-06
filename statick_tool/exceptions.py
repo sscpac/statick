@@ -143,7 +143,13 @@ class Exceptions:
         for exception in exceptions:
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
-            compiled_re = re.compile(exception_re)  # type: Pattern
+            try:
+                compiled_re = re.compile(exception_re)  # type: Pattern
+            except re.error:
+                print(
+                    "Invalid regular expression in exception: {}".format(exception_re)
+                )
+                continue
             for tool, tool_issues in list(issues.items()):
                 to_remove = []
                 if exception_tools == "all" or tool in exception_tools:

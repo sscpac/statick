@@ -132,7 +132,7 @@ def test_package_exceptions():
     """
     Test that package exceptions are found.
 
-    Expected result: no issues found
+    Expected result: exceptions are found for both file and message_regex types
     """
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -143,7 +143,7 @@ def test_package_exceptions():
     package_exceptions = exceptions.get_exceptions(package)
 
     assert len(package_exceptions["file"]) == 1
-    assert len(package_exceptions["message_regex"]) == 1
+    assert len(package_exceptions["message_regex"]) == 2
 
 
 def test_filter_issues():
@@ -238,6 +238,33 @@ def test_filter_issues_nolint_not_abs_path():
     )
     exceptions = Exceptions(
         os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    filename = "valid_package/x.py"
+    line_number = "3"
+    tool = "pylint"
+    issue_type = "missing-docstring"
+    severity = "3"
+    message = "C0111: Missing module docstring"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["pylint"] = [tool_issue]
+
+    issues = exceptions.filter_issues(package, issues)
+    assert len(issues["pylint"]) == 1
+
+
+def test_filter_issues_wildcard_exceptions():
+    """
+    Test that issues are found even when exceptions with wildcards for regex are used.
+
+    Expected result: one issue found
+    """
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "package_exceptions.yaml")
     )
 
     filename = "valid_package/x.py"

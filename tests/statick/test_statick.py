@@ -138,6 +138,54 @@ def test_get_level_valueerror(mocked_profile_constructor, init_statick):
     assert level is None
 
 
+@mock.patch("statick_tool.statick.Config")
+def test_get_config_valueerror(mocked_config_constructor, init_statick):
+    """Test the behavior when Config throws a ValueError."""
+    mocked_config_constructor.side_effect = ValueError("error")
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--config", dest="config", type=str, default="config-test.yaml"
+    )
+    init_statick.get_config(args.get_args([]))
+    assert init_statick.config is None
+
+
+@mock.patch("statick_tool.statick.Config")
+def test_get_config_oserror(mocked_config_constructor, init_statick):
+    """Test the behavior when Config throws a OSError."""
+    mocked_config_constructor.side_effect = OSError("error")
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--config", dest="config", type=str, default="config-test.yaml"
+    )
+    init_statick.get_config(args.get_args([]))
+    assert init_statick.config is None
+
+
+@mock.patch("statick_tool.statick.Exceptions")
+def test_get_exceptions_valueerror(mocked_exceptions_constructor, init_statick):
+    """Test the behavior when Exceptions throws a ValueError."""
+    mocked_exceptions_constructor.side_effect = ValueError("error")
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--exceptions", dest="exceptions", type=str, default="exceptions-test.yaml"
+    )
+    init_statick.get_exceptions(args.get_args([]))
+    assert init_statick.exceptions is None
+
+
+@mock.patch("statick_tool.statick.Exceptions")
+def test_get_exceptions_oserror(mocked_exceptions_constructor, init_statick):
+    """Test the behavior when Exceptions throws a OSError."""
+    mocked_exceptions_constructor.side_effect = OSError("error")
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--exceptions", dest="exceptions", type=str, default="exceptions-test.yaml"
+    )
+    init_statick.get_exceptions(args.get_args([]))
+    assert init_statick.exceptions is None
+
+
 def test_run():
     """Test running Statick."""
     args = Args("Statick tool")
