@@ -23,7 +23,10 @@ class Config:
             self.config = []  # type: Any
             return
         with open(filename) as fname:
-            self.config = yaml.safe_load(fname)
+            try:
+                self.config = yaml.safe_load(fname)
+            except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
+                raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
 
     def has_level(self, level: Optional[str]) -> bool:
         """Check if given level exists in config."""

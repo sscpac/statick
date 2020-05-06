@@ -66,14 +66,28 @@ class Statick:
         config_filename = "config.yaml"
         if args.config is not None:
             config_filename = args.config
-        self.config = Config(self.resources.get_file(config_filename))
+        try:
+            self.config = Config(self.resources.get_file(config_filename))
+        except OSError as ex:
+            print("Failed to access config file {}: {}".format(config_filename, ex))
+        except ValueError as ex:
+            print("Config file {} has errors: {}".format(config_filename, ex))
 
     def get_exceptions(self, args: argparse.Namespace) -> None:
         """Get Statick exceptions."""
         exceptions_filename = "exceptions.yaml"
         if args.exceptions is not None:
             exceptions_filename = args.exceptions
-        self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
+        try:
+            self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
+        except OSError as ex:
+            print(
+                "Failed to access exceptions file {}: {}".format(
+                    exceptions_filename, ex
+                )
+            )
+        except ValueError as ex:
+            print("Exceptions file {} has errors: {}".format(exceptions_filename, ex))
 
     def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
