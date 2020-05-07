@@ -2,6 +2,8 @@ global:
   exceptions:
     file:
       - tools: all
+        globs: ['*/build/*']
+      - tools: all
         globs: ['*unlikelystring*']
       - tools: something
         globs: ['*uncommontext*']

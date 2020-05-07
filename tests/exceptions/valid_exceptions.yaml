@@ -2,6 +2,8 @@ global:
   exceptions:
     file:
       - tools: all
+        globs: ['*/build/*']
+      - tools: all
         globs: ['*example*']
     message_regex:
       # Python 2/3 compatibility requires inheriting from `object`.
