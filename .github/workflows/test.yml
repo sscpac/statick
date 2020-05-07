@@ -109,6 +109,13 @@ jobs:
           mypy --ignore-missing-imports statick_ws
           mypy --ignore-missing-imports statick statick_tool/
 
+      - name: Test with black
+        if: matrix.python-version >= 3.6
+        run: >-
+          black --check --diff
+          --exclude tests/.*/*valid_package/*
+          statick statick_ws statick_tool tests
+
       - name: Statick markdown
         if: matrix.os == 'ubuntu-18.04'
         run: |
