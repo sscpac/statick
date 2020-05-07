@@ -91,7 +91,7 @@ jobs:
       # default on Ubuntu 16.04. When Python 3.5 support is dropped we can add black to requirements.txt
       # and remove this extra stage.
       - name: Install black (Python 3.8)
-        if: matrix.python_version == 3.8
+        if: matrix.python_version == '3.8'
         run: |
           python -m pip install --upgrade black
 
