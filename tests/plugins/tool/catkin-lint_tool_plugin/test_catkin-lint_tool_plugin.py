@@ -115,7 +115,7 @@ def test_catkin_lint_tool_plugin_scan_c11():
 
 
 def test_catkin_lint_tool_plugin_scan_gnu99():
-    """Scan a package that sets compiler flags for gnu99"""
+    """Scan a package that sets compiler flags for gnu99."""
     cltp = setup_catkin_lint_tool_plugin()
     if not cltp.command_exists("catkin_lint"):
         pytest.skip("Missing catkin_lint executable.")
@@ -125,6 +125,32 @@ def test_catkin_lint_tool_plugin_scan_gnu99():
     package["catkin"] = "catkin"
     issues = cltp.scan(package, "level")
     assert len(issues) == 1
+
+
+def test_catkin_lint_tool_plugin_parse_output():
+    """
+    Check that manual exceptions are applied.
+
+    These tests make sure the functionality works in the absence of the tool. If the
+    tool is installed the lines dealing with manual exceptions are already covered.
+    """
+    cltp = setup_catkin_lint_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "cmake_flags")
+    )
+    package["catkin"] = "catkin"
+
+    output = "empty_pkg: CMakeLists.txt(4): warning: variable CMAKE_CXX_FLAGS is modified"
+    issues = cltp.parse_output(package, output)
+    assert not issues
+
+    output = "empty_pkg: CMakeLists.txt(5): warning: variable CMAKE_CXX_FLAGS is modified"
+    issues = cltp.parse_output(package, output)
+    assert not issues
+
+    output = "empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"
+    issues = cltp.parse_output(package, output)
+    assert not issues
 
 
 def test_catkin_lint_tool_plugin_parse_valid():
