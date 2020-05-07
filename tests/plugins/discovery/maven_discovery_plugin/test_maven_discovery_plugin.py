@@ -5,6 +5,7 @@ from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.maven_discovery_plugin import MavenDiscoveryPlugin
 
@@ -82,3 +83,18 @@ def test_maven_discovery_plugin_scan_multilevel():
     ]
     assert set(package["top_poms"]) == set(expected_top_fullpath)
     assert set(package["all_poms"]) == set(expected_all_fullpath)
+
+
+def test_maven_discovery_plugin_scan_with_exceptions():
+    """Test that the Maven discovery plugin finds pom.xml files when exceptions are specified."""
+    mdp = MavenDiscoveryPlugin()
+    package = Package(
+        "single_package", os.path.join(os.path.dirname(__file__), "single_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+    mdp.scan(package, "level", exceptions)
+
+    assert not package["top_poms"]
+    assert not package["all_poms"]
