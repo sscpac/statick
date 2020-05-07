@@ -66,6 +66,9 @@ jobs:
         run: |
           sudo apt update
           sudo apt install cccc
+          sudo apt install clang
+          sudo apt install clang-format
+          sudo apt install clang-tidy
           sudo apt install clang-6.0
           sudo apt install clang-format-6.0
           sudo apt install clang-tidy-6.0
