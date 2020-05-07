@@ -133,6 +133,21 @@ def test_cmake_discovery_plugin_check_output_project():
     assert package["src_dir"] == "foo/src/"
 
 
+@mock.patch("os.path.isfile")
+def test_cmake_discovery_plugin_check_output_roslint(mock_isfile):
+    """Test the CMake discovery plugin finds roslint executable."""
+    mock_isfile.return_value = True
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["cpplint"] = []
+    roslint = "/opt/ros/melodic/lib/roslint/cpplint"
+    output = "-- ROSLINT: {}".format(roslint)
+    cmdp.process_output(output, package)
+    assert package["cpplint"]
+
+
 @mock.patch(
     "statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output"
 )
