@@ -1,6 +1,5 @@
 PyYAML
 bandit
-black
 cmakelint
 cpplint
 deprecated

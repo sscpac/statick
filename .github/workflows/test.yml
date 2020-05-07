@@ -87,6 +87,14 @@ jobs:
           sudo n stable
           sudo npm install -g markdownlint-cli@0.21.0
 
+      # Black is only available on Python 3.6+, but we still want to test Python 3.5 since that is
+      # default on Ubuntu 16.04. When Python 3.5 support is dropped we can add black to requirements.txt
+      # and remove this extra stage.
+      - name: Install black (Python 3.6+)
+        if: matrix.python_version >= 3.6
+        run: |
+          python -m pip install --upgrade black
+
       - name: Test with tox
         run: |
           python -m tox
