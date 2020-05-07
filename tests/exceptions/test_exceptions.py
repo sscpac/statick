@@ -63,7 +63,10 @@ def test_filter_file_exceptions_early():
     )
 
     package = Package("test", os.path.dirname(__file__))
-    files = [os.path.join(os.path.dirname(__file__), "unlikelystring")]
+    files = [
+        "/home/travis/build/unlikelystring",
+        os.path.join(os.path.dirname(__file__), "unlikelystring"),
+    ]
 
     filtered_files = exceptions.filter_file_exceptions_early(package, files)
 
@@ -124,7 +127,7 @@ def test_global_exceptions():
     )
     global_exceptions = exceptions.get_exceptions(package)
 
-    assert len(global_exceptions["file"]) == 1
+    assert len(global_exceptions["file"]) == 2
     assert len(global_exceptions["message_regex"]) == 1
 
 
@@ -160,6 +163,33 @@ def test_filter_issues():
     )
 
     filename = "x.py"
+    line_number = "4"
+    tool = "pylint"
+    issue_type = "R0205(useless-object-inheritance)"
+    severity = "5"
+    message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["pylint"] = [tool_issue]
+
+    issues = exceptions.filter_issues(package, issues)
+    assert not issues["pylint"]
+
+
+def test_filter_issues_travis_build():
+    """
+    Test that issues on Travis CI are not filtered based on the filename prefix.
+
+    Expected result: all but one non-excepted issue is filtered
+    """
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    filename = "/home/travis/build/x.py"
     line_number = "4"
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
