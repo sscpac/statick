@@ -69,9 +69,6 @@ jobs:
           sudo apt install clang
           sudo apt install clang-format
           sudo apt install clang-tidy
-          sudo apt install clang-3.9
-          sudo apt install clang-format-3.9
-          sudo apt install clang-tidy-3.9
           sudo apt install clang-6.0
           sudo apt install clang-format-6.0
           sudo apt install clang-tidy-6.0
