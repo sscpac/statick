@@ -91,6 +91,48 @@ def test_cmake_discovery_plugin_scan_no_plugin_context():
     assert "cmake" not in package
 
 
+def test_cmake_discovery_plugin_check_output_headers():
+    """Test the CMake discovery plugin finds header files."""
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["headers"] = []
+    header = "/usr/include/foo/bar.h"
+    output = "-- HEADERS: {}".format(header)
+    cmdp.process_output(output, package)
+    assert package["headers"] == [header]
+
+
+def test_cmake_discovery_plugin_check_output_target():
+    """Test the CMake discovery plugin finds target output."""
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["make_targets"] = []
+    output = "-- TARGET: [NAME:foo][SRC_DIR:foo/src/][INCLUDE_DIRS:include/foo/][SRC:foo.cpp]"
+    cmdp.process_output(output, package)
+    assert package["make_targets"][0]["name"] == "foo"
+    assert package["make_targets"][0]["src_dir"] == "foo/src/"
+    assert package["make_targets"][0]["include_dirs"] == ["include/foo/"]
+    assert package["make_targets"][0]["src"] == ["foo/src/foo.cpp"]
+
+
+def test_cmake_discovery_plugin_check_output_project():
+    """Test the CMake discovery plugin finds project output."""
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["bin_dir"] = []
+    package["src_dir"] = []
+    output = "-- PROJECT: [NAME:foo][SRC_DIR:foo/src/][BIN_DIR:devel/foo/]"
+    cmdp.process_output(output, package)
+    assert package["bin_dir"] == "devel/foo/"
+    assert package["src_dir"] == "foo/src/"
+
+
 @mock.patch(
     "statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output"
 )
