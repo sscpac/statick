@@ -67,13 +67,14 @@ jobs:
           sudo apt update
           sudo apt install cccc
           sudo apt install clang
-          sudo apt install clang-format
-          sudo apt install clang-tidy
           sudo apt install clang-6.0
+          sudo apt install clang-format
           sudo apt install clang-format-6.0
+          sudo apt install clang-tidy
           sudo apt install clang-tidy-6.0
-          sudo apt install libperl-critic-perl
+          sudo apt install cppcheck
           sudo apt install libpcre3-dev
+          sudo apt install libperl-critic-perl
           sudo apt install libxml2
           sudo apt install libxml2-utils
           sudo apt install uncrustify
