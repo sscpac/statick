@@ -87,6 +87,20 @@ def test_pycodestyle_tool_plugin_parse_valid():
     assert issues[0].message == "line too long (88 > 79 characters)"
 
 
+def test_pycodestyle_tool_plugin_parse_multiple_types():
+    """Verify that we can parse the output of pycodestyle with comma-separated types."""
+    pcstp = setup_pycodestyle_tool_plugin()
+    output = "valid_package/e501.py:1: [E501,S101] line too long (88 > 79 characters)"
+    issues = pcstp.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].issue_type == "E501"
+
+    output = "valid_package/e501.py:1: [S101,] line too long (88 > 79 characters)"
+    issues = pcstp.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].issue_type == "S101"
+
+
 def test_pycodestyle_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of pycodestyle."""
     pcstp = setup_pycodestyle_tool_plugin()
