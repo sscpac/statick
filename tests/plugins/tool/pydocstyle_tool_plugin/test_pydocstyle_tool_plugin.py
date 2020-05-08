@@ -1,7 +1,9 @@
 """Unit tests for the PyCodeStyle plugin."""
 import argparse
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -29,9 +31,9 @@ def setup_pydocstyle_tool_plugin():
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
-    pcstp = PydocstyleToolPlugin()
-    pcstp.set_plugin_context(plugin_context)
-    return pcstp
+    pdstp = PydocstyleToolPlugin()
+    pdstp.set_plugin_context(plugin_context)
+    return pdstp
 
 
 def test_pydocstyle_tool_plugin_found():
@@ -60,23 +62,23 @@ def test_pydocstyle_tool_plugin_found():
 
 def test_pydocstyle_tool_plugin_scan_valid():
     """Integration test: Make sure the pydocstyle output hasn't changed."""
-    pcstp = setup_pydocstyle_tool_plugin()
+    pdstp = setup_pydocstyle_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "d103.py")
     ]
-    issues = pcstp.scan(package, "level")
+    issues = pdstp.scan(package, "level")
     assert len(issues) == 1
 
 
 def test_pydocstyle_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of pydocstyle."""
-    pcstp = setup_pydocstyle_tool_plugin()
+    pdstp = setup_pydocstyle_tool_plugin()
     output = "valid_package/d103.py:3 in public function `some_method`:\n\
  D103: Missing docstring in public function"
-    issues = pcstp.parse_output([output])
+    issues = pdstp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/d103.py"
     assert issues[0].line_number == "3"
@@ -88,7 +90,53 @@ def test_pydocstyle_tool_plugin_parse_valid():
 
 def test_pydocstyle_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of pydocstyle."""
-    pcstp = setup_pydocstyle_tool_plugin()
+    pdstp = setup_pydocstyle_tool_plugin()
     output = "invalid text"
-    issues = pcstp.parse_output(output)
+    issues = pdstp.parse_output(output)
     assert not issues
+
+
+@mock.patch("statick_tool.plugins.tool.pydocstyle_tool_plugin.subprocess.check_output")
+def test_pydocstyle_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means tool hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        0, "", output="mocked error"
+    )
+    pdstp = setup_pydocstyle_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "d103.py")
+    ]
+    issues = pdstp.scan(package, "level")
+    assert issues is None
+
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="mocked error"
+    )
+    issues = pdstp.scan(package, "level")
+    assert not issues
+
+
+@mock.patch("statick_tool.plugins.tool.pydocstyle_tool_plugin.subprocess.check_output")
+def test_pydocstyle_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means tool doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError("mocked_error")
+    pdstp = setup_pydocstyle_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "d103.py")
+    ]
+    issues = pdstp.scan(package, "level")
+    assert issues is None
