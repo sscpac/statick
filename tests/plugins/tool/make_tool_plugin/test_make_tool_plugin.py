@@ -115,6 +115,89 @@ def test_make_tool_plugin_parse_invalid():
     assert not issues
 
 
+def test_make_tool_plugin_parse_overloaded_virtual():
+    """Verify that we can parse the output of make with overloaded-virtual."""
+    mtp = setup_make_tool_plugin()
+    package = Package("valid_package", "/home/user/valid_package")
+    output = (
+        "/home/user/valid_package/hello.c:7:3: error: overloaded-virtual: \n"
+        "/home/user/valid_package/hello.c:7:3: error: second line"
+    )
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/valid_package/hello.c"
+    assert issues[0].line_number == "7"
+    assert issues[0].severity == "5"
+    assert issues[0].message == "overloaded-virtual: second line"
+
+
+def test_make_tool_plugin_parse_warning_levels():
+    """Verify that we can parse the warning levels of make output."""
+    mtp = setup_make_tool_plugin()
+    package = Package("valid_package", "/home/user/valid_package")
+    output = "/home/user/valid_package/hello.c:7:3: fatal error: This is a fatal error"
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/valid_package/hello.c"
+    assert issues[0].line_number == "7"
+    assert issues[0].severity == "5"
+    assert issues[0].message == "This is a fatal error"
+    assert issues[0].issue_type == "fatal-error"
+
+    output = "/home/user/valid_package/hello.c:8:3: warning: This is a warning"
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/valid_package/hello.c"
+    assert issues[0].line_number == "8"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "This is a warning"
+    assert issues[0].issue_type == "unknown-error"
+
+    output = "/home/user/valid_package/hello.c:8:3: notype: This is not a type"
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/valid_package/hello.c"
+    assert issues[0].line_number == "8"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "This is not a type"
+    assert issues[0].issue_type == "unknown-error"
+
+    # Any note type output is filtered from results. I'm not sure that's what we
+    # really want, but changing it would break expected results.
+    output = "/home/user/valid_package/hello.c:9:3: note: This is a note"
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 0
+
+
+def test_make_tool_plugin_parse_linker_error():
+    """Verify that we can parse a linker error in make output."""
+    mtp = setup_make_tool_plugin()
+    package = Package("valid_package", "/home/user/valid_package")
+    output = "collect2: ld returned 1 exit status"
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 1
+    assert issues[0].filename == "Linker"
+    assert issues[0].line_number == "0"
+    assert issues[0].severity == "5"
+    assert issues[0].message == "Linking failed"
+    assert issues[0].issue_type == "linker"
+
+
+def test_make_tool_plugin_parse_warnings_mapping():
+    """Verify that we can associate a make warning with a SEI Cert warning."""
+    mtp = setup_make_tool_plugin()
+    package = Package("valid_package", "/home/user/valid_package")
+    output = "/home/user/valid_package/hello.cpp:8:3: warning: 'Class::i_' will be initialized after [-Wreorder]"
+    issues = mtp.parse_output(package, output)
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/valid_package/hello.cpp"
+    assert issues[0].line_number == "8"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "'Class::i_' will be initialized after [-Wreorder]"
+    assert issues[0].issue_type == "-Wreorder"
+    assert issues[0].cert_reference == "OOP53-CPP"
+
+
 @mock.patch("statick_tool.plugins.tool.make_tool_plugin.subprocess.check_output")
 def test_make_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
