@@ -108,7 +108,6 @@ class MakeToolPlugin(ToolPlugin):
             if warning_list is None:
                 # Something's gone wrong if we don't match the [warning] format
                 if "fatal error" in item[3]:
-                    warning_level = "5"
                     category = "fatal-error"
                 else:
                     category = "unknown-error"
@@ -119,8 +118,8 @@ class MakeToolPlugin(ToolPlugin):
                 warning_level = "3"
             elif item[3].lower() == "error":
                 warning_level = "5"
-            elif item[3].lower() == "note":
-                warning_level = "1"
+            elif item[3].lower() == "fatal error":
+                warning_level = "5"
             else:
                 warning_level = "3"
 
