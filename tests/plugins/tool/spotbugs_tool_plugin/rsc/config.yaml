@@ -1,0 +1,5 @@
+levels:
+  local:
+    tool:
+      spotbugs:
+        exclude: "spotbugs-exclude.xml"
