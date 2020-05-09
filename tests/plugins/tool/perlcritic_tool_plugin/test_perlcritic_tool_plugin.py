@@ -129,7 +129,9 @@ def test_perlcritic_tool_plugin_parse_valid():
 def test_perlcritic_tool_plugin_parse_warnings_mapping():
     """Verify that we can use a mapping to find the SEI Cert reference from a warning."""
     pctp = setup_perlcritic_tool_plugin()
-    output = "valid_package/test.pl:::2:::InputOutput::ProhibitTwoArgOpen:::any string:::5"
+    output = (
+        "valid_package/test.pl:::2:::InputOutput::ProhibitTwoArgOpen:::any string:::5"
+    )
     issues = pctp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/test.pl"

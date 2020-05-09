@@ -17,7 +17,9 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_clang_format_tool_plugin(use_plugin_context=True, binary=None, do_raise=False):
+def setup_clang_format_tool_plugin(
+    use_plugin_context=True, binary=None, do_raise=False
+):
     """Initialize and return an instance of the clang-format plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
