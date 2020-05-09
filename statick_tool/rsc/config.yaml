@@ -214,3 +214,8 @@ levels:
     tool:
       pylint:
         flags: "--good-names=f,i,j,k,x,y,z,ex,_"
+
+  unit_tests:
+    tool:
+      clang-format:
+        version: "6.0"
