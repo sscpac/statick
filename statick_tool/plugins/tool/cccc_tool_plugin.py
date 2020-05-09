@@ -36,7 +36,9 @@ class CCCCToolPlugin(ToolPlugin):
             "--cccc-config", dest="cccc_config", type=str, help="cccc config file"
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(
+        self, package: Package, level: str
+    ) -> Optional[List[Issue]]:  # pylint: disable=too-many-branches
         """Run tool and gather output."""
         if "c_src" not in package.keys():
             return []
