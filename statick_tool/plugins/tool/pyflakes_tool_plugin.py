@@ -63,7 +63,7 @@ class PyflakesToolPlugin(ToolPlugin):
         parse_first = re.compile(tool_re_first)  # type: Pattern[str]
         tool_re_second = r"(.+):(\d+):( \'.*?\'|'.*?')\s(.+)"
         parse_second = re.compile(tool_re_second)  # type: Pattern[str]
-        tool_re_third = r"\s(.+)"
+        tool_re_third = r"(.+)"
         parse_third = re.compile(tool_re_third)  # type: Pattern[str]
         tool_re_fourth = r"(.+):(\d+):(\d+)( \'.*?\'|'.*?')\s(.+)"
         parse_fourth = re.compile(tool_re_fourth)  # type: Pattern[str]
