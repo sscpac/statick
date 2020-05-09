@@ -219,3 +219,5 @@ levels:
     tool:
       clang-format:
         version: "6.0"
+      clang-tidy:
+        version: "6.0"

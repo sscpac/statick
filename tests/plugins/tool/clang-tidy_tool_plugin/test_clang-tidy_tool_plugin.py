@@ -23,7 +23,7 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     )  # pylint: disable=wrong-import-order
 
 
-def setup_clang_tidy_tool_plugin(use_plugin_context=True):
+def setup_clang_tidy_tool_plugin(use_plugin_context=True, binary=None):
     """Initialize and return an instance of the clang-tidy plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -44,6 +44,8 @@ def setup_clang_tidy_tool_plugin(use_plugin_context=True):
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     cttp = ClangTidyToolPlugin()
+    if binary is not None:
+        plugin_context.args.clang_tidy_bin = binary
     if use_plugin_context:
         cttp.set_plugin_context(plugin_context)
     return cttp
@@ -124,7 +126,7 @@ def test_clang_tidy_tool_plugin_scan_valid():
 
 def test_clang_tidy_tool_plugin_scan_no_plugin_context():
     """Test that issues are None when no plugin context is provided."""
-    cttp = setup_clang_tidy_tool_plugin(False)
+    cttp = setup_clang_tidy_tool_plugin(use_plugin_context=False)
     if not cttp.command_exists("cmake"):
         pytest.skip("Can't find CMake, unable to test clang_tidy plugin")
     elif not cttp.command_exists("clang-tidy"):
@@ -145,6 +147,57 @@ def test_clang_tidy_tool_plugin_scan_no_plugin_context():
     assert not issues
 
 
+def test_clang_tidy_tool_plugin_scan_custom_version():
+    """Test that issues are found when a custom version is specified."""
+    cttp = setup_clang_tidy_tool_plugin()
+    if not cttp.command_exists("cmake"):
+        pytest.skip("Can't find CMake, unable to test clang_tidy plugin")
+    elif not cttp.command_exists("clang-tidy"):
+        pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+
+    package["make_targets"] = []
+    package["make_targets"].append({})
+    package["make_targets"][0]["src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.c")
+    ]
+    with TemporaryDirectory() as bin_dir:
+        package["bin_dir"] = bin_dir
+    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
+    issues = cttp.scan(package, "unit_tests")
+    assert len(issues) == 1
+    assert issues[0].line_number == "6"
+    assert issues[0].tool == "clang-tidy"
+    assert issues[0].issue_type == "warning/clang-analyzer-deadcode.DeadStores"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "Value stored to 'si' is never read"
+
+
+def test_clang_tidy_tool_plugin_scan_different_binary():
+    """Test that issues are None when binary is different."""
+    cttp = setup_clang_tidy_tool_plugin(binary="wrong-binary")
+    if not cttp.command_exists("cmake"):
+        pytest.skip("Can't find CMake, unable to test clang_tidy plugin")
+    elif not cttp.command_exists("clang-tidy"):
+        pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+
+    package["make_targets"] = []
+    package["make_targets"].append({})
+    package["make_targets"][0]["src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.c")
+    ]
+    with TemporaryDirectory() as bin_dir:
+        package["bin_dir"] = bin_dir
+    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
+    issues = cttp.scan(package, "level")
+    assert issues is None
+
+
 def test_clang_tidy_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of clang_tidy."""
     cttp = setup_clang_tidy_tool_plugin()
@@ -159,6 +212,23 @@ def test_clang_tidy_tool_plugin_parse_valid():
     assert issues[0].issue_type == "warning/clang-analyzer-deadcode.DeadStores"
     assert issues[0].severity == "3"
     assert issues[0].message == "Value stored to 'si' is never read"
+
+
+def test_clang_tidy_tool_plugin_parse_warnings_mappings():
+    """Verify that we can apply mapping for SEI Cert warnings."""
+    cttp = setup_clang_tidy_tool_plugin()
+    output = "{}:6:5: warning: message [cert-dcl50-cpp]".format(
+        os.path.join("valid_package", "test.c")
+    )
+    issues = cttp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].filename == os.path.join("valid_package", "test.c")
+    assert issues[0].line_number == "6"
+    assert issues[0].tool == "clang-tidy"
+    assert issues[0].issue_type == "warning/cert-dcl50-cpp"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "message"
+    assert issues[0].cert_reference == "DCL50-CPP"
 
 
 def test_clang_tidy_tool_plugin_parse_note():

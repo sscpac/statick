@@ -175,7 +175,7 @@ def test_clang_format_tool_plugin_scan_different_binary():
 
 
 def test_clang_format_tool_plugin_scan_custom_version():
-    """Test that issues are None when a custom version is specified."""
+    """Test that issues is empty when a custom version is specified."""
     cftp = setup_clang_format_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
