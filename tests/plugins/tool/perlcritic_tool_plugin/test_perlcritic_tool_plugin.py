@@ -16,7 +16,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_perlcritic_tool_plugin():
+def setup_perlcritic_tool_plugin(binary=None):
     """Initialize and return a perlcritic plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -37,6 +37,8 @@ def setup_perlcritic_tool_plugin():
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     pctp = PerlCriticToolPlugin()
+    if binary:
+        plugin_context.args.perlcritic_bin = binary
     pctp.set_plugin_context(plugin_context)
     return pctp
 
@@ -95,6 +97,21 @@ def test_perlcritic_tool_plugin_scan_valid():
     assert issues[0].message == "Bareword file handle opened"
 
 
+def test_perlcritic_tool_plugin_scan_wrong_binary():
+    """Verify that no issues are found when using the wrong binary."""
+    pctp = setup_perlcritic_tool_plugin(binary="wrong-binary")
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+
+    package["perl_src"] = []
+    package["perl_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.pl")
+    ]
+    issues = pctp.scan(package, "level")
+    assert not issues
+
+
 def test_perlcritic_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of perlcritic."""
     pctp = setup_perlcritic_tool_plugin()
@@ -107,6 +124,23 @@ def test_perlcritic_tool_plugin_parse_valid():
     assert issues[0].issue_type == "InputOutput::ProhibitBarewordFileHandles"
     assert issues[0].severity == "5"
     assert issues[0].message == "Bareword file handle opened"
+
+
+def test_perlcritic_tool_plugin_parse_warnings_mapping():
+    """Verify that we can use a mapping to find the SEI Cert reference from a warning."""
+    pctp = setup_perlcritic_tool_plugin()
+    output = (
+        "valid_package/test.pl:::2:::InputOutput::ProhibitTwoArgOpen:::any string:::5"
+    )
+    issues = pctp.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].filename == "valid_package/test.pl"
+    assert issues[0].line_number == "2"
+    assert issues[0].tool == "perlcritic"
+    assert issues[0].issue_type == "InputOutput::ProhibitTwoArgOpen"
+    assert issues[0].severity == "5"
+    assert issues[0].message == "any string"
+    assert issues[0].cert_reference == "IDS31-PL"
 
 
 def test_perlcritic_tool_plugin_parse_invalid():

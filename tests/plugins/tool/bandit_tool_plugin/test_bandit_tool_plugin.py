@@ -184,6 +184,14 @@ def test_bandit_tool_plugin_parse_valid():
         == "Consider possible security implications associated with subprocess module."
     )
 
+    output = [
+        "filename,test_name,test_id,issue_severity,issue_confidence,issue_text,line_number,line_range,more_info",
+        "valid_package/b404.py,blacklist,B404,LOW,MEDIUM,Consider possible security implications associated with subprocess module.,1,[1],https://bandit.readthedocs.io/en/latest/blacklists/blacklist_imports.html#b404-import-subprocess",
+    ]
+    issues = btp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].severity == "3"
+
 
 def test_bandit_tool_plugin_parse_invalid():
     """Verify that we don't return anything on bad input."""

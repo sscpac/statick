@@ -58,15 +58,10 @@ class FlawfinderToolPlugin(ToolPlugin):
         parse = re.compile(flawfinder_re)  # type: Pattern[str]
         issues = []
 
-        warnings_mapping = self.load_mapping()
-
         for output in total_output:
             for line in output.splitlines():
                 match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
-                    cert_reference = None
-                    if match.group(4) in warnings_mapping:
-                        cert_reference = warnings_mapping[match.group(4)]
                     issues.append(
                         Issue(
                             match.group(1),
@@ -75,7 +70,7 @@ class FlawfinderToolPlugin(ToolPlugin):
                             match.group(4),
                             match.group(3),
                             match.group(5),
-                            cert_reference,
+                            None,
                         )
                     )
 

@@ -21,7 +21,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_cccc_tool_plugin(use_plugin_context=True, binary=None):
+def setup_cccc_tool_plugin(use_plugin_context=True, binary=None, cccc_config=None):
     """Create an instance of the CCCC plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -31,6 +31,7 @@ def setup_cccc_tool_plugin(use_plugin_context=True, binary=None):
         help="Show tool output",
     )
     arg_parser.add_argument("--cccc-bin", dest="cccc_bin")
+    arg_parser.add_argument("--cccc-config", dest="cccc_config")
 
     resources = Resources(
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
@@ -41,6 +42,8 @@ def setup_cccc_tool_plugin(use_plugin_context=True, binary=None):
     plugin_context.args.output_directory = os.path.dirname(__file__)
     if binary:
         plugin_context.args.cccc_bin = binary
+    if cccc_config:
+        plugin_context.args.cccc_config = cccc_config
     if use_plugin_context:
         ctp.set_plugin_context(plugin_context)
     return ctp
@@ -113,6 +116,20 @@ def test_cccc_tool_plugin_scan_no_plugin_context():
     assert issues is None
 
 
+def test_cccc_tool_plugin_scan_missing_config():
+    """Check that missing missing configuration file results in empty issues."""
+    ctp = setup_cccc_tool_plugin(cccc_config="does_not_exist.opt")
+
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["c_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "example.cpp")
+    ]
+    issues = ctp.scan(package, "level")
+    assert not issues
+
+
 def test_cccc_tool_plugin_scan_wrong_bin():
     """Check that an invalid binary results in None."""
     ctp = setup_cccc_tool_plugin(binary="wrong_binary")
@@ -148,7 +165,6 @@ def test_cccc_tool_plugin_parse_valid():
     package["c_src"] = ["tmp/not_a_file.c"]
 
     issues = ctp.parse_output(output, package, config_file)
-    print("issues: {}".format(issues))
     assert len(issues) == 2
     assert issues[0].filename == "tmp/not_a_file.c"
     assert issues[0].line_number == "0"

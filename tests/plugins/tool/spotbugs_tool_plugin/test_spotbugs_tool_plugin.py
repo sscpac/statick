@@ -17,7 +17,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_spotbugs_tool_plugin(use_plugin_context=True):
+def setup_spotbugs_tool_plugin(use_plugin_context=True, custom_rsc_path=None):
     """Initialize and return a spotbugs plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -30,9 +30,12 @@ def setup_spotbugs_tool_plugin(use_plugin_context=True):
         "--mapping-file-suffix", dest="mapping_file_suffix", type=str
     )
 
-    resources = Resources(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
+    if custom_rsc_path is not None:
+        resources = Resources([custom_rsc_path])
+    else:
+        resources = Resources(
+            [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
+        )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
@@ -130,6 +133,43 @@ def test_spotbugs_tool_plugin_scan_no_plugin_context():
     assert issues is None
 
 
+def test_spotbugs_tool_plugin_scan_custom_exclude():
+    """Test that issues are still found when an exclude file is provided."""
+    custom_rsc_path = os.path.dirname(__file__)
+    sbtp = setup_spotbugs_tool_plugin(custom_rsc_path=custom_rsc_path)
+    # Sanity check - make sure mvn exists
+    if not sbtp.command_exists("mvn"):
+        pytest.skip("Couldn't find 'mvn' command, can't run Spotbugs tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run spotbugs on Windows.")
+
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    # Have to compile the package first
+    try:
+        subprocess.check_output(
+            ["mvn", "clean", "compile"], universal_newlines=True, cwd=package.path
+        )
+    except subprocess.CalledProcessError as ex:
+        print("Problem running Maven! Returncode = {}".format(str(ex.returncode)))
+        print("{}".format(ex.output))
+        pytest.fail("Failed running Maven")
+
+    package["top_poms"] = [os.path.join(package.path, "pom.xml")]
+    package["all_poms"] = [os.path.join(package.path, "pom.xml")]
+    issues = sbtp.scan(package, "local")
+    assert len(issues) == 1
+    assert issues[0].line_number == "4"
+    assert issues[0].tool == "spotbugs"
+    assert issues[0].issue_type == "MS_MUTABLE_COLLECTION_PKGPROTECT"
+    assert issues[0].severity == "1"
+    assert (
+        issues[0].message
+        == "Test.h is a mutable collection which should be package protected"
+    )
+
+
 def test_spotbugs_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of spotbugs."""
     sbtp = setup_spotbugs_tool_plugin()
@@ -150,6 +190,31 @@ def test_spotbugs_tool_plugin_parse_valid():
         == "Test.h is a mutable collection which should be package protected"
     )
 
+    output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='Normal' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
+        os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
+    )
+    assert len(issues) == 1
+    issues = sbtp.parse_output(output)
+    assert issues[0].severity == "3"
+
+    output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='High' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
+        os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
+    )
+    issues = sbtp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].severity == "5"
+
+
+def test_make_tool_plugin_parse_warnings_mapping():
+    """Verify that we can associate a make warning with a SEI Cert warning."""
+    sbtp = setup_spotbugs_tool_plugin()
+    output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_ARRAY' priority='Low' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
+        os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
+    )
+    issues = sbtp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].cert_reference == "OBJ10-J"
+
 
 def test_spotbugs_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of spotbugs."""
@@ -157,6 +222,15 @@ def test_spotbugs_tool_plugin_parse_invalid():
     output = "invalid text"
     issues = sbtp.parse_output(output)
     assert not issues
+
+
+def test_spotbugs_tool_plugin_parse_wrong_file_path():
+    """Verify that the wrong file path results in no issues found."""
+    sbtp = setup_spotbugs_tool_plugin()
+    output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='Low' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project></Project></BugCollection>"
+    issues = sbtp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].filename == "Test.java"
 
 
 @mock.patch("statick_tool.plugins.tool.spotbugs_tool_plugin.ToolPlugin.command_exists")

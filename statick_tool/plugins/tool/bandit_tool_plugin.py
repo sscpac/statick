@@ -71,8 +71,6 @@ class BanditToolPlugin(ToolPlugin):
     def parse_output(self, output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []
-        # Load the plugin mapping if possible
-        warnings_mapping = self.load_mapping()
 
         # Copy output for modification
         output_minus_log = list(output)
@@ -87,9 +85,6 @@ class BanditToolPlugin(ToolPlugin):
 
         csvreader = csv.DictReader(output_minus_log)
         for csv_line in csvreader:
-            cert_reference = None  # type: Optional[str]
-            if csv_line["test_id"] in warnings_mapping:
-                cert_reference = warnings_mapping[csv_line["test_id"]]
             severity = "1"
             if csv_line["issue_confidence"] == "MEDIUM":
                 severity = "3"
@@ -103,7 +98,7 @@ class BanditToolPlugin(ToolPlugin):
                     csv_line["test_id"],
                     severity,
                     csv_line["issue_text"],
-                    cert_reference,
+                    None,
                 )
             )
 
