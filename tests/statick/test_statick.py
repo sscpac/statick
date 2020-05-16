@@ -116,6 +116,16 @@ def test_custom_exceptions_file(init_statick):
     assert ignore_packages == ["test_package"]
 
 
+def test_exceptions_no_file(init_statick):
+    """
+    Test finding ignored packages without specifying an exceptions file.
+
+    Expected result: ignored packages list is empty
+    """
+    ignore_packages = init_statick.get_ignore_packages()
+    assert not ignore_packages
+
+
 def test_custom_config_file(init_statick):
     """
     Test using custom config file.

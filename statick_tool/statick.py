@@ -91,6 +91,8 @@ class Statick:
 
     def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
+        if self.exceptions is None:
+            return []
         return self.exceptions.get_ignore_packages()
 
     def gather_args(self, args: argparse.Namespace) -> None:
