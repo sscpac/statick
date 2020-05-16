@@ -91,7 +91,6 @@ class Statick:
 
     def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
-        assert self.exceptions
         return self.exceptions.get_ignore_packages()
 
     def gather_args(self, args: argparse.Namespace) -> None:
@@ -194,8 +193,11 @@ class Statick:
 
         package = Package(os.path.basename(path), path)
         level = self.get_level(path, args)  # type: Optional[str]
+        print("level: {}".format(level))
+        if level is None:
+            print("Level is not valid.")
+            return None, False
 
-        assert level
         if not self.config or not self.config.has_level(level):
             print("Can't find specified level {} in config!".format(level))
             return None, False

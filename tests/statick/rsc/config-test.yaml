@@ -1,5 +1,8 @@
 levels:
   default_value:
+    discovery:
+      - not_a_plugin
     tool:
-      not_a_tool:
-        flags: ""
+      - not_a_plugin
+    reporting:
+      - not_a_plugin

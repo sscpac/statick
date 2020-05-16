@@ -1,0 +1,4 @@
+levels:
+  missing_tool:
+    tool:
+      - not_a_plugin
