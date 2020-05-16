@@ -1,6 +1,8 @@
 """Unit tests of statick.py."""
 
+import contextlib
 import os
+import shutil
 import sys
 
 import mock
@@ -9,6 +11,37 @@ import pytest
 from statick_tool.args import Args
 from statick_tool.plugins.tool.cppcheck_tool_plugin import CppcheckToolPlugin
 from statick_tool.statick import Statick
+
+
+# From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment
+@contextlib.contextmanager
+def modified_environ(*remove, **update):
+    """
+    Temporarily updates the ``os.environ`` dictionary in-place.
+
+    The ``os.environ`` dictionary is updated in-place so that the modification
+    is sure to work in all situations.
+    :param remove: Environment variables to remove.
+    :param update: Dictionary of environment variables and values to add/update.
+    """
+    env = os.environ
+    update = update or {}
+    remove = remove or []
+
+    # List of environment variables being updated or removed.
+    stomped = (set(update.keys()) | set(remove)) & set(env.keys())
+    # Environment variables and values to restore on exit.
+    update_after = {k: env[k] for k in stomped}
+    # Environment variables and values to remove on exit.
+    remove_after = frozenset(k for k in update if k not in env)
+
+    try:
+        env.update(update)
+        [env.pop(k, None) for k in remove]
+        yield
+    finally:
+        env.update(update_after)
+        [env.pop(k) for k in remove_after]
 
 
 @pytest.fixture
@@ -222,6 +255,10 @@ def test_run():
     for tool in issues:
         assert not issues[tool]
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_missing_path(init_statick):
@@ -237,6 +274,10 @@ def test_run_missing_path(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_missing_config(init_statick):
@@ -257,6 +298,10 @@ def test_run_missing_config(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_output_is_not_directory(init_statick):
@@ -279,6 +324,10 @@ def test_run_output_is_not_directory(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_force_tool_list(init_statick):
@@ -298,6 +347,10 @@ def test_run_force_tool_list(init_statick):
     for tool in issues:
         assert not issues[tool]
     assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_package_is_ignored(init_statick):
@@ -324,6 +377,10 @@ def test_run_package_is_ignored(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert not issues
     assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_invalid_discovery_plugin(init_statick):
@@ -352,6 +409,10 @@ def test_run_invalid_discovery_plugin(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_invalid_tool_plugin(init_statick):
@@ -380,6 +441,10 @@ def test_run_invalid_tool_plugin(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_missing_tool_dependency(init_statick):
@@ -414,6 +479,10 @@ def test_run_missing_tool_dependency(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_tool_dependency(init_statick):
@@ -449,6 +518,10 @@ def test_run_tool_dependency(init_statick):
     for tool in issues:
         assert not issues[tool]
     assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_no_reporting_plugins(init_statick):
@@ -478,6 +551,10 @@ def test_run_no_reporting_plugins(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_invalid_reporting_plugins(init_statick):
@@ -507,6 +584,10 @@ def test_run_invalid_reporting_plugins(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
 
 
 def test_run_invalid_level(init_statick):
@@ -534,3 +615,74 @@ def test_run_invalid_level(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+@mock.patch("os.mkdir")
+def test_run_mkdir_oserror(mocked_mkdir, init_statick):
+    """
+    Test the behavior when mkdir in run throws an OSError.
+
+    Expected results: issues is None and success is False
+    """
+    mocked_mkdir.side_effect = OSError("error")
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--output-directory",
+        os.path.dirname(__file__),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    assert issues is None
+    assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_file_cmd_does_not_exist(init_statick):
+    """
+    Test when file command does not exist.
+
+    Expected results: no issues found even though Python file without extension does
+    have issues
+    """
+    with modified_environ(PATH=""):
+        args = Args("Statick tool")
+        args.parser.add_argument("--path", help="Path of package to scan")
+
+        statick = Statick(args.get_user_paths())
+        statick.gather_args(args.parser)
+        sys.argv = [
+            "--path",
+            os.path.join(os.path.dirname(__file__), "test_package"),
+            "--output-directory",
+            os.path.dirname(__file__),
+            "--force-tool-list",
+            "pylint",
+        ]
+        parsed_args = args.get_args(sys.argv)
+        path = parsed_args.path
+        statick.get_config(parsed_args)
+        statick.get_exceptions(parsed_args)
+        issues, success = statick.run(path, parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))

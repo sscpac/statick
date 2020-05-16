@@ -213,10 +213,15 @@ class Statick:
             output_dir = os.path.join(args.output_directory, package.name + "-" + level)
 
             if not os.path.isdir(output_dir):
-                os.mkdir(output_dir)
-            if not os.path.isdir(output_dir):
-                print("Unable to create output directory at {}!".format(output_dir))
-                return None, False
+                try:
+                    os.mkdir(output_dir)
+                except OSError as ex:
+                    print(
+                        "Unable to create output directory at {}: {}".format(
+                            output_dir, ex
+                        )
+                    )
+                    return None, False
             print("Writing output to: {}".format(output_dir))
 
             os.chdir(output_dir)
