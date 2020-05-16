@@ -1,0 +1,4 @@
+levels:
+  sei_cert:
+    reporting:
+      - not_a_plugin
