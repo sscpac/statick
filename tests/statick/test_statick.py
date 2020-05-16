@@ -524,9 +524,7 @@ def test_run_invalid_level(init_statick):
         "--path",
         os.path.dirname(__file__),
         "--profile",
-        os.path.join(
-            os.path.dirname(__file__), "rsc", "nonexistent.yaml"
-        ),
+        os.path.join(os.path.dirname(__file__), "rsc", "nonexistent.yaml"),
     ]
     args.output_directory = os.path.dirname(__file__)
     parsed_args = args.get_args(sys.argv)
