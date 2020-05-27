@@ -45,8 +45,8 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         )  # type: Union[str, None]
 
         extra_gcc_flags = ""
-        if extra_gcc_flags is not None:
-            extra_gcc_flags = tool_flags  # type: ignore
+        if tool_flags is not None:
+            extra_gcc_flags = tool_flags
 
         subproc_args = [
             "cmake",
