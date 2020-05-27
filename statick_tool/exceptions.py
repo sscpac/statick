@@ -45,9 +45,9 @@ class Exceptions:
             ignore = self.exceptions["ignore_packages"]
         return ignore
 
-    def get_exceptions(self, package: Package) -> Dict:
+    def get_exceptions(self, package: Package) -> Dict[Any, Any]:
         """Get specific exceptions for given package."""
-        exceptions = {"file": [], "message_regex": []}  # type: Dict
+        exceptions = {"file": [], "message_regex": []}  # type: Dict[Any, Any]
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
             global_exceptions = self.exceptions["global"]["exceptions"]
@@ -84,7 +84,7 @@ class Exceptions:
         discovery plugins have been run (so that Statick doesn't run the tool
         plugins against files which will be ignored anyway).
         """
-        exceptions = self.get_exceptions(package)  # type: Dict
+        exceptions = self.get_exceptions(package)  # type: Dict[Any, Any]
         to_remove = []
         for filename in file_list:
             removed = False
@@ -106,8 +106,8 @@ class Exceptions:
         return file_list
 
     def filter_file_exceptions(
-        self, package: Package, exceptions: List, issues: Dict
-    ) -> Dict:
+        self, package: Package, exceptions: List[Any], issues: Dict[str, List[Issue]]
+    ) -> Dict[str, List[Issue]]:
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in list(  # pylint: disable=too-many-nested-blocks
             issues.items()
@@ -138,13 +138,15 @@ class Exceptions:
         return issues
 
     @classmethod
-    def filter_regex_exceptions(cls, exceptions: List, issues: Dict) -> Dict:
+    def filter_regex_exceptions(
+        cls, exceptions: List[Any], issues: Dict[str, List[Issue]]
+    ) -> Dict[str, List[Issue]]:
         """Filter issues based on message regex exceptions list."""
         for exception in exceptions:
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
             try:
-                compiled_re = re.compile(exception_re)  # type: Pattern
+                compiled_re = re.compile(exception_re)  # type: Pattern[str]
             except re.error:
                 print(
                     "Invalid regular expression in exception: {}".format(exception_re)
@@ -156,7 +158,7 @@ class Exceptions:
                     for issue in tool_issues:
                         match = compiled_re.match(
                             issue.message
-                        )  # type: Optional[Match]
+                        )  # type: Optional[Match[str]]
                         if match:
                             to_remove.append(issue)
                 issues[tool] = [
@@ -164,7 +166,7 @@ class Exceptions:
                 ]
         return issues
 
-    def filter_nolint(self, issues: Dict) -> Dict:
+    def filter_nolint(self, issues: Dict[str, List[Issue]]) -> Dict[str, List[Issue]]:
         """
         Filter out lines that have an explicit NOLINT on them.
 
@@ -187,7 +189,9 @@ class Exceptions:
             issues[tool] = [issue for issue in tool_issues if issue not in to_remove]
         return issues
 
-    def filter_issues(self, package: Package, issues: Dict) -> Dict:
+    def filter_issues(
+        self, package: Package, issues: Dict[str, List[Issue]]
+    ) -> Dict[str, List[Issue]]:
         """Filter issues based on exceptions list."""
         exceptions = self.get_exceptions(package)
 

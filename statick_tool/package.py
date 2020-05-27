@@ -1,7 +1,7 @@
 """Package interface."""
 
 
-class Package(dict):
+class Package(dict):  # type: ignore
     """Default implementation of package interface."""
 
     def __init__(  # pylint:disable=super-init-not-called

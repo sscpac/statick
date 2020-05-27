@@ -1,5 +1,6 @@
 """Discovery plugin to find catkin packages."""
 import os
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -13,7 +14,9 @@ class CatkinDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "catkin"
 
-    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
+    def scan(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
         """Scan package looking for catkin files."""
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
         package_file = os.path.join(package.path, "package.xml")

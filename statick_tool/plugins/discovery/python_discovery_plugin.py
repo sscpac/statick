@@ -3,7 +3,7 @@ import fnmatch
 import os
 import subprocess
 from collections import OrderedDict
-from typing import List
+from typing import List, Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -17,7 +17,9 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "python"
 
-    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
+    def scan(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
         """Scan package looking for python files."""
         python_files = []  # type: List[str]
 

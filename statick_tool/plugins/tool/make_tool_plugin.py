@@ -1,7 +1,7 @@
 """Apply make tool and gather results."""
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Any, List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -54,7 +54,7 @@ class MakeToolPlugin(ToolPlugin):
         return match.group(4) == "note"
 
     @classmethod
-    def filter_matches(cls, matches: List, package: Package) -> List:
+    def filter_matches(cls, matches: Any, package: Package) -> Any:
         """Filter matches."""
         i = 0
         result = []
@@ -86,7 +86,7 @@ class MakeToolPlugin(ToolPlugin):
         make_warning_re = r".*\[(.+)\].*"
         parse = re.compile(make_re)  # type: Pattern[str]
         warning_parse = re.compile(make_warning_re)  # type: Pattern[str]
-        matches = []  # type: List
+        matches = []  # type: Any
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
@@ -98,7 +98,7 @@ class MakeToolPlugin(ToolPlugin):
         issues = []  # type: List[Issue]
         for item in filtered_matches:
             cert_reference = None
-            warning_list = warning_parse.match(item[4])  # type: ignore
+            warning_list = warning_parse.match(item[4])
             if (
                 warning_list is not None
                 and warning_list.groups("1")[0] in warnings_mapping

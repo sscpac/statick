@@ -5,7 +5,7 @@ Sets what flags are used for each plugin at those levels.
 """
 import os
 from collections import OrderedDict
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 import yaml
 
@@ -32,10 +32,10 @@ class Config:
         """Check if given level exists in config."""
         return "levels" in self.config and level in self.config["levels"]
 
-    def get_enabled_plugins(self, level: str, plugin_type: str) -> List:
+    def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
         """Get what plugins are enabled for a certain level."""
         level_config = self.config["levels"][level]
-        plugins = []  # type: List
+        plugins = []  # type: List[str]
         if plugin_type in level_config:
             plugins += list(level_config[plugin_type])
         if "inherits_from" in level_config:
@@ -44,21 +44,26 @@ class Config:
         plugins = list(OrderedDict.fromkeys(plugins))
         return plugins
 
-    def get_enabled_tool_plugins(self, level: str) -> List:
+    def get_enabled_tool_plugins(self, level: str) -> List[str]:
         """Get what tool plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "tool")
 
-    def get_enabled_discovery_plugins(self, level: str) -> List:
+    def get_enabled_discovery_plugins(self, level: str) -> List[str]:
         """Get what discovery plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "discovery")
 
-    def get_enabled_reporting_plugins(self, level: str) -> List:
+    def get_enabled_reporting_plugins(self, level: str) -> List[str]:
         """Get what reporting plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "reporting")
 
     def get_plugin_config(  # pylint: disable=too-many-arguments
-        self, plugin_type: str, plugin: str, level: str, key: str, default=None,
-    ) -> str:
+        self,
+        plugin_type: str,
+        plugin: str,
+        level: str,
+        key: str,
+        default: Optional[str] = None,
+    ) -> Optional[Union[str, Any]]:
         """Get flags to use for a plugin at a certain level."""
         if level not in self.config["levels"].keys():
             return default
@@ -76,18 +81,20 @@ class Config:
             )
         return default
 
-    def get_tool_config(self, plugin: str, level: str, key: str, default=None) -> str:
+    def get_tool_config(
+        self, plugin: str, level: str, key: str, default: Optional[str] = None
+    ) -> Optional[str]:
         """Get tool flags to use for a plugin at a certain level."""
         return self.get_plugin_config("tool", plugin, level, key, default)
 
     def get_discovery_config(
-        self, plugin: str, level: str, key: str, default=None
+        self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
         """Get discovery flags to use for a plugin at a certain level."""
         return self.get_plugin_config("discovery", plugin, level, key, default)
 
     def get_reporting_config(
-        self, plugin: str, level: str, key: str, default=None
+        self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
         """Get reporting flags to use for a plugin at a certain level."""
         return self.get_plugin_config("reporting", plugin, level, key, default)
