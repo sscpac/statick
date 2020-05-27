@@ -40,19 +40,19 @@ class Statick:
         )
         self.manager.collectPlugins()
 
-        self.discovery_plugins = {}  # type: Dict
+        self.discovery_plugins = {}  # type: Dict[str, Any]
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
             self.discovery_plugins[
                 plugin_info.plugin_object.get_name()
             ] = plugin_info.plugin_object
 
-        self.tool_plugins = {}  # type: Dict
+        self.tool_plugins = {}  # type: Dict[str, Any]
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
             self.tool_plugins[
                 plugin_info.plugin_object.get_name()
             ] = plugin_info.plugin_object
 
-        self.reporting_plugins = {}  # type: Dict
+        self.reporting_plugins = {}  # type: Dict[str, Any]
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             self.reporting_plugins[
                 plugin_info.plugin_object.get_name()
@@ -95,7 +95,7 @@ class Statick:
             return []
         return self.exceptions.get_ignore_packages()
 
-    def gather_args(self, args: argparse.Namespace) -> None:
+    def gather_args(self, args: argparse.ArgumentParser) -> None:
         """Gather arguments."""
         args.add_argument(
             "--output-directory",
@@ -184,7 +184,7 @@ class Statick:
 
     def run(  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
         self, path: str, args: argparse.Namespace
-    ) -> Tuple[Optional[Dict], bool]:
+    ) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:
         """Run scan tools against targets on path."""
         success = True
 
@@ -303,7 +303,8 @@ class Statick:
                         )
                         return None, False
                     plugin_dependencies.append(dependency_name)
-                    plugins_to_run.remove(dependency_name)
+                    if dependency_name in plugins_to_run:
+                        plugins_to_run.remove(dependency_name)
                     plugins_to_run.insert(0, dependency_name)
                     dependencies_met = False
 

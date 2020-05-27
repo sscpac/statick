@@ -119,14 +119,14 @@ class SpotbugsToolPlugin(ToolPlugin):
             java_path_string = "{}.java".format(
                 file_entry.attrib["classname"].replace(".", os.sep)
             )
-            file_path = ""  # type: Optional[str]
+            file_path = ""
             for source_dir in output_xml.findall("Project/SrcDir"):
-                joined_path = os.path.join(  # type: ignore
-                    os.path.normpath(source_dir.text), java_path_string,  # type: ignore
-                )  # type: ignore
-                if os.path.exists(joined_path):  # type: ignore
-                    file_path = joined_path
-                    break
+                if source_dir.text is not None:
+                    norm_src_path = os.path.normpath(source_dir.text)
+                    joined_path = os.path.join(norm_src_path, java_path_string)
+                    if os.path.exists(joined_path):
+                        file_path = joined_path
+                        break
             if not file_path:
                 print(
                     "Couldn't find file for class {}".format(

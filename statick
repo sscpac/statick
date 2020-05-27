@@ -11,7 +11,7 @@ from statick_tool.args import Args
 from statick_tool.statick import Statick
 
 
-def main():
+def main() -> None:
     """
     Run statick.
     """

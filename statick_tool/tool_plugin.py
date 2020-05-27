@@ -11,7 +11,8 @@ from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
-class ToolPlugin(IPlugin):
+# No stubs available for IPlugin so ignoring type.
+class ToolPlugin(IPlugin):  # type: ignore
     """Default implementation of tool plugin."""
 
     plugin_context = None
@@ -67,7 +68,7 @@ class ToolPlugin(IPlugin):
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping
 
-    def get_user_flags(self, level: str, name: str = None) -> List[str]:
+    def get_user_flags(self, level: str, name: Optional[str] = None) -> List[str]:
         """Get the user-defined extra flags for a specific tool/level combination."""
         if name is None:
             name = self.get_name()  # pylint: disable=assignment-from-no-return
@@ -77,7 +78,7 @@ class ToolPlugin(IPlugin):
         if user_flags:
             # See https://github.com/python/typeshed/issues/1476 for
             # justification to ignore.
-            lex = shlex.shlex(user_flags, posix=True)  # type: ignore
+            lex = shlex.shlex(user_flags, posix=True)
             lex.whitespace_split = True
             flags = list(lex)
         return flags

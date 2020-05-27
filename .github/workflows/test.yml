@@ -110,8 +110,8 @@ jobs:
 
       - name: Test with mypy
         run: |
-          mypy --ignore-missing-imports statick_ws
-          mypy --ignore-missing-imports statick statick_tool/
+          mypy --ignore-missing-imports --strict statick_ws statick_tool/
+          mypy --ignore-missing-imports --strict statick statick_tool/
 
       - name: Test with black
         if: matrix.python-version >= 3.6

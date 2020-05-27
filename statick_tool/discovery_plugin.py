@@ -1,25 +1,29 @@
 """Discovery plugin."""
 import os
 import sys
-from typing import Union
+from typing import Any, Optional, Union
 
 from yapsy.IPlugin import IPlugin
 
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
-class DiscoveryPlugin(IPlugin):
+class DiscoveryPlugin(IPlugin):  # type: ignore
     """Default implementation of discovery plugin."""
 
     plugin_context = None
 
-    def get_name(self):
+    def get_name(self) -> Optional[str]:
         """Get name of plugin."""
 
-    def gather_args(self, args):
+    def gather_args(self, args: Any) -> None:
         """Gather arguments for plugin."""
 
-    def scan(self, package, level, exceptions=None):
+    def scan(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
         """
         Scan package to discover files for analysis.
 

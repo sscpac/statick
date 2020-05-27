@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import List, Match, Optional, Pattern, Union
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -17,7 +17,9 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "cmake"
 
-    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
+    def scan(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
         """Scan package looking for CMake files."""
         if self.plugin_context is None:
             return
@@ -38,9 +40,13 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
 
-        extra_gcc_flags = self.plugin_context.config.get_tool_config(
+        tool_flags = self.plugin_context.config.get_tool_config(
             "make", level, "flags", ""
-        )  # type: str
+        )  # type: Union[str, None]
+
+        extra_gcc_flags = ""
+        if tool_flags is not None:
+            extra_gcc_flags = tool_flags
 
         subproc_args = [
             "cmake",

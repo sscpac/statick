@@ -11,7 +11,7 @@ in a web browser.
 import argparse
 import csv
 import subprocess
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import xmltodict
 
@@ -91,7 +91,7 @@ class CCCCToolPlugin(ToolPlugin):
         return issues
 
     def parse_output(  # pylint: disable=too-many-branches
-        self, output: Dict, package: Package, config_file: str
+        self, output: Dict[Any, Any], package: Package, config_file: str
     ) -> List[Issue]:
         """Parse tool output and report issues."""
         if "CCCC_Project" not in output:
@@ -99,7 +99,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         config = self.parse_config(config_file)
 
-        results = {}  # type: Dict
+        results = {}  # type: Dict[Any, Any]
         for module in output["CCCC_Project"]["structural_summary"]["module"]:
             if "name" not in module or isinstance(module, str):
                 break
@@ -133,7 +133,7 @@ class CCCCToolPlugin(ToolPlugin):
         return issues
 
     @classmethod
-    def parse_config(cls, config_file: str) -> Dict:
+    def parse_config(cls, config_file: str) -> Dict[str, str]:
         """
         Parse CCCC configuration file.
 
@@ -143,7 +143,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         `cccc --opt_outfile=cccc.opt`
         """
-        config = {}  # type: Dict
+        config = {}  # type: Dict[Any, Any]
 
         if config_file is None:
             return config
@@ -161,7 +161,9 @@ class CCCCToolPlugin(ToolPlugin):
 
         return config
 
-    def find_issues(self, config: Dict, results: Dict, package: Package) -> List[Issue]:
+    def find_issues(
+        self, config: Dict[Any, Any], results: Dict[Any, Any], package: Package
+    ) -> List[Issue]:
         """Identify issues by comparing tool results with tool configuration."""
         issues = []
         dummy = []

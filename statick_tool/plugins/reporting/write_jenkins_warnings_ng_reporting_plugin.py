@@ -1,8 +1,9 @@
 """Write Statick results to Jenkins Warnings-NG plugin json-log compatible output."""
 import json
 import os
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
+from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
 
@@ -15,7 +16,7 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
         return "write_jenkins_warnings_ng"
 
     def report(
-        self, package: Package, issues: Dict, level: str
+        self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
         """
         Write the results to Jenkins Warnings-NG plugin compatible file.

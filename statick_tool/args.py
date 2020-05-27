@@ -5,7 +5,7 @@ Enable usage of user-paths argument before parsing other arguments.
 """
 import argparse
 import os
-from typing import List
+from typing import Any, List, Optional
 
 
 class Args:
@@ -29,7 +29,7 @@ class Args:
         self.parser = argparse.ArgumentParser(description=name)
         self.parser.add_argument("--user-paths", **user_path_args)  # type: ignore
 
-    def get_user_paths(self, args=None) -> List[str]:
+    def get_user_paths(self, args: Any = None) -> List[str]:
         """Get a list of user paths containing config or plugins."""
         user_paths = []  # type: List[str]
         args = self.pre_parser.parse_known_args(args)[0]
@@ -42,6 +42,6 @@ class Args:
                     print("Could not find user path {}!".format(path))
         return user_paths
 
-    def get_args(self, args: List[str] = None) -> argparse.Namespace:
+    def get_args(self, args: Optional[List[str]] = None) -> argparse.Namespace:
         """Get parsed command-line arguments."""
         return self.parser.parse_args(args)

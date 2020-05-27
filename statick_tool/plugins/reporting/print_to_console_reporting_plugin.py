@@ -1,7 +1,8 @@
 """Write issue reports to the console."""
 from collections import OrderedDict
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
+from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
 
@@ -14,7 +15,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
         return "print_to_console"
 
     def report(
-        self, package: Package, issues: Dict, level: str
+        self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
         """
         Go through the issues list and print them to the console.

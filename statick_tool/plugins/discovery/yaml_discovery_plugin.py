@@ -2,7 +2,7 @@
 import fnmatch
 import os
 from collections import OrderedDict
-from typing import List
+from typing import List, Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -16,7 +16,9 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "yaml"
 
-    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
+    def scan(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
         """Scan package looking for YAML files."""
         yaml_files = []  # type: List[str]
         globs = ["*.yaml"]  # type: List[str]
