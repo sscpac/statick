@@ -303,7 +303,8 @@ class Statick:
                         )
                         return None, False
                     plugin_dependencies.append(dependency_name)
-                    plugins_to_run.remove(dependency_name)
+                    if dependency_name in plugins_to_run:
+                        plugins_to_run.remove(dependency_name)
                     plugins_to_run.insert(0, dependency_name)
                     dependencies_met = False
 
