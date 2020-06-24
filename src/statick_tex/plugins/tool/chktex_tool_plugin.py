@@ -12,7 +12,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class ChktexToolPlugin(ToolPlugin):
+class ChktexToolPlugin(ToolPlugin):  # type: ignore
     """Apply chktex tool and gather results."""
 
     def get_name(self) -> str:

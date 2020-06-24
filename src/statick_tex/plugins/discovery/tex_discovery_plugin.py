@@ -10,14 +10,14 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class TexDiscoveryPlugin(DiscoveryPlugin):
+class TexDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
     """Discover TeX files to analyze."""
 
     def get_name(self) -> str:
         """Get name of discovery type."""
         return "tex"
 
-    def scan(self, package: Package, level: str, exceptions: Exceptions = None):
+    def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for TeX files."""
         tex_files = []  # type: List[str]
         globs = ["*.tex", "*.bib"]  # type: List[str]
