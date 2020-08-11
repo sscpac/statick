@@ -12,6 +12,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.1 - 2020-08-11
+
+### Added
+
+- Tests performed on Ubuntu 20.04.
+- Black formatting applied and enforced.
+- Using mypy with `--strict` flag.
+- Added lots of unit tests to get to 100% code coverage.
+
+### Fixed
+
+- Bug fixed that caused CMake discovery plugin to fail when using ROS packages on
+  Ubuntu 20.04 with ROS Noetic.
+- Bug fixed that would cause certain regular expression comparisons to fail.
+- Code coverage reports are now more accurate by using multiple operating systems.
+- Better handling of loading yaml by adding exceptions. (@xydesa)
+- Improved parsing of pyflakes output.
+
+### Removed
+
+- Legacy Jenkins reporting plugin was removed due to the plugin being deprecated upstream.
+  Support was already added for the new, recommended Next Generation Jenkins reporting plugin.
+
 ## v0.4.0 - 2020-05-01
 
 ### Added
