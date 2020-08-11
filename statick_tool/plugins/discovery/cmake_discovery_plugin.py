@@ -52,6 +52,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             "cmake",
             ".",
             "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+            "-DBUILD_GMOCK=ON",
             "-DBUILD_GTEST=OFF",
             "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
             "-DCATKIN_ENABLE_TESTING=OFF",
@@ -69,6 +70,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             print("Problem running CMake! Returncode = {}".format(str(ex.returncode)))
+            print("From {}, running {}".format(os.getcwd(), subproc_args))
             print("{}".format(ex.output))
 
         except OSError:
