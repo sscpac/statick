@@ -12,6 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.2 - 2020-08-12
+
+### Added
+
+- Fallback for cpplint discovery that will use system install if ROS provided version
+  is not found.
+  Allows cpplint tool to work without ROS and on ROS Noetic, where the roslint package
+  changed the names of the cpplint executables.
+
 ## v0.4.1 - 2020-08-11
 
 ### Added
