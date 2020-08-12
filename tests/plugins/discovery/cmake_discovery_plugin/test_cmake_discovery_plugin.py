@@ -148,6 +148,39 @@ def test_cmake_discovery_plugin_check_output_roslint(mock_isfile):
     assert package["cpplint"]
 
 
+@mock.patch("os.path.isfile")
+def test_cmake_discovery_plugin_check_output_cpplint_without_roslint_installed(
+    mock_isfile,
+):
+    """Test the CMake discovery plugin finds cpplint executable when roslint is not installed."""
+    mock_isfile.return_value = False
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["cpplint"] = []
+    output = "roslint is not installed"
+    cmdp.process_output(output, package)
+    assert package["cpplint"]
+
+
+@mock.patch("os.path.isfile")
+def test_cmake_discovery_plugin_check_output_cpplint_with_roslint_installed(
+    mock_isfile,
+):
+    """Test the CMake discovery plugin finds cpplint executable when roslint is installed."""
+    mock_isfile.return_value = False
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["cpplint"] = []
+    roslint = "/opt/ros/noetic/lib/roslint/cpplint"
+    output = "-- ROSLINT: {}".format(roslint)
+    cmdp.process_output(output, package)
+    assert package["cpplint"]
+
+
 @mock.patch(
     "statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output"
 )

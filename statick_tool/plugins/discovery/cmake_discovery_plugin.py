@@ -143,6 +143,10 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                 if os.path.isfile(cpplint):
                     print("  cpplint script from roslint found at {}".format(cpplint))
                     package["cpplint"] = cpplint
+                else:
+                    package["cpplint"] = "cpplint"
+            else:
+                package["cpplint"] = "cpplint"
 
             match_project = project_p.match(line)  # type: Optional[Match[str]]
             if match_project:
