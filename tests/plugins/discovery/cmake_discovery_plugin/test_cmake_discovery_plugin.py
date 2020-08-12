@@ -149,7 +149,9 @@ def test_cmake_discovery_plugin_check_output_roslint(mock_isfile):
 
 
 @mock.patch("os.path.isfile")
-def test_cmake_discovery_plugin_check_output_cpplint_without_roslint_installed(mock_isfile):
+def test_cmake_discovery_plugin_check_output_cpplint_without_roslint_installed(
+    mock_isfile,
+):
     """Test the CMake discovery plugin finds cpplint executable when roslint is not installed."""
     mock_isfile.return_value = False
     cmdp = setup_cmake_discovery_plugin()
@@ -163,7 +165,9 @@ def test_cmake_discovery_plugin_check_output_cpplint_without_roslint_installed(m
 
 
 @mock.patch("os.path.isfile")
-def test_cmake_discovery_plugin_check_output_cpplint_with_roslint_installed(mock_isfile):
+def test_cmake_discovery_plugin_check_output_cpplint_with_roslint_installed(
+    mock_isfile,
+):
     """Test the CMake discovery plugin finds cpplint executable when roslint is installed."""
     mock_isfile.return_value = False
     cmdp = setup_cmake_discovery_plugin()
