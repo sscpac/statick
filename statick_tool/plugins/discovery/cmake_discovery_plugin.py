@@ -145,6 +145,8 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                     package["cpplint"] = cpplint
                 else:
                     package["cpplint"] = "cpplint"
+            else:
+                package["cpplint"] = "cpplint"
 
             match_project = project_p.match(line)  # type: Optional[Match[str]]
             if match_project:
