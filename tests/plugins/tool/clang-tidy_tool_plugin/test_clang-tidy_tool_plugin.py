@@ -18,9 +18,9 @@ from statick_tool.tool_plugin import ToolPlugin
 try:
     from tempfile import TemporaryDirectory
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (
+    from backports.tempfile import (  # pylint: disable=wrong-import-order
         TemporaryDirectory,
-    )  # pylint: disable=wrong-import-order
+    )
 
 
 def setup_clang_tidy_tool_plugin(use_plugin_context=True, binary=None):
