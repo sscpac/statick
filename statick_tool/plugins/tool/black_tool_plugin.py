@@ -88,16 +88,16 @@ class BlackToolPlugin(ToolPlugin):
                             )
                         )
                 if line.startswith("error"):
-                    match = parse_error.match(line)  # type: Optional[Match[str]]
-                    if match:
+                    match_error = parse_error.match(line)  # type: Optional[Match[str]]
+                    if match_error:
                         issues.append(
                             Issue(
-                                match.group(1).split(' ')[2],
+                                match_error.group(1).split(' ')[2],
                                 "0",
                                 self.get_name(),
                                 "format",
                                 "3",
-                                match.group(3),
+                                match_error.group(3),
                                 None,
                             )
                         )
