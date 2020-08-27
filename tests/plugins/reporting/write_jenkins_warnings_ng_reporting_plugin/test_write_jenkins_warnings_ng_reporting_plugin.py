@@ -62,7 +62,9 @@ def test_write_jenkins_warnings_ng_reporting_plugin_found():
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
     )
     manager.setCategoriesFilter(
-        {"Reporting": ReportingPlugin,}
+        {
+            "Reporting": ReportingPlugin,
+        }
     )
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "c"

@@ -46,7 +46,9 @@ def test_lizard_tool_plugin_found():
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
     )
     manager.setCategoriesFilter(
-        {"Tool": ToolPlugin,}
+        {
+            "Tool": ToolPlugin,
+        }
     )
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "lizard"
@@ -88,8 +90,10 @@ def test_lizard_tool_plugin_scan_valid():
 def test_lizard_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of lizard."""
     ltp = setup_lizard_tool_plugin()
-    output = "{}:1: warning: func has 22 NLOC, 18 CCN, 143 token, 0 PARAM, 69 length".format(
-        os.path.join("valid_package", "test.c")
+    output = (
+        "{}:1: warning: func has 22 NLOC, 18 CCN, 143 token, 0 PARAM, 69 length".format(
+            os.path.join("valid_package", "test.c")
+        )
     )
     issues = ltp.parse_output(output)
     assert len(issues) == 1
