@@ -33,7 +33,9 @@ class Exceptions:
             try:
                 self.exceptions = yaml.safe_load(fname)  # type: Dict[Any, Any]
             except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
-                raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
+                raise ValueError(
+                    "{} is not a valid YAML file: {}".format(filename, ex)
+                ) from ex
 
     def get_ignore_packages(self) -> List[str]:
         """Get list of packages to skip when scanning a workspace."""
