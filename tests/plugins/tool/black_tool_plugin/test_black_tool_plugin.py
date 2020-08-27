@@ -91,6 +91,16 @@ def test_black_tool_plugin_parse_valid():
     assert issues[0].severity == "3"
     assert issues[0].message == "would reformat"
 
+    output = "error: cannot format /home/user/file: INTERNAL ERROR: message: /tmp/x"
+    issues = btp.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/file"
+    assert issues[0].line_number == "0"
+    assert issues[0].tool == "black"
+    assert issues[0].issue_type == "format"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "message"
+
 
 def test_black_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of black."""
@@ -138,3 +148,24 @@ def test_black_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output)
     ]
     issues = btp.scan(package, "level")
     assert issues is None
+
+
+@mock.patch("statick_tool.plugins.tool.black_tool_plugin.subprocess.check_output")
+def test_black_tool_plugin_scan_internal_error(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised due to an internal error.
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        123, "", output="error: cannot format /tmp/x: INTERNAL ERROR: message: /tmp/x"
+    )
+    btp = setup_black_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "e501.py")
+    ]
+    issues = btp.scan(package, "level")
+    assert len(issues) == 1
