@@ -32,8 +32,13 @@ class BlackToolPlugin(ToolPlugin):
                 )
 
             except subprocess.CalledProcessError as ex:
+                # Return code 123 means there was an internal error
+                if ex.returncode == 123:
+                    print("Black encountered internal error")
+                    print("{}".format(ex.output))
+
                 # Return code 1 just means "found problems"
-                if ex.returncode != 1:
+                elif ex.returncode != 1:
                     print("Problem {}".format(ex.returncode))
                     print("{}".format(ex.output))
                     return None
@@ -59,14 +64,17 @@ class BlackToolPlugin(ToolPlugin):
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        tool_re = r"(.+)\s(.+)\s(.+)"
-        parse = re.compile(tool_re)  # type: Pattern[str]
+        tool_re_reformat = r"(.+)\s(.+)\s(.+)"
+        parse_reformat = re.compile(tool_re_reformat)  # type: Pattern[str]
+        tool_re_error = r"\w+:\s(.+):\s(.+):\s(.+):\s(.+)"
+        parse_error = re.compile(tool_re_error)  # type: Pattern[str]
         issues = []
 
         for output in total_output:
             for line in output.splitlines():
+                print("line: {}".format(line))
                 if line.startswith("would reformat"):
-                    match = parse.match(line)  # type: Optional[Match[str]]
+                    match = parse_reformat.match(line)  # type: Optional[Match[str]]
                     if match:
                         issues.append(
                             Issue(
@@ -76,6 +84,20 @@ class BlackToolPlugin(ToolPlugin):
                                 "format",
                                 "3",
                                 "would reformat",
+                                None,
+                            )
+                        )
+                if line.startswith("error"):
+                    match = parse_error.match(line)  # type: Optional[Match[str]]
+                    if match:
+                        issues.append(
+                            Issue(
+                                match.group(1).split(' ')[2],
+                                "0",
+                                self.get_name(),
+                                "format",
+                                "3",
+                                match.group(3),
                                 None,
                             )
                         )
