@@ -19,9 +19,9 @@ from statick_tool.tool_plugin import ToolPlugin
 try:
     from tempfile import TemporaryDirectory
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (
+    from backports.tempfile import (  # pylint: disable=wrong-import-order
         TemporaryDirectory,
-    )  # pylint: disable=wrong-import-order
+    )
 
 
 def setup_cpplint_tool_plugin():
@@ -54,7 +54,9 @@ def test_cpplint_tool_plugin_found():
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
     )
     manager.setCategoriesFilter(
-        {"Tool": ToolPlugin,}
+        {
+            "Tool": ToolPlugin,
+        }
     )
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "cpplint"

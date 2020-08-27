@@ -49,7 +49,9 @@ def test_make_tool_plugin_found():
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
     )
     manager.setCategoriesFilter(
-        {"Tool": ToolPlugin,}
+        {
+            "Tool": ToolPlugin,
+        }
     )
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "make"

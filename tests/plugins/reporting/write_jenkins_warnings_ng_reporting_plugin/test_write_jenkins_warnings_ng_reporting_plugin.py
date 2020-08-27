@@ -20,9 +20,9 @@ from statick_tool.resources import Resources
 try:
     from tempfile import TemporaryDirectory
 except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (
+    from backports.tempfile import (  # pylint: disable=wrong-import-order
         TemporaryDirectory,
-    )  # pylint: disable=wrong-import-order
+    )
 
 output_regex = r"^{\"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": (\d+), \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\"}"
 
@@ -62,7 +62,9 @@ def test_write_jenkins_warnings_ng_reporting_plugin_found():
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
     )
     manager.setCategoriesFilter(
-        {"Reporting": ReportingPlugin,}
+        {
+            "Reporting": ReportingPlugin,
+        }
     )
     manager.collectPlugins()
     # Verify that a plugin's get_name() function returns "c"
