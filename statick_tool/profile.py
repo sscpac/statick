@@ -18,7 +18,9 @@ class Profile:  # pylint: disable=too-few-public-methods
             try:
                 self.profile = yaml.safe_load(fname)
             except yaml.YAMLError as ex:
-                raise ValueError("{} is not a valid YAML file: {}".format(filename, ex))
+                raise ValueError(
+                    "{} is not a valid YAML file: {}".format(filename, ex)
+                ) from ex
             if self.profile is None:
                 raise ValueError("{} is empty, can't continue!".format(filename))
             if "default" not in self.profile:
