@@ -189,7 +189,7 @@ This is a very important part of Statick, as many _tools_ are notorious for gene
 and sometimes source code in a project is not allowed to be modified for various reasons.
 Statick allows _exceptions_ to be specified in three different ways:
 
-* Placing `NOLINT` on the line of source code generating the warning.
+* Placing a comment with `NOLINT` on the line of source code generating the warning.
 * Using individual _tool_ methods for ignoring warnings (such as adding `# pylint: disable=<warning>`in Python source code).
 * Via an `excpetions.yaml` file.
 
