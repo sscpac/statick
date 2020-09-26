@@ -8,4 +8,4 @@ if [ ! -d statick_example1 ]; then
     mkdir statick_example1
 fi
 
-statick sbpl/ statick_example1/
+statick sbpl/ --output-directory statick_example1/

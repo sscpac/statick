@@ -17,4 +17,4 @@ if [ ! -d statick_example4 ]; then
     mkdir statick_example4
 fi
 
-statick src/navigation/amcl statick_example4/ --user-paths ./navigation_config --profile profile_objective.yaml
+statick src/navigation/amcl --output-directory statick_example4/ --user-paths ./navigation_config --profile profile_objective.yaml

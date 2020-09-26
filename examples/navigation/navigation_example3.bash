@@ -16,4 +16,4 @@ if [ ! -d statick_example3 ]; then
     mkdir statick_example3
 fi
 
-statick src/navigation/amcl statick_example3/ --user-paths ./navigation_config
+statick src/navigation/amcl --output-directory statick_example3/ --user-paths ./navigation_config
