@@ -141,6 +141,7 @@ An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick 
 ### Levels
 
 Statick has _levels_ of configuration to support testing each _package_ in the desired manner.
+_Levels_ are defined in the `config.yaml` file.
 Some projects only care about static analysis at a minimal level and do not care about linting for style at all.
 Other projects want all the bells and whistles that static analysis and linting have to offer.
 That's okay with Statick -- just make a level to match your project needs.
@@ -160,7 +161,7 @@ A gradual transition of packages from _threshold_ to _objective_ can be undertak
 Flags from the inherited level can be overridden by listing the same tool under the level's `tools` key with a new set
 of flags.
 
-In the following example the `objective` _level_ inherits and modifies the `threshold` _level_.
+In the following `config.yaml` example the `objective` _level_ inherits from and modifies the `threshold` _level_.
 The `pylint` flags from `threshold` are completely modified by the `objective` _level_, and the `clang-tidy` _tool_ is
 new for the `objective` _level_.
 
