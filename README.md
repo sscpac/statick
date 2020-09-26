@@ -234,7 +234,7 @@ The `default` key lists the _level_ to run if no specific level listed for a pac
 The `packages` key lists _packages_ and override levels to run for those packages.
 
 With the built-in configuration files the default _profile_ uses `sei_cert` as the default _level_.
-This _level_ sets all available _tools_ to use flags that find issues listed in the
+This _level_ sets all available _tools_ to use flags that find issues listed in
 Carnegie Mellon University Software Engineering Institute
 "CERT C++ Coding Standard: Rules for Developing Safe, Reliable, and Secure Systems".
 The rules and flags can be found in the
