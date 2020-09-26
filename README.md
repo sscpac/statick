@@ -86,8 +86,8 @@ This will run the default level and print the results to the console.
 Early Statick development and use was targeted towards [Robot Operating System](https://www.ros.org/) (ROS),
 with results to be displayed on Jenkins.
 Both ROS and Jenkins have a concept of software components as _packages_.
-Statick will explicitly look for ROS packages and treat each of them as an individual unit, especially with the
-command `statick_ws`.
+The standard `statick` command treats the _package_ path as a single package.
+Statick will explicitly look for ROS packages and treat each of them as an individual unit when running `statick_ws`.
 
 At the same time Statick is ROS agnostic and can be used against many different programming languages.
 The term _package_ is still used to designate a directory with source code.
@@ -159,6 +159,56 @@ An _objective_ level can build on the _threshold_ level with more tools or more 
 A gradual transition of packages from _threshold_ to _objective_ can be undertaken.
 Flags from the inherited level can be overridden by listing the same tool under the level's `tools` key with a new set
 of flags.
+
+In the following example the `objective` _level_ inherits and modifies the `threshold` _level_.
+The `pylint` flags from `threshold` are completely modified by the `objective` _level_, and the `clang-tidy` _tool_ is
+new for the `objective` _level_.
+
+```yaml
+levels:
+  threshold:
+    tool:
+      pylint:
+        flags: "--disable=R,I,C0302,W0141,W0142,W0511,W0703
+                --max-line-length=100
+                --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
+                --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
+      make:
+        flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast
+                -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
+      catkin_lint:
+        flags: "-W2 --ignore DESCRIPTION_BOILERPLATE,DESCRIPTION_MEANINGLESS,GLOBAL_VAR_COLLISION,LINK_DIRECTORY,LITERAL_PROJECT_NAME,TARGET_NAME_COLLISION"
+      cppcheck:
+        flags: "-j 4 --suppress=unreadVariable --suppress=unusedPrivateFunction --suppress=unusedStructMember
+                --enable=warning,style --config-exclude=/usr --template='[{file}:{line}]: ({severity} {id}) {message}'"
+      cpplint:
+        # These flags must remain on one line to not break the flag parsing
+        flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
+
+  objective:
+    inherits_from: "threshold"
+    tool:
+      pylint:
+        flags: "--disable=I0011,W0141,W0142,W0511
+                --max-line-length=100
+                --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
+                --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
+      clang-tidy:
+        # These flags must remain on one line to not break the flag parsing
+        # cert-err58-cpp gives unwanted error for pluginlib code
+        flags: "-checks='*,-cert-err58-cpp,-cert-err60-cpp,-clang-analyzer-deadcode.DeadStores,-clang-analyzer-alpha.deadcode.UnreachableCode,-clang-analyzer-optin.performance.Padding,-cppcoreguidelines-*,-google-readability-namespace-comments,-google-runtime-int,-llvm-include-order,-llvm-namespace-comment,-modernize-*,-misc-unused-parameters,-readability-else-after-return'"
+      xmllint:
+        flags: ""
+      yamllint:
+        flags: "-d '{extends: default,
+                     rules: {
+                       colons: {max-spaces-before: 0, max-spaces-after: -1},
+                       commas: disable,
+                       document-start: disable,
+                       line-length: disable}}'"
+      cmakelint:
+        flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
+```
 
 ### Profiles
 
@@ -273,8 +323,9 @@ User-defined plugins are stored in the `plugins` directory.
 Configuration files used by the plugins are stored in the `rsc` directory.
 
 It is possible to use a comma-separated chain of _user paths_ with Statick.
-Statick will look up files in the order of the paths passed to it.
+Statick will look for plugins and configuaration files in the order of the paths passed to it.
 Files from paths earlier in the list will override files from paths later in the list.
+An example is provided below.
 
 ```shell
 my_org_config
@@ -375,7 +426,7 @@ and a pure [Python package](examples/werkzeug).
 
 If you are running statick against a ROS package and get an error that there is no rule to make target `clean`,
 and that the package is not CMake, it usually means that you did not specify a single package.
-Instead, this is what happens when you tell statick to analyze a ROS workspace and do not use `statick_ws`.
+For example, this is what happens when you tell Statick to analyze a ROS workspace and do not use `statick_ws`.
 
 ```shell
 Running cmake discovery plugin...
