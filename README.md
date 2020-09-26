@@ -263,9 +263,11 @@ This is where you can place custom plugins or custom configurations.
 
 The basic structure of a user path directory is
 
-    user_path_root
-     |- plugins
-     |- rsc
+```shell
+user_path_root
+ |- plugins
+ |- rsc
+```
 
 User-defined plugins are stored in the `plugins` directory.
 Configuration files used by the plugins are stored in the `rsc` directory.
@@ -274,14 +276,16 @@ It is possible to use a comma-separated chain of _user paths_ with Statick.
 Statick will look up files in the order of the paths passed to it.
 Files from paths earlier in the list will override files from paths later in the list.
 
-    my_org_config
-     |- rsc
-         |- config.yaml
-         |- exceptions.yaml
+```shell
+my_org_config
+ |- rsc
+     |- config.yaml
+     |- exceptions.yaml
 
-    my_project_config
-     |- rsc
-         | - exceptions.yaml
+my_project_config
+ |- rsc
+     | - exceptions.yaml
+```
 
 To run Statick with this set of configurations, you would do
 
@@ -335,20 +339,22 @@ For a description of how yapsy works, check out the [yapsy documentation](http:/
 
 A _user path_ with some custom plugins may look like
 
-    my_custom_config
-      setup.py
-      |- plugins
-         |- my_discovery_plugin
-            |- my_discovery_plugin.py
-            |- my_discovery_plugin.yapsy
-         |- my_tool_plugins
-            |- my_tool_plugin.py
-            |- my_tool_plugin.yapsy
-            |- my_other_tool_plugin.py
-            |- my_other_tool_plugin.yapsy
-      |- rsc
-         |- config.yaml
-         |- exceptions.yaml
+```shell
+my_custom_config
+  setup.py
+  |- plugins
+     |- my_discovery_plugin
+        |- my_discovery_plugin.py
+        |- my_discovery_plugin.yapsy
+     |- my_tool_plugins
+        |- my_tool_plugin.py
+        |- my_tool_plugin.yapsy
+        |- my_other_tool_plugin.py
+        |- my_other_tool_plugin.yapsy
+  |- rsc
+     |- config.yaml
+     |- exceptions.yaml
+```
 
 For the actual implementation of a plugin, it is recommended to copy a suitable default plugin provided by Statick and
 modify as needed.
