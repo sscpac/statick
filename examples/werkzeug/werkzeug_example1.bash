@@ -8,4 +8,4 @@ if [ ! -d statick_example1 ]; then
     mkdir statick_example1
 fi
 
-statick werkzeug/ statick_example1/
+statick werkzeug/ --output-directory statick_example1/
