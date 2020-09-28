@@ -72,7 +72,6 @@ class BlackToolPlugin(ToolPlugin):
 
         for output in total_output:
             for line in output.splitlines():
-                print("line: {}".format(line))
                 if line.startswith("would reformat"):
                     match = parse_reformat.match(line)  # type: Optional[Match[str]]
                     if match:
