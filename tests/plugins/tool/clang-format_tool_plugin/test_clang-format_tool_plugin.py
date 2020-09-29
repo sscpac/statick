@@ -111,6 +111,40 @@ def test_clang_format_tool_plugin_scan_valid():
     assert not issues
 
 
+def test_clang_format_tool_plugin_scan_valid_alternate_config():
+    """Test that alternate format configuration file can be used."""
+    cftp = setup_clang_format_tool_plugin(do_raise=True)
+    if not cftp.command_exists("clang-format"):
+        pytest.skip("Missing clang-format executable.")
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    # Make sure no configuration files are present.
+    if os.path.exists(os.path.join(os.path.expanduser("~"), "_clang-format")):
+        os.remove(os.path.join(os.path.expanduser("~"), "_clang-format"))
+    if os.path.exists(os.path.join(os.path.expanduser("~"), ".clang-format")):
+        os.remove(os.path.join(os.path.expanduser("~"), ".clang-format"))
+    # Copy the latest clang_format over
+    shutil.copyfile(
+        cftp.plugin_context.resources.get_file("_clang-format"),
+        os.path.join(os.path.expanduser("~"), ".clang-format"),
+    )
+    package["make_targets"] = []
+    package["make_targets"].append({})
+    package["make_targets"][0]["src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "indents.c")
+    ]
+    package["headers"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "indents.h")
+    ]
+    issues = cftp.scan(package, "level")
+    assert len(issues) == 1
+
+    cftp = setup_clang_format_tool_plugin()
+    issues = cftp.scan(package, "level")
+    assert not issues
+
+
 def test_clang_format_tool_plugin_scan_no_plugin_context():
     """Test that issues are None when no plugin context is provided."""
     cftp = setup_clang_format_tool_plugin(False)
