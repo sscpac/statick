@@ -85,9 +85,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
 
         if cmake_flags:
             subproc_args.extend(cmake_flags)
-            print("found cmake_flags: {}".format(cmake_flags))
         else:
-            print("did not find cmake_flags: {}".format(cmake_flags))
             subproc_args.extend(default_flags)
         subproc_args.extend(path_flags)
 
