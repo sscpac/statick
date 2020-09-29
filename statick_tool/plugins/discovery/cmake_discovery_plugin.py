@@ -1,4 +1,5 @@
 """Discovery plugin to find CMake-based projects."""
+import argparse
 import os
 import re
 import shutil
@@ -16,6 +17,12 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     def get_name(self) -> str:
         """Get name of discovery type."""
         return "cmake"
+
+    def gather_args(self, args: argparse.Namespace) -> None:
+        """Gather arguments."""
+        args.add_argument(
+            "--cmake-flags", dest="cmake_flags", type=str, help="CMake flags"
+        )
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
@@ -51,15 +58,36 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         subproc_args = [
             "cmake",
             ".",
+        ]  # type: List[str]
+
+        # We are keeping default flags for backwards compatibility. Ideally, we would
+        # allow arbitrary flags to be set, but we started off by hard-coding these
+        # defaults. In an effort to not break existing installations, we have made it
+        # so that new CMake flags must explicitly be set in order to override the
+        # default flags.
+        default_flags = [
             "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
             "-DBUILD_GMOCK=ON",
             "-DBUILD_GTEST=OFF",
             "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
             "-DCATKIN_ENABLE_TESTING=OFF",
             "-DCATKIN_SKIP_TESTING=ON",
+        ]  # type: List[str]
+
+        path_flags = [
             "-DINPUT_DIR=" + package.path,
             "-DSTATICK_EXTRA_GCC_FLAGS=" + extra_gcc_flags,
         ]  # type: List[str]
+
+        cmake_flags = []  # type: List[str]
+        if self.plugin_context.args.cmake_flags is not None:
+            cmake_flags = self.plugin_context.args.cmake_flags.split(",")
+
+        if cmake_flags:
+            subproc_args.extend(cmake_flags)
+        else:
+            subproc_args.extend(default_flags)
+        subproc_args.extend(path_flags)
 
         try:
             output = subprocess.check_output(

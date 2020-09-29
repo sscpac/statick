@@ -15,7 +15,7 @@ from statick_tool.plugins.discovery.cmake_discovery_plugin import CMakeDiscovery
 from statick_tool.resources import Resources
 
 
-def setup_cmake_discovery_plugin(add_plugin_context=True):
+def setup_cmake_discovery_plugin(add_plugin_context=True, cmake_flags=""):
     """Create an instance of the CMake discovery plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -33,6 +33,7 @@ def setup_cmake_discovery_plugin(add_plugin_context=True):
     if add_plugin_context:
         plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
         plugin_context.args.output_directory = os.path.dirname(__file__)
+        plugin_context.args.cmake_flags = cmake_flags
         cmdp.set_plugin_context(plugin_context)
     return cmdp
 
@@ -91,6 +92,16 @@ def test_cmake_discovery_plugin_scan_no_plugin_context():
     )
     cmdp.scan(package, "level")
     assert "cmake" not in package
+
+
+def test_cmake_discovery_plugin_empty_cmake_flags():
+    """Test the CMake discovery plugin without custom CMake flags."""
+    cmdp = setup_cmake_discovery_plugin(True, None)
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    cmdp.scan(package, "level")
+    assert "cmake" in package
 
 
 def test_cmake_discovery_plugin_check_output_headers():

@@ -77,6 +77,13 @@ jobs:
           sudo apt install libxml2-utils
           sudo apt install uncrustify
 
+      - name: Install clang tools (for unit tests)
+        if: matrix.os == 'ubuntu-18.04'
+        run: |
+          sudo apt update
+          sudo apt install clang-format
+          sudo apt install clang-tidy
+
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'

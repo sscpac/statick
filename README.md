@@ -44,6 +44,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   * [Custom Profile](#custom-profile)
   * [Custom Configuration](#custom-configuration)
   * [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
+  * [Custom CMake Flags](#custom-cmake-flags)
 * [Custom Plugins](#custom-plugins)
 * [Examples](#examples)
 * [Troubleshooting](#troubleshooting)
@@ -386,6 +387,19 @@ git clone --branch 1.81 https://github.com/danmar/cppcheck.git
 cd cppcheck
 make SRCDIR=build CFGDIR=/usr/share/cppcheck/ HAVE_RULES=yes
 sudo make install SRCDIR=build CFGDIR=/usr/share/cppcheck/ HAVE_RULES=yes
+```
+
+### Custom CMake Flags
+
+The default values for use when running CMake were hard-coded.
+We have since added the ability to set arbitrary CMake flags, but left the default values alone for backwards compatibility.
+In order to use custom CMake flags you can list them when invoking `statick`.
+Due to the likely situation where a leading hyphen will be used in custom CMake flags the syntax is slightly
+different than for other flags.
+The equals sign and double quotes must be used when specifying `--cmake-flags`.
+
+```shell
+statick src/my_pkg --cmake-flags="-DFIRST_FLAG=x,-DSECOND_FLAG=y"
 ```
 
 ## Custom Plugins
