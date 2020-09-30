@@ -294,6 +294,8 @@ The path for the issue is set in the _tool_ plugin that generates the issues.
 `message_regex` exceptions ignore warnings based on a regular expression match against an error message.
 The `tools` key can either be `all` to suppress warnings from all tools or a list of specific tools.
 The `regex` key is a regular expression to match against messages.
+The `globs` key is a list of globs of files to ignore.
+The glob could also be a specific filename.
 Information about the regex syntax used by Python can be found [here](https://docs.python.org/2/library/re.html).
 The site <https://regex101.com/> can be very helpful when trying to generate regular expressions to match the warnings
 you are trying to create an _exception_ for.

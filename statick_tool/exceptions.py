@@ -53,9 +53,12 @@ class Exceptions:
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
             global_exceptions = self.exceptions["global"]["exceptions"]
-            if "file" in global_exceptions:
+            if "file" in global_exceptions and global_exceptions["file"]:
                 exceptions["file"] += global_exceptions["file"]
-            if "message_regex" in global_exceptions:
+            if (
+                "message_regex" in global_exceptions
+                and global_exceptions["message_regex"]
+            ):
                 exceptions["message_regex"] += global_exceptions["message_regex"]
 
         # pylint: disable=too-many-boolean-expressions
@@ -144,9 +147,12 @@ class Exceptions:
         cls, exceptions: List[Any], issues: Dict[str, List[Issue]]
     ) -> Dict[str, List[Issue]]:
         """Filter issues based on message regex exceptions list."""
-        for exception in exceptions:
+        for exception in exceptions:  # pylint: disable=too-many-nested-blocks
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
+            exception_globs = []
+            if "globs" in exception:
+                exception_globs = exception["globs"]
             try:
                 compiled_re = re.compile(exception_re)  # type: Pattern[str]
             except re.error:
@@ -158,11 +164,20 @@ class Exceptions:
                 to_remove = []
                 if exception_tools == "all" or tool in exception_tools:
                     for issue in tool_issues:
-                        match = compiled_re.match(
-                            issue.message
-                        )  # type: Optional[Match[str]]
-                        if match:
-                            to_remove.append(issue)
+                        if exception_globs:
+                            for pattern in exception_globs:
+                                if fnmatch.fnmatch(issue.filename, pattern):
+                                    match = compiled_re.match(
+                                        issue.message
+                                    )  # type: Optional[Match[str]]
+                                    if match:
+                                        to_remove.append(issue)
+                        else:
+                            match_re = compiled_re.match(
+                                issue.message
+                            )  # type: Optional[Match[str]]
+                            if match_re:
+                                to_remove.append(issue)
                 issues[tool] = [
                     issue for issue in tool_issues if issue not in to_remove
                 ]
