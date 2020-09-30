@@ -55,7 +55,10 @@ class Exceptions:
             global_exceptions = self.exceptions["global"]["exceptions"]
             if "file" in global_exceptions and global_exceptions["file"]:
                 exceptions["file"] += global_exceptions["file"]
-            if "message_regex" in global_exceptions and global_exceptions["message_regex"]:
+            if (
+                "message_regex" in global_exceptions
+                and global_exceptions["message_regex"]
+            ):
                 exceptions["message_regex"] += global_exceptions["message_regex"]
 
         # pylint: disable=too-many-boolean-expressions
