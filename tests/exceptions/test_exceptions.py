@@ -153,7 +153,7 @@ def test_filter_issues():
     """
     Test that issues are filtered based on regex exceptions.
 
-    Expected result: all but one non-excepted issue is filtered
+    Expected result: all issues are filtered and none are found
     """
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -174,6 +174,87 @@ def test_filter_issues():
 
     issues = exceptions.filter_issues(package, issues)
     assert not issues["pylint"]
+
+
+def test_filter_issues_empty_exceptions():
+    """
+    Test that issues are filtered when the exceptions file is empty.
+
+    Expected result: one issue is found.
+    """
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "empty_exceptions.yaml")
+    )
+
+    filename = "x.py"
+    line_number = "4"
+    tool = "pylint"
+    issue_type = "R0205(useless-object-inheritance)"
+    severity = "5"
+    message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["pylint"] = [tool_issue]
+
+    issues = exceptions.filter_issues(package, issues)
+    assert len(issues["pylint"]) == 1
+
+
+def test_filter_issues_globs():
+    """
+    Test that issues are filtered based on regex exceptions if it matches a glob.
+
+    Expected result: all issues are filtered out.
+    """
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "glob_exceptions.yaml")
+    )
+
+    filename = "x.py"
+    line_number = "4"
+    tool = "pylint"
+    issue_type = "R0205(useless-object-inheritance)"
+    severity = "5"
+    message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["pylint"] = [tool_issue]
+
+    issues = exceptions.filter_issues(package, issues)
+    assert not issues["pylint"]
+
+
+def test_filter_issues_globs_wrong_file_pattern():
+    """
+    Test that issues are filtered based on regex exceptions if it matches a glob.
+
+    Expected result: no issues are filtered and one issue is found.
+    """
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "glob_exceptions.yaml")
+    )
+
+    filename = "filename_does_not_match_glob_pattern.py"
+    line_number = "4"
+    tool = "pylint"
+    issue_type = "R0205(useless-object-inheritance)"
+    severity = "5"
+    message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["pylint"] = [tool_issue]
+
+    issues = exceptions.filter_issues(package, issues)
+    assert len(issues["pylint"]) == 1
 
 
 def test_filter_issues_travis_build():
