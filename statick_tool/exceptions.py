@@ -170,10 +170,10 @@ class Exceptions:
                                     if match:
                                         to_remove.append(issue)
                         else:
-                            match = compiled_re.match(
+                            match_re = compiled_re.match(
                                 issue.message
                             )  # type: Optional[Match[str]]
-                            if match:
+                            if match_re:
                                 to_remove.append(issue)
                 issues[tool] = [
                     issue for issue in tool_issues if issue not in to_remove
