@@ -254,7 +254,7 @@ def test_run():
     issues, success = statick.run(path, parsed_args)
     for tool in issues:
         assert not issues[tool]
-    assert not success
+    assert success
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
