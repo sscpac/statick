@@ -48,7 +48,9 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
                     except subprocess.CalledProcessError as ex:
                         output = ex.output
                         print(
-                            "Python discovery failed! Returncode = {}".format(ex.returncode)
+                            "Python discovery failed! Returncode = {}".format(
+                                ex.returncode
+                            )
                         )
                         print("Exception output: {}".format(ex.output))
                         package["python_src"] = []

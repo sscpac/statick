@@ -44,7 +44,9 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
                     except subprocess.CalledProcessError as ex:
                         output = ex.output
                         print(
-                            "Perl discovery failed! Returncode = {}".format(ex.returncode)
+                            "Perl discovery failed! Returncode = {}".format(
+                                ex.returncode
+                            )
                         )
                         print("Exception output: {}".format(ex.output))
                         package["perl_src"] = []

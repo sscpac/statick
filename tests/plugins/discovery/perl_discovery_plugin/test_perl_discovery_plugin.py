@@ -125,7 +125,9 @@ def test_perl_discovery_plugin_no_file_cmd():
         assert set(package["perl_src"]) == set(expected_fullpath)
 
 
-@mock.patch("statick_tool.plugins.discovery.perl_discovery_plugin.subprocess.check_output")
+@mock.patch(
+    "statick_tool.plugins.discovery.perl_discovery_plugin.subprocess.check_output"
+)
 def test_perl_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised (usually means make hit an error).
