@@ -3,6 +3,7 @@
 import contextlib
 import os
 import shutil
+import subprocess
 import sys
 
 import mock
@@ -686,3 +687,33 @@ def test_run_file_cmd_does_not_exist(init_statick):
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
     except OSError as ex:
         print("Error: {}".format(ex))
+
+
+@mock.patch("subprocess.check_output")
+def test_run_called_process_error(mock_subprocess_check_output):
+    """
+    Test running Statick when a plugin has a CalledProcessError.
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="mocked error"
+    )
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.dirname(__file__),
+        "--path",
+        os.path.dirname(__file__),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, _ = statick.run(path, parsed_args)
+    for tool in issues:
+        assert not issues[tool]

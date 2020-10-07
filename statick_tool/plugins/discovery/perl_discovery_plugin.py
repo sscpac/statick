@@ -35,11 +35,20 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
             if file_cmd_exists:
                 for f in files:
                     full_path = os.path.join(root, f)
-                    output = subprocess.check_output(
-                        ["file", full_path], universal_newlines=True
-                    )  # type: str
-                    if "perl script" in output.lower():
-                        perl_files.append(os.path.abspath(full_path))
+                    try:
+                        output = subprocess.check_output(
+                            ["file", full_path], universal_newlines=True
+                        )  # type: str
+                        if "perl script" in output.lower():
+                            perl_files.append(os.path.abspath(full_path))
+                    except subprocess.CalledProcessError as ex:
+                        output = ex.output
+                        print(
+                            "Perl discovery failed! Returncode = {}".format(ex.returncode)
+                        )
+                        print("Exception output: {}".format(ex.output))
+                        package["perl_src"] = []
+                        return
 
         perl_files = list(OrderedDict.fromkeys(perl_files))
 
