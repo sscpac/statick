@@ -140,7 +140,7 @@ def test_python_discovery_plugin_no_file_cmd():
 )
 def test_python_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
-    Test what happens when a CalledProcessError is raised (usually means make hit an error).
+    Test what happens when a CalledProcessError is raised.
 
     Expected result: issues is None
     """

@@ -691,7 +691,7 @@ def test_run_file_cmd_does_not_exist(init_statick):
 @mock.patch("subprocess.check_output")
 def test_run_called_process_error(mock_subprocess_check_output):
     """
-    Test running Statick when a plugin has a CalledProcessError.
+    Test running Statick when each plugin has a CalledProcessError.
 
     Expected result: issues is None
     """

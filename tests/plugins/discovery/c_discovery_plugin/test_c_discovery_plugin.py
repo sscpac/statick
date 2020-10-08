@@ -164,7 +164,7 @@ def test_c_discovery_plugin_no_file_cmd():
 @mock.patch("statick_tool.plugins.discovery.c_discovery_plugin.subprocess.check_output")
 def test_c_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
-    Test what happens when a CalledProcessError is raised (usually means make hit an error).
+    Test what happens when a CalledProcessError is raised.
 
     Expected result: issues is None
     """
