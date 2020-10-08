@@ -35,15 +35,26 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
             if file_cmd_exists:
                 for f in files:
                     full_path = os.path.join(root, f)
-                    output = subprocess.check_output(
-                        ["file", full_path], universal_newlines=True
-                    )  # type: str
-                    # pylint: disable=unsupported-membership-test
-                    if (
-                        "python script" in output or "Python script" in output
-                    ) and not f.endswith(".cfg"):
-                        # pylint: enable=unsupported-membership-test
-                        python_files.append(os.path.abspath(full_path))
+                    try:
+                        output = subprocess.check_output(
+                            ["file", full_path], universal_newlines=True
+                        )  # type: str
+                        # pylint: disable=unsupported-membership-test
+                        if (
+                            "python script" in output or "Python script" in output
+                        ) and not f.endswith(".cfg"):
+                            # pylint: enable=unsupported-membership-test
+                            python_files.append(os.path.abspath(full_path))
+                    except subprocess.CalledProcessError as ex:
+                        output = ex.output
+                        print(
+                            "Python discovery failed! Returncode = {}".format(
+                                ex.returncode
+                            )
+                        )
+                        print("Exception output: {}".format(ex.output))
+                        package["python_src"] = []
+                        return
 
         python_files = list(OrderedDict.fromkeys(python_files))
 

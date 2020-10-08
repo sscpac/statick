@@ -1,7 +1,9 @@
 """Unit tests for the C discovery plugin."""
 import contextlib
 import os
+import subprocess
 
+import mock
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -157,3 +159,21 @@ def test_c_discovery_plugin_no_file_cmd():
         ]
         # Neat trick to verify that two unordered lists are the same
         assert set(package["c_src"]) == set(expected_fullpath)
+
+
+@mock.patch("statick_tool.plugins.discovery.c_discovery_plugin.subprocess.check_output")
+def test_c_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised.
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="mocked error"
+    )
+    cdp = CDiscoveryPlugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    cdp.scan(package, "level")
+    assert not package["c_src"]
