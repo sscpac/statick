@@ -12,6 +12,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.3 - 2020-10-09
+
+### Added
+
+- Overhaul of documentation.
+  README contains more structure and examples by consolidating README and GUIDE.
+- Regular expression-based exceptions can now be applied to a subset of files that match a pattern ("glob").
+  This feature is available for both global and package exceptions.
+- Custom CMake flags can be added to the CMake discovery plugin.
+  Those flags will be used by the Make tool plugin.
+  The default values have not changed, but can be overridden.
+- The clang-format tool can now use either `_clang-format` or `.clang-format` as the configuration file.
+  If the `_clang-format` file exists then that is the configuration file that is used.
+  Otherwise, Statick will look for `.clang-format`.
+  This allows users to keep the configuration file hidden in their home directories.
+
+### Fixed
+
+- Make tool plugin no longer causes Statick to crash if `make_targets` are missing.
+- When the Black tool encountered an internal error it would silently fail as far as Statick was concerned.
+  Statick is now aware of internal errors from Black and reports the information as an issue.
+- The exceptions module can now handle `exceptions.yaml` configuration files that are empty.
+
 ## v0.4.2 - 2020-08-12
 
 ### Added
