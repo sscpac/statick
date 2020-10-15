@@ -24,11 +24,6 @@ class CppcheckToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cppcheck"
 
-    @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
-        """Get a list of tools that must run before this one."""
-        return ["make"]
-
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument(

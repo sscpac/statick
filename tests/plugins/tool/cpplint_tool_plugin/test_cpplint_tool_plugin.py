@@ -123,12 +123,6 @@ def test_cpplint_tool_plugin_scan_valid():
     assert issues[2].message == " Lines should be <= 80 characters long "
 
 
-def test_tool_dependencies():
-    """Verify that tool dependencies are reported correctly."""
-    ctp = setup_cpplint_tool_plugin()
-    assert ctp.get_tool_dependencies() == ["make"]
-
-
 def test_cpplint_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of cpplint."""
     ctp = setup_cpplint_tool_plugin()
