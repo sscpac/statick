@@ -10,7 +10,6 @@ import mock
 import pytest
 
 from statick_tool.args import Args
-from statick_tool.plugins.tool.cppcheck_tool_plugin import CppcheckToolPlugin
 from statick_tool.statick import Statick
 
 
