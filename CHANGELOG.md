@@ -12,6 +12,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.4 - 2020-10-16
+
+### Fixed
+
+- The `cppcheck` and `cpplint` tool plugins no longer depend on the `make` tool plugin to run first.
+  The tool plugins get all of the information they need, such as source files, headers, and include directories,
+  from the `cmake` discovery plugin.
+  This greatly speeds up Statick runs that use the `cppcheck` and/or `cpplint` tools but do not use the `make` tool.
+- Now we are using a configuration file for Codecov so that reports from Windows are reported with the correct path.
+  This allows the reports from all operating systems to be merged together, restoring prior behavior.
+
 ## v0.4.3 - 2020-10-09
 
 ### Added
