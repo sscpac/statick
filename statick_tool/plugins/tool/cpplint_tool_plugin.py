@@ -16,11 +16,6 @@ class CpplintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cpplint"
 
-    @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
-        """Get a list of tools that must run before this one."""
-        return ["make"]
-
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "cpplint" not in package:

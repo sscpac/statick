@@ -10,7 +10,7 @@ import mock
 import pytest
 
 from statick_tool.args import Args
-from statick_tool.plugins.tool.cppcheck_tool_plugin import CppcheckToolPlugin
+from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
 from statick_tool.statick import Statick
 
 
@@ -453,9 +453,9 @@ def test_run_missing_tool_dependency(init_statick):
 
     Expected results: issues is None and success is False
     """
-    cctp = CppcheckToolPlugin()
-    if not cctp.command_exists("cppcheck"):
-        pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
+    cttp = ClangTidyToolPlugin()
+    if not cttp.command_exists("clang-tidy"):
+        pytest.skip("Can't find clang-tidy, unable to test clang-tidy plugin")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -465,7 +465,7 @@ def test_run_missing_tool_dependency(init_statick):
         "--path",
         os.path.dirname(__file__),
         "--force-tool-list",
-        "cppcheck",
+        "clang-tidy",
         "--config",
         os.path.join(
             os.path.dirname(__file__), "rsc", "config-missing-tool-dependency.yaml"
@@ -491,9 +491,9 @@ def test_run_tool_dependency(init_statick):
 
     Expected results: issues is None and success is False
     """
-    cctp = CppcheckToolPlugin()
-    if not cctp.command_exists("cppcheck"):
-        pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
+    cttp = ClangTidyToolPlugin()
+    if not cttp.command_exists("clang-tidy"):
+        pytest.skip("Can't find clang-tidy, unable to test clang-tidy plugin")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -507,7 +507,7 @@ def test_run_tool_dependency(init_statick):
             os.path.dirname(__file__), "rsc", "config-enabled-dependency.yaml"
         ),
         "--force-tool-list",
-        "cppcheck",
+        "clang-tidy",
     ]
     args.output_directory = os.path.dirname(__file__)
     parsed_args = args.get_args(sys.argv)
