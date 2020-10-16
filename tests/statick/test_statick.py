@@ -10,6 +10,7 @@ import mock
 import pytest
 
 from statick_tool.args import Args
+from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
 from statick_tool.statick import Statick
 
 
@@ -440,6 +441,83 @@ def test_run_invalid_tool_plugin(init_statick):
     issues, success = statick.run(path, parsed_args)
     assert issues is None
     assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_missing_tool_dependency(init_statick):
+    """
+    Test that a tool plugin results in failure when its dependency is not configured to run.
+
+    Expected results: issues is None and success is False
+    """
+    cttp = ClangTidyToolPlugin()
+    if not cttp.command_exists("clang-tidy"):
+        pytest.skip("Can't find clang-tidy, unable to test clang-tidy plugin")
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--force-tool-list",
+        "clang-tidy",
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-missing-tool-dependency.yaml"
+        ),
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    assert issues is None
+    assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_tool_dependency(init_statick):
+    """
+    Test that a tool plugin can run its dependencies.
+
+    Expected results: issues is None and success is False
+    """
+    cttp = ClangTidyToolPlugin()
+    if not cttp.command_exists("clang-tidy"):
+        pytest.skip("Can't find clang-tidy, unable to test clang-tidy plugin")
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-enabled-dependency.yaml"
+        ),
+        "--force-tool-list",
+        "clang-tidy",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run(path, parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
