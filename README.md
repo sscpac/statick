@@ -348,7 +348,7 @@ Tool | About
 [bandit][bandit]             | Bandit is a tool designed to find common security issues in Python code.
 [black][black]               | The uncompromising Python code formatter
 [catkin_lint][catkin_lint]   | Check catkin packages for common errors
-[CCCC][CCCC]                 | Source code counter and metrics tool for C++, C, and Java
+[cccc][cccc]                 | Source code counter and metrics tool for C++, C, and Java
 [clang-format][clang-format] | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.
 [clang-tidy][clang-tidy]     | Provide an extensible framework for diagnosing and fixing typical programming errors.
 [cmakelint][cmakelint]       | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.
@@ -366,7 +366,7 @@ Tool | About
 [pylint][pylint]             | It's not just a linter that annoys you!
 [spotbugs][spotbugs]         | A tool for static analysis to look for bugs in Java code.
 [uncrustify][uncrustify]     | Code beautifier
-[xmllint][xmlsoft]           | Lint XML files.
+[xmllint][xmllint]           | Lint XML files.
 [yamllint][yamllint]         | A linter for YAML files.
 
 ## Customization
@@ -580,11 +580,10 @@ black statick statick_ws statick_tool tests
 A special note should be made that the original primary author was Mark Tjersland (@Prognarok).
 His commits were scrubbed from git history upon the initial public release.
 
-[CCCC]: https://github.com/sarnold/cccc
-[Xmllint]: http://xmlsoft.org/
 [bandit]: https://github.com/PyCQA/bandit
 [black]: https://github.com/psf/black
 [catkin_lint]: https://github.com/fkie/catkin_lint
+[cccc]: https://github.com/sarnold/cccc
 [clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [clang-tidy]: http://clang.llvm.org/extra/clang-tidy/
 [cmakelint]: https://cmake-format.readthedocs.io/en/latest/cmake-lint.html
@@ -602,4 +601,5 @@ His commits were scrubbed from git history upon the initial public release.
 [pylint]: https://pylint.org/
 [spotbugs]: https://github.com/spotbugs/spotbugs
 [uncrustify]: https://github.com/uncrustify/uncrustify
+[xmllint]: http://xmlsoft.org/
 [yamllint]: https://yamllint.readthedocs.io/en/stable/
