@@ -330,14 +330,14 @@ command exists.
 File Type | Extensions
 :-------- | :---------
 catkin    | `CMakeLists.txt` and `package.xml`
-C         | .c, .cc, .cpp, .cxx, .h, .hxx, .hpp
-CMake     | CMakeLists.txt
-java      | .class, .java
-Maven     | pom.xml
-Perl      | .pl
-Python    | .py
-XML       | .xml, .launch
-Yaml      | .yaml
+C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
+CMake     | `CMakeLists.txt`
+java      | `.class`, `.java`
+Maven     | `pom.xml`
+Perl      | `.pl`
+Python    | `.py`
+XML       | `.xml`, `.launch`
+Yaml      | `.yaml`
 
 The `.launch` extension is mapped to XML files due to use with ROS launch files.
 
@@ -355,7 +355,7 @@ Tool | About
 [cppcheck][cppcheck]         | static analysis of C/C++ code
 [cpplint][cpplint]           | Static code checker for C++
 [docformatter][docformatter] | Formats docstrings to follow PEP 257
-[flawfinder][flawfinder]     | Examines C/C++ source code and reports possible security weaknesses (“flaws”) sorted by risk level.
+[flawfinder][flawfinder]     | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.
 [lizard][lizard]             | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages.
 [make][make]                 | C++ compiler.
 [mypy][mypy]                 | Optional static typing for Python 3 and 2 (PEP 484)
