@@ -82,7 +82,6 @@ def test_shellcheck_tool_plugin_scan_valid():
         os.path.join(os.path.dirname(__file__), "valid_package", "basic.sh")
     ]
     issues = sctp.scan(package, "level")
-    # We expect to have missing docstring and unused import warnings.
     assert len(issues) == 2
 
 
