@@ -2,8 +2,10 @@
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -68,6 +70,11 @@ def test_shellcheck_tool_plugin_found():
 def test_shellcheck_tool_plugin_scan_valid():
     """Integration test: Make sure the shellcheck output hasn't changed."""
     sctp = setup_shellcheck_tool_plugin()
+    # Sanity check - make sure shellcheck exists
+    if not sctp.command_exists("shellcheck"):
+        pytest.skip("Couldn't find 'shellcheck' command, can't run tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run shellcheck on Windows.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -85,6 +92,11 @@ def test_shellcheck_tool_plugin_no_sources():
     Expected result: issues is empty
     """
     sctp = setup_shellcheck_tool_plugin()
+    # Sanity check - make sure shellcheck exists
+    if not sctp.command_exists("shellcheck"):
+        pytest.skip("Couldn't find 'shellcheck' command, can't run tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run shellcheck on Windows.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -100,6 +112,11 @@ def test_spellcheck_tool_plugin_scan_wrong_binary():
     Expected result: issues is None
     """
     sctp = setup_shellcheck_tool_plugin("wrong_binary")
+    # Sanity check - make sure shellcheck exists
+    if not sctp.command_exists("shellcheck"):
+        pytest.skip("Couldn't find 'shellcheck' command, can't run tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run shellcheck on Windows.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -165,6 +182,11 @@ def test_shellcheck_tool_plugin_scan_calledprocesserror(mock_subprocess_check_ou
         0, "", output="mocked error"
     )
     sctp = setup_shellcheck_tool_plugin()
+    # Sanity check - make sure shellcheck exists
+    if not sctp.command_exists("shellcheck"):
+        pytest.skip("Couldn't find 'shellcheck' command, can't run tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run shellcheck on Windows.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -190,6 +212,11 @@ def test_shellcheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     mock_subprocess_check_output.side_effect = OSError("mocked error")
     sctp = setup_shellcheck_tool_plugin()
+    # Sanity check - make sure shellcheck exists
+    if not sctp.command_exists("shellcheck"):
+        pytest.skip("Couldn't find 'shellcheck' command, can't run tests")
+    elif sys.platform == "win32":
+        pytest.skip("Don't know how to run shellcheck on Windows.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
