@@ -113,7 +113,10 @@ def test_spellcheck_tool_plugin_scan_wrong_binary():
 def test_shellcheck_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of shellcheck."""
     sctp = setup_shellcheck_tool_plugin()
-    output = ["In /home/user/basic.sh line 3: PARAMS='$@'", " ^--^ SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate. "]
+    output = [
+        "In /home/user/basic.sh line 3: PARAMS='$@'",
+        " ^--^ SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate. ",
+    ]
     issues = sctp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.sh"
@@ -121,9 +124,15 @@ def test_shellcheck_tool_plugin_parse_valid():
     assert issues[0].tool == "shellcheck"
     assert issues[0].issue_type == "SC2124"
     assert issues[0].severity == "3"
-    assert issues[0].message == "Assigning an array to a string! Assign as array, or use * instead of @ to concatenate."
+    assert (
+        issues[0].message
+        == "Assigning an array to a string! Assign as array, or use * instead of @ to concatenate."
+    )
 
-    output = ["In /home/user/basic.bash line 4:", "^--------------^ SC1091: Not following: devel/setup.bash was not specified as input (see shellcheck -x)."]
+    output = [
+        "In /home/user/basic.bash line 4:",
+        "^--------------^ SC1091: Not following: devel/setup.bash was not specified as input (see shellcheck -x).",
+    ]
     issues = sctp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.bash"
@@ -131,7 +140,10 @@ def test_shellcheck_tool_plugin_parse_valid():
     assert issues[0].tool == "shellcheck"
     assert issues[0].issue_type == "SC1091"
     assert issues[0].severity == "3"
-    assert issues[0].message == "Not following: devel/setup.bash was not specified as input (see shellcheck -x)."
+    assert (
+        issues[0].message
+        == "Not following: devel/setup.bash was not specified as input (see shellcheck -x)."
+    )
 
 
 def test_shellcheck_tool_plugin_parse_invalid():
