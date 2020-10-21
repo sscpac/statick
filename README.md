@@ -601,7 +601,7 @@ His commits were scrubbed from git history upon the initial public release.
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
-[shellscript]: https://github.com/koalaman/shellcheck
+[shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
 [uncrustify]: https://github.com/uncrustify/uncrustify
 [xmllint]: http://xmlsoft.org/
