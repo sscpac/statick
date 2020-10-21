@@ -164,6 +164,14 @@ statick_tool.plugins.tool.pylint_tool_plugin module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.shell_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.shell_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.spotbugs_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

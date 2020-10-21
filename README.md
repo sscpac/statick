@@ -336,6 +336,7 @@ java      | `.class`, `.java`
 Maven     | `pom.xml`
 Perl      | `.pl`
 Python    | `.py`
+Shell     | `.sh`, `.bash`, `.zsh`, `.csh`
 XML       | `.xml`, `.launch`
 Yaml      | `.yaml`
 
@@ -364,6 +365,7 @@ Tool | About
 [pydocstyle][pydocstyle]     | A static analysis tool for checking compliance with Python docstring conventions.
 [pyflakes][pyflakes]         | A simple program which checks Python source files for errors
 [pylint][pylint]             | It's not just a linter that annoys you!
+[shellcheck][shellcheck]     | A static analysis tool for shell scripts
 [spotbugs][spotbugs]         | A tool for static analysis to look for bugs in Java code.
 [uncrustify][uncrustify]     | Code beautifier
 [xmllint][xmllint]           | Lint XML files.
@@ -599,6 +601,7 @@ His commits were scrubbed from git history upon the initial public release.
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
+[shellscript]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
 [uncrustify]: https://github.com/uncrustify/uncrustify
 [xmllint]: http://xmlsoft.org/
