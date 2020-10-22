@@ -21,7 +21,7 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Scan package looking for shell files."""
         shell_files = []  # type: List[str]
-        shell_extensions = (".sh", ".bash", ".zsh", ".csh")
+        shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
 
         file_cmd_exists = True  # type: bool
         if not DiscoveryPlugin.file_command_exists():

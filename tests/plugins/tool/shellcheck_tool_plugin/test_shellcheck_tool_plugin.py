@@ -130,24 +130,54 @@ def test_shellcheck_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of shellcheck."""
     sctp = setup_shellcheck_tool_plugin()
     output = [
-        "In /home/user/basic.sh line 3: PARAMS='$@'",
-        " ^--^ SC2124: Assigning an array to a string! Assign as array, or use * instead of @ to concatenate. ",
+        {
+            "file": "/home/user/basic.sh",
+            "line": 3,
+            "endLine": 3,
+            "column": 1,
+            "endColumn": 12,
+            "level": "warning",
+            "code": 2164,
+            "message": "Use 'cd ... || exit' or 'cd ... || return' in case cd fails.",
+            "fix": {
+                "replacements": [
+                    {
+                        "line": 3,
+                        "endLine": 3,
+                        "precedence": 5,
+                        "insertionPoint": "beforeStart",
+                        "column": 12,
+                        "replacement": " || exit",
+                        "endColumn": 12,
+                    }
+                ]
+            },
+        }
     ]
     issues = sctp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.sh"
     assert issues[0].line_number == "3"
     assert issues[0].tool == "shellcheck"
-    assert issues[0].issue_type == "SC2124"
+    assert issues[0].issue_type == "SC2164"
     assert issues[0].severity == "3"
     assert (
         issues[0].message
-        == "Assigning an array to a string! Assign as array, or use * instead of @ to concatenate."
+        == "Use 'cd ... || exit' or 'cd ... || return' in case cd fails."
     )
 
     output = [
-        "In /home/user/basic.bash line 4:",
-        "^--------------^ SC1091: Not following: devel/setup.bash was not specified as input (see shellcheck -x).",
+        {
+            "file": "/home/user/basic.bash",
+            "line": 4,
+            "endLine": 4,
+            "column": 3,
+            "endColumn": 44,
+            "level": "info",
+            "code": 1091,
+            "message": "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x).",
+            "fix": None,
+        }
     ]
     issues = sctp.parse_output(output)
     assert len(issues) == 1
@@ -155,10 +185,10 @@ def test_shellcheck_tool_plugin_parse_valid():
     assert issues[0].line_number == "4"
     assert issues[0].tool == "shellcheck"
     assert issues[0].issue_type == "SC1091"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == "1"
     assert (
         issues[0].message
-        == "Not following: devel/setup.bash was not specified as input (see shellcheck -x)."
+        == "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x)."
     )
 
 

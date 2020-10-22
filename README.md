@@ -336,7 +336,7 @@ java      | `.class`, `.java`
 Maven     | `pom.xml`
 Perl      | `.pl`
 Python    | `.py`
-Shell     | `.sh`, `.bash`, `.zsh`, `.csh`
+Shell     | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`
 XML       | `.xml`, `.launch`
 Yaml      | `.yaml`
 
