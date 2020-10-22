@@ -129,6 +129,8 @@ levels:
         flags: "--good-names=f,i,j,k,ex,_
                 --disable=bad-continuation
                "
+      shellcheck:
+        flags: ""
       uncrustify:
         flags: ""
       xmllint:
