@@ -191,6 +191,58 @@ def test_shellcheck_tool_plugin_parse_valid():
         == "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x)."
     )
 
+    output = [
+        {
+            "file": "/home/user/basic.bash",
+            "line": 9,
+            "endLine": 9,
+            "column": 3,
+            "endColumn": 44,
+            "level": "style",
+            "code": 1091,
+            "message": "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x).",
+            "fix": None,
+        }
+    ]
+    issues = sctp.parse_output(output)
+    assert issues[0].severity == "1"
+
+    output = [
+        {
+            "file": "/home/user/basic.bash",
+            "line": 9,
+            "endLine": 9,
+            "column": 3,
+            "endColumn": 44,
+            "level": "error",
+            "code": 1091,
+            "message": "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x).",
+            "fix": None,
+        }
+    ]
+    issues = sctp.parse_output(output)
+    assert issues[0].severity == "5"
+
+    output = [
+        {
+            "file": "/home/user/basic.bash",
+            "line": 9,
+            "endLine": 9,
+            "column": 3,
+            "endColumn": 44,
+            "level": "unsupported level",
+            "code": 1091,
+            "message": "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x).",
+            "fix": None,
+        }
+    ]
+    issues = sctp.parse_output(output)
+    assert issues[0].severity == "3"
+
+    output = [{"field": "not a real field",}]
+    issues = sctp.parse_output(output)
+    assert not issues
+
 
 def test_shellcheck_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of shellcheck."""

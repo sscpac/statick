@@ -79,7 +79,14 @@ def test_shell_discovery_plugin_scan_valid():
     shdp.scan(package, "level")
     expected = ["test.sh", os.path.join("ignore_this", "ignoreme.bash")]
     if shdp.file_command_exists():
-        expected += ["oddextensionsh.source"]
+        expected += [
+            "oddextensionsh.source",
+            "oddextensionbash.source",
+            "oddextensionzsh.source",
+            "oddextensioncsh.source",
+            "oddextensionksh.source",
+            "oddextensiondash.source",
+        ]
     # We have to add the path to each of the above...yuck
     expected_fullpath = [os.path.join(package.path, filename) for filename in expected]
     # Neat trick to verify that two unordered lists are the same
@@ -104,7 +111,15 @@ def test_shell_discovery_plugin_scan_exceptions():
     )
     exceptions = Exceptions(os.path.join(os.path.dirname(__file__), "exceptions.yaml"))
     shdp.scan(package, "level", exceptions)
-    expected_src = ["test.sh", "oddextensionsh.source"]
+    expected_src = [
+        "test.sh",
+        "oddextensionsh.source",
+        "oddextensionbash.source",
+        "oddextensionzsh.source",
+        "oddextensioncsh.source",
+        "oddextensionksh.source",
+        "oddextensiondash.source",
+    ]
     # We have to add the path to each of the above...yuck
     expected_src_fullpath = [
         os.path.join(package.path, filename) for filename in expected_src

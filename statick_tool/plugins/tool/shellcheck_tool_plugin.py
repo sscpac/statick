@@ -1,4 +1,8 @@
-"""Apply shellcheck tool and gather results."""
+"""
+Apply shellcheck tool and gather results.
+
+The output from the tool is collected in JSON format to facilitate parsing.
+"""
 import argparse
 import json
 import subprocess
@@ -81,6 +85,8 @@ class ShellcheckToolPlugin(ToolPlugin):
                 or "code" not in item
                 or "message" not in item
             ):
+                if self.plugin_context and self.plugin_context.args.show_tool_output:
+                    print("  Found invalid shellcheck output: {}".format(item))
                 continue
             if item["level"] == "style":
                 warning_level = "1"

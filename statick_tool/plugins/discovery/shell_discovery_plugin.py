@@ -41,13 +41,17 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
                             ["file", full_path], universal_newlines=True
                         )  # type: str
                         # pylint: disable=unsupported-membership-test
-                        if "shell script" in output or "Shell script" in output:
+                        if (
+                            "shell script" in output
+                            or "dash script" in output
+                            or "zsh script" in output
+                        ):
                             # pylint: enable=unsupported-membership-test
                             shell_files.append(os.path.abspath(full_path))
                     except subprocess.CalledProcessError as ex:
                         output = ex.output
                         print(
-                            "Shell  discovery failed! Returncode = {}".format(
+                            "Shell discovery failed! Returncode = {}".format(
                                 ex.returncode
                             )
                         )
