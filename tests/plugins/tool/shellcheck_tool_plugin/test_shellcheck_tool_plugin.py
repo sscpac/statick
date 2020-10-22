@@ -239,7 +239,11 @@ def test_shellcheck_tool_plugin_parse_valid():
     issues = sctp.parse_output(output)
     assert issues[0].severity == "3"
 
-    output = [{"field": "not a real field",}]
+    output = [
+        {
+            "field": "not a real field",
+        }
+    ]
     issues = sctp.parse_output(output)
     assert not issues
 
