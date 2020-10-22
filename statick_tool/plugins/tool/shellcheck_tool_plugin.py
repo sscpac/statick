@@ -2,7 +2,7 @@
 import argparse
 import json
 import subprocess
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -70,7 +70,7 @@ class ShellcheckToolPlugin(ToolPlugin):
         issues = self.parse_output(json.loads(output))
         return issues
 
-    def parse_output(self, output: List[str]) -> List[Issue]:
+    def parse_output(self, output: Any) -> List[Issue]:
         """Parse tool output and report issues."""
         issues = []  # type: List[Issue]
         for item in output:
