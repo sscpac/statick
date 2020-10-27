@@ -103,6 +103,11 @@ global:
       # Python 2/3 compatibility requires inheriting from `object`.
       - tools: [pylint]
         regex: ".+: Class .+ inherits from object, can be safely removed from bases in python3"
+      # Several examples over time of type hints not being properly supported by pylint.
+      # https://github.com/PyCQA/pylint/issues/776
+      # https://github.com/PyCQA/pylint/issues/2416
+      - tools: [pylint]
+        regex: "Value 'Optional' is unsubscriptable"
 
 packages:
 
