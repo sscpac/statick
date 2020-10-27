@@ -1,11 +1,10 @@
 ---
 name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
 
-# on:  # NOLINT
-#   push:
-#     tags:
-#       - "*"
-on: [pull_request]  # NOLINT
+on:  # NOLINT
+  push:
+    tags:
+      - "*"
 
 jobs:
   build-n-publish:
@@ -55,16 +54,16 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
 
-      # - name: Publish distribution 📦 to Test PyPI
-      #   uses: pypa/gh-action-pypi-publish@master
-      #   with:
-      #     password: ${{ secrets.PYPI_TEST_TOKEN }}
-      #     repository_url: https://test.pypi.org/legacy/
+      - name: Publish distribution 📦 to Test PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_TEST_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
 
-      # - name: Publish distribution 📦 to PyPI
-      #   uses: pypa/gh-action-pypi-publish@master
-      #   with:
-      #     password: ${{ secrets.PYPI_TOKEN }}
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
 
       - name: Sphinx lint
         uses: ammaraskar/sphinx-action@master
