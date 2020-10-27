@@ -39,6 +39,9 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   * [Profiles](#profiles)
   * [Exceptions](#exceptions)
 * [Advanced Installation](#advanced-installation)
+* [Existing Plugins](#existing-plugins)
+  * [Discovery Plugins](#discovery-plugins)
+  * [Tool Plugins](#tool-plugins)
 * [Customization](#customization)
   * [User Paths](#user-paths)
   * [Custom Profile](#custom-profile)
@@ -315,6 +318,59 @@ To install Statick from source on your system and make it part of your `$PATH`:
 sudo python3 setup.py install
 ```
 
+## Existing Plugins
+
+### Discovery Plugins
+
+Note that if a file exists without the extension listed it can still be discovered if the `file` command identifies it
+as a specific file type.
+This type of discovery must be supported by the discovery plugin and only works on operating systems where the `file`
+command exists.
+
+File Type | Extensions
+:-------- | :---------
+catkin    | `CMakeLists.txt` and `package.xml`
+C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
+CMake     | `CMakeLists.txt`
+java      | `.class`, `.java`
+Maven     | `pom.xml`
+Perl      | `.pl`
+Python    | `.py`
+Shell     | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`
+XML       | `.xml`, `.launch`
+Yaml      | `.yaml`
+
+The `.launch` extension is mapped to XML files due to use with ROS launch files.
+
+### Tool Plugins
+
+Tool | About
+:--- | :----
+[bandit][bandit]             | Bandit is a tool designed to find common security issues in Python code.
+[black][black]               | The uncompromising Python code formatter
+[catkin_lint][catkin_lint]   | Check catkin packages for common errors
+[cccc][cccc]                 | Source code counter and metrics tool for C++, C, and Java
+[clang-format][clang-format] | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.
+[clang-tidy][clang-tidy]     | Provide an extensible framework for diagnosing and fixing typical programming errors.
+[cmakelint][cmakelint]       | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.
+[cppcheck][cppcheck]         | static analysis of C/C++ code
+[cpplint][cpplint]           | Static code checker for C++
+[docformatter][docformatter] | Formats docstrings to follow PEP 257
+[flawfinder][flawfinder]     | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.
+[lizard][lizard]             | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages.
+[make][make]                 | C++ compiler.
+[mypy][mypy]                 | Optional static typing for Python 3 and 2 (PEP 484)
+[perlcritic][perlcritic]     | Critique Perl source code for best-practices.
+[pycodestyle][pycodestyle]   | Python style guide checker
+[pydocstyle][pydocstyle]     | A static analysis tool for checking compliance with Python docstring conventions.
+[pyflakes][pyflakes]         | A simple program which checks Python source files for errors
+[pylint][pylint]             | It's not just a linter that annoys you!
+[shellcheck][shellcheck]     | A static analysis tool for shell scripts
+[spotbugs][spotbugs]         | A tool for static analysis to look for bugs in Java code.
+[uncrustify][uncrustify]     | Code beautifier
+[xmllint][xmllint]           | Lint XML files.
+[yamllint][yamllint]         | A linter for YAML files.
+
 ## Customization
 
 ### User Paths
@@ -525,3 +581,28 @@ black statick statick_ws statick_tool tests
 
 A special note should be made that the original primary author was Mark Tjersland (@Prognarok).
 His commits were scrubbed from git history upon the initial public release.
+
+[bandit]: https://github.com/PyCQA/bandit
+[black]: https://github.com/psf/black
+[catkin_lint]: https://github.com/fkie/catkin_lint
+[cccc]: https://github.com/sarnold/cccc
+[clang-format]: https://clang.llvm.org/docs/ClangFormat.html
+[clang-tidy]: http://clang.llvm.org/extra/clang-tidy/
+[cmakelint]: https://cmake-format.readthedocs.io/en/latest/cmake-lint.html
+[cppcheck]: https://github.com/danmar/cppcheck/
+[cpplint]: https://github.com/cpplint/cpplint
+[docformatter]: https://github.com/myint/docformatter
+[flawfinder]: https://dwheeler.com/flawfinder/
+[lizard]: https://github.com/terryyin/lizard
+[make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
+[mypy]: https://github.com/python/mypy
+[perlcritic]: http://perlcritic.com/
+[pycodestyle]: https://pycodestyle.pycqa.org/en/latest/
+[pydocstyle]: http://www.pydocstyle.org/en/stable/
+[pyflakes]: https://github.com/PyCQA/pyflakes
+[pylint]: https://pylint.org/
+[shellcheck]: https://github.com/koalaman/shellcheck
+[spotbugs]: https://github.com/spotbugs/spotbugs
+[uncrustify]: https://github.com/uncrustify/uncrustify
+[xmllint]: http://xmlsoft.org/
+[yamllint]: https://yamllint.readthedocs.io/en/stable/

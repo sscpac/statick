@@ -17,7 +17,8 @@ class MakeToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        if "make_targets" not in package:
+        if "make_targets" not in package or not package["make_targets"]:
+            print("  Skipping make. No targets.")
             return []
 
         output = None

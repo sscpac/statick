@@ -1,5 +1,4 @@
-"""Discover python files to analyze."""
-import fnmatch
+"""Discover shell files to analyze."""
 import os
 import subprocess
 from collections import OrderedDict
@@ -10,27 +9,29 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class PythonDiscoveryPlugin(DiscoveryPlugin):
-    """Discover python files to analyze."""
+class ShellDiscoveryPlugin(DiscoveryPlugin):
+    """Discover shell files to analyze."""
 
     def get_name(self) -> str:
         """Get name of discovery type."""
-        return "python"
+        return "shell"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for python files."""
-        python_files = []  # type: List[str]
+        """Scan package looking for shell files."""
+        shell_files = []  # type: List[str]
+        shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
 
         file_cmd_exists = True  # type: bool
         if not DiscoveryPlugin.file_command_exists():
             file_cmd_exists = False
 
         for root, _, files in os.walk(package.path):
-            for f in fnmatch.filter(files, "*.py"):
-                full_path = os.path.join(root, f)
-                python_files.append(os.path.abspath(full_path))
+            for f in files:
+                if f.lower().endswith(shell_extensions):
+                    full_path = os.path.join(root, f)
+                    shell_files.append(os.path.abspath(full_path))
 
             if file_cmd_exists:
                 for f in files:
@@ -41,34 +42,34 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
                         )  # type: str
                         # pylint: disable=unsupported-membership-test
                         if (
-                            "python script" in output or "Python script" in output
-                        ) and not f.endswith(".cfg"):
+                            "shell script" in output
+                            or "dash script" in output
+                            or "zsh script" in output
+                        ):
                             # pylint: enable=unsupported-membership-test
-                            python_files.append(os.path.abspath(full_path))
+                            shell_files.append(os.path.abspath(full_path))
                     except subprocess.CalledProcessError as ex:
                         output = ex.output
                         print(
-                            "Python discovery failed! Returncode = {}".format(
+                            "Shell discovery failed! Returncode = {}".format(
                                 ex.returncode
                             )
                         )
                         print("Exception output: {}".format(ex.output))
-                        package["python_src"] = []
+                        package["shell_src"] = []
                         return
 
-        python_files = list(OrderedDict.fromkeys(python_files))
+        shell_files = list(OrderedDict.fromkeys(shell_files))
 
-        print("  {} python files found.".format(len(python_files)))
+        print("  {} shell files found.".format(len(shell_files)))
         if exceptions:
-            original_file_count = len(python_files)
-            python_files = exceptions.filter_file_exceptions_early(
-                package, python_files
-            )
-            if original_file_count > len(python_files):
+            original_file_count = len(shell_files)
+            shell_files = exceptions.filter_file_exceptions_early(package, shell_files)
+            if original_file_count > len(shell_files):
                 print(
-                    "  After filtering, {} python files will be scanned.".format(
-                        len(python_files)
+                    "  After filtering, {} shell files will be scanned.".format(
+                        len(shell_files)
                     )
                 )
 
-        package["python_src"] = python_files
+        package["shell_src"] = shell_files

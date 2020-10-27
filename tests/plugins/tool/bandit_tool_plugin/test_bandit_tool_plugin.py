@@ -112,9 +112,9 @@ def test_bandit_tool_plugin_scan_empty_src():
 
 def test_bandit_tool_plugin_scan_wrong_binary():
     """
-    Test what happens when python_src is an empty list.
+    Test what happens when the specified tool binary does not exist.
 
-    Expected result: issues is an empty list
+    Expected result: issues is None
     """
     btp = setup_bandit_tool_plugin("wrong_binary")
     package = Package(

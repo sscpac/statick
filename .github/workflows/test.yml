@@ -75,6 +75,7 @@ jobs:
           sudo apt install libperl-critic-perl
           sudo apt install libxml2
           sudo apt install libxml2-utils
+          sudo apt install shellcheck
           sudo apt install uncrustify
 
       - name: Install clang tools (for unit tests)

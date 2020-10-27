@@ -169,12 +169,6 @@ def test_cppcheck_tool_plugin_scan_invalid_file():
     assert issues is None
 
 
-def test_tool_dependencies():
-    """Verify that tool dependencies are reported correctly."""
-    cctp = setup_cppcheck_tool_plugin()
-    assert cctp.get_tool_dependencies() == ["make"]
-
-
 def test_cppcheck_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of cppcheck."""
     cctp = setup_cppcheck_tool_plugin()

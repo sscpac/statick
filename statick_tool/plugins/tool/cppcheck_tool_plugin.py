@@ -24,11 +24,6 @@ class CppcheckToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cppcheck"
 
-    @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
-        """Get a list of tools that must run before this one."""
-        return ["make"]
-
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument(
@@ -38,10 +33,9 @@ class CppcheckToolPlugin(ToolPlugin):
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        if "make_targets" not in package and "headers" not in package:
-            return []
-
-        if self.plugin_context is None:
+        if (
+            "make_targets" not in package and "headers" not in package
+        ) or self.plugin_context is None:
             return []
 
         flags = [
@@ -79,8 +73,15 @@ class CppcheckToolPlugin(ToolPlugin):
                         "proper version".format(user_version, match.group(2))
                     )
                     return None
+
         except OSError as ex:
             print("Cppcheck not found! ({})".format(ex))
+            return None
+
+        except subprocess.CalledProcessError as ex:
+            output = ex.output
+            print("Cppcheck failed! Returncode = {}".format(ex.returncode))
+            print("Exception output: {}".format(ex.output))
             return None
 
         files = []  # type: List[str]
