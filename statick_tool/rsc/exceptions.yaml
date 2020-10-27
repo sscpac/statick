@@ -107,7 +107,7 @@ global:
       # https://github.com/PyCQA/pylint/issues/776
       # https://github.com/PyCQA/pylint/issues/2416
       - tools: [pylint]
-        regex: "Value 'Optional' is unsubscriptable"
+        regex: ".+: Value 'Optional' is unsubscriptable"
 
 packages:
 
