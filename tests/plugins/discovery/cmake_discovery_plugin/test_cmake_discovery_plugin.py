@@ -125,7 +125,9 @@ def test_cmake_discovery_plugin_check_output_target():
     )
     package["make_targets"] = []
     output = "-- TARGET: [NAME:foo][SRC_DIR:foo/src/][INCLUDE_DIRS:include/foo/][SRC:foo.cpp]"
-    output += "\n-- TARGET: [NAME:foo_lib][SRC_DIR:foo/src/][INCLUDE_DIRS:][SRC:foo.cpp]"
+    output += (
+        "\n-- TARGET: [NAME:foo_lib][SRC_DIR:foo/src/][INCLUDE_DIRS:][SRC:foo.cpp]"
+    )
     cmdp.process_output(output, package)
     assert package["make_targets"][0]["name"] == "foo"
     assert package["make_targets"][0]["src_dir"] == "foo/src/"
