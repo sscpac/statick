@@ -53,7 +53,10 @@ function(add_statick_target)
 
   get_directory_property(TARGET_INCLUDE_DIRS INCLUDE_DIRECTORIES)
 
-  get_target_property(TARGET_SOURCES ${ARGV0} SOURCES)
+  get_target_property(TARGET_TYPE ${ARGV0} TYPE)
+  if (NOT ${TARGET_TYPE} MATCHES ".*INTERFACE.*")
+    get_target_property(TARGET_SOURCES ${ARGV0} SOURCES)
+  endif()
 
   message(STATUS "TARGET: [NAME:${ARGV0}][SRC_DIR:${CMAKE_CURRENT_SOURCE_DIR}][INCLUDE_DIRS:${TARGET_INCLUDE_DIRS}][SRC:${TARGET_SOURCES}]")
 

@@ -119,7 +119,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Parse the tool output."""
         # pylint: disable=anomalous-backslash-in-string
-        cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
+        cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.*)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
         target_p = re.compile(cmake_target_re)  # type: Pattern[str]
         cmake_headers_re = r"-- HEADERS: (.+)"
         headers_p = re.compile(cmake_headers_re)  # type: Pattern[str]
