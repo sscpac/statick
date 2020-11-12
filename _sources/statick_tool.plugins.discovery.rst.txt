@@ -65,6 +65,15 @@ statick_tool.plugins.discovery.python_discovery_plugin module
     :show-inheritance:
 
 
+statick_tool.plugins.discovery.shell_discovery_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.discovery.shell_discovery_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 statick_tool.plugins.discovery.xml_discovery_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

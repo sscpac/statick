@@ -1,18 +1,17 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>statick_tool.plugins.tool package &#8212; Statick  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="statick_tool.plugins.reporting package" href="statick_tool.plugins.reporting.html" />
@@ -40,729 +39,77 @@
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="module-statick_tool.plugins.tool.bandit_tool_plugin">
-<span id="statick-tool-plugins-tool-bandit-tool-plugin-module"></span><h3>statick_tool.plugins.tool.bandit_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.bandit_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply bandit tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.bandit_tool_plugin.</code><code class="descname">BanditToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/bandit_tool_plugin.html#BanditToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply bandit tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/bandit_tool_plugin.html#BanditToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/bandit_tool_plugin.html#BanditToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/bandit_tool_plugin.html#BanditToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/bandit_tool_plugin.html#BanditToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.bandit_tool_plugin.BanditToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-bandit-tool-plugin-module">
+<h3>statick_tool.plugins.tool.bandit_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-bandit-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.catkin_lint_tool_plugin">
-<span id="statick-tool-plugins-tool-catkin-lint-tool-plugin-module"></span><h3>statick_tool.plugins.tool.catkin_lint_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.catkin_lint_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply catkin_lint tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.catkin_lint_tool_plugin.</code><code class="descname">CatkinLintToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/catkin_lint_tool_plugin.html#CatkinLintToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply catkin_lint tool and gather results.</p>
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.check_for_exceptions_has_file">
-<em class="property">classmethod </em><code class="descname">check_for_exceptions_has_file</code><span class="sig-paren">(</span><em>match: Match[str], package: statick_tool.package.Package</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/statick_tool/plugins/tool/catkin_lint_tool_plugin.html#CatkinLintToolPlugin.check_for_exceptions_has_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.check_for_exceptions_has_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manual exceptions.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.get_level">
-<em class="property">classmethod </em><code class="descname">get_level</code><span class="sig-paren">(</span><em>issue_type: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/catkin_lint_tool_plugin.html#CatkinLintToolPlugin.get_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.get_level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get level for given issue type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/catkin_lint_tool_plugin.html#CatkinLintToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/catkin_lint_tool_plugin.html#CatkinLintToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/catkin_lint_tool_plugin.html#CatkinLintToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.catkin_lint_tool_plugin.CatkinLintToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-black-tool-plugin-module">
+<h3>statick_tool.plugins.tool.black_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-black-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.cccc_tool_plugin">
-<span id="statick-tool-plugins-tool-cccc-tool-plugin-module"></span><h3>statick_tool.plugins.tool.cccc_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.cccc_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply CCCC tool and gather results.</p>
-<p>To run the CCCC tool locally (without Statick) one way to do so is:</p>
-<blockquote>
-<div>find . -name *.h -print -o -name *.cpp -print | xargs cccc</div></blockquote>
-<p>That will generate several reports, including HTML. The results can be viewd
-in a web browser.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.cccc_tool_plugin.</code><code class="descname">CCCCToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply CCCC tool and gather results.</p>
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.convert_name_to_id">
-<em class="property">classmethod </em><code class="descname">convert_name_to_id</code><span class="sig-paren">(</span><em>name: str</em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.convert_name_to_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.convert_name_to_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert result name to configuration name.</p>
-<p>The name given in CCCC results is different than the name given in CCCC
-configuration. This will map the name in the configuration file to the
-name given in the results.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.find_issues">
-<code class="descname">find_issues</code><span class="sig-paren">(</span><em>config: Dict[KT, VT], results: Dict[KT, VT], package: statick_tool.package.Package</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.find_issues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.find_issues" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identify issues by comparing tool results with tool configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.parse_config">
-<em class="property">classmethod </em><code class="descname">parse_config</code><span class="sig-paren">(</span><em>config_file: str</em><span class="sig-paren">)</span> &#x2192; Dict[KT, VT]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.parse_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.parse_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse CCCC configuration file.</p>
-<p>Gets warning and error thresholds for all the metrics.
-An explanation to dump default values to a configuration file is at:
-<a class="reference external" href="http://sarnold.github.io/cccc/CCCC_User_Guide.html#config">http://sarnold.github.io/cccc/CCCC_User_Guide.html#config</a></p>
-<p><cite>cccc –opt_outfile=cccc.opt</cite></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: Dict[KT, VT], package: statick_tool.package.Package, config_file: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cccc_tool_plugin.html#CCCCToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cccc_tool_plugin.CCCCToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-catkin-lint-tool-plugin-module">
+<h3>statick_tool.plugins.tool.catkin_lint_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-catkin-lint-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.clang_format_tool_plugin">
-<span id="statick-tool-plugins-tool-clang-format-tool-plugin-module"></span><h3>statick_tool.plugins.tool.clang_format_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.clang_format_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply clang-format tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.clang_format_tool_plugin.</code><code class="descname">ClangFormatToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_format_tool_plugin.html#ClangFormatToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply clang-format tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.check_configuration">
-<code class="descname">check_configuration</code><span class="sig-paren">(</span><em>clang_format_bin: str</em><span class="sig-paren">)</span> &#x2192; Optional[bool]<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_format_tool_plugin.html#ClangFormatToolPlugin.check_configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.check_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that configuration is configured properly.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_format_tool_plugin.html#ClangFormatToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_format_tool_plugin.html#ClangFormatToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_format_tool_plugin.html#ClangFormatToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_format_tool_plugin.html#ClangFormatToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_format_tool_plugin.ClangFormatToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-cccc-tool-plugin-module">
+<h3>statick_tool.plugins.tool.cccc_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-cccc-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.clang_tidy_tool_plugin">
-<span id="statick-tool-plugins-tool-clang-tidy-tool-plugin-module"></span><h3>statick_tool.plugins.tool.clang_tidy_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.clang_tidy_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply clang-tidy tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.clang_tidy_tool_plugin.</code><code class="descname">ClangTidyToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply clang-tidy tool and gather results.</p>
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.check_for_exceptions">
-<em class="property">classmethod </em><code class="descname">check_for_exceptions</code><span class="sig-paren">(</span><em>match: Match[str]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin.check_for_exceptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.check_for_exceptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manual exceptions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.get_tool_dependencies">
-<em class="property">classmethod </em><code class="descname">get_tool_dependencies</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin.get_tool_dependencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.get_tool_dependencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of tools that must run before this one.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/clang_tidy_tool_plugin.html#ClangTidyToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.clang_tidy_tool_plugin.ClangTidyToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-clang-format-tool-plugin-module">
+<h3>statick_tool.plugins.tool.clang_format_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-clang-format-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.cmakelint_tool_plugin">
-<span id="statick-tool-plugins-tool-cmakelint-tool-plugin-module"></span><h3>statick_tool.plugins.tool.cmakelint_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.cmakelint_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply cmakelint tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.cmakelint_tool_plugin.</code><code class="descname">CMakelintToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/cmakelint_tool_plugin.html#CMakelintToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply cmakelint tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/cmakelint_tool_plugin.html#CMakelintToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cmakelint_tool_plugin.html#CMakelintToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cmakelint_tool_plugin.html#CMakelintToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cmakelint_tool_plugin.CMakelintToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-clang-tidy-tool-plugin-module">
+<h3>statick_tool.plugins.tool.clang_tidy_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-clang-tidy-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.cppcheck_tool_plugin">
-<span id="statick-tool-plugins-tool-cppcheck-tool-plugin-module"></span><h3>statick_tool.plugins.tool.cppcheck_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.cppcheck_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply cppcheck tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.cppcheck_tool_plugin.</code><code class="descname">CppcheckToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply cppcheck tool and gather results.</p>
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.check_for_exceptions">
-<em class="property">classmethod </em><code class="descname">check_for_exceptions</code><span class="sig-paren">(</span><em>match: Match[str]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin.check_for_exceptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.check_for_exceptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manual exceptions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.get_tool_dependencies">
-<em class="property">classmethod </em><code class="descname">get_tool_dependencies</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin.get_tool_dependencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.get_tool_dependencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of tools that must run before this one.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cppcheck_tool_plugin.html#CppcheckToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cppcheck_tool_plugin.CppcheckToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-cmakelint-tool-plugin-module">
+<h3>statick_tool.plugins.tool.cmakelint_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-cmakelint-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.cpplint_tool_plugin">
-<span id="statick-tool-plugins-tool-cpplint-tool-plugin-module"></span><h3>statick_tool.plugins.tool.cpplint_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.cpplint_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply Cpplint tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.cpplint_tool_plugin.</code><code class="descname">CpplintToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/cpplint_tool_plugin.html#CpplintToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply Cpplint tool and gather results.</p>
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.check_for_exceptions">
-<em class="property">classmethod </em><code class="descname">check_for_exceptions</code><span class="sig-paren">(</span><em>match: Match[str]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/statick_tool/plugins/tool/cpplint_tool_plugin.html#CpplintToolPlugin.check_for_exceptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.check_for_exceptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manual exceptions.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/cpplint_tool_plugin.html#CpplintToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.get_tool_dependencies">
-<em class="property">classmethod </em><code class="descname">get_tool_dependencies</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cpplint_tool_plugin.html#CpplintToolPlugin.get_tool_dependencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.get_tool_dependencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of tools that must run before this one.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cpplint_tool_plugin.html#CpplintToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/cpplint_tool_plugin.html#CpplintToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.cpplint_tool_plugin.CpplintToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-cppcheck-tool-plugin-module">
+<h3>statick_tool.plugins.tool.cppcheck_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-cppcheck-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.flawfinder_tool_plugin">
-<span id="statick-tool-plugins-tool-flawfinder-tool-plugin-module"></span><h3>statick_tool.plugins.tool.flawfinder_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.flawfinder_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply flawfinder tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.flawfinder_tool_plugin.</code><code class="descname">FlawfinderToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/flawfinder_tool_plugin.html#FlawfinderToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply flawfinder tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/flawfinder_tool_plugin.html#FlawfinderToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/flawfinder_tool_plugin.html#FlawfinderToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/flawfinder_tool_plugin.html#FlawfinderToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.flawfinder_tool_plugin.FlawfinderToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-cpplint-tool-plugin-module">
+<h3>statick_tool.plugins.tool.cpplint_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-cpplint-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.lizard_tool_plugin">
-<span id="statick-tool-plugins-tool-lizard-tool-plugin-module"></span><h3>statick_tool.plugins.tool.lizard_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.lizard_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply lizard tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.lizard_tool_plugin.</code><code class="descname">LizardToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/lizard_tool_plugin.html#LizardToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply Lizard tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/lizard_tool_plugin.html#LizardToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/lizard_tool_plugin.html#LizardToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/lizard_tool_plugin.html#LizardToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.lizard_tool_plugin.LizardToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-docformatter-tool-plugin-module">
+<h3>statick_tool.plugins.tool.docformatter_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-docformatter-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.make_tool_plugin">
-<span id="statick-tool-plugins-tool-make-tool-plugin-module"></span><h3>statick_tool.plugins.tool.make_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.make_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply make tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.make_tool_plugin.</code><code class="descname">MakeToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/make_tool_plugin.html#MakeToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply Make tool and gather results.</p>
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.check_for_exceptions">
-<em class="property">classmethod </em><code class="descname">check_for_exceptions</code><span class="sig-paren">(</span><em>match: Match[str]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/statick_tool/plugins/tool/make_tool_plugin.html#MakeToolPlugin.check_for_exceptions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.check_for_exceptions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Manual exceptions.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.filter_matches">
-<em class="property">classmethod </em><code class="descname">filter_matches</code><span class="sig-paren">(</span><em>matches: List[T], package: statick_tool.package.Package</em><span class="sig-paren">)</span> &#x2192; List[T]<a class="reference internal" href="_modules/statick_tool/plugins/tool/make_tool_plugin.html#MakeToolPlugin.filter_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.filter_matches" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter matches.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/make_tool_plugin.html#MakeToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>output: str</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/make_tool_plugin.html#MakeToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/make_tool_plugin.html#MakeToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.make_tool_plugin.MakeToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-flawfinder-tool-plugin-module">
+<h3>statick_tool.plugins.tool.flawfinder_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-flawfinder-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.perlcritic_tool_plugin">
-<span id="statick-tool-plugins-tool-perlcritic-tool-plugin-module"></span><h3>statick_tool.plugins.tool.perlcritic_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.perlcritic_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply Perl::Critic tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.perlcritic_tool_plugin.</code><code class="descname">PerlCriticToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/perlcritic_tool_plugin.html#PerlCriticToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply Perl::Critic tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/perlcritic_tool_plugin.html#PerlCriticToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/perlcritic_tool_plugin.html#PerlCriticToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/perlcritic_tool_plugin.html#PerlCriticToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/perlcritic_tool_plugin.html#PerlCriticToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.perlcritic_tool_plugin.PerlCriticToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-lizard-tool-plugin-module">
+<h3>statick_tool.plugins.tool.lizard_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-lizard-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.pydocstyle_tool_plugin">
-<span id="statick-tool-plugins-tool-pydocstyle-tool-plugin-module"></span><h3>statick_tool.plugins.tool.pydocstyle_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.pydocstyle_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply pydocstyle tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.pydocstyle_tool_plugin.</code><code class="descname">PydocstyleToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/pydocstyle_tool_plugin.html#PydocstyleToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply pydocstyle tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/pydocstyle_tool_plugin.html#PydocstyleToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pydocstyle_tool_plugin.html#PydocstyleToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pydocstyle_tool_plugin.html#PydocstyleToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pydocstyle_tool_plugin.PydocstyleToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-make-tool-plugin-module">
+<h3>statick_tool.plugins.tool.make_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-make-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.pycodestyle_tool_plugin">
-<span id="statick-tool-plugins-tool-pycodestyle-tool-plugin-module"></span><h3>statick_tool.plugins.tool.pycodestyle_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.pycodestyle_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply pycodestyle tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.pycodestyle_tool_plugin.</code><code class="descname">PycodestyleToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/pycodestyle_tool_plugin.html#PycodestyleToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply pycodestyle tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/pycodestyle_tool_plugin.html#PycodestyleToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pycodestyle_tool_plugin.html#PycodestyleToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pycodestyle_tool_plugin.html#PycodestyleToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pycodestyle_tool_plugin.PycodestyleToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-mypy-tool-plugin-module">
+<h3>statick_tool.plugins.tool.mypy_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-mypy-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.pyflakes_tool_plugin">
-<span id="statick-tool-plugins-tool-pyflakes-tool-plugin-module"></span><h3>statick_tool.plugins.tool.pyflakes_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.pyflakes_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply pyflakes tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.pyflakes_tool_plugin.</code><code class="descname">PyflakesToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/pyflakes_tool_plugin.html#PyflakesToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply pyflakes tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/pyflakes_tool_plugin.html#PyflakesToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pyflakes_tool_plugin.html#PyflakesToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pyflakes_tool_plugin.html#PyflakesToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pyflakes_tool_plugin.PyflakesToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-perlcritic-tool-plugin-module">
+<h3>statick_tool.plugins.tool.perlcritic_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-perlcritic-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.pylint_tool_plugin">
-<span id="statick-tool-plugins-tool-pylint-tool-plugin-module"></span><h3>statick_tool.plugins.tool.pylint_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.pylint_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply pylint tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.pylint_tool_plugin.</code><code class="descname">PylintToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/pylint_tool_plugin.html#PylintToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply pylint tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/pylint_tool_plugin.html#PylintToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pylint_tool_plugin.html#PylintToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/pylint_tool_plugin.html#PylintToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.pylint_tool_plugin.PylintToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-pycodestyle-tool-plugin-module">
+<h3>statick_tool.plugins.tool.pycodestyle_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-pycodestyle-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.spotbugs_tool_plugin">
-<span id="statick-tool-plugins-tool-spotbugs-tool-plugin-module"></span><h3>statick_tool.plugins.tool.spotbugs_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.spotbugs_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply spotbugs tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.spotbugs_tool_plugin.</code><code class="descname">SpotbugsToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/spotbugs_tool_plugin.html#SpotbugsToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply spotbugs tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/spotbugs_tool_plugin.html#SpotbugsToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="classmethod">
-<dt id="statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.get_tool_dependencies">
-<em class="property">classmethod </em><code class="descname">get_tool_dependencies</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="_modules/statick_tool/plugins/tool/spotbugs_tool_plugin.html#SpotbugsToolPlugin.get_tool_dependencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.get_tool_dependencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of tools that must run before this one.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>output: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/spotbugs_tool_plugin.html#SpotbugsToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/spotbugs_tool_plugin.html#SpotbugsToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.spotbugs_tool_plugin.SpotbugsToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-pydocstyle-tool-plugin-module">
+<h3>statick_tool.plugins.tool.pydocstyle_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-pydocstyle-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.uncrustify_tool_plugin">
-<span id="statick-tool-plugins-tool-uncrustify-tool-plugin-module"></span><h3>statick_tool.plugins.tool.uncrustify_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.uncrustify_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply uncrustify tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.uncrustify_tool_plugin.</code><code class="descname">UncrustifyToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/uncrustify_tool_plugin.html#UncrustifyToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply uncrustify tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.gather_args">
-<code class="descname">gather_args</code><span class="sig-paren">(</span><em>args: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/statick_tool/plugins/tool/uncrustify_tool_plugin.html#UncrustifyToolPlugin.gather_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.gather_args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gather arguments.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/uncrustify_tool_plugin.html#UncrustifyToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/uncrustify_tool_plugin.html#UncrustifyToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/uncrustify_tool_plugin.html#UncrustifyToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.uncrustify_tool_plugin.UncrustifyToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-pyflakes-tool-plugin-module">
+<h3>statick_tool.plugins.tool.pyflakes_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-pyflakes-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.xmllint_tool_plugin">
-<span id="statick-tool-plugins-tool-xmllint-tool-plugin-module"></span><h3>statick_tool.plugins.tool.xmllint_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.xmllint_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply xmllint tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.xmllint_tool_plugin.</code><code class="descname">XmllintToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/xmllint_tool_plugin.html#XmllintToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply xmllint tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/xmllint_tool_plugin.html#XmllintToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/xmllint_tool_plugin.html#XmllintToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/xmllint_tool_plugin.html#XmllintToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.xmllint_tool_plugin.XmllintToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-pylint-tool-plugin-module">
+<h3>statick_tool.plugins.tool.pylint_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-pylint-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
-<div class="section" id="module-statick_tool.plugins.tool.yamllint_tool_plugin">
-<span id="statick-tool-plugins-tool-yamllint-tool-plugin-module"></span><h3>statick_tool.plugins.tool.yamllint_tool_plugin module<a class="headerlink" href="#module-statick_tool.plugins.tool.yamllint_tool_plugin" title="Permalink to this headline">¶</a></h3>
-<p>Apply yamllint tool and gather results.</p>
-<dl class="class">
-<dt id="statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin">
-<em class="property">class </em><code class="descclassname">statick_tool.plugins.tool.yamllint_tool_plugin.</code><code class="descname">YamllintToolPlugin</code><a class="reference internal" href="_modules/statick_tool/plugins/tool/yamllint_tool_plugin.html#YamllintToolPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="statick_tool.html#statick_tool.tool_plugin.ToolPlugin" title="statick_tool.tool_plugin.ToolPlugin"><code class="xref py py-class docutils literal notranslate"><span class="pre">statick_tool.tool_plugin.ToolPlugin</span></code></a></p>
-<p>Apply yamllint tool and gather results.</p>
-<dl class="method">
-<dt id="statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="_modules/statick_tool/plugins/tool/yamllint_tool_plugin.html#YamllintToolPlugin.get_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get name of tool.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin.parse_output">
-<code class="descname">parse_output</code><span class="sig-paren">(</span><em>total_output: List[str]</em><span class="sig-paren">)</span> &#x2192; List[statick_tool.issue.Issue]<a class="reference internal" href="_modules/statick_tool/plugins/tool/yamllint_tool_plugin.html#YamllintToolPlugin.parse_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin.parse_output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse tool output and report issues.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin.scan">
-<code class="descname">scan</code><span class="sig-paren">(</span><em>package: statick_tool.package.Package</em>, <em>level: str</em><span class="sig-paren">)</span> &#x2192; Optional[List[statick_tool.issue.Issue]]<a class="reference internal" href="_modules/statick_tool/plugins/tool/yamllint_tool_plugin.html#YamllintToolPlugin.scan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#statick_tool.plugins.tool.yamllint_tool_plugin.YamllintToolPlugin.scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run tool and gather output.</p>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="statick-tool-plugins-tool-shellcheck-tool-plugin-module">
+<h3>statick_tool.plugins.tool.shellcheck_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-shellcheck-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="statick-tool-plugins-tool-spotbugs-tool-plugin-module">
+<h3>statick_tool.plugins.tool.spotbugs_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-spotbugs-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="statick-tool-plugins-tool-uncrustify-tool-plugin-module">
+<h3>statick_tool.plugins.tool.uncrustify_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-uncrustify-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="statick-tool-plugins-tool-xmllint-tool-plugin-module">
+<h3>statick_tool.plugins.tool.xmllint_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-xmllint-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="statick-tool-plugins-tool-yamllint-tool-plugin-module">
+<h3>statick_tool.plugins.tool.yamllint_tool_plugin module<a class="headerlink" href="#statick-tool-plugins-tool-yamllint-tool-plugin-module" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>
@@ -813,17 +160,15 @@ An explanation to dump default values to a configuration file is at:
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -840,7 +185,7 @@ An explanation to dump default values to a configuration file is at:
       &copy;2018, SSC Pacific.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.9</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
