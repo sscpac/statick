@@ -1,0 +1,3 @@
+[Core]
+Name = ROS Discovery Plugin
+Module = ros_discovery_plugin

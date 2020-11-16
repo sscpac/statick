@@ -70,6 +70,7 @@ def test_cmake_discovery_plugin_scan_valid():
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
+    package["cmake_flags"] = "-DCMAKE_PREFIX_PATH=/opt/ros/foxy"
     cmdp.scan(package, "level")
     assert package["cmake"]
 

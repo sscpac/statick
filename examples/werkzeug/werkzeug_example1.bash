@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Example script for running statick against a python package (no CMake/ROS/catkin)
 
 if [ ! -d werkzeug ]; then 

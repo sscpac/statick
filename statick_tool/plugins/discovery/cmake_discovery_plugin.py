@@ -18,6 +18,11 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "cmake"
 
+    @classmethod
+    def get_discovery_dependencies(cls) -> List[str]:
+        """Get a list of plugins that must run before this one."""
+        return ["ros"]
+
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument(
@@ -73,6 +78,9 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             "-DCATKIN_ENABLE_TESTING=OFF",
             "-DCATKIN_SKIP_TESTING=ON",
         ]  # type: List[str]
+
+        if "cmake_flags" in package and package["cmake_flags"]:
+            default_flags.append(package["cmake_flags"])
 
         path_flags = [
             "-DINPUT_DIR=" + package.path,

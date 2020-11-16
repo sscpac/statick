@@ -255,22 +255,40 @@ class Statick:
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
             discovery_plugins = list(self.discovery_plugins.keys())
+        plugins_ran = []  # type: List[Any]
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
                 print("Can't find specified discovery plugin {}!".format(plugin_name))
                 return None, False
 
             plugin = self.discovery_plugins[plugin_name]
-            plugin.set_plugin_context(plugin_context)
-            print("Running {} discovery plugin...".format(plugin.get_name()))
-            plugin.scan(package, level, self.exceptions)
-            print("{} discovery plugin done.".format(plugin.get_name()))
+            dependencies = plugin.get_discovery_dependencies()
+            for dependency_name in dependencies:
+                dependency_plugin = self.discovery_plugins[dependency_name]
+                if dependency_plugin.get_name() in plugins_ran:
+                    continue
+                dependency_plugin.set_plugin_context(plugin_context)
+                print(
+                    "Running {} discovery plugin...".format(
+                        dependency_plugin.get_name()
+                    )
+                )
+                dependency_plugin.scan(package, level, self.exceptions)
+                print("{} discovery plugin done.".format(dependency_plugin.get_name()))
+                plugins_ran.append(dependency_plugin.get_name())
+
+            if plugin.get_name() not in plugins_ran:
+                plugin.set_plugin_context(plugin_context)
+                print("Running {} discovery plugin...".format(plugin.get_name()))
+                plugin.scan(package, level, self.exceptions)
+                print("{} discovery plugin done.".format(plugin.get_name()))
+                plugins_ran.append(plugin.get_name())
         print("---Discovery---")
 
         print("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
         plugins_to_run = copy.copy(enabled_plugins)
-        plugins_ran = []  # type: List[Any]
+        plugins_ran = []
         plugin_dependencies = []  # type: List[str]
         while plugins_to_run:
             plugin_name = plugins_to_run[0]
