@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Example script for running statick with a custom configuration and custom
 # tool plugin
 

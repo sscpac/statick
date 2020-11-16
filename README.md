@@ -51,7 +51,8 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 * [Custom Plugins](#custom-plugins)
 * [Examples](#examples)
 * [Troubleshooting](#troubleshooting)
-  * [Make plugin](#make-plugin)
+  * [Make Tool Plugin](#make-tool-plugin)
+  * [CMake Discovery Plugin](#cmake-discovery-plugin)
 * [Contributing](#contributing)
   * [Tests](#tests)
   * [Mypy](#mypy)
@@ -336,6 +337,7 @@ java      | `.class`, `.java`
 Maven     | `pom.xml`
 Perl      | `.pl`
 Python    | `.py`
+ROS       | `CMakeLists.txt` and `package.xml`
 Shell     | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`
 XML       | `.xml`, `.launch`
 Yaml      | `.yaml`
@@ -502,9 +504,9 @@ and a pure [Python package](examples/werkzeug).
 
 ## Troubleshooting
 
-### Make plugin
+### Make Tool Plugin
 
-If you are running statick against a ROS package and get an error that there is no rule to make target `clean`,
+If you are running Statick against a ROS package and get an error that there is no rule to make target `clean`,
 and that the package is not CMake, it usually means that you did not specify a single package.
 For example, this is what happens when you tell Statick to analyze a ROS workspace and do not use `statick_ws`.
 
@@ -520,6 +522,33 @@ make: *** No rule to make target 'clean'.  Stop.
 Make failed! Returncode = 2
 Exception output:
 make tool plugin failed
+```
+
+### CMake Discovery Plugin
+
+If you are running Statick against a ROS package and get an error that no module name `ament_package` can be found,
+it usually means that you did not source a ROS environment setup file.
+
+```shell
+Running cmake discovery plugin...
+  Found cmake package /home/user/src/ws/src/repo/package/CMakeLists.txt
+Problem running CMake! Returncode = 1
+.
+.
+.
+Traceback (most recent call last):
+  File "/opt/ros/foxy/share/ament_cmake_core/cmake/package_templates/templates_2_cmake.py", line 21, in <module>
+    from ament_package.templates import get_environment_hook_template_path
+ModuleNotFoundError: No module named 'ament_package'
+CMake Error at /opt/ros/foxy/share/ament_cmake_core/cmake/ament_cmake_package_templates-extras.cmake:41 (message):
+  execute_process(/home/user/.pyenv/shims/python3
+  /opt/ros/foxy/share/ament_cmake_core/cmake/package_templates/templates_2_cmake.py
+  /home/user/src/ws/statick-output/package-sei_cert/build/ament_cmake_package_templates/templates.cmake)
+  returned error code 1
+.
+.
+.
+-- Configuring incomplete, errors occurred!
 ```
 
 ## Contributing

@@ -524,6 +524,38 @@ def test_run_tool_dependency(init_statick):
         print("Error: {}".format(ex))
 
 
+def test_run_discovery_dependency(init_statick):
+    """
+    Test that a discovery plugin can run its dependencies.
+
+    Expected results: issues is None and success is False
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-discovery-dependency.yaml"
+        ),
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    _, success = statick.run(path, parsed_args)
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
 def test_run_no_reporting_plugins(init_statick):
     """
     Test that no reporting plugins returns unsuccessful.
@@ -716,3 +748,7 @@ def test_run_called_process_error(mock_subprocess_check_output):
     issues, _ = statick.run(path, parsed_args)
     for tool in issues:
         assert not issues[tool]
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))

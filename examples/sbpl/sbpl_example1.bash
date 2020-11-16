@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Example script for running statick against a standard CMake package (no ROS/catkin)
 
 if [ ! -d sbpl ]; then 

@@ -1,7 +1,7 @@
 """Discovery plugin."""
 import os
 import sys
-from typing import Any, Optional, Union
+from typing import Any, List, Optional, Union
 
 from yapsy.IPlugin import IPlugin
 
@@ -17,6 +17,11 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
     def get_name(self) -> Optional[str]:
         """Get name of plugin."""
+
+    @classmethod
+    def get_discovery_dependencies(cls) -> List[str]:
+        """Get a list of discovery plugins that must run before this one."""
+        return []
 
     def gather_args(self, args: Any) -> None:
         """Gather arguments for plugin."""
