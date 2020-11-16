@@ -526,7 +526,7 @@ make tool plugin failed
 
 ### CMake Discovery Plugin
 
-If you are running Statick against a ROS package and get an error that no module name `ament_package` can be found,
+If you are running Statick against a ROS package and get an error that no module named `ament_package` can be found,
 it usually means that you did not source a ROS environment setup file.
 
 ```shell
