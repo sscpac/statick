@@ -125,9 +125,11 @@ levels:
       # https://github.com/psf/black/blob/master/README.md#how-black-wraps-lines
       # https://github.com/psf/black/issues/48
       # https://github.com/PyCQA/pylint/issues/289
+      # Disabling unsubscriptable-object as it has issues in Python 3.9 with type hints, among other false positives.
+      # https://github.com/PyCQA/pylint/issues/3139
       pylint:
         flags: "--good-names=f,i,j,k,ex,_
-                --disable=bad-continuation
+                --disable=bad-continuation,unsubscriptable-object
                "
       shellcheck:
         flags: ""
