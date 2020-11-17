@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04, windows-latest]
-        python-version: [3.5, 3.6, 3.7, 3.8]
+        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
 
     steps:
       - uses: actions/checkout@v2
@@ -138,4 +138,4 @@ jobs:
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         run: |
           mkdir statick-output
-          statick . --output-directory statick-output --check --profile self_check.yaml
+          ./statick . --output-directory statick-output --check --profile self_check.yaml
