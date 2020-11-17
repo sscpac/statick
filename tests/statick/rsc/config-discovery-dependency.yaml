@@ -1,0 +1,4 @@
+levels:
+  sei_cert:
+    discovery:
+      - cmake

@@ -70,6 +70,7 @@ def test_cmake_discovery_plugin_scan_valid():
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
+    package["cmake_flags"] = "-DCMAKE_PREFIX_PATH=/opt/ros/foxy"
     cmdp.scan(package, "level")
     assert package["cmake"]
 
@@ -125,11 +126,18 @@ def test_cmake_discovery_plugin_check_output_target():
     )
     package["make_targets"] = []
     output = "-- TARGET: [NAME:foo][SRC_DIR:foo/src/][INCLUDE_DIRS:include/foo/][SRC:foo.cpp]"
+    output += (
+        "\n-- TARGET: [NAME:foo_lib][SRC_DIR:foo/src/][INCLUDE_DIRS:][SRC:foo.cpp]"
+    )
     cmdp.process_output(output, package)
     assert package["make_targets"][0]["name"] == "foo"
     assert package["make_targets"][0]["src_dir"] == "foo/src/"
     assert package["make_targets"][0]["include_dirs"] == ["include/foo/"]
     assert package["make_targets"][0]["src"] == ["foo/src/foo.cpp"]
+    assert package["make_targets"][1]["name"] == "foo_lib"
+    assert package["make_targets"][1]["src_dir"] == "foo/src/"
+    assert package["make_targets"][1]["include_dirs"] == [""]
+    assert package["make_targets"][1]["src"] == ["foo/src/foo.cpp"]
 
 
 def test_cmake_discovery_plugin_check_output_project():

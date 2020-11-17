@@ -2,6 +2,8 @@
 import os
 from typing import Optional
 
+from deprecated import deprecated
+
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
@@ -14,6 +16,9 @@ class CatkinDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "catkin"
 
+    @deprecated(
+        "A more generic version of this plugin is the ros_discovery_plugin. This plugin will be removed in a future version."  # NOLINT
+    )
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:

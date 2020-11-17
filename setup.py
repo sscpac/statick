@@ -13,6 +13,7 @@ with open("README.md") as f:
 
 TEST_DEPS = [
     "backports.tempfile",
+    "deprecated",
     "pylint-django",
     "pytest",
     "mock",
@@ -47,6 +48,7 @@ setup(
         "bandit",
         "cmakelint",
         "cpplint",
+        "deprecated",
         "flawfinder",
         "lizard",
         "pycodestyle",

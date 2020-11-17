@@ -12,6 +12,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.5 - 2020-11-12
+
+### Added
+
+- Generate and publish Sphinx documentation to GitHub Pages on all new releases.
+- Add discovery plugin to find shell files.
+- Add tool plugin for [shellcheck](https://www.shellcheck.net/).
+- Update documentation to list plugin types and link to tool documentation.
+
+### Fixed
+
+- Fix for running `cmake_discovery_plugin` with some ROS 2 packages that contain messages. (@xydesa)
+
 ## v0.4.4 - 2020-10-16
 
 ### Fixed

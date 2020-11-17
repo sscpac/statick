@@ -18,6 +18,11 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Get name of discovery type."""
         return "cmake"
 
+    @classmethod
+    def get_discovery_dependencies(cls) -> List[str]:
+        """Get a list of plugins that must run before this one."""
+        return ["ros"]
+
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
         args.add_argument(
@@ -74,6 +79,9 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             "-DCATKIN_SKIP_TESTING=ON",
         ]  # type: List[str]
 
+        if "cmake_flags" in package and package["cmake_flags"]:
+            default_flags.append(package["cmake_flags"])
+
         path_flags = [
             "-DINPUT_DIR=" + package.path,
             "-DSTATICK_EXTRA_GCC_FLAGS=" + extra_gcc_flags,
@@ -119,7 +127,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Parse the tool output."""
         # pylint: disable=anomalous-backslash-in-string
-        cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.+)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
+        cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.*)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
         target_p = re.compile(cmake_target_re)  # type: Pattern[str]
         cmake_headers_re = r"-- HEADERS: (.+)"
         headers_p = re.compile(cmake_headers_re)  # type: Pattern[str]
