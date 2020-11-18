@@ -125,6 +125,11 @@ jobs:
         run: |
           statick . --check --profile documentation.yaml
 
+      - name: Sphinx lint
+        uses: ammaraskar/sphinx-action@master
+        with:
+          docs-folder: "docs/"
+
       - name: Test with tox
         run: |
           python -m tox
