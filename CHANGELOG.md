@@ -12,6 +12,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.6 - 2020-11-18
+
+### Added
+
+Date:   Tue Nov 17 08:17:55 2020 -0800
+
+- Add Python 3.9 support.
+  All unit tests and self checks are performed using Python 3.9.
+  This required modifying the `self_check` configuration to disable the pylint flag `--unsubscriptable-object` due
+  to documented issues with pylint, Python 3.9, and type hints.
+- Add new ROS discovery plugin.
+- Add feature that allows discovery plugins to depend on other discovery plugins, necessary for getting additional
+  CMake flags from ROS discovery plugin to the CMake disocvery plugin.
+
+### Deprecated
+
+- The catkin discovery plugin is now marked as deprecated since the ROS discovery plugin is more general.
+  For now both plugins run by default, but the catkin discovery plugin will be removed in a future version.
+
 ## v0.4.5 - 2020-11-12
 
 ### Added
