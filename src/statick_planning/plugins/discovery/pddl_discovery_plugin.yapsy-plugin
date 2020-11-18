@@ -1,0 +1,3 @@
+[Core]
+Name = PDDL Discovery Plugin
+Module = pddl_discovery_plugin

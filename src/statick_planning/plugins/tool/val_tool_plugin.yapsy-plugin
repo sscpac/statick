@@ -1,0 +1,3 @@
+[Core]
+Name = VAL Tool Plugin
+Module = val_tool_plugin

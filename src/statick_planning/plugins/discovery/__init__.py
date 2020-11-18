@@ -1,0 +1,1 @@
+"""PDDL file discovery plugin."""
