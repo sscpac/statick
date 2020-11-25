@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 - Fix bug in CCCC tool plugin where an empty list of source files results in trying to print output before it is available.
   The result of the bug was the Statick tool crashing.
+- Fix title underlines in documentation files.
+  Based on sphinx linting feedback from ammaraskar/sphinx-action.
 
 ## v0.4.6 - 2020-11-18
 
