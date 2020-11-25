@@ -40,7 +40,7 @@ class CCCCToolPlugin(ToolPlugin):
         self, package: Package, level: str
     ) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        if "c_src" not in package.keys():
+        if "c_src" not in package.keys() or not package["c_src"]:
             return []
 
         if self.plugin_context is None:
