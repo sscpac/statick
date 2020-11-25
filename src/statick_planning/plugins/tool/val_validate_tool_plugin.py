@@ -1,4 +1,4 @@
-"""Apply VAL tool and gather results."""
+"""Apply Validate tool and gather results."""
 import argparse
 import subprocess
 from typing import List, Optional
@@ -8,16 +8,18 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class ValToolPlugin(ToolPlugin):  # type: ignore
-    """Apply VAL tool and gather results."""
+class ValValidateToolPlugin(ToolPlugin):  # type: ignore
+    """Apply Validate tool and gather results."""
 
     def get_name(self) -> str:
         """Get name of tool."""
-        return "val"
+        return "val_validate"
 
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
-        args.add_argument("--val-bin", dest="val_bin", type=str, help="VAL binary path")
+        args.add_argument(
+            "--validate-bin", dest="validate_bin", type=str, help="Validate binary path"
+        )
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
@@ -27,13 +29,13 @@ class ValToolPlugin(ToolPlugin):  # type: ignore
         flags = ["-v"]
         flags += self.get_user_flags(level)
 
-        val_bin = "Validate"
-        if self.plugin_context.args.val_bin is not None:
-            val_bin = self.plugin_context.args.val_bin
+        validate_bin = "Validate"
+        if self.plugin_context.args.validate_bin is not None:
+            validate_bin = self.plugin_context.args.validate_bin
 
         try:
             subproc_args = (
-                [val_bin]
+                [validate_bin]
                 + flags
                 + package["pddl_domain_src"]
                 + package["pddl_problem_src"]
@@ -45,12 +47,12 @@ class ValToolPlugin(ToolPlugin):  # type: ignore
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 255:
-                print("VAL failed! Returncode = {}".format(str(ex.returncode)))
+                print("Validate failed! Returncode = {}".format(str(ex.returncode)))
                 print("{}".format(ex.output))
                 return None
 
         except OSError as ex:
-            print("Couldn't find {}! ({})".format(val_bin, ex))
+            print("Couldn't find {}! ({})".format(validate_bin, ex))
             return None
 
         if self.plugin_context and self.plugin_context.args.show_tool_output:
