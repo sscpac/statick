@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.7 - 2020-11-25
+
+### Fixed
+
+- Fix bug in CCCC tool plugin where an empty list of source files results in trying to print output before it is available.
+  The result of the bug was the Statick tool crashing.
+
 ## v0.4.6 - 2020-11-18
 
 ### Added
