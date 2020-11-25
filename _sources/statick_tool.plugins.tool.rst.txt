@@ -21,7 +21,7 @@ statick_tool.plugins.tool.bandit_tool_plugin module
     :show-inheritance:
 
 statick_tool.plugins.tool.black_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.black_tool_plugin
     :members:
@@ -37,7 +37,7 @@ statick_tool.plugins.tool.catkin_lint_tool_plugin module
     :show-inheritance:
 
 statick_tool.plugins.tool.cccc_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.cccc_tool_plugin
     :members:
@@ -85,7 +85,7 @@ statick_tool.plugins.tool.cpplint_tool_plugin module
     :show-inheritance:
 
 statick_tool.plugins.tool.docformatter_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.docformatter_tool_plugin
     :members:
@@ -165,7 +165,7 @@ statick_tool.plugins.tool.pylint_tool_plugin module
     :show-inheritance:
 
 statick_tool.plugins.tool.shellcheck_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.shellcheck_tool_plugin
     :members:
