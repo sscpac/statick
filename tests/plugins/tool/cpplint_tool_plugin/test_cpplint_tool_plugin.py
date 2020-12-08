@@ -158,15 +158,32 @@ def test_cpplint_tool_plugin_scan_missing_fields():
     Expected result: issues is None then empty
     """
     ctp = setup_cpplint_tool_plugin()
+
+    # Missing tool name in package.
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
-    # Missing tool name in package.
+    package["make_targets"] = []
+    package["make_targets"].append({})
+    package["make_targets"][0]["src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.c")
+    ]
     issues = ctp.scan(package, "level")
     assert issues is None
 
-    # Missing make_targets and headers in package
-    package["cpplint"] = "cpplint"
+    # Empty make_targets and headers in package.
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["make_targets"] = []
+    package["headers"] = []
+    issues = ctp.scan(package, "level")
+    assert not issues
+
+    # Missing make_targets and headers in package.
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
     issues = ctp.scan(package, "level")
     assert not issues
 
