@@ -12,6 +12,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.9 - 2020-12-09
+
+### Fixed
+
+- Reverted changes to ROS discovery plugin to support Python-only packages.
+  Those changes were causing crashes for some users.
+  We will get those changes back into a future release, but take out the bugs.
+
 ## v0.4.8 - 2020-12-09
 
 ### Added
