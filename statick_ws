@@ -51,9 +51,10 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             full_dir = os.path.join(root, sub_dir)
             files = os.listdir(full_dir)
             if (
-                "package.xml" in files
+                "CMakeLists.txt" in files
                 and "CATKIN_IGNORE" not in files
                 and "AMENT_IGNORE" not in files
+                and "package.xml" in files
             ):
                 if ignore_packages and sub_dir in ignore_packages:
                     continue
