@@ -77,6 +77,18 @@ def test_ros_discovery_plugin_scan_valid():
     assert package["ros"]
 
 
+def test_ros_discovery_plugin_scan_ros2_python_only():
+    """Test the behavior when the ROS plugin scans a valid Python-only package."""
+    rdp = RosDiscoveryPlugin()
+    package = Package(
+        "ros2_python_package",
+        os.path.join(os.path.dirname(__file__), "ros2_python_package"),
+    )
+    os.environ["ROS_VERSION"] = "2"
+    rdp.scan(package, "level")
+    assert package["ros"]
+
+
 def test_ros_discovery_plugin_scan_invalid_no_ros_distro():
     """Test the behavior when the ROS plugin scans a valid package but no ROS
     environment has been set."""
