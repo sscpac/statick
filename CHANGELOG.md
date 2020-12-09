@@ -12,6 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.8 - 2020-12-09
+
+### Added
+
+- The ROS discovery plugin now supports Python-only packages that do not contain a `CMakeLists.txt` file.
+- Improved the output of the cpplint tool plugin.
+  When no make targets or C/C++ headers have been discovered the tool no longer gives confusing message about the
+  cpplint executable not being found.
+
 ## v0.4.7 - 2020-11-25
 
 ### Fixed
