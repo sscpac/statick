@@ -18,12 +18,15 @@ class CpplintToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
+        if "make_targets" not in package and "headers" not in package:
+            return []
+
+        if not package["make_targets"] and not package["headers"]:
+            return []
+
         if "cpplint" not in package:
             print("  cpplint not found!")
             return None
-
-        if "make_targets" not in package and "headers" not in package:
-            return []
 
         flags = []  # type: List[str]
         flags += self.get_user_flags(level)
