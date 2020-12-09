@@ -2,8 +2,6 @@
 import os
 from typing import Optional
 
-import xmltodict
-
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
@@ -42,23 +40,6 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                             package[
                                 "cmake_flags"
                             ] = "-DCMAKE_PREFIX_PATH=" + item.rstrip("/bin")
-        elif os.path.isfile(package_file):
-            with open(package_file) as fconfig:
-                try:
-                    output = xmltodict.parse(fconfig.read())
-                except xmltodict.expat.ExpatError as exc:
-                    # No valid XML found, so we are not going to find the build type.
-                    package["ros"] = False
-                    print("  Invalid XML in {}: {}".format(package_file, exc))
-                    return
-                if (
-                    "package" in output
-                    and "export" in output["package"]
-                    and "build_type" in output["package"]["export"]
-                    and output["package"]["export"]["build_type"] == "ament_python"
-                ):
-                    print("  Package is ROS{}.".format(ros_version))
-                    package["ros"] = True
         else:
             print("  Package is not ROS.")
             package["ros"] = False
