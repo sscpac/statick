@@ -110,6 +110,9 @@ def test_clang_format_tool_plugin_scan_valid():
     issues = cftp.scan(package, "level")
     assert not issues
 
+    if os.path.exists(os.path.join(os.path.expanduser("~"), "_clang-format")):
+        os.remove(os.path.join(os.path.expanduser("~"), "_clang-format"))
+
 
 def test_clang_format_tool_plugin_scan_valid_alternate_config():
     """Test that alternate format configuration file can be used."""
@@ -143,6 +146,9 @@ def test_clang_format_tool_plugin_scan_valid_alternate_config():
     cftp = setup_clang_format_tool_plugin()
     issues = cftp.scan(package, "level")
     assert not issues
+
+    if os.path.exists(os.path.join(os.path.expanduser("~"), "_clang-format")):
+        os.remove(os.path.join(os.path.expanduser("~"), "_clang-format"))
 
 
 def test_clang_format_tool_plugin_scan_no_plugin_context():
@@ -321,6 +327,9 @@ def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_
     issues = cftp.scan(package, "level")
     assert issues is None
 
+    if os.path.exists(os.path.join(os.path.expanduser("~"), "_clang-format")):
+        os.remove(os.path.join(os.path.expanduser("~"), "_clang-format"))
+
 
 @mock.patch("statick_tool.plugins.tool.clang_format_tool_plugin.open")
 def test_clang_format_tool_plugin_scan_oserror_open(mock_open):
@@ -380,6 +389,9 @@ def test_clang_format_tool_plugin_scan_oserror(mock_subprocess_check_output):
     cftp = setup_clang_format_tool_plugin(do_raise=True)
     issues = cftp.scan(package, "level")
     assert issues is None
+
+    if os.path.exists(os.path.join(os.path.expanduser("~"), "_clang-format")):
+        os.remove(os.path.join(os.path.expanduser("~"), "_clang-format"))
 
 
 @mock.patch("statick_tool.plugins.tool.clang_format_tool_plugin.open")
