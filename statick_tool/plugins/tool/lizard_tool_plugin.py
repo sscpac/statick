@@ -1,9 +1,9 @@
 """Apply lizard tool and gather results."""
-from contextlib import redirect_stdout
 import io
 import os
 import re
 import sys
+from contextlib import redirect_stdout
 from typing import List, Match, Optional, Pattern
 
 import lizard
