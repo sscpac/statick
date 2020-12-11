@@ -89,7 +89,6 @@ class LizardToolPlugin(ToolPlugin):
         if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
-        # Log file is already written at this point, so if we don't want it, delete it
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
