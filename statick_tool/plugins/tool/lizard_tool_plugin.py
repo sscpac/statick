@@ -25,7 +25,7 @@ class LizardToolPlugin(ToolPlugin):
             return []
 
         try:
-            ## The following is a modification of lizard.py's main() ##
+            # The following is a modification of lizard.py's main() #
             user_flags = (
                 [lizard.__file__] + [package.path] + self.get_user_flags(level)
             )  # leading None is required
