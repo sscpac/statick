@@ -17,14 +17,14 @@ class LizardToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        src_dir = "."
-        if "src_dir" in package:
-            src_dir = package["src_dir"]
+        if not package.path:
+            return []
 
         try:
             output = subprocess.check_output(
-                ["lizard", "-w", src_dir], universal_newlines=True
+                ["lizard", "-w", package.path], universal_newlines=True
             )
+
         except subprocess.CalledProcessError as ex:
             if ex.returncode == 1:
                 output = ex.output
@@ -41,8 +41,8 @@ class LizardToolPlugin(ToolPlugin):
             print("{}".format(output))
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output)
         return issues
