@@ -29,28 +29,11 @@ class LizardToolPlugin(ToolPlugin):
             # The following is a modification of lizard.py's main() #
             user_flags = (
                 [lizard.__file__] + [package.path] + self.get_user_flags(level)
-            )  # leading None is required
+            )  # leading lizard file name is required
+
             # Make sure we log warnings
             if "-w" not in user_flags:
                 user_flags += ["-w"]
-
-            # # Create desired logging extension for later
-            # if ("-X" in user_flags) or ("--xml" in user_flags):
-            #     log_extension = ".xml"
-            # elif "--csv" in user_flags:
-            #     log_extension = ".csv"
-            # elif ("-H" in user_flags) or ("--html" in user_flags):
-            #     log_extension = ".html"
-            # else:
-            #     log_extension = ".log"
-
-            # # Make sure we log to a file for Statick
-            # if "-o" not in user_flags:
-            #     log_file = self.get_name() + log_extension
-            #     user_flags += ["-o", log_file]
-            # else:
-            #     # Get the log file name
-            #     log_file = user_flags[user_flags.index("-o") + 1]
 
             options = lizard.parse_args(user_flags)
             printer = options.printer or lizard.print_result
@@ -83,7 +66,7 @@ class LizardToolPlugin(ToolPlugin):
                 output_file.close()
 
         except OSError as ex:
-            print("Couldn't find lizard executable! ({})".format(ex))
+            print("Error occurred while running lizard! ({})".format(ex))
             return None
 
         if self.plugin_context and self.plugin_context.args.show_tool_output:
