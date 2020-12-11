@@ -26,28 +26,30 @@ class LizardToolPlugin(ToolPlugin):
 
         try:
             ## The following is a modification of lizard.py's main() ##
-            user_flags = [lizard.__file__] + [package.path] + self.get_user_flags(level) # leading None is required
+            user_flags = (
+                [lizard.__file__] + [package.path] + self.get_user_flags(level)
+            )  # leading None is required
             # Make sure we log warnings
-            if '-w' not in user_flags:
-                user_flags += ['-w']
-            
+            if "-w" not in user_flags:
+                user_flags += ["-w"]
+
             # Create desired logging extension for later
-            if ('-X' in user_flags) or ('--xml' in user_flags):
-                log_extension = '.xml'
-            elif '--csv' in user_flags:
-                log_extension = '.csv'
-            elif ('-H' in user_flags) or ('--html' in user_flags):
-                log_extension = '.html'
+            if ("-X" in user_flags) or ("--xml" in user_flags):
+                log_extension = ".xml"
+            elif "--csv" in user_flags:
+                log_extension = ".csv"
+            elif ("-H" in user_flags) or ("--html" in user_flags):
+                log_extension = ".html"
             else:
-                log_extension = '.log'
+                log_extension = ".log"
 
             # Make sure we log to a file for Statick
-            if '-o' not in user_flags:
+            if "-o" not in user_flags:
                 log_file = self.get_name() + log_extension
-                user_flags += ['-o', log_file]
+                user_flags += ["-o", log_file]
             else:
                 # Get the log file name
-                log_file = user_flags[user_flags.index('-o') + 1]
+                log_file = user_flags[user_flags.index("-o") + 1]
 
             options = lizard.parse_args(user_flags)
             printer = options.printer or lizard.print_result
@@ -68,7 +70,8 @@ class LizardToolPlugin(ToolPlugin):
                 options.exclude,
                 options.working_threads,
                 options.extensions,
-                options.languages)
+                options.languages,
+            )
             printer(result, options, schema, lizard.AllResult)
             lizard.print_extension_results(options.extensions)
             list(result)
@@ -80,20 +83,19 @@ class LizardToolPlugin(ToolPlugin):
             # Read back written data for the rest of Statick
             # There HAS to be a more elegant way to do this...
             if output_file:
-                with open(log_file, 'r') as log_f:
+                with open(log_file, "r") as log_f:
                     output = "".join(log_f.readlines())
 
         except OSError as ex:
             print("Couldn't find lizard executable! ({})".format(ex))
             return None
 
-
         if self.plugin_context and self.plugin_context.args.show_tool_output:
             print("{}".format(output))
 
         # Log file is already written at this point, so if we don't want it, delete it
         if not (self.plugin_context and self.plugin_context.args.output_directory):
-           os.remove(log_file) 
+            os.remove(log_file)
 
         issues = self.parse_output(output)
 
