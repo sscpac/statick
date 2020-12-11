@@ -122,10 +122,8 @@ def test_lizard_tool_plugin_scan_missing_fields():
     Expected result: issues is empty
     """
     ltp = setup_lizard_tool_plugin()
-    package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    )
-    # Missing src_dir
+    # Empty package path.
+    package = Package("", "")
     issues = ltp.scan(package, "level")
     assert not issues
 
