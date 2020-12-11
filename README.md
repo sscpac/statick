@@ -49,6 +49,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   * [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
   * [Custom CMake Flags](#custom-cmake-flags)
 * [Custom Plugins](#custom-plugins)
+* [ROS Workspaces](#ros-workspaces)
 * [Examples](#examples)
 * [Troubleshooting](#troubleshooting)
   * [Make Tool Plugin](#make-tool-plugin)
@@ -502,6 +503,40 @@ Examples are provided in the [examples](examples) directory.
 You can see how to run Statick against a [ROS package](examples/navigation), a pure [CMake package](examples/sbpl),
 and a pure [Python package](examples/werkzeug).
 
+## ROS Workspaces
+
+Statick started by being used to scan [ROS][ros] workspaces for issues.
+The `statick_ws` utility provides support for running against a ROS workspace and identifying individual ROS packages
+within the workspace.
+Each ROS package will then get a unique directory of results in the Statick output directory.
+This can be helpful for presenting results using various reporting plugins.
+
+For example, suppose you have the following directory layout for the ROS workspace.
+
+* /home/user/ws
+  * src
+    * package1
+    * package2
+    * subdir
+      * package3
+      * package4
+      * package5
+  * build
+  * devel
+
+Statick should be run against the ROS workspace source directory.
+Note that you can provide relative paths to the source directory.
+
+```shell
+statick_ws /home/user/ws/src --output-directory <output directory>
+```
+
+Statick can also run against a subset of the source directory in a ROS workspace.
+
+```shell
+statick_ws /home/user/ws/src/subdir --output-directory <output directory>
+```
+
 ## Troubleshooting
 
 ### Make Tool Plugin
@@ -630,6 +665,7 @@ His commits were scrubbed from git history upon the initial public release.
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
+[ros]: https://www.ros.org/
 [shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
 [uncrustify]: https://github.com/uncrustify/uncrustify
