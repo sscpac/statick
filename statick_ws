@@ -47,10 +47,7 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
 
     packages = []
     for root, dirs, files in os.walk(parsed_args.path):
-        if (
-            "CATKIN_IGNORE" in files
-            or "AMENT_IGNORE" in files
-        ):
+        if "CATKIN_IGNORE" in files or "AMENT_IGNORE" in files:
             dirs.clear()
             continue
         for sub_dir in dirs:
