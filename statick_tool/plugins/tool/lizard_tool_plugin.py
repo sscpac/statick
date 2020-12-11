@@ -1,15 +1,16 @@
 """Apply lizard tool and gather results."""
+from contextlib import redirect_stdout
+import io
 import os
 import re
-import subprocess
 import sys
 from typing import List, Match, Optional, Pattern
+
+import lizard
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
-
-import lizard
 
 
 class LizardToolPlugin(ToolPlugin):
@@ -33,23 +34,23 @@ class LizardToolPlugin(ToolPlugin):
             if "-w" not in user_flags:
                 user_flags += ["-w"]
 
-            # Create desired logging extension for later
-            if ("-X" in user_flags) or ("--xml" in user_flags):
-                log_extension = ".xml"
-            elif "--csv" in user_flags:
-                log_extension = ".csv"
-            elif ("-H" in user_flags) or ("--html" in user_flags):
-                log_extension = ".html"
-            else:
-                log_extension = ".log"
+            # # Create desired logging extension for later
+            # if ("-X" in user_flags) or ("--xml" in user_flags):
+            #     log_extension = ".xml"
+            # elif "--csv" in user_flags:
+            #     log_extension = ".csv"
+            # elif ("-H" in user_flags) or ("--html" in user_flags):
+            #     log_extension = ".html"
+            # else:
+            #     log_extension = ".log"
 
-            # Make sure we log to a file for Statick
-            if "-o" not in user_flags:
-                log_file = self.get_name() + log_extension
-                user_flags += ["-o", log_file]
-            else:
-                # Get the log file name
-                log_file = user_flags[user_flags.index("-o") + 1]
+            # # Make sure we log to a file for Statick
+            # if "-o" not in user_flags:
+            #     log_file = self.get_name() + log_extension
+            #     user_flags += ["-o", log_file]
+            # else:
+            #     # Get the log file name
+            #     log_file = user_flags[user_flags.index("-o") + 1]
 
             options = lizard.parse_args(user_flags)
             printer = options.printer or lizard.print_result
@@ -60,10 +61,8 @@ class LizardToolPlugin(ToolPlugin):
             if options.input_file:
                 options.paths = lizard.auto_read(options.input_file).splitlines()
 
-            # Set up logging (sys.stdout now goes to file)
-            original_stdout = sys.stdout
-            output_file = lizard.open_output_file(options.output_file)
-            sys.stdout = output_file
+            if options.output_file:
+                output_file = lizard.open_output_file(options.output_file)
 
             result = lizard.analyze(
                 options.paths,
@@ -72,19 +71,16 @@ class LizardToolPlugin(ToolPlugin):
                 options.extensions,
                 options.languages,
             )
-            printer(result, options, schema, lizard.AllResult)
+            lizard_output = io.StringIO()
+            with redirect_stdout(lizard_output):
+                printer(result, options, schema, lizard.AllResult)
+            output = lizard_output.getvalue()
             lizard.print_extension_results(options.extensions)
             list(result)
 
-            # Return to normal sys.stdout operation
-            sys.stdout = original_stdout
-            output_file.close()
-
-            # Read back written data for the rest of Statick
-            # There HAS to be a more elegant way to do this...
-            if output_file:
-                with open(log_file, "r") as log_f:
-                    output = "".join(log_f.readlines())
+            if options.output_file:
+                output_file.write(output)
+                output_file.close()
 
         except OSError as ex:
             print("Couldn't find lizard executable! ({})".format(ex))
@@ -94,8 +90,9 @@ class LizardToolPlugin(ToolPlugin):
             print("{}".format(output))
 
         # Log file is already written at this point, so if we don't want it, delete it
-        if not (self.plugin_context and self.plugin_context.args.output_directory):
-            os.remove(log_file)
+        if self.plugin_context and self.plugin_context.args.output_directory:
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output)
 
