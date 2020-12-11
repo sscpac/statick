@@ -1,5 +1,5 @@
 """Apply lizard tool and gather results."""
-import json
+import os
 import re
 import subprocess
 import sys
@@ -25,13 +25,31 @@ class LizardToolPlugin(ToolPlugin):
             return []
 
         try:
-            ## The following is basically copy-pasted from lizard.py's main() ##
-            user_flags = [lizard.__file__] + self.get_user_flags(level) # leading None is required
+            ## The following is a modification of lizard.py's main() ##
+            user_flags = [lizard.__file__] + [package.path] + self.get_user_flags(level) # leading None is required
+            # Make sure we log warnings
             if '-w' not in user_flags:
                 user_flags += ['-w']
-            print('user_flags: {}'.format(user_flags))
+            
+            # Create desired logging extension for later
+            if ('-X' in user_flags) or ('--xml' in user_flags):
+                log_extension = '.xml'
+            elif '--csv' in user_flags:
+                log_extension = '.csv'
+            elif ('-H' in user_flags) or ('--html' in user_flags):
+                log_extension = '.html'
+            else:
+                log_extension = '.log'
+
+            # Make sure we log to a file for Statick
+            if '-o' not in user_flags:
+                log_file = self.get_name() + log_extension
+                user_flags += ['-o', log_file]
+            else:
+                # Get the log file name
+                log_file = user_flags[user_flags.index('-o') + 1]
+
             options = lizard.parse_args(user_flags)
-            # print(options)
             printer = options.printer or lizard.print_result
             schema = lizard.OutputScheme(options.extensions)
             if schema.any_silent():
@@ -39,48 +57,46 @@ class LizardToolPlugin(ToolPlugin):
             schema.patch_for_extensions()
             if options.input_file:
                 options.paths = lizard.auto_read(options.input_file).splitlines()
+
+            # Set up logging (sys.stdout now goes to file)
             original_stdout = sys.stdout
-            output_file = None
-            if options.output_file:
-                output_file = lizard.open_output_file(options.output_file)
-                sys.stdout = output_file
-            print("\nLizard options: {}\n".format(options))
-            # print('Lizard paths: {}'.format(options.paths))
-            # print('Lizard directory: {}'.format(src_dir))
-            print('options.printer: {}'.format(options.printer))
-            print('options.paths: {}'.format(options.paths))
-            print('options.exclude: {}'.format(options.exclude))
-            print('options.extensions: {}'.format(options.extensions))
-            print('options.languages: {}'.format(options.languages))
+            output_file = lizard.open_output_file(options.output_file)
+            sys.stdout = output_file
+
             result = lizard.analyze(
                 options.paths,
-                # src_dir,
                 options.exclude,
                 options.working_threads,
                 options.extensions,
                 options.languages)
             printer(result, options, schema, lizard.AllResult)
             lizard.print_extension_results(options.extensions)
-            result = "".join(list(result))
-            if output_file:
-                sys.stdout = original_stdout
-                output_file.close()
+            list(result)
 
-            # lizard output: /usr/src/gmock/src/gmock-spec-builders.cc:330: warning: testing::internal::GTEST_LOCK_EXCLUDED_ has 60 NLOC, 16 CCN, 414 token, 1 PARAM, 106 length
-            print("Lizard result: {}".format(result))
+            # Return to normal sys.stdout operation
+            sys.stdout = original_stdout
+            output_file.close()
+
+            # Read back written data for the rest of Statick
+            # There HAS to be a more elegant way to do this...
+            if output_file:
+                with open(log_file, 'r') as log_f:
+                    output = "".join(log_f.readlines())
 
         except OSError as ex:
             print("Couldn't find lizard executable! ({})".format(ex))
             return None
 
+
         if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(result))
+            print("{}".format(output))
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
-                fid.write(output)
+        # Log file is already written at this point, so if we don't want it, delete it
+        if not (self.plugin_context and self.plugin_context.args.output_directory):
+           os.remove(log_file) 
 
-        issues = self.parse_output(result)
+        issues = self.parse_output(output)
+
         return issues
 
     def parse_output(self, output: str) -> List[Issue]:
