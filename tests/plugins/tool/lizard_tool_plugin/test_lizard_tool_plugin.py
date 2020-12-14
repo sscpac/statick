@@ -144,12 +144,13 @@ def test_lizard_tool_plugin_scan_dump_comments(capsys):
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
+    output_package = os.path.join(package["src_dir"], "test.c")
     issues = ltp.scan(package, "any_silent")
     captured = capsys.readouterr()
     assert (
         captured.out
         == """====================
-{}/test.c
+{}
 --------------------
  Do nothing.
  Do nothing.
@@ -169,7 +170,7 @@ def test_lizard_tool_plugin_scan_dump_comments(capsys):
  Do nothing.
 
 """.format(
-            package["src_dir"]
+            output_package
         )
     )
     assert len(issues) == 0
