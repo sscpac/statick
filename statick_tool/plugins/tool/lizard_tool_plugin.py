@@ -11,6 +11,12 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
+def _valid_flag(flag: str) -> bool:
+    """Indicate if passed flag is invalid."""
+    if flag in ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]:
+        return False
+    return True
+
 class LizardToolPlugin(ToolPlugin):
     """Apply Lizard tool and gather results.
 
@@ -20,13 +26,6 @@ class LizardToolPlugin(ToolPlugin):
     def get_name(self) -> str:
         """Get name of tool."""
         return "lizard"
-
-    def _valid_flag(self, flag: str) -> bool:
-        """Indicate if passed flag is invalid."""
-        if flag in ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]:
-            return False
-        else:
-            return True
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
@@ -43,7 +42,7 @@ class LizardToolPlugin(ToolPlugin):
             raw_user_flags += ["-w"]
 
         # Make sure unsupported arguments are not included
-        user_flags = [x for x in raw_user_flags if self._valid_flag(x)]
+        user_flags = [x for x in raw_user_flags if _valid_flag(x)]
 
         options = lizard.parse_args(user_flags)
         printer = options.printer or lizard.print_result
