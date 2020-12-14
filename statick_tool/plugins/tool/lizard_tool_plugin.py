@@ -12,11 +12,21 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 class LizardToolPlugin(ToolPlugin):
-    """Apply Lizard tool and gather results."""
+    """Apply Lizard tool and gather results.
+
+    NOTE: The `-f/--input_file`, `-o/--output_file`, and `-Edumpcomments` options are unsupported
+    """
 
     def get_name(self) -> str:
         """Get name of tool."""
         return "lizard"
+
+    def _valid_flag(self, flag: str) -> bool:
+        """Indicate if passed flag is invalid."""
+        if flag in ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]:
+            return False
+        else:
+            return True
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
@@ -24,25 +34,21 @@ class LizardToolPlugin(ToolPlugin):
             return []
 
         # The following is a modification of lizard.py's main() #
-        user_flags = (
+        raw_user_flags = (
             [lizard.__file__] + [package.path] + self.get_user_flags(level)
         )  # leading lizard file name is required
 
         # Make sure we log warnings
-        if "-w" not in user_flags:
-            user_flags += ["-w"]
+        if "-w" not in raw_user_flags:
+            raw_user_flags += ["-w"]
+
+        # Make sure unsupported arguments are not included
+        user_flags = [x for x in raw_user_flags if self._valid_flag(x)]
 
         options = lizard.parse_args(user_flags)
         printer = options.printer or lizard.print_result
         schema = lizard.OutputScheme(options.extensions)
-        if schema.any_silent():
-            printer = lizard.silent_printer
         schema.patch_for_extensions()
-        if options.input_file:
-            options.paths = lizard.auto_read(options.input_file).splitlines()
-
-        if options.output_file:
-            output_file = lizard.open_output_file(options.output_file)
 
         try:
             result = lizard.analyze(
@@ -58,10 +64,6 @@ class LizardToolPlugin(ToolPlugin):
             output = lizard_output.getvalue()
             lizard.print_extension_results(options.extensions)
             list(result)
-
-            if options.output_file:
-                output_file.write(output)
-                output_file.close()
 
             if self.plugin_context:
                 if self.plugin_context.args.show_tool_output:
