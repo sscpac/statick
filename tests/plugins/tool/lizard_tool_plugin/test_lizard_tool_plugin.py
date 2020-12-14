@@ -14,7 +14,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_lizard_tool_plugin():
+def setup_lizard_tool_plugin(custom_rsc_path=None):
     """Initialize and return an instance of the lizard plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -24,9 +24,12 @@ def setup_lizard_tool_plugin():
         help="Show tool output",
     )
 
-    resources = Resources(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
+    if custom_rsc_path is not None:
+        resources = Resources([custom_rsc_path])
+    else:
+        resources = Resources(
+            [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
+        )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
@@ -124,3 +127,47 @@ def test_lizard_tool_plugin_scan_missing_fields():
     package = Package("", "")
     issues = ltp.scan(package, "level")
     assert not issues
+
+
+def test_lizard_tool_plugin_scan_dump_comments(capsys):
+    """
+    Test what happens when the `any_silent` option is enabled via `-Edumpcomments`
+
+    Expected result: issues is empty, stdout contains all comments of scanned file
+    """
+    ltp = setup_lizard_tool_plugin(os.path.dirname(__file__))
+
+    if not ltp.command_exists("lizard"):
+        pytest.skip("Can't find lizard, unable to test lizard plugin")
+
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
+    issues = ltp.scan(package, "any_silent")
+    captured = capsys.readouterr()
+    assert (
+        captured.out
+        == """====================
+/home/jhassold/statick/tests/plugins/tool/lizard_tool_plugin/valid_package/test.c
+--------------------
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+ Do nothing.
+
+"""
+    )
+    assert len(issues) == 0
