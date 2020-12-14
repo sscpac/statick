@@ -1,9 +1,7 @@
 """Unit tests for the lizard plugin."""
 import argparse
 import os
-import subprocess
 
-import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -126,39 +124,3 @@ def test_lizard_tool_plugin_scan_missing_fields():
     package = Package("", "")
     issues = ltp.scan(package, "level")
     assert not issues
-
-
-@mock.patch("statick_tool.plugins.tool.lizard_tool_plugin.subprocess.check_output")
-def test_lizard_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means lizard doesn't exist).
-
-    Expected result: issues is None
-    """
-    mock_subprocess_check_output.side_effect = OSError("mocked error")
-    ltp = setup_lizard_tool_plugin()
-    package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    )
-    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
-    issues = ltp.scan(package, "level")
-    assert issues is None
-
-
-@mock.patch("statick_tool.plugins.tool.lizard_tool_plugin.subprocess.check_output")
-def test_lizard_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means lizard hit an error).
-
-    Expected result: issues is None
-    """
-    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
-        2, "", output="mocked error"
-    )
-    ltp = setup_lizard_tool_plugin()
-    package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    )
-    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
-    issues = ltp.scan(package, "level")
-    assert issues is None
