@@ -1,8 +1,6 @@
 """Apply lizard tool and gather results."""
 import io
-import os
 import re
-import sys
 from contextlib import redirect_stdout
 from typing import List, Match, Optional, Pattern
 
@@ -65,16 +63,15 @@ class LizardToolPlugin(ToolPlugin):
                 output_file.write(output)
                 output_file.close()
 
+            if self.plugin_context:
+                if self.plugin_context.args.show_tool_output:
+                    print("{}".format(output))
+                if self.plugin_context.args.output_directory:
+                    with open(self.get_name() + ".log", "w") as fid:
+                        fid.write(output)
         except OSError as ex:
             print("Error occurred while running lizard! ({})".format(ex))
             return None
-
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
-
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
-                fid.write(output)
 
         issues = self.parse_output(output)
 
