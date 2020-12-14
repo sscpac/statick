@@ -17,6 +17,7 @@ def _valid_flag(flag: str) -> bool:
         return False
     return True
 
+
 class LizardToolPlugin(ToolPlugin):
     """Apply Lizard tool and gather results.
 
