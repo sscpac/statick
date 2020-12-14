@@ -149,7 +149,7 @@ def test_lizard_tool_plugin_scan_dump_comments(capsys):
     assert (
         captured.out
         == """====================
-/home/jhassold/statick/tests/plugins/tool/lizard_tool_plugin/valid_package/test.c
+{}/test.c
 --------------------
  Do nothing.
  Do nothing.
@@ -168,6 +168,8 @@ def test_lizard_tool_plugin_scan_dump_comments(capsys):
  Do nothing.
  Do nothing.
 
-"""
+""".format(
+            package["src_dir"]
+        )
     )
     assert len(issues) == 0
