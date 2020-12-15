@@ -9,10 +9,7 @@ import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.lizard_tool_plugin import (
-    LizardToolPlugin,
-    remove_invalid_flags,
-)
+from statick_tool.plugins.tool.lizard_tool_plugin import LizardToolPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
@@ -134,10 +131,11 @@ def test_lizard_tool_plugin_scan_missing_fields():
 
 def test_lizard_tool_plugin_valid_flag_filter():
     """
-    Test that valid flag filter removes unwanted flags
+    Test that valid flag filter removes unwanted flags.
 
     Expected result: flag list is empty
     """
+    ltp = setup_lizard_tool_plugin()
     flag_list = ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]
-    filtered_list = remove_invalid_flags(flag_list)
-    assert filtered_list == []
+    filtered_list = ltp.remove_invalid_flags(flag_list)
+    assert not filtered_list

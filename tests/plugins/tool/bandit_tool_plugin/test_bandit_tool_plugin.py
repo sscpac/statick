@@ -130,9 +130,9 @@ def test_bandit_tool_plugin_scan_wrong_binary():
 @mock.patch("statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output")
 def test_bandit_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
     """
-    Test what happens an OSError is hit (such as if bandit doesn't exist)
+    Test what happens an OSError is hit (such as if bandit doesn't exist).
 
-    Expected result: issues is an empty list
+    Expected result: issues is None
     """
     mock_subprocess_check_output.side_effect = OSError("mocked error")
     btp = setup_bandit_tool_plugin()
@@ -151,7 +151,7 @@ def test_bandit_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_
     """
     Test what happens when a CalledProcessError is hit (such as if bandit encounters an error).
 
-    Expected result: issues is an empty list
+    Expected result: issues is None
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
         2, "", output="mocked error"
