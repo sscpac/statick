@@ -10,12 +10,19 @@ from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
+DISABLED_FLAGS = ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]
+
 
 def _valid_flag(flag: str) -> bool:
     """Indicate if passed flag is invalid."""
-    if flag in ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]:
+    if flag in DISABLED_FLAGS:
         return False
     return True
+
+
+def remove_invalid_flags(flag_list: List[str]) -> List[str]:
+    """Filter out all flags in the DISABLED_FLAGS list."""
+    return [x for x in flag_list if _valid_flag(x)]
 
 
 class LizardToolPlugin(ToolPlugin):
@@ -43,7 +50,7 @@ class LizardToolPlugin(ToolPlugin):
             raw_user_flags += ["-w"]
 
         # Make sure unsupported arguments are not included
-        user_flags = [x for x in raw_user_flags if _valid_flag(x)]
+        user_flags = remove_invalid_flags(raw_user_flags)
 
         options = lizard.parse_args(user_flags)
         printer = options.printer or lizard.print_result
