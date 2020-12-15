@@ -1,0 +1,9 @@
+levels:
+  default:
+    tool:
+      lizard:
+        flags: ""
+  any_silent:
+    tool:
+      lizard:
+        flags: "-Edumpcomments"

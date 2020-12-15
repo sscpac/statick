@@ -1,9 +1,7 @@
 """Unit tests for the lizard plugin."""
 import argparse
 import os
-import subprocess
 
-import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -16,7 +14,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_lizard_tool_plugin():
+def setup_lizard_tool_plugin(custom_rsc_path=None):
     """Initialize and return an instance of the lizard plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -26,9 +24,12 @@ def setup_lizard_tool_plugin():
         help="Show tool output",
     )
 
-    resources = Resources(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
+    if custom_rsc_path is not None:
+        resources = Resources([custom_rsc_path])
+    else:
+        resources = Resources(
+            [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
+        )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
@@ -128,37 +129,13 @@ def test_lizard_tool_plugin_scan_missing_fields():
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.lizard_tool_plugin.subprocess.check_output")
-def test_lizard_tool_plugin_scan_oserror(mock_subprocess_check_output):
+def test_lizard_tool_plugin_valid_flag_filter():
     """
-    Test what happens when an OSError is raised (usually means lizard doesn't exist).
+    Test that valid flag filter removes unwanted flags.
 
-    Expected result: issues is None
+    Expected result: flag list is empty
     """
-    mock_subprocess_check_output.side_effect = OSError("mocked error")
     ltp = setup_lizard_tool_plugin()
-    package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    )
-    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
-    issues = ltp.scan(package, "level")
-    assert issues is None
-
-
-@mock.patch("statick_tool.plugins.tool.lizard_tool_plugin.subprocess.check_output")
-def test_lizard_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means lizard hit an error).
-
-    Expected result: issues is None
-    """
-    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
-        2, "", output="mocked error"
-    )
-    ltp = setup_lizard_tool_plugin()
-    package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    )
-    package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
-    issues = ltp.scan(package, "level")
-    assert issues is None
+    flag_list = ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]
+    filtered_list = ltp.remove_invalid_flags(flag_list)
+    assert not filtered_list

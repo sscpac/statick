@@ -1,7 +1,10 @@
 """Apply lizard tool and gather results."""
+import io
 import re
-import subprocess
+from contextlib import redirect_stdout
 from typing import List, Match, Optional, Pattern
+
+import lizard
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -9,7 +12,11 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 class LizardToolPlugin(ToolPlugin):
-    """Apply Lizard tool and gather results."""
+    """Apply Lizard tool and gather results.
+
+    Note: The `-f/--input_file`, `-o/--output_file`, and `-Edumpcomments`
+    options are unsupported.
+    """
 
     def get_name(self) -> str:
         """Get name of tool."""
@@ -20,31 +27,45 @@ class LizardToolPlugin(ToolPlugin):
         if not package.path:
             return []
 
-        try:
-            output = subprocess.check_output(
-                ["lizard", "-w", package.path], universal_newlines=True
-            )
+        # The following is a modification of lizard.py's main().
+        raw_user_flags = (
+            [lizard.__file__] + [package.path] + self.get_user_flags(level)
+        )  # Leading lizard file name is required.
 
-        except subprocess.CalledProcessError as ex:
-            if ex.returncode == 1:
-                output = ex.output
-            else:
-                print("Problem {}".format(ex.returncode))
-                print("{}".format(ex.output))
-                return None
+        # Make sure we log warnings.
+        if "-w" not in raw_user_flags:
+            raw_user_flags += ["-w"]
 
-        except OSError as ex:
-            print("Couldn't find lizard executable! ({})".format(ex))
-            return None
+        # Make sure unsupported arguments are not included.
+        user_flags = self.remove_invalid_flags(raw_user_flags)
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        options = lizard.parse_args(user_flags)
+        printer = options.printer or lizard.print_result
+        schema = lizard.OutputScheme(options.extensions)
+        schema.patch_for_extensions()
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
-                fid.write(output)
+        result = lizard.analyze(
+            options.paths,
+            options.exclude,
+            options.working_threads,
+            options.extensions,
+            options.languages,
+        )
+        lizard_output = io.StringIO()
+        with redirect_stdout(lizard_output):
+            printer(result, options, schema, lizard.AllResult)
+        output = lizard_output.getvalue()
+        lizard.print_extension_results(options.extensions)
+
+        if self.plugin_context:
+            if self.plugin_context.args.show_tool_output:
+                print("{}".format(output))
+            if self.plugin_context.args.output_directory:
+                with open(self.get_name() + ".log", "w") as fid:
+                    fid.write(output)
 
         issues = self.parse_output(output)
+
         return issues
 
     def parse_output(self, output: str) -> List[Issue]:
@@ -66,3 +87,15 @@ class LizardToolPlugin(ToolPlugin):
                 issues.append(issue)
 
         return issues
+
+    def remove_invalid_flags(self, flag_list: List[str]) -> List[str]:
+        """Filter out all disabled flags."""
+        return [x for x in flag_list if self.valid_flag(x)]
+
+    @classmethod
+    def valid_flag(cls, flag: str) -> bool:
+        """Indicate if passed flag is invalid."""
+        disabled_flags = ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]
+        if flag in disabled_flags:
+            return False
+        return True
