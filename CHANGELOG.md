@@ -12,6 +12,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.10 - 2020-12-15
+
+### Added
+
+- Add support to ROS discovery plugin for ROS2 Python-only packages that do not contain `CMakeLists.txt`.
+  Second attempt that fixed some bugs from first attempt.
+- Add section to the `README` about `statick_ws` usage.
+- Convert `lizard` tool plugin to use Python API and support user flags. (@jhdcs)
+
+### Fixed
+
+- Remove `~/_clang-format` after each unit test where it is copied to the home directory.
+- Fix bug in lizard tool plugin where the directory to scan for files was not set properly.
+  Thanks @jhdcs for finding the bug.
+- Ignoring any subdirectories in `statick_ws` if the current directory contains `CATKIN_IGNORE` or `AMENT_IGNORE`. (@xydesa)
+
 ## v0.4.9 - 2020-12-09
 
 ### Fixed
