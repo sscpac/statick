@@ -44,7 +44,7 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             sys.exit(1)
 
     ignore_packages = statick.get_ignore_packages()
-    ignore_files = ["AMENT_IGNORE", "COLCON_IGNORE", "CATKIN_IGNORE"]
+    ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
 
     packages = []
     for root, dirs, files in os.walk(parsed_args.path):
