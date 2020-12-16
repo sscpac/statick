@@ -44,10 +44,11 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             sys.exit(1)
 
     ignore_packages = statick.get_ignore_packages()
+    ignore_files = ["AMENT_IGNORE", "COLCON_IGNORE", "CATKIN_IGNORE"]
 
     packages = []
     for root, dirs, files in os.walk(parsed_args.path):
-        if "CATKIN_IGNORE" in files or "AMENT_IGNORE" in files or "COLCON_IGNORE" in files:
+        if any(item in files for item in ignore_files):
             dirs.clear()
             continue
         for sub_dir in dirs:
@@ -55,9 +56,7 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             files = os.listdir(full_dir)
             if (
                 "package.xml" in files
-                and "CATKIN_IGNORE" not in files
-                and "AMENT_IGNORE" not in files
-                and "COLCON_IGNORE" not in files
+                and not any(item in files for item in ignore_files)
             ):
                 if ignore_packages and sub_dir in ignore_packages:
                     continue
