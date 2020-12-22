@@ -2,9 +2,6 @@
 
 from __future__ import print_function
 
-import fnmatch
-import os
-import subprocess
 from collections import OrderedDict
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -20,30 +17,15 @@ class HTMLDiscoveryPlugin(DiscoveryPlugin):
     def scan(self, package, level, exceptions=None):
         """Scan package looking for HTML files."""
         src_files = []
-        globs = ["*.html"]
 
-        file_cmd_exists = True
-        if not DiscoveryPlugin.file_command_exists():
-            file_cmd_exists = False
+        self.find_files(package)
 
-        root = ""
-        files = []
-        for root, _, files in os.walk(package.path):
-            for glob in globs:
-                for f in fnmatch.filter(files, glob):
-                    full_path = os.path.join(root, f)
-                    src_files.append(os.path.abspath(full_path))
-
-            if file_cmd_exists:
-                for f in files:
-                    full_path = os.path.join(root, f)
-                    output = subprocess.check_output(
-                        ["file", full_path], universal_newlines=True
-                    )
-                    # pylint: disable=unsupported-membership-test
-                    if "HTML document" in output:
-                        # pylint: enable=unsupported-membership-test
-                        src_files.append(os.path.abspath(full_path))
+        for file_dict in package.files.values():
+            if (
+                file_dict["name"].endswith(".html")
+                or "html document" in file_dict["file_cmd_out"]
+            ):
+                src_files.append(file_dict["path"])
 
         src_files = list(OrderedDict.fromkeys(src_files))
 
