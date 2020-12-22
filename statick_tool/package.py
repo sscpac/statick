@@ -12,5 +12,5 @@ class Package(dict):  # type: ignore
         """Initialize package interface."""
         self.name = name
         self.path = path
-        self.walked = False
         self.files = {}  # type: Dict[str, Dict[str, str]]
+        self.__walked = False

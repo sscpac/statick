@@ -39,7 +39,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
     def find_files(self, package: Package) -> None:
         """Walk the package path exactly once to discover files for analysis."""
-        if package.walked:
+        if package._Package__walked:
             return
 
         for root, _, files in os.walk(package.path):
@@ -54,7 +54,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 }
                 package.files[abs_path] = file_dict
 
-        package.walked = True
+        package._Package__walked = True
 
     def get_file_cmd_output(self, full_path: str) -> str:
         """Run the file command (if it exists) on the supplied path."""
