@@ -25,7 +25,7 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
         for file_dict in package.files.values():
             if (
                 file_dict["name"].endswith(".pl")
-                or "perl script" in file_dict["file_cmd_out"].lower()
+                or "perl script" in file_dict["file_cmd_out"]
             ):
                 perl_files.append(file_dict["path"])
 

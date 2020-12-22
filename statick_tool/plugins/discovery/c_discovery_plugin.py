@@ -29,7 +29,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
                 c_files.append(file_dict["path"])
 
             if any(
-                item in file_dict["file_cmd_out"].lower() for item in c_output
+                item in file_dict["file_cmd_out"] for item in c_output
             ) and not file_dict["name"].endswith(".cfg"):
                 c_files.append(file_dict["path"])
 

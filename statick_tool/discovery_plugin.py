@@ -65,7 +65,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             output = subprocess.check_output(
                 ["file", full_path], universal_newlines=True
             )  # type: str
-            return output
+            return output.lower()
         except subprocess.CalledProcessError as ex:
             print("Failed to run 'file' command. Returncode = {}".format(ex.returncode))
             print("Exception output: {}".format(ex.output))

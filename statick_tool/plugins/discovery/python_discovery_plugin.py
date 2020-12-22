@@ -19,16 +19,15 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Scan package looking for python files."""
         python_files = []  # type: List[str]
-        python_output = ("python script", "Python script")
 
         self.find_files(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(".py"):
                 python_files.append(file_dict["path"])
-            elif any(
-                item in file_dict["file_cmd_out"] for item in python_output
-            ) and not file_dict["name"].endswith(".cfg"):
+            elif "python script" in file_dict["file_cmd_out"] and not file_dict[
+                "name"
+            ].endswith(".cfg"):
                 python_files.append(file_dict["path"])
 
         python_files = list(OrderedDict.fromkeys(python_files))
