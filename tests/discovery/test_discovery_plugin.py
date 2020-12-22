@@ -41,9 +41,7 @@ def modified_environ(*remove, **update):
 
 
 def test_discovery_plugin_find_files():
-    """
-    Test calling find files.
-    """
+    """Test calling find files."""
     dp = DiscoveryPlugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -71,9 +69,7 @@ def test_discovery_plugin_find_files():
 
 
 def test_discovery_plugin_find_files_multiple():
-    """
-    Test that find_files will only walk the path once.
-    """
+    """Test that find_files will only walk the path once."""
     dp = DiscoveryPlugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -88,9 +84,7 @@ def test_discovery_plugin_find_files_multiple():
 
 
 def test_discovery_plugin_get_file_cmd_output():
-    """
-    Test get_file_cmd_output.
-    """
+    """Test get_file_cmd_output."""
     dp = DiscoveryPlugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -100,9 +94,7 @@ def test_discovery_plugin_get_file_cmd_output():
 
 
 def test_discovery_plugin_get_file_cmd_output_no_file_cmd():
-    """
-    Test get_file_cmd_output when file command does not exist.
-    """
+    """Test get_file_cmd_output when file command does not exist."""
     with modified_environ(PATH=""):
         dp = DiscoveryPlugin()
         package = Package(
@@ -133,17 +125,13 @@ def test_discovery_plugin_get_file_cmd_output_calledprocess_error(
 
 
 def test_discovery_plugin_file_cmd_exists():
-    """
-    Test when file command exists.
-    """
+    """Test when file command exists."""
     dp = DiscoveryPlugin()
     assert dp.file_command_exists()
 
 
 def test_discovery_plugin_no_file_cmd():
-    """
-    Test when file command does not exist.
-    """
+    """Test when file command does not exist."""
     with modified_environ(PATH=""):
         dp = DiscoveryPlugin()
         assert not dp.file_command_exists()
