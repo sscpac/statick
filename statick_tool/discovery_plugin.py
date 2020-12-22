@@ -62,7 +62,9 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 ["file", full_path], universal_newlines=True
             )  # type: str
             return output
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError as ex:
+            print("Failed to run 'file' command. Returncode = {}".format(ex.returncode))
+            print("Exception output: {}".format(ex.output))
             return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
