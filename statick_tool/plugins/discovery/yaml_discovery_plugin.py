@@ -21,14 +21,12 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Scan package looking for YAML files."""
         yaml_files = []  # type: List[str]
-        globs = ["*.yaml"]  # type: List[str]
 
-        root = ""
-        for root, _, files in os.walk(package.path):
-            for glob in globs:
-                for f in fnmatch.filter(files, glob):
-                    full_path = os.path.join(root, f)
-                    yaml_files.append(os.path.abspath(full_path))
+        self.scan_once(package, level, exceptions)
+
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".yaml"):
+                yaml_files.append(file_dict["path"])
 
         yaml_files = list(OrderedDict.fromkeys(yaml_files))
 

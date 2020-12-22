@@ -10,3 +10,5 @@ class Package(dict):  # type: ignore
         """Initialize package interface."""
         self.name = name
         self.path = path
+        self.scanned = False
+        self.files = {}

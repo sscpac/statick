@@ -22,35 +22,16 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for C files."""
         c_files = []  # type: List[str]
         c_extensions = (".c", ".cc", ".cpp", ".cxx", ".h", ".hxx", ".hpp")
-        file_cmd_exists = True  # type: bool
-        if not DiscoveryPlugin.file_command_exists():
-            file_cmd_exists = False
+        c_output = ("c source", "c program", "c++ source")
 
-        for root, _, files in os.walk(package.path):
-            for f in files:
-                if f.lower().endswith(c_extensions):
-                    full_path = os.path.join(root, f)
-                    c_files.append(os.path.abspath(full_path))
-                elif file_cmd_exists:
-                    full_path = os.path.join(root, f)
-                    try:
-                        output = subprocess.check_output(
-                            ["file", full_path], universal_newlines=True
-                        )  # type: str
-                        if (
-                            "c source" in output.lower()
-                            or "c program" in output.lower()
-                            or "c++ source" in output.lower()
-                        ) and not f.endswith(".cfg"):
-                            c_files.append(os.path.abspath(full_path))
-                    except subprocess.CalledProcessError as ex:
-                        output = ex.output
-                        print(
-                            "C discovery failed! Returncode = {}".format(ex.returncode)
-                        )
-                        print("Exception output: {}".format(ex.output))
-                        package["c_src"] = []
-                        return
+        self.scan_once(package, level, exceptions)
+
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(c_extensions):
+                c_files.append(file_dict["path"])
+
+            if any(item in file_dict["file_cmd_out"].lower() for item in c_output) and not file_dict["name"].endswith(".cfg"):
+                c_files.append(file_dict["path"])
 
         c_files = list(OrderedDict.fromkeys(c_files))
 

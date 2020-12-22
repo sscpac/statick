@@ -23,36 +23,14 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for Perl files."""
         perl_files = []  # type: List[str]
 
-        file_cmd_exists = True  # type: bool
-        if not DiscoveryPlugin.file_command_exists():
-            file_cmd_exists = False
+        self.scan_once(package, level, exceptions)
 
-        for root, _, files in os.walk(package.path):
-            for f in fnmatch.filter(files, "*.pl"):
-                full_path = os.path.join(root, f)
-                perl_files.append(os.path.abspath(full_path))
-
-            if file_cmd_exists:
-                for f in files:
-                    full_path = os.path.join(root, f)
-                    try:
-                        output = subprocess.check_output(
-                            ["file", full_path], universal_newlines=True
-                        )  # type: str
-                        if "perl script" in output.lower():
-                            perl_files.append(os.path.abspath(full_path))
-                    except subprocess.CalledProcessError as ex:
-                        output = ex.output
-                        print(
-                            "Perl discovery failed! Returncode = {}".format(
-                                ex.returncode
-                            )
-                        )
-                        print("Exception output: {}".format(ex.output))
-                        package["perl_src"] = []
-                        return
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".pl") or "perl script" in file_dict["file_cmd_out"].lower():
+                perl_files.append(file_dict["path"])
 
         perl_files = list(OrderedDict.fromkeys(perl_files))
+        print(perl_files)
 
         print("  {} Perl files found.".format(len(perl_files)))
         if exceptions:

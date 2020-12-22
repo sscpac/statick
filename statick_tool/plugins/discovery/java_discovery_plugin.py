@@ -23,14 +23,13 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         java_src_files = []  # type: List[str]
         java_class_files = []  # type: List[str]
 
-        for root, _, files in os.walk(package.path):
-            for f in fnmatch.filter(files, "*.java"):
-                full_path = os.path.join(root, f)
-                java_src_files.append(os.path.abspath(full_path))
+        self.scan_once(package, level, exceptions)
 
-            for f in fnmatch.filter(files, "*.class"):
-                full_path = os.path.join(root, f)
-                java_class_files.append(os.path.abspath(full_path))
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".java"):
+                java_src_files.append(file_dict["path"])
+            if file_dict["name"].endswith(".class"):
+                java_class_files.append(file_dict["path"])
 
         java_src_files = list(OrderedDict.fromkeys(java_src_files))
         java_class_files = list(OrderedDict.fromkeys(java_class_files))

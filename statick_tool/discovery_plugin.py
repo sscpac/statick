@@ -1,5 +1,6 @@
 """Discovery plugin."""
 import os
+import subprocess
 import sys
 from typing import Any, List, Optional, Union
 
@@ -35,6 +36,40 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         If exceptions is passed, then the plugin should (if practical)
         use it to filter which files the plugin detects.
         """
+
+    def scan_once(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
+        """
+        Scan package to discover files for analysis.
+
+        If exceptions is passed, then the plugin should (if practical)
+        use it to filter which files the plugin detects.
+        """
+        if package.scanned:
+            return
+
+        for root, _, files in os.walk(package.path):
+            for f in files:
+                full_path = os.path.join(root, f)
+                abs_path = os.path.abspath(full_path)
+                file_output = self.get_file_cmd_output(full_path)
+                file_dict = {"name": f.lower(), "path": abs_path, "file_cmd_out": file_output}
+                package.files[abs_path] = file_dict
+
+        package.scanned = True
+
+    def get_file_cmd_output(self, full_path):
+        if not self.file_command_exists():
+            return ""
+
+        try:
+            output = subprocess.check_output(
+                ["file", full_path], universal_newlines=True
+            )  # type: str
+            return output
+        except subprocess.CalledProcessError as ex:
+            return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
