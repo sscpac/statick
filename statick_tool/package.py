@@ -13,4 +13,4 @@ class Package(dict):  # type: ignore
         self.name = name
         self.path = path
         self.files = {}  # type: Dict[str, Dict[str, str]]
-        self.__walked = False
+        self._walked = False

@@ -39,7 +39,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
     def find_files(self, package: Package) -> None:
         """Walk the package path exactly once to discover files for analysis."""
-        if package._Package__walked:
+        if package._walked:  # pylint: disable=protected-access
             return
 
         for root, _, files in os.walk(package.path):
@@ -54,7 +54,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 }
                 package.files[abs_path] = file_dict
 
-        package._Package__walked = True
+        package._walked = True  # pylint: disable=protected-access
 
     def get_file_cmd_output(self, full_path: str) -> str:
         """
