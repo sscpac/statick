@@ -12,6 +12,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.4.11 - 2020-12-22
+
+### Added
+
+- A big speedup improvement of roughly 3x was implemented for the discovery phase.
+  The main discovery plugin will now walk through the filesystem once per package and cache information about absolute
+  file paths and `file` command output.
+  Each discovery plugin can now use that cached information instead of walking the filesystem itself. (@xydesa)
+- Any directory with `COLCON_IGNORE` (and all of its subdirectories) will be ignored by `statick_ws`.
+  This is a standard file used by ROS2 to indicate that a ROS2 package should be ignored. (@xydesa)
+
 ## v0.4.10 - 2020-12-15
 
 ### Added
