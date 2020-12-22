@@ -1,6 +1,4 @@
 """Discover shell files to analyze."""
-import os
-import subprocess
 from collections import OrderedDict
 from typing import List, Optional
 

@@ -1,6 +1,4 @@
 """Discover XML files to analyze."""
-import fnmatch
-import os
 from collections import OrderedDict
 from typing import List, Optional, Tuple
 

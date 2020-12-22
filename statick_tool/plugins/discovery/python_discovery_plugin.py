@@ -1,7 +1,4 @@
 """Discover python files to analyze."""
-import fnmatch
-import os
-import subprocess
 from collections import OrderedDict
 from typing import List, Optional
 
