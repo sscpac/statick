@@ -21,7 +21,7 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
         xml_files = []  # type: List[str]
         xml_extensions = (".xml", ".launch")  # type: Tuple[str, str]
 
-        self.walk_once(package)
+        self.find_files(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(xml_extensions):

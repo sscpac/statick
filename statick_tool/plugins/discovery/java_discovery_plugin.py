@@ -21,7 +21,7 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         java_src_files = []  # type: List[str]
         java_class_files = []  # type: List[str]
 
-        self.walk_once(package)
+        self.find_files(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(".java"):

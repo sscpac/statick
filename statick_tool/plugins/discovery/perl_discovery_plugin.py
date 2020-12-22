@@ -20,7 +20,7 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for Perl files."""
         perl_files = []  # type: List[str]
 
-        self.walk_once(package)
+        self.find_files(package)
 
         for file_dict in package.files.values():
             if (

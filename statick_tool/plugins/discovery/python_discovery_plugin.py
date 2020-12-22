@@ -21,7 +21,7 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         python_files = []  # type: List[str]
         python_output = ("python script", "Python script")
 
-        self.walk_once(package)
+        self.find_files(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(".py"):

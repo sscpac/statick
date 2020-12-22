@@ -37,7 +37,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         use it to filter which files the plugin detects.
         """
 
-    def walk_once(self, package: Package) -> None:
+    def find_files(self, package: Package) -> None:
         """Walk the package path exactly once to discover files for analysis."""
         if package.walked:
             return
