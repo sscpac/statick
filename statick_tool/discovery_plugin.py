@@ -1,5 +1,6 @@
 """Discovery plugin."""
 import os
+import subprocess
 import sys
 from typing import Any, List, Optional, Union
 
@@ -35,6 +36,53 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         If exceptions is passed, then the plugin should (if practical)
         use it to filter which files the plugin detects.
         """
+
+    def find_files(self, package: Package) -> None:
+        """Walk the package path exactly once to discover files for analysis."""
+        if package._walked:  # pylint: disable=protected-access
+            return
+
+        for root, _, files in os.walk(package.path):
+            for f in files:
+                full_path = os.path.join(root, f)
+                abs_path = os.path.abspath(full_path)
+                file_output = self.get_file_cmd_output(full_path)
+                file_dict = {
+                    "name": f.lower(),
+                    "path": abs_path,
+                    "file_cmd_out": file_output,
+                }
+                package.files[abs_path] = file_dict
+
+        package._walked = True  # pylint: disable=protected-access
+
+    def get_file_cmd_output(self, full_path: str) -> str:
+        """
+        Run the file command (if it exists) on the supplied path.
+
+        The output from the file command is converted to lowercase.
+        There are two recommended ways to check it:
+        1. When searching for a single string just use the python "in" operator:
+
+            if "search string" in fild_dict["file_cmd_out"]:
+
+        2. When searching for multiple different strings, use the `any()` function:
+
+            expected_output = ("output_1", "output_2")
+            if any(item in file_dict["file_cmd_out"] for item in expected_output):
+        """
+        if not self.file_command_exists():
+            return ""
+
+        try:
+            output = subprocess.check_output(
+                ["file", full_path], universal_newlines=True
+            )  # type: str
+            return output.lower()
+        except subprocess.CalledProcessError as ex:
+            print("Failed to run 'file' command. Returncode = {}".format(ex.returncode))
+            print("Exception output: {}".format(ex.output))
+            return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""

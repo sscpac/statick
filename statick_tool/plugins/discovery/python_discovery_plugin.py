@@ -1,7 +1,4 @@
 """Discover python files to analyze."""
-import fnmatch
-import os
-import subprocess
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -23,38 +20,15 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for python files."""
         python_files = []  # type: List[str]
 
-        file_cmd_exists = True  # type: bool
-        if not DiscoveryPlugin.file_command_exists():
-            file_cmd_exists = False
+        self.find_files(package)
 
-        for root, _, files in os.walk(package.path):
-            for f in fnmatch.filter(files, "*.py"):
-                full_path = os.path.join(root, f)
-                python_files.append(os.path.abspath(full_path))
-
-            if file_cmd_exists:
-                for f in files:
-                    full_path = os.path.join(root, f)
-                    try:
-                        output = subprocess.check_output(
-                            ["file", full_path], universal_newlines=True
-                        )  # type: str
-                        # pylint: disable=unsupported-membership-test
-                        if (
-                            "python script" in output or "Python script" in output
-                        ) and not f.endswith(".cfg"):
-                            # pylint: enable=unsupported-membership-test
-                            python_files.append(os.path.abspath(full_path))
-                    except subprocess.CalledProcessError as ex:
-                        output = ex.output
-                        print(
-                            "Python discovery failed! Returncode = {}".format(
-                                ex.returncode
-                            )
-                        )
-                        print("Exception output: {}".format(ex.output))
-                        package["python_src"] = []
-                        return
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".py"):
+                python_files.append(file_dict["path"])
+            elif "python script" in file_dict["file_cmd_out"] and not file_dict[
+                "name"
+            ].endswith(".cfg"):
+                python_files.append(file_dict["path"])
 
         python_files = list(OrderedDict.fromkeys(python_files))
 

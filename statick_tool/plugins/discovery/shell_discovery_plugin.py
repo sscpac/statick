@@ -1,6 +1,4 @@
 """Discover shell files to analyze."""
-import os
-import subprocess
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -22,42 +20,16 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for shell files."""
         shell_files = []  # type: List[str]
         shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
+        shell_output = ("shell script", "dash script", "zsh script")
 
-        file_cmd_exists = True  # type: bool
-        if not DiscoveryPlugin.file_command_exists():
-            file_cmd_exists = False
+        self.find_files(package)
 
-        for root, _, files in os.walk(package.path):
-            for f in files:
-                if f.lower().endswith(shell_extensions):
-                    full_path = os.path.join(root, f)
-                    shell_files.append(os.path.abspath(full_path))
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(shell_extensions):
+                shell_files.append(file_dict["path"])
 
-            if file_cmd_exists:
-                for f in files:
-                    full_path = os.path.join(root, f)
-                    try:
-                        output = subprocess.check_output(
-                            ["file", full_path], universal_newlines=True
-                        )  # type: str
-                        # pylint: disable=unsupported-membership-test
-                        if (
-                            "shell script" in output
-                            or "dash script" in output
-                            or "zsh script" in output
-                        ):
-                            # pylint: enable=unsupported-membership-test
-                            shell_files.append(os.path.abspath(full_path))
-                    except subprocess.CalledProcessError as ex:
-                        output = ex.output
-                        print(
-                            "Shell discovery failed! Returncode = {}".format(
-                                ex.returncode
-                            )
-                        )
-                        print("Exception output: {}".format(ex.output))
-                        package["shell_src"] = []
-                        return
+            if any(item in file_dict["file_cmd_out"] for item in shell_output):
+                shell_files.append(file_dict["path"])
 
         shell_files = list(OrderedDict.fromkeys(shell_files))
 
