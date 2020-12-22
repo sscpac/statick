@@ -47,7 +47,11 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 full_path = os.path.join(root, f)
                 abs_path = os.path.abspath(full_path)
                 file_output = self.get_file_cmd_output(full_path)
-                file_dict = {"name": f.lower(), "path": abs_path, "file_cmd_out": file_output}
+                file_dict = {
+                    "name": f.lower(),
+                    "path": abs_path,
+                    "file_cmd_out": file_output,
+                }
                 package.files[abs_path] = file_dict
 
         package.walked = True
