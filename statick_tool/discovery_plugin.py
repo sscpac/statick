@@ -56,7 +56,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
         package.walked = True
 
-    def get_file_cmd_output(self, full_path):
+    def get_file_cmd_output(self, full_path: str) -> str:
         """Run the file command (if it exists) on the supplied path."""
         if not self.file_command_exists():
             return ""
