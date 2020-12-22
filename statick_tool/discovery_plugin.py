@@ -37,16 +37,9 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         use it to filter which files the plugin detects.
         """
 
-    def scan_once(
-        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
-    ) -> None:
-        """
-        Scan package to discover files for analysis.
-
-        If exceptions is passed, then the plugin should (if practical)
-        use it to filter which files the plugin detects.
-        """
-        if package.scanned:
+    def walk_once(self, package: Package) -> None:
+        """Walk the package path exactly once to discover files for analysis."""
+        if package.walked:
             return
 
         for root, _, files in os.walk(package.path):
@@ -57,9 +50,10 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 file_dict = {"name": f.lower(), "path": abs_path, "file_cmd_out": file_output}
                 package.files[abs_path] = file_dict
 
-        package.scanned = True
+        package.walked = True
 
     def get_file_cmd_output(self, full_path):
+        """Run the file command (if it exists) on the supplied path."""
         if not self.file_command_exists():
             return ""
 
@@ -68,7 +62,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 ["file", full_path], universal_newlines=True
             )  # type: str
             return output
-        except subprocess.CalledProcessError as ex:
+        except subprocess.CalledProcessError:
             return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:

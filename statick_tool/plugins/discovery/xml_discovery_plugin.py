@@ -2,7 +2,7 @@
 import fnmatch
 import os
 from collections import OrderedDict
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -21,14 +21,13 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Scan package looking for XML files."""
         xml_files = []  # type: List[str]
-        globs = ["*.xml", "*.launch"]  # type: List[str]
+        xml_extensions = (".xml", ".launch")  # type: Tuple[str, str]
 
-        root = ""
-        for root, _, files in os.walk(package.path):
-            for glob in globs:
-                for f in fnmatch.filter(files, glob):
-                    full_path = os.path.join(root, f)
-                    xml_files.append(os.path.abspath(full_path))
+        self.walk_once(package)
+
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(xml_extensions):
+                xml_files.append(file_dict["path"])
 
         xml_files = list(OrderedDict.fromkeys(xml_files))
 

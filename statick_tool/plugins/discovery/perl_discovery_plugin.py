@@ -23,14 +23,13 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for Perl files."""
         perl_files = []  # type: List[str]
 
-        self.scan_once(package, level, exceptions)
+        self.walk_once(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(".pl") or "perl script" in file_dict["file_cmd_out"].lower():
                 perl_files.append(file_dict["path"])
 
         perl_files = list(OrderedDict.fromkeys(perl_files))
-        print(perl_files)
 
         print("  {} Perl files found.".format(len(perl_files)))
         if exceptions:

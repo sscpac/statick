@@ -1,5 +1,7 @@
 """Package interface."""
 
+from typing import Dict
+
 
 class Package(dict):  # type: ignore
     """Default implementation of package interface."""
@@ -10,5 +12,5 @@ class Package(dict):  # type: ignore
         """Initialize package interface."""
         self.name = name
         self.path = path
-        self.scanned = False
-        self.files = {}
+        self.walked = False
+        self.files = {}  # type: Dict[str, Dict]

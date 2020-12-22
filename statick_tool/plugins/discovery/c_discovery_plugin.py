@@ -24,7 +24,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         c_extensions = (".c", ".cc", ".cpp", ".cxx", ".h", ".hxx", ".hpp")
         c_output = ("c source", "c program", "c++ source")
 
-        self.scan_once(package, level, exceptions)
+        self.walk_once(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(c_extensions):

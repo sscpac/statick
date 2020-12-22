@@ -24,7 +24,7 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
         shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
         shell_output = ("shell script", "dash script", "zsh script")
 
-        self.scan_once(package, level, exceptions)
+        self.walk_once(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(shell_extensions):

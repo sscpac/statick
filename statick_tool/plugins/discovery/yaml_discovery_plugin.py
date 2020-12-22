@@ -22,7 +22,7 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for YAML files."""
         yaml_files = []  # type: List[str]
 
-        self.scan_once(package, level, exceptions)
+        self.walk_once(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(".yaml"):
