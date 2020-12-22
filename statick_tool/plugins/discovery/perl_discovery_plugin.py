@@ -23,7 +23,10 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
         self.walk_once(package)
 
         for file_dict in package.files.values():
-            if file_dict["name"].endswith(".pl") or "perl script" in file_dict["file_cmd_out"].lower():
+            if (
+                file_dict["name"].endswith(".pl")
+                or "perl script" in file_dict["file_cmd_out"].lower()
+            ):
                 perl_files.append(file_dict["path"])
 
         perl_files = list(OrderedDict.fromkeys(perl_files))

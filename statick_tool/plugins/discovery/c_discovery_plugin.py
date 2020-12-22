@@ -28,7 +28,9 @@ class CDiscoveryPlugin(DiscoveryPlugin):
             if file_dict["name"].endswith(c_extensions):
                 c_files.append(file_dict["path"])
 
-            if any(item in file_dict["file_cmd_out"].lower() for item in c_output) and not file_dict["name"].endswith(".cfg"):
+            if any(
+                item in file_dict["file_cmd_out"].lower() for item in c_output
+            ) and not file_dict["name"].endswith(".cfg"):
                 c_files.append(file_dict["path"])
 
         c_files = list(OrderedDict.fromkeys(c_files))
