@@ -2,8 +2,6 @@
 
 from __future__ import print_function
 
-import fnmatch
-import os
 from collections import OrderedDict
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -20,10 +18,11 @@ class MarkdownDiscoveryPlugin(DiscoveryPlugin):
         """Scan package looking for Markdown files."""
         src_files = []
 
-        for root, _, files in os.walk(package.path):
-            for f in fnmatch.filter(files, "*.md"):
-                full_path = os.path.join(root, f)
-                src_files.append(os.path.abspath(full_path))
+        self.find_files(package)
+
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".md"):
+                src_files.append(file_dict["path"])
 
         src_files = list(OrderedDict.fromkeys(src_files))
 
