@@ -57,7 +57,20 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         package._Package__walked = True
 
     def get_file_cmd_output(self, full_path: str) -> str:
-        """Run the file command (if it exists) on the supplied path."""
+        """
+        Run the file command (if it exists) on the supplied path.
+
+        The output from the file command is converted to lowercase.
+        There are two recommended ways to check it:
+        1. When searching for a single string just use the python "in" operator:
+
+            if "search string" in fild_dict["file_cmd_out"]:
+
+        2. When searching for multiple different strings, use the `any()` function:
+
+            expected_output = ("output_1", "output_2")
+            if any(item in file_dict["file_cmd_out"] for item in expected_output):
+        """
         if not self.file_command_exists():
             return ""
 
