@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import argparse
+import io
 import multiprocessing
 import os
 import sys
@@ -17,6 +18,11 @@ from statick_tool.statick import Statick
 
 
 def scan_package(statick: Statick, parsed_args: argparse.Namespace, count: int, package: Package, num_packages: int) -> Dict[str, List[Issue]]:
+    sio = io.StringIO()
+    old_stdout = sys.stdout
+    old_stderr = sys.stderr
+    sys.stdout = sio
+    sys.stderr = sio
     print(
         "-- Scanning package "
         + package[0]
@@ -37,9 +43,15 @@ def scan_package(statick: Statick, parsed_args: argparse.Namespace, count: int, 
             + str(num_packages)
             + ") --"
         )
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+        print(sio.getvalue(), flush=True)
         return issues
     else:
         print("Failed to run statick on package " + package[0] + "!")
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+        print(sio.getvalue(), flush=True)
         sys.exit(1)
 
 def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
@@ -120,6 +132,7 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             count += 1
             mp_args.append((statick, parsed_args, count, package, num_packages))
 
+        print("-- Scanning {} packages --".format(num_packages))
         with multiprocessing.Pool(parsed_args.max_procs) as pool:
             total_issues = pool.starmap(scan_package, mp_args)
 
