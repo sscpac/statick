@@ -17,7 +17,13 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.statick import Statick
 
 
-def scan_package(statick: Statick, parsed_args: argparse.Namespace, count: int, package: Package, num_packages: int) -> Dict[str, List[Issue]]:
+def scan_package(
+    statick: Statick,
+    parsed_args: argparse.Namespace,
+    count: int,
+    package: Package,
+    num_packages: int,
+) -> Dict[str, List[Issue]]:
     """Function used by multiprocess to scan each package in a separate process while buffering output."""
     sio = io.StringIO()
     old_stdout = sys.stdout
@@ -55,11 +61,17 @@ def scan_package(statick: Statick, parsed_args: argparse.Namespace, count: int, 
         sys.exit(1)
     return issues
 
+
 def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     """Run statick_ws."""
     args = Args("Statick workspace tool")
     args.parser.add_argument("path", help="Path of workspace to scan")
-    args.parser.add_argument("--max_procs", type=int, default=int(multiprocessing.cpu_count()/2), help="Maximum number of procs")
+    args.parser.add_argument(
+        "--max_procs",
+        type=int,
+        default=int(multiprocessing.cpu_count() / 2),
+        help="Maximum number of procs",
+    )
     args.parser.add_argument(
         "--packages-file",
         dest="packages_file",
