@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 
+import multiprocessing
 import os
 import sys
 from typing import Dict, List, Optional
@@ -14,10 +15,37 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.statick import Statick
 
 
+def scan_package(statick, parsed_args, count, package, num_packages):
+    print(
+        "-- Scanning package "
+        + package[0]
+        + " ("
+        + str(count)
+        + " of "
+        + str(num_packages)
+        + ") --"
+    )
+    issues, dummy = statick.run(package[1], parsed_args)
+    if issues is not None:
+        print(
+            "-- Done scanning package "
+            + package[0]
+            + " ("
+            + str(count)
+            + " of "
+            + str(num_packages)
+            + ") --"
+        )
+        return issues
+    else:
+        print("Failed to run statick on package " + package[0] + "!")
+        sys.exit(1)
+
 def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     """Run statick_ws."""
     args = Args("Statick workspace tool")
     args.parser.add_argument("path", help="Path of workspace to scan")
+    args.parser.add_argument("--max_threads", type=int, default=int(multiprocessing.cpu_count()/2), help="Maximum number of threads")
     args.parser.add_argument(
         "--packages-file",
         dest="packages_file",
@@ -76,41 +104,24 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             sys.exit(1)
         packages = [package for package in packages if package[0] in packages_file_list]
 
-    count = 0
-    total_issues = []
-    issues = {}  # type: Optional[Dict[str, List[Issue]]]
-    for package in packages:
-        if parsed_args.list_packages:
-            print(
-                "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
-            )
-            continue
+    if parsed_args.list_packages:
+        for package in packages:
+                print(
+                    "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
+                )
+    else:
+        count = 0
+        total_issues = []
+        threads = []  # type: List[Thread]
+        issues = {}  # type: Optional[Dict[str, List[Issue]]]
+        num_packages = len(packages)
+        mp_args = []
+        for package in packages:
+            count += 1
+            mp_args.append((statick, parsed_args, count, package, num_packages))
 
-        count += 1
-        print(
-            "-- Scanning package "
-            + package[0]
-            + " ("
-            + str(count)
-            + " of "
-            + str(len(packages))
-            + ") --"
-        )
-        issues, dummy = statick.run(package[1], parsed_args)
-        if issues is not None:
-            total_issues.append(issues)
-        else:
-            print("Failed to run statick on package " + package[0] + "!")
-            sys.exit(1)
-        print(
-            "-- Done scanning package "
-            + package[0]
-            + " ("
-            + str(count)
-            + " of "
-            + str(len(packages))
-            + ") --"
-        )
+        with multiprocessing.Pool(parsed_args.max_threads) as pool:
+            total_issues = pool.starmap(scan_package, mp_args)
 
     if parsed_args.list_packages:
         sys.exit(0)
