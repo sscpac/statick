@@ -24,7 +24,8 @@ def scan_package(
     package: Package,
     num_packages: int,
 ) -> Dict[str, List[Issue]]:
-    """Function used by multiprocess to scan each package in a separate process while buffering output."""
+    """Function used by multiprocess to scan each package in a separate process while
+    buffering output."""
     sio = io.StringIO()
     old_stdout = sys.stdout
     old_stderr = sys.stderr
