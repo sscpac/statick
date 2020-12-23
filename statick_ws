@@ -18,6 +18,7 @@ from statick_tool.statick import Statick
 
 
 def scan_package(statick: Statick, parsed_args: argparse.Namespace, count: int, package: Package, num_packages: int) -> Dict[str, List[Issue]]:
+    """Function used by multiprocess to scan each package in a separate process while buffering output."""
     sio = io.StringIO()
     old_stdout = sys.stdout
     old_stderr = sys.stderr
@@ -46,13 +47,13 @@ def scan_package(statick: Statick, parsed_args: argparse.Namespace, count: int, 
         sys.stdout = old_stdout
         sys.stderr = old_stderr
         print(sio.getvalue(), flush=True)
-        return issues
     else:
         print("Failed to run statick on package " + package[0] + "!")
         sys.stdout = old_stdout
         sys.stderr = old_stderr
         print(sio.getvalue(), flush=True)
         sys.exit(1)
+    return issues
 
 def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     """Run statick_ws."""
@@ -119,9 +120,9 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
 
     if parsed_args.list_packages:
         for package in packages:
-                print(
-                    "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
-                )
+            print(
+                "%-40s: %s" % (package[0], statick.get_level(package[1], parsed_args))
+            )
     else:
         count = 0
         total_issues = []
