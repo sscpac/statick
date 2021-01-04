@@ -78,7 +78,7 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
         dest="max_procs",
         type=int,
         default=int(multiprocessing.cpu_count() / 2),
-        help="Maximum number of procs",
+        help="Maximum number of CPU cores to use",
     )
     args.parser.add_argument(
         "--packages-file",
@@ -99,8 +99,9 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    if parsed_args.max_procs == -1:
-        parsed_args.max_procs = multiprocessing.cpu_count()
+    max_cpus = multiprocessing.cpu_count()
+    if parsed_args.max_procs > max_cpus or parsed_args.max_procs == -1:
+        parsed_args.max_procs = max_cpus
     elif parsed_args.max_procs <= 0:
         parsed_args.max_procs = 1
 
