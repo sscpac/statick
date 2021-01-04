@@ -19,11 +19,12 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
     ) -> None:
         """Scan package looking for YAML files."""
         yaml_files = []  # type: List[str]
+        yaml_extensions = (".yaml", ".yml")
 
         self.find_files(package)
 
         for file_dict in package.files.values():
-            if file_dict["name"].endswith(".yaml"):
+            if file_dict["name"].endswith(yaml_extensions):
                 yaml_files.append(file_dict["path"])
 
         yaml_files = list(OrderedDict.fromkeys(yaml_files))
