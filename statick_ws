@@ -64,11 +64,18 @@ def scan_package(
 
 
 def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-    """Run statick_ws."""
+    """
+    Run statick_ws.
+
+    --max-procs can be set to the desired number of CPUs to use for processing a workspace.
+    This defaults to half the available CPUs.
+    Setting this to -1 will cause statick_ws to use all available CPUs.
+    """
     args = Args("Statick workspace tool")
     args.parser.add_argument("path", help="Path of workspace to scan")
     args.parser.add_argument(
-        "--max_procs",
+        "--max-procs",
+        dest="max_procs",
         type=int,
         default=int(multiprocessing.cpu_count() / 2),
         help="Maximum number of procs",
@@ -91,6 +98,11 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
     parsed_args = args.get_args()
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
+
+    if parsed_args.max_procs == -1:
+        parsed_args.max_procs = multiprocessing.cpu_count()
+    elif parsed_args.max_procs <= 0:
+        parsed_args.max_procs = 1
 
     if parsed_args.output_directory:
         out_dir = parsed_args.output_directory
@@ -146,7 +158,7 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
             count += 1
             mp_args.append((statick, parsed_args, count, package, num_packages))
 
-        print("-- Scanning {} packages --".format(num_packages))
+        print("-- Scanning {} packages --".format(num_packages), flush=True)
         with multiprocessing.Pool(parsed_args.max_procs) as pool:
             total_issues = pool.starmap(scan_package, mp_args)
 
