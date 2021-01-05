@@ -9,8 +9,7 @@ from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
-    """Writes Statick results to Jenkins Warnings-NG plugin json-log compatible
-    output."""
+    """Writes Statick results to Jenkins Warnings-NG json-log compatible output."""
 
     def get_name(self) -> str:
         """Return the plugin name."""
