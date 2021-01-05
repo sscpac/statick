@@ -639,7 +639,7 @@ To fix locally use
 ```shell
 python3 -m pip install black docformatter
 black statick statick_ws statick_tool tests
-docformatter -i <file> --wrap-summaries 88 --wrap-descriptions 88 --blank
+docformatter -i --wrap-summaries 88 --wrap-descriptions 88 --blank <file>
 ```
 
 ## Original Author
