@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Executable script for running statick against a single package.
-"""
+"""Executable script for running statick against a single package."""
 
 from __future__ import print_function
 
@@ -12,9 +10,7 @@ from statick_tool.statick import Statick
 
 
 def main() -> None:
-    """
-    Run statick.
-    """
+    """Run statick."""
     args = Args("Statick tool")
     args.parser.add_argument("path", help="Path of package to scan")
 

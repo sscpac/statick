@@ -17,8 +17,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
     def report(
         self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
-        """
-        Go through the issues list and print them to the console.
+        """Go through the issues list and print them to the console.
 
         Args:
             package (:obj:`Package`): The Package object that was analyzed.
@@ -26,6 +25,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
                 found by the Statick analysis, keyed by the tool that found
                 them.
             level: (:obj:`str`): Name of the level used in the scan
+
         """
         total = 0  # type: int
         for key, value in issues.items():

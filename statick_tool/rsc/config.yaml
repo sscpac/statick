@@ -119,6 +119,8 @@ levels:
     reporting:
       print_to_console:
     tool:
+      docformatter:
+        flags: "--wrap-summaries 88 --wrap-descriptions 88 --blank"
       mypy:
         flags: "--ignore-missing-imports"
       pydocstyle:

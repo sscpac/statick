@@ -1,7 +1,7 @@
-"""
-Apply shellcheck tool and gather results.
+"""Apply shellcheck tool and gather results.
 
 The output from the tool is collected in JSON format to facilitate parsing.
+
 """
 import argparse
 import json

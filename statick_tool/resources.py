@@ -1,18 +1,17 @@
-"""
-Manages plugin and file lookup chaining.
+"""Manages plugin and file lookup chaining.
 
 Handles chaining user directories and the default statick resource directory.
+
 """
 import os
 from typing import List, Optional
 
 
 class Resources:
-    """
-    Manages plugin and file lookup chaining.
+    """Manages plugin and file lookup chaining.
 
-    Handles chaining user directories and the default statick resource
-    directory.
+    Handles chaining user directories and the default statick resource directory.
+
     """
 
     def __init__(self, paths: List[str]) -> None:

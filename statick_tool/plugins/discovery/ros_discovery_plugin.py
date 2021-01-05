@@ -28,6 +28,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
 
         Copied from:
         https://stackoverflow.com/questions/25833613/python-safe-method-to-get-value-of-nested-dictionary
+
         """
         return reduce(
             lambda d, key: d.get(key, default) if isinstance(d, dict) else default,
