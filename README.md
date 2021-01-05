@@ -633,12 +633,13 @@ It is hoped that in the future we will generate coverage reports from mypy and u
 
 ### Formatting
 
-Statick code is formatted using [black](https://github.com/psf/black).
+Statick code is formatted using [black][black] and [docformatter][docformatter].
 To fix locally use
 
 ```shell
-python3 -m pip install black
+python3 -m pip install black docformatter
 black statick statick_ws statick_tool tests
+docformatter -i --wrap-summaries 88 --wrap-descriptions 88 <file>
 ```
 
 ## Original Author

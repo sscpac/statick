@@ -1,5 +1,4 @@
-"""
-Custom argument handling.
+"""Custom argument handling.
 
 Enable usage of user-paths argument before parsing other arguments.
 """
@@ -9,8 +8,7 @@ from typing import Any, List, Optional
 
 
 class Args:
-    """
-    Custom argument handling.
+    """Custom argument handling.
 
     Enable usage of user-paths argument before parsing other arguments.
     """

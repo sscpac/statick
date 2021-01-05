@@ -17,8 +17,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
     def report(
         self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
-        """
-        Go through the issues list and print them to the console.
+        """Go through the issues list and print them to the console.
 
         Args:
             package (:obj:`Package`): The Package object that was analyzed.

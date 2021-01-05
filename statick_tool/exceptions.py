@@ -1,5 +1,4 @@
-"""
-Exceptions interface.
+"""Exceptions interface.
 
 Exceptions allow for ignoring detected issues. This is commonly done to
 suppress false positives or to ignore issues that a group has no intention
@@ -82,12 +81,11 @@ class Exceptions:
     def filter_file_exceptions_early(
         self, package: Package, file_list: List[str]
     ) -> List[str]:
-        """
-        Filter files based on file pattern exceptions list.
+        """Filter files based on file pattern exceptions list.
 
-        Only filters files which have tools=all, intended for use after the
-        discovery plugins have been run (so that Statick doesn't run the tool
-        plugins against files which will be ignored anyway).
+        Only filters files which have tools=all, intended for use after the discovery
+        plugins have been run (so that Statick doesn't run the tool plugins against
+        files which will be ignored anyway).
         """
         exceptions = self.get_exceptions(package)  # type: Dict[Any, Any]
         to_remove = []
@@ -184,11 +182,10 @@ class Exceptions:
         return issues
 
     def filter_nolint(self, issues: Dict[str, List[Issue]]) -> Dict[str, List[Issue]]:
-        """
-        Filter out lines that have an explicit NOLINT on them.
+        """Filter out lines that have an explicit NOLINT on them.
 
-        Sometimes the tools themselves don't properly filter these out if
-        there is a complex macro or something.
+        Sometimes the tools themselves don't properly filter these out if there is a
+        complex macro or something.
         """
         for tool, tool_issues in list(issues.items()):
             warning_printed = False  # type: bool
@@ -224,8 +221,7 @@ class Exceptions:
 
     @classmethod
     def print_exception_warning(cls, tool: str) -> None:
-        """
-        Print warning about exception not being applied for an issue.
+        """Print warning about exception not being applied for an issue.
 
         Warning will only be printed once per tool.
         """

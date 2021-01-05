@@ -64,8 +64,7 @@ def scan_package(
 
 
 def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-    """
-    Run statick_ws.
+    """Run statick_ws.
 
     --max-procs can be set to the desired number of CPUs to use for processing a workspace.
     This defaults to half the available CPUs.

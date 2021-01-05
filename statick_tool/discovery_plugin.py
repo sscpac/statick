@@ -30,11 +30,10 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """
-        Scan package to discover files for analysis.
+        """Scan package to discover files for analysis.
 
-        If exceptions is passed, then the plugin should (if practical)
-        use it to filter which files the plugin detects.
+        If exceptions is passed, then the plugin should (if practical) use it to filter
+        which files the plugin detects.
         """
 
     def find_files(self, package: Package) -> None:
@@ -57,8 +56,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         package._walked = True  # pylint: disable=protected-access
 
     def get_file_cmd_output(self, full_path: str) -> str:
-        """
-        Run the file command (if it exists) on the supplied path.
+        """Run the file command (if it exists) on the supplied path.
 
         The output from the file command is converted to lowercase.
         There are two recommended ways to check it:

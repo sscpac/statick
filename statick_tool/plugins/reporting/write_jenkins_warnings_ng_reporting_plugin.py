@@ -9,7 +9,7 @@ from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
-    """Writes Statick results to Jenkins Warnings-NG plugin json-log compatible output."""
+    """Writes Statick results to Jenkins Warnings-NG json-log compatible output."""
 
     def get_name(self) -> str:
         """Return the plugin name."""
@@ -18,8 +18,7 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
     def report(
         self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
-        """
-        Write the results to Jenkins Warnings-NG plugin compatible file.
+        """Write the results to Jenkins Warnings-NG plugin compatible file.
 
         Args:
             package (:obj:`Package`): The Package object that was analyzed.
