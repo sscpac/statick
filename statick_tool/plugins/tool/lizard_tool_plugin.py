@@ -16,7 +16,6 @@ class LizardToolPlugin(ToolPlugin):
 
     Note: The `-f/--input_file`, `-o/--output_file`, and `-Edumpcomments`
     options are unsupported.
-
     """
 
     def get_name(self) -> str:

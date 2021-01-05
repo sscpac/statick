@@ -69,7 +69,6 @@ def main() -> None:  # pylint: disable=too-many-locals, too-many-branches, too-m
     --max-procs can be set to the desired number of CPUs to use for processing a workspace.
     This defaults to half the available CPUs.
     Setting this to -1 will cause statick_ws to use all available CPUs.
-
     """
     args = Args("Statick workspace tool")
     args.parser.add_argument("path", help="Path of workspace to scan")

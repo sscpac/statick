@@ -26,7 +26,6 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
                 found by the Statick analysis, keyed by the tool that found
                 them.
             level: (:obj:`str`): Name of the level used in the scan.
-
         """
         if self.plugin_context is None:
             return None, False

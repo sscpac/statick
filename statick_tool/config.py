@@ -1,7 +1,6 @@
 """Manages which plugins are run for each statick scan level.
 
 Sets what flags are used for each plugin at those levels.
-
 """
 import os
 from collections import OrderedDict
@@ -14,7 +13,6 @@ class Config:
     """Manages which plugins are run for each statick scan level.
 
     Sets what flags are used for each plugin at those levels.
-
     """
 
     def __init__(self, filename: Optional[str]) -> None:

@@ -25,7 +25,6 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
                 found by the Statick analysis, keyed by the tool that found
                 them.
             level: (:obj:`str`): Name of the level used in the scan
-
         """
         total = 0  # type: int
         for key, value in issues.items():

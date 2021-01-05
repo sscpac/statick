@@ -141,7 +141,6 @@ class CCCCToolPlugin(ToolPlugin):
         http://sarnold.github.io/cccc/CCCC_User_Guide.html#config
 
         `cccc --opt_outfile=cccc.opt`
-
         """
         config = {}  # type: Dict[Any, Any]
 
@@ -215,7 +214,6 @@ class CCCCToolPlugin(ToolPlugin):
         The name given in CCCC results is different than the name given in CCCC
         configuration. This will map the name in the configuration file to the name
         given in the results.
-
         """
         name_id = ""
 

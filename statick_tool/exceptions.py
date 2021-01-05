@@ -9,7 +9,6 @@ If using filename matching for the exception it is required that the
 reported issue contain the absolute path to the file containing the issue
 to be ignored. The path for the issue is set in the tool plugin that
 generates the issues.
-
 """
 import fnmatch
 import os
@@ -87,7 +86,6 @@ class Exceptions:
         Only filters files which have tools=all, intended for use after the discovery
         plugins have been run (so that Statick doesn't run the tool plugins against
         files which will be ignored anyway).
-
         """
         exceptions = self.get_exceptions(package)  # type: Dict[Any, Any]
         to_remove = []
@@ -188,7 +186,6 @@ class Exceptions:
 
         Sometimes the tools themselves don't properly filter these out if there is a
         complex macro or something.
-
         """
         for tool, tool_issues in list(issues.items()):
             warning_printed = False  # type: bool
@@ -227,7 +224,6 @@ class Exceptions:
         """Print warning about exception not being applied for an issue.
 
         Warning will only be printed once per tool.
-
         """
         print(
             "[WARNING] File exceptions not available for {} tool "

@@ -1,7 +1,6 @@
 """Custom argument handling.
 
 Enable usage of user-paths argument before parsing other arguments.
-
 """
 import argparse
 import os
@@ -12,7 +11,6 @@ class Args:
     """Custom argument handling.
 
     Enable usage of user-paths argument before parsing other arguments.
-
     """
 
     def __init__(self, name: str) -> None:

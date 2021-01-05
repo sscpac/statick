@@ -34,7 +34,6 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
         If exceptions is passed, then the plugin should (if practical) use it to filter
         which files the plugin detects.
-
         """
 
     def find_files(self, package: Package) -> None:
@@ -69,7 +68,6 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
 
             expected_output = ("output_1", "output_2")
             if any(item in file_dict["file_cmd_out"] for item in expected_output):
-
         """
         if not self.file_command_exists():
             return ""
