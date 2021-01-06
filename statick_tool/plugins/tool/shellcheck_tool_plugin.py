@@ -37,7 +37,7 @@ class ShellcheckToolPlugin(ToolPlugin):
         if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
             shellcheck_bin = self.plugin_context.args.shellcheck_bin
 
-        # Get output in GCC format.
+        # Get output in JSON format.
         flags = ["-f", "json"]  # type: List[str]
         flags += self.get_user_flags(level)
 
