@@ -37,10 +37,9 @@ class PrintJsonReportingPlugin(ReportingPlugin):
                 issue_dict["type"] = issue.issue_type
                 issue_dict["severity"] = issue.severity
                 issue_dict["message"] = issue.message
+                issue_dict["certReference"] = ""
                 if issue.cert_reference:
                     issue_dict["certReference"] = issue.cert_reference
-                else:
-                    issue_dict["certReference"] = ""
                 all_issues.append(issue_dict)
         report_json = {"issues": all_issues}
         line = json.dumps(report_json)
