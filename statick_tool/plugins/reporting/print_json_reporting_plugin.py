@@ -1,5 +1,6 @@
 """Prints the Statick reports out to the terminal in JSON format."""
 import json
+from collections import OrderedDict
 from typing import Dict, List, Optional, Tuple
 
 from statick_tool.issue import Issue
@@ -29,14 +30,13 @@ class PrintJsonReportingPlugin(ReportingPlugin):
         all_issues = []
         for _, value in issues.items():
             for issue in value:
-                issue_dict = {
-                    "fileName": issue.filename,
-                    "lineNumber": issue.line_number,
-                    "tool": issue.tool,
-                    "type": issue.issue_type,
-                    "severity": issue.severity,
-                    "message": issue.message,
-                }
+                issue_dict = OrderedDict()
+                issue_dict["fileName"] = issue.filename
+                issue_dict["lineNumber"] = issue.line_number
+                issue_dict["tool"] = issue.tool
+                issue_dict["type"] = issue.issue_type
+                issue_dict["severity"] = issue.severity
+                issue_dict["message"] = issue.message
                 if issue.cert_reference:
                     issue_dict["certReference"] = issue.cert_reference
                 else:
