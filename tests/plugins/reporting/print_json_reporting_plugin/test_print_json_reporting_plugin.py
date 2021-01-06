@@ -1,4 +1,4 @@
-"""Unit tests for the console reporting plugin."""
+"""Unit tests for the print JSON reporting plugin."""
 import json
 import os
 
@@ -39,7 +39,7 @@ def test_print_json_reporting_plugin_found():
 
 def test_print_json_reporting_plugin_report_cert(capsys):
     """Test the output of the reporting plugin."""
-    ptcrp = PrintJsonReportingPlugin()
+    pjrp = PrintJsonReportingPlugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -49,7 +49,7 @@ def test_print_json_reporting_plugin_report_cert(capsys):
         ]
     }
 
-    ptcrp.report(package, issues, "level")
+    pjrp.report(package, issues, "level")
     captured = capsys.readouterr()
     output = captured.out.splitlines()[0]
     assert (
@@ -61,7 +61,7 @@ def test_print_json_reporting_plugin_report_cert(capsys):
 
 def test_print_json_reporting_plugin_report_nocert(capsys):
     """Test the output of the reporting plugin."""
-    ptcrp = PrintJsonReportingPlugin()
+    pjrp = PrintJsonReportingPlugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -72,7 +72,7 @@ def test_print_json_reporting_plugin_report_nocert(capsys):
         ]
     }
 
-    ptcrp.report(package, issues, "level")
+    pjrp.report(package, issues, "level")
     captured = capsys.readouterr()
     output = captured.out.splitlines()[0]
     assert (
