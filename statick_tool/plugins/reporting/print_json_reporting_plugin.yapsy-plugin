@@ -1,0 +1,3 @@
+[Core]
+Name = Print JSON Reporting Plugin
+Module = print_json_reporting_plugin
