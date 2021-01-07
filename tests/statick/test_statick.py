@@ -11,7 +11,7 @@ import pytest
 
 from statick_tool.args import Args
 from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
-from statick_tool.statick import Statick
+from statick_tool.statick import Statick, scan_package
 
 
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment
@@ -1168,5 +1168,62 @@ def test_run_workspace_no_config():
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_scan_package():
+    """Test running Statick via the scan_package function used in multiprocessing."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.dirname(__file__),
+        "--path",
+        os.path.dirname(__file__),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues = scan_package(statick, parsed_args, 1, path, 1)
+    assert issues is None
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_scan_package_with_issues():
+    """Test running Statick via the scan_package function used in multiprocessing."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.dirname(__file__),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_package"),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
+        ),
+        "--exceptions",
+        os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    package = ("test_package", path)
+    issues = scan_package(statick, parsed_args, 1, package, 1)
+    assert len(issues['pylint']) == 1
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
     except OSError as ex:
         print("Error: {}".format(ex))
