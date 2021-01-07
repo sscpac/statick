@@ -776,9 +776,21 @@ def test_run_workspace():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -796,7 +808,7 @@ def test_run_workspace_one_proc():
         "--path",
         os.path.join(os.path.dirname(__file__), "test_workspace"),
         "--max-procs",
-        "0"
+        "0",
     ]
     parsed_args = args.get_args(sys.argv)
     statick.get_config(parsed_args)
@@ -806,9 +818,21 @@ def test_run_workspace_one_proc():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -826,7 +850,7 @@ def test_run_workspace_max_proc():
         "--path",
         os.path.join(os.path.dirname(__file__), "test_workspace"),
         "--max-procs",
-        "-1"
+        "-1",
     ]
     parsed_args = args.get_args(sys.argv)
     statick.get_config(parsed_args)
@@ -836,9 +860,21 @@ def test_run_workspace_max_proc():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -863,9 +899,21 @@ def test_run_workspace_output_is_not_a_directory():
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -895,9 +943,21 @@ def test_run_workspace_package_is_ignored():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -923,9 +983,21 @@ def test_run_workspace_list_packages():
     assert issues is None
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -957,9 +1029,21 @@ def test_run_workspace_packages_file():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -990,9 +1074,21 @@ def test_run_workspace_no_packages_file():
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1026,9 +1122,21 @@ def test_run_workspace_no_reporting_plugins():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1062,9 +1170,21 @@ def test_run_workspace_invalid_reporting_plugins():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1097,12 +1217,24 @@ def test_run_workspace_with_issues():
     statick.get_exceptions(parsed_args)
     issues, success = statick.run_workspace(parsed_args)
     # we expect two docstring errors
-    assert len(issues['pylint']) == 2
+    assert len(issues["pylint"]) == 2
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1136,7 +1268,13 @@ def test_run_workspace_invalid_level():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-default_value"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__),
+                "test_workspace",
+                "all_packages-default_value",
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1165,9 +1303,21 @@ def test_run_workspace_no_config():
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1222,7 +1372,7 @@ def test_scan_package_with_issues():
     statick.get_exceptions(parsed_args)
     package = ("test_package", path)
     issues = scan_package(statick, parsed_args, 1, package, 1)
-    assert len(issues['pylint']) == 1
+    assert len(issues["pylint"]) == 1
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
     except OSError as ex:

@@ -24,6 +24,7 @@ def run(statick: Statick, parsed_args: argparse.Namespace) -> bool:
             success = False
     return success
 
+
 def main() -> None:
     """Run statick."""
     args = Args("Statick tool")

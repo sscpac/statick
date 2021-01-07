@@ -154,7 +154,7 @@ class Statick:
             "-ws",
             dest="workspace",
             action="store_true",
-            help="Treat the path argument as a workspace of multiple packages"
+            help="Treat the path argument as a workspace of multiple packages",
         )
         args.add_argument(
             "--max-procs",
@@ -395,9 +395,14 @@ class Statick:
         print("Done!")
 
         return issues, success
-# , args: argparse.Namespace
 
-    def run_workspace(self, parsed_args: argparse.Namespace) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+    # , args: argparse.Namespace
+
+    def run_workspace(
+        self, parsed_args: argparse.Namespace
+    ) -> Tuple[
+        Optional[Dict[str, List[Issue]]], bool
+    ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
         """Run statick on a workspace.
 
         --max-procs can be set to the desired number of CPUs to use for processing a workspace.
@@ -447,12 +452,16 @@ class Statick:
             except OSError:
                 print("Packages file not found")
                 return None, False
-            packages = [package for package in packages if package[0] in packages_file_list]
+            packages = [
+                package for package in packages if package[0] in packages_file_list
+            ]
 
         if parsed_args.list_packages:
             for package in packages:
                 print(
-                    "{:40}: {}".format(package[0], self.get_level(package[1], parsed_args))
+                    "{:40}: {}".format(
+                        package[0], self.get_level(package[1], parsed_args)
+                    )
                 )
             return None, True
 
@@ -499,7 +508,9 @@ class Statick:
                 print("Can't find specified level {} in config!".format(level))
                 enabled_reporting_plugins = list(available_reporting_plugins)
             else:
-                enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(level)
+                enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
+                    level
+                )
         else:
             enabled_reporting_plugins = list(available_reporting_plugins)
 
