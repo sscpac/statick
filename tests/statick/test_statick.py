@@ -1,7 +1,6 @@
 """Unit tests of statick.py."""
 
 import contextlib
-import multiprocessing
 import os
 import shutil
 import subprocess
@@ -582,8 +581,9 @@ def test_run_no_reporting_plugins(init_statick):
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
     issues, success = statick.run(path, parsed_args)
-    assert issues is None
-    assert not success
+    for tool in issues:
+        assert not issues[tool]
+    assert success
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
@@ -759,25 +759,6 @@ def test_run_workspace():
     """Test running Statick on a workspace."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
-    args.parser.add_argument(
-            "--max-procs",
-            dest="max_procs",
-            type=int,
-            default=int(multiprocessing.cpu_count() / 2),
-            help="Maximum number of CPU cores to use, only used when running on a workspace",
-            )
-    args.parser.add_argument(
-            "--packages-file",
-            dest="packages_file",
-            type=str,
-            help="File listing packages to scan, only used when running on a workspace",
-            )
-    args.parser.add_argument(
-            "--list-packages",
-            dest="list_packages",
-            action="store_true",
-            help="List packages and levels, only used when running on a workspace",
-            )
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
@@ -793,6 +774,293 @@ def test_run_workspace():
     issues, success = statick.run_workspace(parsed_args)
     for tool in issues:
         assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_one_proc():
+    """Test running Statick on a workspace."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--max-procs",
+        "0"
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_max_proc():
+    """Test running Statick on a workspace."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--max-procs",
+        "-1"
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_output_is_not_a_directory():
+    """Test running Statick on a workspace."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        "/tmp/not_a_directory",
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    assert issues is None
+    assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_package_is_ignored():
+    """
+    Test that ignored package is ignored.
+
+    Expected results: issues is empty and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--exceptions",
+        os.path.join(os.path.dirname(__file__), "rsc", "exceptions-test.yaml"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_list_packages():
+    """Test running Statick on a workspace but only listing packages."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--list-packages",
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    assert issues is None
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_packages_file():
+    """
+    Test running only on packages in the packages file.
+
+    Expected results: issues is empty and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--packages-file",
+        os.path.join(os.path.dirname(__file__), "rsc", "packages-file-test.txt"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_no_packages_file():
+    """
+    Test running on workspace without packages file.
+
+    Expected results: issues is empty and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--packages-file",
+        "/tmp/not_a_packages_file.txt",
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    assert issues is None
+    assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_no_reporting_plugins():
+    """
+    Test that no reporting plugins returns unsuccessful.
+
+    Expected results: issues is empty and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
+        ),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_invalid_reporting_plugins():
+    """
+    Test that invalid reporting plugins returns unsuccessful.
+
+    Expected results: issues is empty and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-invalid-reporting-plugins.yaml"
+        ),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))

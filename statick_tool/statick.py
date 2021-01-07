@@ -149,6 +149,33 @@ class Statick:
             help="Suffix to use when searching for CERT mapping files",
         )
 
+        # statick workspace arguments
+        args.add_argument(
+            "-ws",
+            dest="workspace",
+            action="store_true",
+            help="Treat the path argument as a workspace of multiple packages"
+        )
+        args.add_argument(
+            "--max-procs",
+            dest="max_procs",
+            type=int,
+            default=int(multiprocessing.cpu_count() / 2),
+            help="Maximum number of CPU cores to use, only used when running on a workspace",
+        )
+        args.add_argument(
+            "--packages-file",
+            dest="packages_file",
+            type=str,
+            help="File listing packages to scan, only used when running on a workspace",
+        )
+        args.add_argument(
+            "--list-packages",
+            dest="list_packages",
+            action="store_true",
+            help="List packages and levels, only used when running on a workspace",
+        )
+
         for _, plugin in list(self.discovery_plugins.items()):
             plugin.gather_args(args)
 
@@ -387,7 +414,7 @@ class Statick:
             out_dir = parsed_args.output_directory
             if not os.path.isdir(out_dir):
                 print("Output directory not found at " + out_dir + "!")
-                return
+                return None, False
 
         ignore_packages = self.get_ignore_packages()
         ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
@@ -419,13 +446,13 @@ class Statick:
                     ]
             except OSError:
                 print("Packages file not found")
-                return
+                return None, False
             packages = [package for package in packages if package[0] in packages_file_list]
 
         if parsed_args.list_packages:
             for package in packages:
                 print(
-                    "%-40s: %s" % (package[0], self.get_level(package[1], parsed_args))
+                    "{:40}: {}".format(package[0], self.get_level(package[1], parsed_args))
                 )
         else:
             count = 0
@@ -442,23 +469,27 @@ class Statick:
                 total_issues = pool.starmap(scan_package, mp_args)
 
         if parsed_args.list_packages:
-            return [], True
+            return None, True
 
         print("-- All packages run --")
         print("-- overall report --")
 
         success = True
-        for issue in total_issues:
-            for key, value in list(issue.items()):
-                if issues is not None:
-                    if key in issues:
-                        issues[key] += value
-                        success = False
-                    else:
-                        issues[key] = value
-                        success = False
-                else:
-                    success = False
+        if total_issues is not None:
+            for issue in total_issues:
+                if issue is not None:
+                    for key, value in list(issue.items()):
+                        if issues is not None:
+                            if key in issues:
+                                issues[key] += value
+                                if value:
+                                    success = False
+                            else:
+                                issues[key] = value
+                                if value:
+                                    success = False
+                        else:
+                            success = False
 
         # Make a fake 'all' package for reporting
         dummy_all_package = Package("all_packages", parsed_args.path)
@@ -481,6 +512,7 @@ class Statick:
         for plugin_name in enabled_reporting_plugins:
             if plugin_name not in available_reporting_plugins:
                 print("Can't find specified reporting plugin {}!".format(plugin_name))
+                continue
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
             print("Running {} reporting plugin...".format(plugin.get_name()))
@@ -496,7 +528,7 @@ def scan_package(
     count: int,
     package: Package,
     num_packages: int,
-) -> Dict[str, List[Issue]]:
+) -> Optional[Dict[str, List[Issue]]]:
     """Scan each package in a separate process while buffering output."""
     sio = io.StringIO()
     old_stdout = sys.stdout
@@ -531,5 +563,4 @@ def scan_package(
         sys.stdout = old_stdout
         sys.stderr = old_stderr
         print(sio.getvalue(), flush=True)
-        sys.exit(1)
     return issues
