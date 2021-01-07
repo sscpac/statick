@@ -3,16 +3,55 @@
 
 from __future__ import print_function
 
+import multiprocessing
 import sys
 
 from statick_tool.args import Args
 from statick_tool.statick import Statick
 
 
+def run(statick, parsed_args) -> bool:
+    path = parsed_args.path
+    issues, success = statick.run(path, parsed_args)
+    if issues is None:
+        print(
+            "Something went wrong, no information about issues. Statick exiting with errors."
+        )
+        return False
+    for tool in issues:
+        if issues[tool]:
+            success = False
+    return success
+
 def main() -> None:
     """Run statick."""
     args = Args("Statick tool")
-    args.parser.add_argument("path", help="Path of package to scan")
+    args.parser.add_argument("path", help="Path of package or workspace to scan")
+
+    # statick workspace arguments
+    args.parser.add_argument("-ws",
+            dest="workspace",
+            action="store_true",
+            help="Treat the path argument as a workspace of multiple packages")
+    args.parser.add_argument(
+            "--max-procs",
+            dest="max_procs",
+            type=int,
+            default=int(multiprocessing.cpu_count() / 2),
+            help="Maximum number of CPU cores to use, only used when running on a workspace",
+            )
+    args.parser.add_argument(
+            "--packages-file",
+            dest="packages_file",
+            type=str,
+            help="File listing packages to scan, only used when running on a workspace",
+            )
+    args.parser.add_argument(
+            "--list-packages",
+            dest="list_packages",
+            action="store_true",
+            help="List packages and levels, only used when running on a workspace",
+            )
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
@@ -20,16 +59,11 @@ def main() -> None:
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    path = parsed_args.path
-    issues, success = statick.run(path, parsed_args)
-    if issues is None:
-        print(
-            "Something went wrong, no information about issues. Statick exiting with errors."
-        )
-        sys.exit(1)
-    for tool in issues:
-        if issues[tool]:
-            success = False
+    if parsed_args.workspace:
+        issues, success = statick.run_workspace(parsed_args)
+    else:
+        success = run(statick, parsed_args)
+
     if parsed_args.check and not success:
         print("Statick exiting with errors.")
         sys.exit(1)

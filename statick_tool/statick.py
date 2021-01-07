@@ -1,8 +1,11 @@
 """Code analysis front-end."""
 import argparse
 import copy
+import io
 import logging
+import multiprocessing
 import os
+import sys
 from typing import Any, Dict, List, Optional, Tuple
 
 from yapsy.PluginManager import PluginManager
@@ -365,3 +368,168 @@ class Statick:
         print("Done!")
 
         return issues, success
+# , args: argparse.Namespace
+
+    def run_workspace(self, parsed_args) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+        """Run statick on a workspace.
+
+        --max-procs can be set to the desired number of CPUs to use for processing a workspace.
+        This defaults to half the available CPUs.
+        Setting this to -1 will cause statick_ws to use all available CPUs.
+        """
+        max_cpus = multiprocessing.cpu_count()
+        if parsed_args.max_procs > max_cpus or parsed_args.max_procs == -1:
+            parsed_args.max_procs = max_cpus
+        elif parsed_args.max_procs <= 0:
+            parsed_args.max_procs = 1
+
+        if parsed_args.output_directory:
+            out_dir = parsed_args.output_directory
+            if not os.path.isdir(out_dir):
+                print("Output directory not found at " + out_dir + "!")
+                return
+
+        ignore_packages = self.get_ignore_packages()
+        ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
+
+        packages = []
+        for root, dirs, files in os.walk(parsed_args.path):
+            if any(item in files for item in ignore_files):
+                dirs.clear()
+                continue
+            for sub_dir in dirs:
+                full_dir = os.path.join(root, sub_dir)
+                files = os.listdir(full_dir)
+                if "package.xml" in files and not any(
+                    item in files for item in ignore_files
+                ):
+                    if ignore_packages and sub_dir in ignore_packages:
+                        continue
+                    packages.append((sub_dir, full_dir))
+
+        if parsed_args.packages_file is not None:
+            packages_file_list = []
+            try:
+                packages_file = os.path.abspath(parsed_args.packages_file)
+                with open(packages_file, "r") as fname:
+                    packages_file_list = [
+                        package.strip()
+                        for package in fname.readlines()
+                        if package.strip() and package[0] != "#"
+                    ]
+            except OSError:
+                print("Packages file not found")
+                return
+            packages = [package for package in packages if package[0] in packages_file_list]
+
+        if parsed_args.list_packages:
+            for package in packages:
+                print(
+                    "%-40s: %s" % (package[0], self.get_level(package[1], parsed_args))
+                )
+        else:
+            count = 0
+            total_issues = []
+            issues = {}  # type: Optional[Dict[str, List[Issue]]]
+            num_packages = len(packages)
+            mp_args = []
+            for package in packages:
+                count += 1
+                mp_args.append((self, parsed_args, count, package, num_packages))
+
+            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            with multiprocessing.Pool(parsed_args.max_procs) as pool:
+                total_issues = pool.starmap(scan_package, mp_args)
+
+        if parsed_args.list_packages:
+            return [], True
+
+        print("-- All packages run --")
+        print("-- overall report --")
+
+        success = True
+        for issue in total_issues:
+            for key, value in list(issue.items()):
+                if issues is not None:
+                    if key in issues:
+                        issues[key] += value
+                        success = False
+                    else:
+                        issues[key] = value
+                        success = False
+                else:
+                    success = False
+
+        # Make a fake 'all' package for reporting
+        dummy_all_package = Package("all_packages", parsed_args.path)
+        level = self.get_level(dummy_all_package.path, parsed_args)
+        if level is not None and self.config is not None:
+            enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(level)
+            available_reporting_plugins = {}
+            for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
+                available_reporting_plugins[
+                    plugin_info.plugin_object.get_name()
+                ] = plugin_info.plugin_object
+
+        # Make a dummy plugincontext as well
+        plugin_context = PluginContext(parsed_args, None, None)  # type: ignore
+        plugin_context.args.output_directory = parsed_args.output_directory
+
+        if not enabled_reporting_plugins:
+            enabled_reporting_plugins = list(available_reporting_plugins)
+
+        for plugin_name in enabled_reporting_plugins:
+            if plugin_name not in available_reporting_plugins:
+                print("Can't find specified reporting plugin {}!".format(plugin_name))
+            plugin = self.reporting_plugins[plugin_name]
+            plugin.set_plugin_context(plugin_context)
+            print("Running {} reporting plugin...".format(plugin.get_name()))
+            plugin.report(dummy_all_package, issues, level)
+            print("{} reporting plugin done.".format(plugin.get_name()))
+
+        return issues, success
+
+
+def scan_package(
+    statick: Statick,
+    parsed_args: argparse.Namespace,
+    count: int,
+    package: Package,
+    num_packages: int,
+) -> Dict[str, List[Issue]]:
+    """Scan each package in a separate process while buffering output."""
+    sio = io.StringIO()
+    old_stdout = sys.stdout
+    old_stderr = sys.stderr
+    sys.stdout = sio
+    sys.stderr = sio
+    print(
+        "-- Scanning package "
+        + package[0]
+        + " ("
+        + str(count)
+        + " of "
+        + str(num_packages)
+        + ") --"
+    )
+    issues, dummy = statick.run(package[1], parsed_args)
+    if issues is not None:
+        print(
+            "-- Done scanning package "
+            + package[0]
+            + " ("
+            + str(count)
+            + " of "
+            + str(num_packages)
+            + ") --"
+        )
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+        print(sio.getvalue(), flush=True)
+    else:
+        print("Failed to run statick on package " + package[0] + "!")
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+        print(sio.getvalue(), flush=True)
+        sys.exit(1)
+    return issues

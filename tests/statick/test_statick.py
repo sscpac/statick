@@ -1,6 +1,7 @@
 """Unit tests of statick.py."""
 
 import contextlib
+import multiprocessing
 import os
 import shutil
 import subprocess
@@ -750,5 +751,51 @@ def test_run_called_process_error(mock_subprocess_check_output):
         assert not issues[tool]
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace():
+    """Test running Statick on a workspace."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    args.parser.add_argument(
+            "--max-procs",
+            dest="max_procs",
+            type=int,
+            default=int(multiprocessing.cpu_count() / 2),
+            help="Maximum number of CPU cores to use, only used when running on a workspace",
+            )
+    args.parser.add_argument(
+            "--packages-file",
+            dest="packages_file",
+            type=str,
+            help="File listing packages to scan, only used when running on a workspace",
+            )
+    args.parser.add_argument(
+            "--list-packages",
+            dest="list_packages",
+            action="store_true",
+            help="List packages and levels, only used when running on a workspace",
+            )
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
     except OSError as ex:
         print("Error: {}".format(ex))
