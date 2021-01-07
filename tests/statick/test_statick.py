@@ -1067,3 +1067,106 @@ def test_run_workspace_invalid_reporting_plugins():
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
     except OSError as ex:
         print("Error: {}".format(ex))
+
+
+def test_run_workspace_with_issues():
+    """
+    Test that invalid reporting plugins returns unsuccessful.
+
+    Expected results: issues is empty and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
+        ),
+        "--exceptions",
+        os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    # we expect two docstring errors
+    assert len(issues['pylint']) == 2
+    assert not success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_invalid_level():
+    """
+    Test that invalid profile results in invalid level.
+
+    Expected results: issues is None and success is False
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--exceptions",
+        os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-test.yaml"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-default_value"))
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
+
+def test_run_workspace_no_config():
+    """
+    Test that no config is handled gracefully.
+
+    Expected results: issues is None and success is False
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--output-directory",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+        "--path",
+        os.path.join(os.path.dirname(__file__), "test_workspace"),
+    ]
+    parsed_args = args.get_args(sys.argv)
+    statick.get_exceptions(parsed_args)
+    issues, success = statick.run_workspace(parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"))
+    except OSError as ex:
+        print("Error: {}".format(ex))

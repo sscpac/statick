@@ -457,7 +457,6 @@ class Statick:
         else:
             count = 0
             total_issues = []
-            issues = {}  # type: Optional[Dict[str, List[Issue]]]
             num_packages = len(packages)
             mp_args = []
             for package in packages:
@@ -475,39 +474,41 @@ class Statick:
         print("-- overall report --")
 
         success = True
+        issues = {}  # type: Dict[str, List[Issue]]
         if total_issues is not None:
             for issue in total_issues:
                 if issue is not None:
                     for key, value in list(issue.items()):
-                        if issues is not None:
-                            if key in issues:
-                                issues[key] += value
-                                if value:
-                                    success = False
-                            else:
-                                issues[key] = value
-                                if value:
-                                    success = False
+                        if key in issues:
+                            issues[key] += value
+                            if value:
+                                success = False
                         else:
-                            success = False
+                            issues[key] = value
+                            if value:
+                                success = False
+
+        available_reporting_plugins = {}
+        for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
+            available_reporting_plugins[
+                plugin_info.plugin_object.get_name()
+            ] = plugin_info.plugin_object
 
         # Make a fake 'all' package for reporting
         dummy_all_package = Package("all_packages", parsed_args.path)
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
-            enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(level)
-            available_reporting_plugins = {}
-            for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
-                available_reporting_plugins[
-                    plugin_info.plugin_object.get_name()
-                ] = plugin_info.plugin_object
+            if not self.config or not self.config.has_level(level):
+                print("Can't find specified level {} in config!".format(level))
+                enabled_reporting_plugins = list(available_reporting_plugins)
+            else:
+                enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(level)
+        else:
+            enabled_reporting_plugins = list(available_reporting_plugins)
 
         # Make a dummy plugincontext as well
         plugin_context = PluginContext(parsed_args, None, None)  # type: ignore
         plugin_context.args.output_directory = parsed_args.output_directory
-
-        if not enabled_reporting_plugins:
-            enabled_reporting_plugins = list(available_reporting_plugins)
 
         for plugin_name in enabled_reporting_plugins:
             if plugin_name not in available_reporting_plugins:
