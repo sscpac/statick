@@ -407,7 +407,7 @@ class Statick:
 
         --max-procs can be set to the desired number of CPUs to use for processing a workspace.
         This defaults to half the available CPUs.
-        Setting this to -1 will cause statick_ws to use all available CPUs.
+        Setting this to -1 will cause statick.run_workspace to use all available CPUs.
         """
         max_cpus = multiprocessing.cpu_count()
         if parsed_args.max_procs > max_cpus or parsed_args.max_procs == -1:
