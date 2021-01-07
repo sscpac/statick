@@ -454,39 +454,36 @@ class Statick:
                 print(
                     "{:40}: {}".format(package[0], self.get_level(package[1], parsed_args))
                 )
-        else:
-            count = 0
-            total_issues = []
-            num_packages = len(packages)
-            mp_args = []
-            for package in packages:
-                count += 1
-                mp_args.append((self, parsed_args, count, package, num_packages))
-
-            print("-- Scanning {} packages --".format(num_packages), flush=True)
-            with multiprocessing.Pool(parsed_args.max_procs) as pool:
-                total_issues = pool.starmap(scan_package, mp_args)
-
-        if parsed_args.list_packages:
             return None, True
+
+        count = 0
+        total_issues = []
+        num_packages = len(packages)
+        mp_args = []
+        for package in packages:
+            count += 1
+            mp_args.append((self, parsed_args, count, package, num_packages))
+
+        print("-- Scanning {} packages --".format(num_packages), flush=True)
+        with multiprocessing.Pool(parsed_args.max_procs) as pool:
+            total_issues = pool.starmap(scan_package, mp_args)
 
         print("-- All packages run --")
         print("-- overall report --")
 
         success = True
         issues = {}  # type: Dict[str, List[Issue]]
-        if total_issues is not None:
-            for issue in total_issues:
-                if issue is not None:
-                    for key, value in list(issue.items()):
-                        if key in issues:
-                            issues[key] += value
-                            if value:
-                                success = False
-                        else:
-                            issues[key] = value
-                            if value:
-                                success = False
+        for issue in total_issues:
+            if issue is not None:
+                for key, value in list(issue.items()):
+                    if key in issues:
+                        issues[key] += value
+                        if value:
+                            success = False
+                    else:
+                        issues[key] = value
+                        if value:
+                            success = False
 
         available_reporting_plugins = {}
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):

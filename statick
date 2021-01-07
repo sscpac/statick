@@ -3,7 +3,6 @@
 
 from __future__ import print_function
 
-import multiprocessing
 import sys
 
 from statick_tool.args import Args
@@ -11,6 +10,7 @@ from statick_tool.statick import Statick
 
 
 def run(statick, parsed_args) -> bool:
+    """Run statick on a single package."""
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
     if issues is None:
@@ -35,7 +35,7 @@ def main() -> None:
     statick.get_exceptions(parsed_args)
 
     if parsed_args.workspace:
-        issues, success = statick.run_workspace(parsed_args)
+        _, success = statick.run_workspace(parsed_args)
     else:
         success = run(statick, parsed_args)
 
