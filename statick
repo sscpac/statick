@@ -3,13 +3,14 @@
 
 from __future__ import print_function
 
+import argparse
 import sys
 
 from statick_tool.args import Args
 from statick_tool.statick import Statick
 
 
-def run(statick, parsed_args) -> bool:
+def run(statick: Statick, parsed_args: argparse.Namespace) -> bool:
     """Run statick on a single package."""
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)

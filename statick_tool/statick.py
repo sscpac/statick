@@ -397,7 +397,7 @@ class Statick:
         return issues, success
 # , args: argparse.Namespace
 
-    def run_workspace(self, parsed_args) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+    def run_workspace(self, parsed_args: argparse.Namespace) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
         """Run statick on a workspace.
 
         --max-procs can be set to the desired number of CPUs to use for processing a workspace.
