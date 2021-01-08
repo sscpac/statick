@@ -494,6 +494,7 @@ class Statick:
                         if value:
                             success = False
 
+        enabled_reporting_plugins = []  # type: List[str]
         available_reporting_plugins = {}
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             available_reporting_plugins[
@@ -501,7 +502,6 @@ class Statick:
             ] = plugin_info.plugin_object
 
         # Make a fake 'all' package for reporting
-        enabled_reporting_plugins = None
         dummy_all_package = Package("all_packages", parsed_args.path)
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
