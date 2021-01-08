@@ -471,11 +471,11 @@ class Statick:
         mp_args = []
         for package in packages:
             count += 1
-            mp_args.append((self, parsed_args, count, package, num_packages))
+            mp_args.append((parsed_args, count, package, num_packages))
 
         print("-- Scanning {} packages --".format(num_packages), flush=True)
         with multiprocessing.Pool(parsed_args.max_procs) as pool:
-            total_issues = pool.starmap(scan_package, mp_args)
+            total_issues = pool.starmap(self.scan_package, mp_args)
 
         print("-- All packages run --")
         print("-- overall report --")
@@ -530,33 +530,21 @@ class Statick:
 
         return issues, success
 
-
-def scan_package(
-    statick: Statick,
-    parsed_args: argparse.Namespace,
-    count: int,
-    package: Package,
-    num_packages: int,
-) -> Optional[Dict[str, List[Issue]]]:
-    """Scan each package in a separate process while buffering output."""
-    sio = io.StringIO()
-    old_stdout = sys.stdout
-    old_stderr = sys.stderr
-    sys.stdout = sio
-    sys.stderr = sio
-    print(
-        "-- Scanning package "
-        + package[0]
-        + " ("
-        + str(count)
-        + " of "
-        + str(num_packages)
-        + ") --"
-    )
-    issues, dummy = statick.run(package[1], parsed_args)
-    if issues is not None:
+    def scan_package(
+        self,
+        parsed_args: argparse.Namespace,
+        count: int,
+        package: Package,
+        num_packages: int,
+    ) -> Optional[Dict[str, List[Issue]]]:
+        """Scan each package in a separate process while buffering output."""
+        sio = io.StringIO()
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = sio
+        sys.stderr = sio
         print(
-            "-- Done scanning package "
+            "-- Scanning package "
             + package[0]
             + " ("
             + str(count)
@@ -564,12 +552,23 @@ def scan_package(
             + str(num_packages)
             + ") --"
         )
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
-        print(sio.getvalue(), flush=True)
-    else:
-        print("Failed to run statick on package " + package[0] + "!")
-        sys.stdout = old_stdout
-        sys.stderr = old_stderr
-        print(sio.getvalue(), flush=True)
-    return issues
+        issues, dummy = self.run(package[1], parsed_args)
+        if issues is not None:
+            print(
+                "-- Done scanning package "
+                + package[0]
+                + " ("
+                + str(count)
+                + " of "
+                + str(num_packages)
+                + ") --"
+            )
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            print(sio.getvalue(), flush=True)
+        else:
+            print("Failed to run statick on package " + package[0] + "!")
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            print(sio.getvalue(), flush=True)
+        return issues
