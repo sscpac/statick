@@ -501,6 +501,7 @@ class Statick:
             ] = plugin_info.plugin_object
 
         # Make a fake 'all' package for reporting
+        enabled_reporting_plugins = None
         dummy_all_package = Package("all_packages", parsed_args.path)
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
@@ -511,7 +512,8 @@ class Statick:
                 enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
                     level
                 )
-        else:
+
+        if not enabled_reporting_plugins:
             enabled_reporting_plugins = list(available_reporting_plugins)
 
         # Make a dummy plugincontext as well
