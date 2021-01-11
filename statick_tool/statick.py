@@ -469,13 +469,26 @@ class Statick:
         total_issues = []
         num_packages = len(packages)
         mp_args = []
-        for package in packages:
-            count += 1
-            mp_args.append((parsed_args, count, package, num_packages))
+        if multiprocessing.get_start_method() == "fork":
+            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            for package in packages:
+                count += 1
+                mp_args.append((parsed_args, count, package, num_packages))
 
-        print("-- Scanning {} packages --".format(num_packages), flush=True)
-        with multiprocessing.Pool(parsed_args.max_procs) as pool:
-            total_issues = pool.starmap(self.scan_package, mp_args)
+            with multiprocessing.Pool(parsed_args.max_procs) as pool:
+                total_issues = pool.starmap(self.scan_package, mp_args)
+        else:
+            print(
+                "Statick's plugin manager does not currently support multiprocessing without"
+                " UNIX's fork function. Falling back to a single process."
+            )
+            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            for package in packages:
+                count += 1
+                pkg_issues = self.scan_package(
+                    parsed_args, count, package, num_packages
+                )
+                total_issues.append(pkg_issues)
 
         print("-- All packages run --")
         print("-- overall report --")
