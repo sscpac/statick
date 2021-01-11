@@ -437,7 +437,7 @@ class Statick:
                 ):
                     if ignore_packages and sub_dir in ignore_packages:
                         continue
-                    packages.append((sub_dir, full_dir))
+                    packages.append(Package(sub_dir, full_dir))
 
         if parsed_args.packages_file is not None:
             packages_file_list = []
@@ -453,14 +453,14 @@ class Statick:
                 print("Packages file not found")
                 return None, False
             packages = [
-                package for package in packages if package[0] in packages_file_list
+                package for package in packages if package.name in packages_file_list
             ]
 
         if parsed_args.list_packages:
             for package in packages:
                 print(
                     "{:40}: {}".format(
-                        package[0], self.get_level(package[1], parsed_args)
+                        package.name, self.get_level(package.path, parsed_args)
                     )
                 )
             return None, True
@@ -560,18 +560,18 @@ class Statick:
         sys.stderr = sio
         print(
             "-- Scanning package "
-            + package[0]
+            + package.name
             + " ("
             + str(count)
             + " of "
             + str(num_packages)
             + ") --"
         )
-        issues, dummy = self.run(package[1], parsed_args)
+        issues, dummy = self.run(package.path, parsed_args)
         if issues is not None:
             print(
                 "-- Done scanning package "
-                + package[0]
+                + package.name
                 + " ("
                 + str(count)
                 + " of "
@@ -582,7 +582,7 @@ class Statick:
             sys.stderr = old_stderr
             print(sio.getvalue(), flush=True)
         else:
-            print("Failed to run statick on package " + package[0] + "!")
+            print("Failed to run statick on package " + package.name + "!")
             sys.stdout = old_stdout
             sys.stderr = old_stderr
             print(sio.getvalue(), flush=True)

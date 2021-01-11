@@ -10,6 +10,7 @@ import mock
 import pytest
 
 from statick_tool.args import Args
+from statick_tool.package import Package
 from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
 from statick_tool.statick import Statick
 
@@ -1152,15 +1153,16 @@ def test_scan_package(init_statick_ws):
         "--output-directory",
         os.path.dirname(__file__),
         "--path",
-        os.path.dirname(__file__),
+        "/tmp/not_a_package",
     ]
 
     parsed_args = args.get_args(sys.argv)
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
+    package = Package("statick", path)
 
-    issues = statick.scan_package(parsed_args, 1, path, 1)
+    issues = statick.scan_package(parsed_args, 1, package, 1)
 
     assert issues is None
 
@@ -1191,7 +1193,7 @@ def test_scan_package_with_issues(init_statick_ws):
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
-    package = ("test_package", path)
+    package = Package("test_package", path)
 
     issues = statick.scan_package(parsed_args, 1, package, 1)
 
