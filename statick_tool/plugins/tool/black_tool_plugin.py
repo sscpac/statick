@@ -91,7 +91,7 @@ class BlackToolPlugin(ToolPlugin):
                     if match_error:
                         issues.append(
                             Issue(
-                                match_error.group(1).split(" ")[2],
+                                match_error.group(1).split(" ")[2].rstrip(":"),
                                 "0",
                                 self.get_name(),
                                 "format",
