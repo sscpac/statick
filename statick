@@ -3,16 +3,32 @@
 
 from __future__ import print_function
 
+import argparse
 import sys
 
 from statick_tool.args import Args
 from statick_tool.statick import Statick
 
 
+def run(statick: Statick, parsed_args: argparse.Namespace) -> bool:
+    """Run statick on a single package."""
+    path = parsed_args.path
+    issues, success = statick.run(path, parsed_args)
+    if issues is None:
+        print(
+            "Something went wrong, no information about issues. Statick exiting with errors."
+        )
+        return False
+    for tool in issues:
+        if issues[tool]:
+            success = False
+    return success
+
+
 def main() -> None:
     """Run statick."""
     args = Args("Statick tool")
-    args.parser.add_argument("path", help="Path of package to scan")
+    args.parser.add_argument("path", help="Path of package or workspace to scan")
 
     statick = Statick(args.get_user_paths())
     statick.gather_args(args.parser)
@@ -20,16 +36,11 @@ def main() -> None:
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    path = parsed_args.path
-    issues, success = statick.run(path, parsed_args)
-    if issues is None:
-        print(
-            "Something went wrong, no information about issues. Statick exiting with errors."
-        )
-        sys.exit(1)
-    for tool in issues:
-        if issues[tool]:
-            success = False
+    if parsed_args.workspace:
+        _, success = statick.run_workspace(parsed_args)
+    else:
+        success = run(statick, parsed_args)
+
     if parsed_args.check and not success:
         print("Statick exiting with errors.")
         sys.exit(1)

@@ -1,8 +1,11 @@
 """Code analysis front-end."""
 import argparse
 import copy
+import io
 import logging
+import multiprocessing
 import os
+import sys
 from typing import Any, Dict, List, Optional, Tuple
 
 from yapsy.PluginManager import PluginManager
@@ -144,6 +147,33 @@ class Statick:
             dest="mapping_file_suffix",
             type=str,
             help="Suffix to use when searching for CERT mapping files",
+        )
+
+        # statick workspace arguments
+        args.add_argument(
+            "-ws",
+            dest="workspace",
+            action="store_true",
+            help="Treat the path argument as a workspace of multiple packages",
+        )
+        args.add_argument(
+            "--max-procs",
+            dest="max_procs",
+            type=int,
+            default=int(multiprocessing.cpu_count() / 2),
+            help="Maximum number of CPU cores to use, only used when running on a workspace",
+        )
+        args.add_argument(
+            "--packages-file",
+            dest="packages_file",
+            type=str,
+            help="File listing packages to scan, only used when running on a workspace",
+        )
+        args.add_argument(
+            "--list-packages",
+            dest="list_packages",
+            action="store_true",
+            help="List packages and levels, only used when running on a workspace",
         )
 
         for _, plugin in list(self.discovery_plugins.items()):
@@ -365,3 +395,195 @@ class Statick:
         print("Done!")
 
         return issues, success
+
+    # , args: argparse.Namespace
+
+    def run_workspace(
+        self, parsed_args: argparse.Namespace
+    ) -> Tuple[
+        Optional[Dict[str, List[Issue]]], bool
+    ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+        """Run statick on a workspace.
+
+        --max-procs can be set to the desired number of CPUs to use for processing a workspace.
+        This defaults to half the available CPUs.
+        Setting this to -1 will cause statick.run_workspace to use all available CPUs.
+        """
+        max_cpus = multiprocessing.cpu_count()
+        if parsed_args.max_procs > max_cpus or parsed_args.max_procs == -1:
+            parsed_args.max_procs = max_cpus
+        elif parsed_args.max_procs <= 0:
+            parsed_args.max_procs = 1
+
+        if parsed_args.output_directory:
+            out_dir = parsed_args.output_directory
+            if not os.path.isdir(out_dir):
+                print("Output directory not found at " + out_dir + "!")
+                return None, False
+
+        ignore_packages = self.get_ignore_packages()
+        ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
+
+        packages = []
+        for root, dirs, files in os.walk(parsed_args.path):
+            if any(item in files for item in ignore_files):
+                dirs.clear()
+                continue
+            for sub_dir in dirs:
+                full_dir = os.path.join(root, sub_dir)
+                files = os.listdir(full_dir)
+                if "package.xml" in files and not any(
+                    item in files for item in ignore_files
+                ):
+                    if ignore_packages and sub_dir in ignore_packages:
+                        continue
+                    packages.append(Package(sub_dir, full_dir))
+
+        if parsed_args.packages_file is not None:
+            packages_file_list = []
+            try:
+                packages_file = os.path.abspath(parsed_args.packages_file)
+                with open(packages_file, "r") as fname:
+                    packages_file_list = [
+                        package.strip()
+                        for package in fname.readlines()
+                        if package.strip() and package[0] != "#"
+                    ]
+            except OSError:
+                print("Packages file not found")
+                return None, False
+            packages = [
+                package for package in packages if package.name in packages_file_list
+            ]
+
+        if parsed_args.list_packages:
+            for package in packages:
+                print(
+                    "{:40}: {}".format(
+                        package.name, self.get_level(package.path, parsed_args)
+                    )
+                )
+            return None, True
+
+        count = 0
+        total_issues = []
+        num_packages = len(packages)
+        mp_args = []
+        if multiprocessing.get_start_method() == "fork":
+            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            for package in packages:
+                count += 1
+                mp_args.append((parsed_args, count, package, num_packages))
+
+            with multiprocessing.Pool(parsed_args.max_procs) as pool:
+                total_issues = pool.starmap(self.scan_package, mp_args)
+        else:
+            print(
+                "Statick's plugin manager does not currently support multiprocessing without"
+                " UNIX's fork function. Falling back to a single process."
+            )
+            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            for package in packages:
+                count += 1
+                pkg_issues = self.scan_package(
+                    parsed_args, count, package, num_packages
+                )
+                total_issues.append(pkg_issues)
+
+        print("-- All packages run --")
+        print("-- overall report --")
+
+        success = True
+        issues = {}  # type: Dict[str, List[Issue]]
+        for issue in total_issues:
+            if issue is not None:
+                for key, value in list(issue.items()):
+                    if key in issues:
+                        issues[key] += value
+                        if value:
+                            success = False
+                    else:
+                        issues[key] = value
+                        if value:
+                            success = False
+
+        enabled_reporting_plugins = []  # type: List[str]
+        available_reporting_plugins = {}
+        for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
+            available_reporting_plugins[
+                plugin_info.plugin_object.get_name()
+            ] = plugin_info.plugin_object
+
+        # Make a fake 'all' package for reporting
+        dummy_all_package = Package("all_packages", parsed_args.path)
+        level = self.get_level(dummy_all_package.path, parsed_args)
+        if level is not None and self.config is not None:
+            if not self.config or not self.config.has_level(level):
+                print("Can't find specified level {} in config!".format(level))
+                enabled_reporting_plugins = list(available_reporting_plugins)
+            else:
+                enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
+                    level
+                )
+
+        if not enabled_reporting_plugins:
+            enabled_reporting_plugins = list(available_reporting_plugins)
+
+        # Make a dummy plugincontext as well
+        plugin_context = PluginContext(parsed_args, None, None)  # type: ignore
+        plugin_context.args.output_directory = parsed_args.output_directory
+
+        for plugin_name in enabled_reporting_plugins:
+            if plugin_name not in available_reporting_plugins:
+                print("Can't find specified reporting plugin {}!".format(plugin_name))
+                continue
+            plugin = self.reporting_plugins[plugin_name]
+            plugin.set_plugin_context(plugin_context)
+            print("Running {} reporting plugin...".format(plugin.get_name()))
+            plugin.report(dummy_all_package, issues, level)
+            print("{} reporting plugin done.".format(plugin.get_name()))
+
+        return issues, success
+
+    def scan_package(
+        self,
+        parsed_args: argparse.Namespace,
+        count: int,
+        package: Package,
+        num_packages: int,
+    ) -> Optional[Dict[str, List[Issue]]]:
+        """Scan each package in a separate process while buffering output."""
+        sio = io.StringIO()
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = sio
+        sys.stderr = sio
+        print(
+            "-- Scanning package "
+            + package.name
+            + " ("
+            + str(count)
+            + " of "
+            + str(num_packages)
+            + ") --"
+        )
+        issues, dummy = self.run(package.path, parsed_args)
+        if issues is not None:
+            print(
+                "-- Done scanning package "
+                + package.name
+                + " ("
+                + str(count)
+                + " of "
+                + str(num_packages)
+                + ") --"
+            )
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            print(sio.getvalue(), flush=True)
+        else:
+            print("Failed to run statick on package " + package.name + "!")
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            print(sio.getvalue(), flush=True)
+        return issues

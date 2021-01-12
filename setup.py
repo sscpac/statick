@@ -41,7 +41,7 @@ setup(
             "plugins/reporting/*",
         ]
     },
-    scripts=["statick", "statick_ws"],
+    scripts=["statick"],
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     install_requires=[

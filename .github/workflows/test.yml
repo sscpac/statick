@@ -110,7 +110,6 @@ jobs:
       # When the deprecations are removed we can remove that mypy flag as well.
       - name: Test with mypy
         run: |
-          mypy --ignore-missing-imports --allow-untyped-decorators --strict statick_ws statick_tool/
           mypy --ignore-missing-imports --allow-untyped-decorators --strict statick statick_tool/
 
       - name: Test with black
@@ -118,7 +117,7 @@ jobs:
         run: >-
           black --check --diff
           --exclude tests/.*/*valid_package/*
-          statick statick_ws statick_tool tests
+          statick statick_tool tests
 
       - name: Statick markdown
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
