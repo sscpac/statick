@@ -95,8 +95,12 @@ class BlackToolPlugin(ToolPlugin):
                             )
                         )
                 if line.startswith("error"):
-                    match_tool_error = parse_tool_error.match(line)  # type: Optional[Match[str]]
-                    match_parse_error = parse_error.match(line)  # type: Optional[Match[str]]
+                    match_tool_error = parse_tool_error.match(
+                        line
+                    )  # type: Optional[Match[str]]
+                    match_parse_error = parse_error.match(
+                        line
+                    )  # type: Optional[Match[str]]
                     if match_parse_error:
                         issues.append(
                             Issue(
@@ -105,7 +109,9 @@ class BlackToolPlugin(ToolPlugin):
                                 self.get_name(),
                                 "format",
                                 "3",
-                                match_parse_error.group(2) + " " + match_parse_error.group(5),
+                                match_parse_error.group(2)
+                                + " "
+                                + match_parse_error.group(5),
                                 None,
                             )
                         )
