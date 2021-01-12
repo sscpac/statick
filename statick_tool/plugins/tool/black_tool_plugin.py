@@ -66,8 +66,16 @@ class BlackToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         tool_re_reformat = r"(.+)\s(.+)\s(.+)"
         parse_reformat = re.compile(tool_re_reformat)  # type: Pattern[str]
+
+        # example output for this regex:
+        # error: cannot format /home/user/file: INTERNAL ERROR: message
         tool_re_error = r"\w+:\s(.+):\s(.+):\s(.+):\s(.+)"
-        parse_error = re.compile(tool_re_error)  # type: Pattern[str]
+        parse_tool_error = re.compile(tool_re_error)  # type: Pattern[str]
+
+        # example output for this regex:
+        # error: cannot format /home/user/file: Cannot parse: 1:3: {faulty_line}
+        tool_re_parse_error = r"\w+:\s(.+):\s(.+):\s([0-9]+):([0-9]+):\s(.+)"
+        parse_error = re.compile(tool_re_parse_error)  # type: Pattern[str]
         issues = []
 
         for output in total_output:
@@ -87,16 +95,35 @@ class BlackToolPlugin(ToolPlugin):
                             )
                         )
                 if line.startswith("error"):
-                    match_error = parse_error.match(line)  # type: Optional[Match[str]]
-                    if match_error:
+                    match_tool_error = parse_tool_error.match(
+                        line
+                    )  # type: Optional[Match[str]]
+                    match_parse_error = parse_error.match(
+                        line
+                    )  # type: Optional[Match[str]]
+                    if match_parse_error:
                         issues.append(
                             Issue(
-                                match_error.group(1).split(" ")[2].rstrip(":"),
+                                match_parse_error.group(1).split(" ")[2].rstrip(":"),
+                                match_parse_error.group(3),
+                                self.get_name(),
+                                "format",
+                                "3",
+                                match_parse_error.group(2)
+                                + " "
+                                + match_parse_error.group(5),
+                                None,
+                            )
+                        )
+                    elif match_tool_error:
+                        issues.append(
+                            Issue(
+                                match_tool_error.group(1).split(" ")[2].rstrip(":"),
                                 "0",
                                 self.get_name(),
                                 "format",
                                 "3",
-                                match_error.group(3),
+                                match_tool_error.group(3),
                                 None,
                             )
                         )
