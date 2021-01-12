@@ -80,7 +80,7 @@ class SpotbugsToolPlugin(ToolPlugin):
                 print("Couldn't find maven! ({})".format(ex))
                 return None
 
-            if self.plugin_context.args.show_tool_output:
+            if self.plugin_context and self.plugin_context.args.show_tool_output:
                 print("{}".format(output))
             total_output += output
 

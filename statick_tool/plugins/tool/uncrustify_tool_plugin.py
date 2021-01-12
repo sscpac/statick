@@ -96,7 +96,7 @@ class UncrustifyToolPlugin(ToolPlugin):
             print("Couldn't find uncrustify executable! ({})".format(ex))
             return None
 
-        if self.plugin_context.args.show_tool_output:
+        if self.plugin_context and self.plugin_context.args.show_tool_output:
             for output in total_output:
                 print("{}".format(output))
 
