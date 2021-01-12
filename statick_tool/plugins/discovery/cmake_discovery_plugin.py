@@ -113,7 +113,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             print("Couldn't find cmake executable!")
             return
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open("cmake.log", "w") as fname:
                 fname.write(output)
 

@@ -100,7 +100,7 @@ class UncrustifyToolPlugin(ToolPlugin):
             for output in total_output:
                 print("{}".format(output))
 
-        if self.plugin_context.args.output_directory:
+        if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
                 for output in total_output:
                     fname.write(output)
