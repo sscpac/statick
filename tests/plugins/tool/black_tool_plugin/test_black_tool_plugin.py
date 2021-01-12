@@ -101,6 +101,16 @@ def test_black_tool_plugin_parse_valid():
     assert issues[0].severity == "3"
     assert issues[0].message == "message"
 
+    output = "error: cannot format /home/user/file: Cannot parse: 1:3: {faulty line}"
+    issues = btp.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].filename == "/home/user/file"
+    assert issues[0].line_number == "1"
+    assert issues[0].tool == "black"
+    assert issues[0].issue_type == "format"
+    assert issues[0].severity == "3"
+    assert issues[0].message == "Cannot parse {faulty line}"
+
 
 def test_black_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of black."""
