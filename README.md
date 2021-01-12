@@ -528,7 +528,7 @@ Statick should be run against the ROS workspace source directory.
 Note that you can provide relative paths to the source directory.
 
 ```shell
-statick -ws /home/user/ws/src --output-directory <output directory>
+statick /home/user/ws/src --output-directory <output directory> -ws
 ```
 
 Statick can also run against a subset of the source directory in a ROS workspace.
