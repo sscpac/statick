@@ -73,7 +73,9 @@ class Statick:
         log_level = args.log_level.upper()
         if log_level not in valid_levels:
             log_level = "WARNING"
+        args.log_level = log_level
         logging.basicConfig(level=log_level)
+        logging.root.setLevel(log_level)
         logging.info("Log level set to %s", args.log_level.upper())
 
         if args.show_tool_output:
@@ -127,7 +129,7 @@ class Statick:
             dest="log_level",
             type=str,
             default="WARNING",
-            help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR, CRITICAL",
+            help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
         )
         args.add_argument(
             "--show-tool-output",

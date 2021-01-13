@@ -41,8 +41,7 @@ class XmllintToolPlugin(ToolPlugin):
                 logging.info("Couldn't find xmllint executable! (%s)", ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                logging.debug("%s", output)
+            logging.debug("%s", output)
 
             total_output.append(output)
 

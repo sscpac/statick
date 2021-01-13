@@ -1241,17 +1241,16 @@ def test_print_exit_status_success(caplog):
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
     statick = Statick(args.get_user_paths())
+    logging.root.setLevel(logging.INFO)
 
     statick.print_exit_status(True)
     # This should contain logging output but is empty for INFO level.
-    # output = caplog.text.splitlines()[0]
-    # assert "Statick exiting with success." in output
-    assert not caplog.text
+    output = caplog.text.splitlines()[0]
+    assert "Statick exiting with success." in output
 
 
-def test_print_logging_level(caplog):
+def test_print_logging_level():
     """Test that log level is set as expected."""
-    LOGGER.info("Testing now.")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -1260,26 +1259,19 @@ def test_print_logging_level(caplog):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
-        "--profile",
-        os.path.join(os.path.dirname(__file__), "rsc", "nonexistent.yaml"),
         "--log",
         "ERROR",
-        "--show-tool-output",
     ]
     args.output_directory = os.path.dirname(__file__)
     parsed_args = args.get_args(sys.argv)
     statick.set_logging_level(parsed_args)
 
-    # This should contain logging output but is empty for INFO level.
-    # output = caplog.text.splitlines()[0]
-    # assert "Log level set to ERROR" in output
-    output = caplog.text.splitlines()[0]
-    assert "The --show-tool-output argument has been deprecated since v0.5.0." in output
+    logger = logging.getLogger()
+    assert logger.getEffectiveLevel() == logging.ERROR
 
 
-def test_print_logging_level_invalid(caplog):
+def test_print_logging_level_invalid():
     """Test that log level is set to a valid level given garbage input."""
-    LOGGER.info("Testing now.")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -1288,8 +1280,6 @@ def test_print_logging_level_invalid(caplog):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
-        "--profile",
-        os.path.join(os.path.dirname(__file__), "rsc", "nonexistent.yaml"),
         "--log",
         "NOT_A_VALID_LEVEL",
     ]
@@ -1297,7 +1287,28 @@ def test_print_logging_level_invalid(caplog):
     parsed_args = args.get_args(sys.argv)
     statick.set_logging_level(parsed_args)
 
-    # This should contain logging output but is empty for INFO level.
-    # output = caplog.text.splitlines()[0]
-    # assert "Log level set to WARNING" in output
-    assert not caplog.text
+    logger = logging.getLogger()
+    assert logger.getEffectiveLevel() == logging.WARNING
+
+
+def test_show_tool_output_deprecated(caplog):
+    """Test that the deprecation warning is shown for --show-tool-output flag."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--log",
+        "INFO",
+        "--show-tool-output",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    statick.set_logging_level(parsed_args)
+
+    print("caplog: {}".format(caplog.text))
+    output = caplog.text.splitlines()[1]
+    assert "The --show-tool-output argument has been deprecated since v0.5.0." in output
