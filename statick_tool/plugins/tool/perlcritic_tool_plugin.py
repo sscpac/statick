@@ -1,5 +1,6 @@
 """Apply Perl::Critic tool and gather results."""
 import argparse
+import logging
 import subprocess
 from typing import List, Optional
 
@@ -52,16 +53,15 @@ class PerlCriticToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 2:
-                print("perlcritic failed! Returncode = {}".format(str(ex.returncode)))
-                print("{}".format(ex.output))
+                logging.info("perlcritic failed! Returncode = %d", ex.returncode)
+                logging.info("%s", ex.output)
                 return []
 
         except OSError as ex:
-            print("Couldn't find {}! ({})".format(perlcritic_bin, ex))
+            logging.info("Couldn't find %s! (%s)", perlcritic_bin, ex)
             return []
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "wt") as f:

@@ -1,4 +1,5 @@
 """Apply pylint tool and gather results."""
+import logging
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -36,16 +37,15 @@ class PylintToolPlugin(ToolPlugin):
                 if ex.returncode != 32:
                     output = ex.output
                 else:
-                    print("Problem {}".format(ex.returncode))
-                    print("{}".format(ex.output))
+                    logging.info("Problem %d", ex.returncode)
+                    logging.info("%s", ex.output)
                     return None
 
             except OSError as ex:
-                print("Couldn't find pylint executable! ({})".format(ex))
+                logging.info("Couldn't find pylint executable! (%s)", ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+            logging.debug("%s: %s", src, output)
 
             total_output.append(output)
 

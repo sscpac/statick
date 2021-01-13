@@ -1,4 +1,5 @@
 """Apply docformatter tool and gather results."""
+import logging
 import os
 import re
 import subprocess
@@ -37,20 +38,19 @@ class DocformatterToolPlugin(ToolPlugin):
                 )
 
             except (IOError, OSError) as ex:
-                print("docformatter binary failed: {}".format(tool_bin))
-                print("Error = {}".format(str(ex.strerror)))
+                logging.info("docformatter binary failed: %s", tool_bin)
+                logging.info("Error = %s", ex.strerror)
                 return []
 
             except subprocess.CalledProcessError as ex:
-                print("docformatter binary failed: {}.".format(tool_bin))
-                print("Returncode: {}".format(str(ex.returncode)))
-                print("Error: {}".format(ex.output))
+                logging.info("docformatter binary failed: %s.", tool_bin)
+                logging.info("Returncode: %d", ex.returncode)
+                logging.info("Error: %s", ex.output)
                 total_output.append(ex.output)
                 continue
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            for output in total_output:
-                print("{}".format(output))
+        for output in total_output:
+            logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:

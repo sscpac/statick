@@ -1,5 +1,6 @@
 """Apply clang-tidy tool and gather results."""
 import argparse
+import logging
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -81,16 +82,16 @@ class ClangTidyToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("clang-tidy failed! Returncode = {}".format(str(ex.returncode)))
-                print("{}".format(ex.output))
+                logging.info("clang-tidy failed! Returncode = %d", ex.returncode)
+                logging.info("%s", ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find {}! ({})".format(clang_tidy_bin, ex))
+            logging.info("Couldn't find %s! (%s)", clang_tidy_bin, ex)
             return None
 
         if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+            logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:

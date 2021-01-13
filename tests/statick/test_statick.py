@@ -1245,4 +1245,59 @@ def test_print_exit_status_success(caplog):
     statick.print_exit_status(True)
     # This should contain logging output but is empty for INFO level.
     # output = caplog.text.splitlines()[0]
+    # assert "Statick exiting with success." in output
+    assert not caplog.text
+
+
+def test_print_logging_level(caplog):
+    """Test that log level is set as expected."""
+    LOGGER.info("Testing now.")
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "nonexistent.yaml"),
+        "--log",
+        "ERROR",
+        "--show-tool-output",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    statick.set_logging_level(parsed_args)
+
+    # This should contain logging output but is empty for INFO level.
+    # output = caplog.text.splitlines()[0]
+    # assert "Log level set to ERROR" in output
+    output = caplog.text.splitlines()[0]
+    assert "The --show-tool-output argument has been deprecated since v0.5.0." in output
+
+
+def test_print_logging_level_invalid(caplog):
+    """Test that log level is set to a valid level given garbage input."""
+    LOGGER.info("Testing now.")
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "nonexistent.yaml"),
+        "--log",
+        "NOT_A_VALID_LEVEL",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    statick.set_logging_level(parsed_args)
+
+    # This should contain logging output but is empty for INFO level.
+    # output = caplog.text.splitlines()[0]
+    # assert "Log level set to WARNING" in output
     assert not caplog.text

@@ -1,6 +1,7 @@
 """Apply uncrustify tool and gather results."""
 import argparse
 import difflib
+import logging
 import subprocess
 from typing import List, Optional
 
@@ -88,17 +89,16 @@ class UncrustifyToolPlugin(ToolPlugin):
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            print("uncrustify failed! Returncode = {}".format(str(ex.returncode)))
-            print("{}".format(ex.output))
+            logging.info("uncrustify failed! Returncode = %d", ex.returncode)
+            logging.info("%s", ex.output)
             return None
 
         except OSError as ex:
-            print("Couldn't find uncrustify executable! ({})".format(ex))
+            logging.info("Couldn't find uncrustify executable! (%s)", ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            for output in total_output:
-                print("{}".format(output))
+        for output in total_output:
+            logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:

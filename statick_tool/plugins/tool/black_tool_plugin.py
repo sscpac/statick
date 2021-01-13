@@ -1,4 +1,5 @@
 """Apply black tool and gather results."""
+import logging
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -34,23 +35,22 @@ class BlackToolPlugin(ToolPlugin):
             except subprocess.CalledProcessError as ex:
                 # Return code 123 means there was an internal error
                 if ex.returncode == 123:
-                    print("Black encountered internal error")
-                    print("{}".format(ex.output))
+                    logging.info("Black encountered internal error")
+                    logging.info("%s", ex.output)
 
                 # Return code 1 just means "found problems"
                 elif ex.returncode != 1:
-                    print("Problem {}".format(ex.returncode))
-                    print("{}".format(ex.output))
+                    logging.info("Problem %d", ex.returncode)
+                    logging.info("%s", ex.output)
                     return None
 
                 output = ex.output
 
             except OSError as ex:
-                print("Couldn't find {}! ({})".format(tool_bin, ex))
+                logging.info("Couldn't find %s! (%s)", tool_bin, ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+            logging.debug("%s", output)
 
             total_output.append(output)
 

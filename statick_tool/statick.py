@@ -22,9 +22,6 @@ from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
-# Make the logging level be an argument that can be set from command line.
-logging.basicConfig(level=logging.INFO)
-
 
 class Statick:
     """Code analysis front-end."""
@@ -65,6 +62,26 @@ class Statick:
         self.config = None  # type: Optional[Config]
         self.exceptions = None  # type: Optional[Exceptions]
 
+    @staticmethod
+    def set_logging_level(args: argparse.Namespace) -> None:
+        """Set the logging level to use for output.
+
+        Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL. Specifying the level is
+        case-insensitive (both upper-case and lower-case are allowed).
+        """
+        valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        log_level = args.log_level.upper()
+        if log_level not in valid_levels:
+            log_level = "WARNING"
+        logging.basicConfig(level=log_level)
+        logging.info("Log level set to %s", args.log_level.upper())
+
+        if args.show_tool_output:
+            logging.warning(
+                "The --show-tool-output argument has been deprecated since v0.5.0."
+                " Use log level of DEBUG instead. The argument will be removed in v0.6."
+            )
+
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
         config_filename = "config.yaml"
@@ -104,6 +121,13 @@ class Statick:
             dest="output_directory",
             type=str,
             help="Directory to write output files to",
+        )
+        args.add_argument(
+            "--log",
+            dest="log_level",
+            type=str,
+            default="WARNING",
+            help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR, CRITICAL",
         )
         args.add_argument(
             "--show-tool-output",

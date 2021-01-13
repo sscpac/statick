@@ -1,4 +1,5 @@
 """Apply catkin_lint tool and gather results."""
+import logging
 import os
 import re
 import subprocess
@@ -32,16 +33,15 @@ class CatkinLintToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("catkin_lint failed! Returncode = {}".format(ex.returncode))
-                print("{}".format(ex.output))
+                logging.info("catkin_lint failed! Returncode = %d", ex.returncode)
+                logging.info("%s", ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find catkin_lint executable! ({})".format(ex))
+            logging.info("Couldn't find catkin_lint executable! (%s)", ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:

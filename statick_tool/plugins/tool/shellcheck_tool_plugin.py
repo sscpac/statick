@@ -4,6 +4,7 @@ The output from the tool is collected in JSON format to facilitate parsing.
 """
 import argparse
 import json
+import logging
 import subprocess
 from typing import Any, List, Optional
 
@@ -55,16 +56,15 @@ class ShellcheckToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("shellcheck failed! Returncode = {}".format(str(ex.returncode)))
-                print("{}".format(ex.output))
+                logging.info("shellcheck failed! Returncode = %d", ex.returncode)
+                logging.info("%s", ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find {}! ({})".format(shellcheck_bin, ex))
+            logging.info("Couldn't find %s! (%s)", shellcheck_bin, ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as f:
@@ -84,8 +84,7 @@ class ShellcheckToolPlugin(ToolPlugin):
                 or "code" not in item
                 or "message" not in item
             ):
-                if self.plugin_context and self.plugin_context.args.show_tool_output:
-                    print("  Found invalid shellcheck output: {}".format(item))
+                logging.debug("  Found invalid shellcheck output: %s", item)
                 continue
             if item["level"] == "style":
                 warning_level = "1"

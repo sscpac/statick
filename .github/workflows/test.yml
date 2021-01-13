@@ -143,4 +143,4 @@ jobs:
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         run: |
           mkdir statick-output
-          ./statick . --output-directory statick-output --check --profile self_check.yaml
+          ./statick . --output-directory statick-output --check --profile self_check.yaml --log INFO

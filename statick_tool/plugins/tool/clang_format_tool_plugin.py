@@ -1,6 +1,7 @@
 """Apply clang-format tool and gather results."""
 import argparse
 import difflib
+import logging
 import os
 import re
 import subprocess
@@ -96,8 +97,8 @@ class ClangFormatToolPlugin(ToolPlugin):
                     total_output.append(output)
 
         except (IOError, OSError) as ex:
-            print("clang-format binary failed: {}".format(clang_format_bin))
-            print("Error = {}".format(str(ex.strerror)))
+            logging.info("clang-format binary failed: %s", clang_format_bin)
+            logging.info("Error = %s", ex.strerror)
             if (
                 self.plugin_context
                 and self.plugin_context.args.clang_format_raise_exception
@@ -106,9 +107,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             return []
 
         except subprocess.CalledProcessError as ex:
-            print("clang-format binary failed: {}.".format(clang_format_bin))
-            print("Returncode: {}".format(str(ex.returncode)))
-            print("Error: {}".format(ex.output))
+            logging.info("clang-format binary failed: %s.", clang_format_bin)
+            logging.info("Returncode: %d", ex.returncode)
+            logging.info("Error: %s", ex.output)
             if (
                 self.plugin_context
                 and self.plugin_context.args.clang_format_raise_exception
@@ -116,9 +117,8 @@ class ClangFormatToolPlugin(ToolPlugin):
                 return None
             return []
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            for output in total_output:
-                print("{}".format(output))
+        for output in total_output:
+            logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w") as fname:
@@ -170,14 +170,14 @@ class ClangFormatToolPlugin(ToolPlugin):
                             raise exc
 
         except (IOError, OSError) as ex:
-            print("{}".format(exc_msg))
-            print("Error: {}".format(str(ex.strerror)))
+            logging.info("%s", exc_msg)
+            logging.info("Error: %s", ex.strerror)
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             return False
 
         except subprocess.CalledProcessError as ex:
-            print("{} Returncode = {}".format(exc_msg, str(ex.returncode)))
+            logging.info("%s Returncode = %d", exc_msg, ex.returncode)
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
 

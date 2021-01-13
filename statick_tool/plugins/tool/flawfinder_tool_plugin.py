@@ -1,4 +1,5 @@
 """Apply flawfinder tool and gather results."""
+import logging
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -31,16 +32,15 @@ class FlawfinderToolPlugin(ToolPlugin):
                     subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
                 )
             except subprocess.CalledProcessError as ex:
-                print("Problem {}".format(ex.returncode))
-                print("{}".format(ex.output))
+                logging.info("Problem %d", ex.returncode)
+                logging.info("%s", ex.output)
                 return None
 
             except OSError as ex:
-                print("Couldn't find flawfinder executable! ({})".format(ex))
+                logging.info("Couldn't find flawfinder executable! (%s)", ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+            logging.debug("%s", output)
 
             total_output.append(output)
 

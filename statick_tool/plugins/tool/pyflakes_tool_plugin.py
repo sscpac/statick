@@ -1,4 +1,5 @@
 """Apply pyflakes tool and gather results."""
+import logging
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -32,18 +33,17 @@ class PyflakesToolPlugin(ToolPlugin):
             except subprocess.CalledProcessError as ex:
                 # Return code 1 just means "found problems"
                 if ex.returncode != 1:
-                    print("Problem {}".format(ex.returncode))
-                    print("{}".format(ex.output))
+                    logging.info("Problem %d", ex.returncode)
+                    logging.info("%s", ex.output)
                     return None
 
                 output = ex.output
 
             except OSError as ex:
-                print("Couldn't find pyflakes executable! ({})".format(ex))
+                logging.info("Couldn't find pyflakes executable! (%s)", ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+            logging.debug("%s: %s", src, output)
 
             total_output.append(output)
 
