@@ -1,4 +1,5 @@
 """Discover C files to analyze."""
+import logging
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -35,15 +36,11 @@ class CDiscoveryPlugin(DiscoveryPlugin):
 
         c_files = list(OrderedDict.fromkeys(c_files))
 
-        print("  {} C/C++ files found.".format(len(c_files)))
+        logging.info("  %d C/C++ files found.", len(c_files))
         if exceptions:
             original_file_count = len(c_files)
             c_files = exceptions.filter_file_exceptions_early(package, c_files)
             if original_file_count > len(c_files):
-                print(
-                    "  After filtering, {} C/C++ files will be scanned.".format(
-                        len(c_files)
-                    )
-                )
+                logging.info("  After filtering, %d C/C++ files will be scanned.", len(c_files))
 
         package["c_src"] = c_files

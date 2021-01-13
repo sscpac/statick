@@ -1,4 +1,5 @@
 """Discover Perl files to analyze."""
+import logging
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -31,15 +32,11 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
 
         perl_files = list(OrderedDict.fromkeys(perl_files))
 
-        print("  {} Perl files found.".format(len(perl_files)))
+        logging.info("  %d Perl files found.", len(perl_files))
         if exceptions:
             original_file_count = len(perl_files)
             perl_files = exceptions.filter_file_exceptions_early(package, perl_files)
             if original_file_count > len(perl_files):
-                print(
-                    "  After filtering, {} perl files will be scanned.".format(
-                        len(perl_files)
-                    )
-                )
+                logging.info("  After filtering, %d perl files will be scanned.", len(perl_files))
 
         package["perl_src"] = perl_files

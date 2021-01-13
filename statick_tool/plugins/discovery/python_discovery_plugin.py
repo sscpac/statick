@@ -1,4 +1,5 @@
 """Discover python files to analyze."""
+import logging
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -32,17 +33,13 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
 
         python_files = list(OrderedDict.fromkeys(python_files))
 
-        print("  {} python files found.".format(len(python_files)))
+        logging.info("  %d python files found.", len(python_files))
         if exceptions:
             original_file_count = len(python_files)
             python_files = exceptions.filter_file_exceptions_early(
                 package, python_files
             )
             if original_file_count > len(python_files):
-                print(
-                    "  After filtering, {} python files will be scanned.".format(
-                        len(python_files)
-                    )
-                )
+                logging.info("  After filtering, %d python files will be scanned.", len(python_files))
 
         package["python_src"] = python_files

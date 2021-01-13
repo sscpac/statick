@@ -15,9 +15,7 @@ def run(statick: Statick, parsed_args: argparse.Namespace) -> bool:
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args)
     if issues is None:
-        print(
-            "Something went wrong, no information about issues. Statick exiting with errors."
-        )
+        statick.print_no_issues()
         return False
     for tool in issues:
         if issues[tool]:
@@ -42,10 +40,10 @@ def main() -> None:
         success = run(statick, parsed_args)
 
     if parsed_args.check and not success:
-        print("Statick exiting with errors.")
+        statick.print_exit_status(False)
         sys.exit(1)
     else:
-        print("Statick exiting with success.")
+        statick.print_exit_status(True)
         sys.exit(0)
 
 

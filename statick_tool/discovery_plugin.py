@@ -1,4 +1,5 @@
 """Discovery plugin."""
+import logging
 import os
 import subprocess
 import sys
@@ -78,8 +79,8 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             )  # type: str
             return output.lower()
         except subprocess.CalledProcessError as ex:
-            print("Failed to run 'file' command. Returncode = {}".format(ex.returncode))
-            print("Exception output: {}".format(ex.output))
+            logging.info("Failed to run 'file' command. Returncode = %d", ex.returncode)
+            logging.info("Exception output: %s", ex.output)
             return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
