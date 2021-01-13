@@ -71,7 +71,9 @@ class CppcheckToolPlugin(ToolPlugin):
                     logging.info(
                         "You need version %s of cppcheck, but you have %s. "
                         "See README.md for instuctions on how to install the "
-                        "proper version", user_version, match.group(2)
+                        "proper version",
+                        user_version,
+                        match.group(2),
                     )
                     return None
 
