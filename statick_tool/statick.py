@@ -570,7 +570,7 @@ class Statick:
         return issues
 
     @staticmethod
-    def print_no_issues():
+    def print_no_issues() -> None:
         """Print that no information about issues was found."""
         logging.error(
             "Something went wrong, no information about issues."
@@ -578,7 +578,7 @@ class Statick:
         )
 
     @staticmethod
-    def print_exit_status(status):
+    def print_exit_status(status: bool) -> None:
         """Print Statick exit status."""
         if status:
             logging.info("Statick exiting with success.")
