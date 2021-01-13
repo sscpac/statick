@@ -41,10 +41,10 @@ def main() -> None:
         success = run(statick, parsed_args)
 
     if parsed_args.check and not success:
-        statick.print_exit_status(False)
+        statick.print_exit_status(success)
         sys.exit(1)
     else:
-        statick.print_exit_status(True)
+        statick.print_exit_status(success)
         sys.exit(0)
 
 
