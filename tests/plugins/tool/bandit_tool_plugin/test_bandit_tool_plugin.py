@@ -18,12 +18,6 @@ from statick_tool.tool_plugin import ToolPlugin
 def setup_bandit_tool_plugin(binary=None):
     """Create an instance of the bandit plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
     arg_parser.add_argument("--bandit-bin", dest="bandit_bin")
     arg_parser.add_argument(
         "--mapping-file-suffix", dest="mapping_file_suffix", type=str

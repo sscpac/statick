@@ -19,12 +19,6 @@ from statick_tool.tool_plugin import ToolPlugin
 def setup_cppcheck_tool_plugin(use_plugin_context=True, binary=None):
     """Initialize and return an instance of the cppcheck plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
     arg_parser.add_argument("--cppcheck-bin", dest="cppcheck_bin")
     arg_parser.add_argument(
         "--mapping-file-suffix", dest="mapping_file_suffix", type=str

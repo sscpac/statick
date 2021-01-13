@@ -22,12 +22,6 @@ def setup_clang_format_tool_plugin(
 ):
     """Initialize and return an instance of the clang-format plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
     arg_parser.add_argument("--clang-format-bin", dest="clang_format_bin")
     if do_raise:
         arg_parser.add_argument(

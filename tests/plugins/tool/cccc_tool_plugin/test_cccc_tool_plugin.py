@@ -24,12 +24,6 @@ from statick_tool.tool_plugin import ToolPlugin
 def setup_cccc_tool_plugin(use_plugin_context=True, binary=None, cccc_config=None):
     """Create an instance of the CCCC plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
     arg_parser.add_argument("--cccc-bin", dest="cccc_bin")
     arg_parser.add_argument("--cccc-config", dest="cccc_config")
 

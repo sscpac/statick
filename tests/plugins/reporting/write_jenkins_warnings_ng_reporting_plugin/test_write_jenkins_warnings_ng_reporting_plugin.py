@@ -33,12 +33,6 @@ def setup_write_jenkins_warnings_ng_reporting_plugin(
     """Create an instance of the file writer plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("output_directory")
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
 
     resources = Resources(
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]

@@ -1,5 +1,6 @@
 """Run grep."""
 
+import logging
 import re
 import shlex
 import subprocess
@@ -32,12 +33,11 @@ class MyCustomToolPlugin(ToolPlugin):
             output = subprocess.check_output(subproc_args,
                                              stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as ex:
-            print("Problem {}".format(ex.returncode))
-            print("{}".format(ex.output))
+            logging.info("Problem %d", ex.returncode)
+            logging.info("%s", ex.output)
             return None
 
-        if self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         with open(self.get_name() + ".log", "w") as fname:
             fname.write(output)

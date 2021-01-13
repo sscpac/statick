@@ -27,12 +27,6 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 def setup_cpplint_tool_plugin():
     """Initialize and return an instance of the cpplint plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
 
     resources = Resources(
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
