@@ -62,7 +62,11 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
                         if int(issue.severity) > 4:
                             severity = "ERROR"
                     except ValueError as ex:
-                        logging.info("Invalid severity integer (%s), using default 'LOW' severity. Error = %s", issue.severity, ex)
+                        logging.info(
+                            "Invalid severity integer (%s), using default 'LOW' severity. Error = %s",
+                            issue.severity,
+                            ex,
+                        )
                     issue_dict = {
                         "fileName": issue.filename,
                         "severity": severity,

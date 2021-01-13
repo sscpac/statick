@@ -39,6 +39,9 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(shell_files)
             shell_files = exceptions.filter_file_exceptions_early(package, shell_files)
             if original_file_count > len(shell_files):
-                logging.info("  After filtering, %d shell files will be scanned.", len(shell_files))
+                logging.info(
+                    "  After filtering, %d shell files will be scanned.",
+                    len(shell_files),
+                )
 
         package["shell_src"] = shell_files

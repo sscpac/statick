@@ -41,6 +41,8 @@ class CDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(c_files)
             c_files = exceptions.filter_file_exceptions_early(package, c_files)
             if original_file_count > len(c_files):
-                logging.info("  After filtering, %d C/C++ files will be scanned.", len(c_files))
+                logging.info(
+                    "  After filtering, %d C/C++ files will be scanned.", len(c_files)
+                )
 
         package["c_src"] = c_files

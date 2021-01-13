@@ -66,7 +66,9 @@ def test_resources_init_file(caplog):
     LOGGER.info("Testing now.")
     with tempfile.NamedTemporaryFile() as tmpfile:
         resources = Resources([tmpfile.name])
-        assert "{} is not a directory".format(tmpfile.name) in caplog.text.splitlines()[0]
+        assert (
+            "{} is not a directory".format(tmpfile.name) in caplog.text.splitlines()[0]
+        )
 
     assert resources.paths
     assert resources.paths[0] == os.path.dirname(statick_tool.resources.__file__)

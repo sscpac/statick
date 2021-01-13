@@ -37,6 +37,8 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(perl_files)
             perl_files = exceptions.filter_file_exceptions_early(package, perl_files)
             if original_file_count > len(perl_files):
-                logging.info("  After filtering, %d perl files will be scanned.", len(perl_files))
+                logging.info(
+                    "  After filtering, %d perl files will be scanned.", len(perl_files)
+                )
 
         package["perl_src"] = perl_files

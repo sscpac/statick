@@ -1217,7 +1217,10 @@ def test_print_no_issues(caplog):
     statick = Statick(args.get_user_paths())
     statick.print_no_issues()
     output = caplog.text.splitlines()[0]
-    assert "Something went wrong, no information about issues. Statick exiting with errors." in output
+    assert (
+        "Something went wrong, no information about issues. Statick exiting with errors."
+        in output
+    )
 
 
 def test_print_exit_status_errors(caplog):

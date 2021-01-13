@@ -35,6 +35,8 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(yaml_files)
             yaml_files = exceptions.filter_file_exceptions_early(package, yaml_files)
             if original_file_count > len(yaml_files):
-                logging.info("  After filtering, %d YAML files will be scanned.", len(yaml_files))
+                logging.info(
+                    "  After filtering, %d YAML files will be scanned.", len(yaml_files)
+                )
 
         package["yaml"] = yaml_files

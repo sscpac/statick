@@ -40,7 +40,10 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
                 package, java_src_files
             )
             if original_src_file_count > len(java_src_files):
-                logging.info("  After filtering, %d java source files will be scanned.", len(java_src_files))
+                logging.info(
+                    "  After filtering, %d java source files will be scanned.",
+                    len(java_src_files),
+                )
 
         logging.info("  %d java class files found.", len(java_class_files))
         if exceptions:
@@ -49,7 +52,10 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
                 package, java_class_files
             )
             if original_class_file_count > len(java_class_files):
-                logging.info("  After filtering, %d java class files will be scanned.", len(java_class_files))
+                logging.info(
+                    "  After filtering, %d java class files will be scanned.",
+                    len(java_class_files),
+                )
 
         package["java_src"] = java_src_files
         package["java_bin"] = java_class_files

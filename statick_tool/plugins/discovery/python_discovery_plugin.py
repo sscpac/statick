@@ -40,6 +40,9 @@ class PythonDiscoveryPlugin(DiscoveryPlugin):
                 package, python_files
             )
             if original_file_count > len(python_files):
-                logging.info("  After filtering, %d python files will be scanned.", len(python_files))
+                logging.info(
+                    "  After filtering, %d python files will be scanned.",
+                    len(python_files),
+                )
 
         package["python_src"] = python_files

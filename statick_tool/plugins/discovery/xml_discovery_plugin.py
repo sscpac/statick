@@ -35,6 +35,8 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
             original_file_count = len(xml_files)
             xml_files = exceptions.filter_file_exceptions_early(package, xml_files)
             if original_file_count > len(xml_files):
-                logging.info("  After filtering, %d XML files will be scanned.", len(xml_files))
+                logging.info(
+                    "  After filtering, %d XML files will be scanned.", len(xml_files)
+                )
 
         package["xml"] = xml_files
