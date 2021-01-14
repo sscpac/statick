@@ -73,6 +73,8 @@ class Statick:
         log_level = args.log_level.upper()
         if log_level not in valid_levels:
             log_level = "WARNING"
+        if args.show_tool_output:
+            log_level = "DEBUG"
         args.log_level = log_level
         logging.basicConfig(level=log_level)
         logging.root.setLevel(log_level)

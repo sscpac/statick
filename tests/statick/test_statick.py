@@ -1210,7 +1210,6 @@ def test_scan_package_with_issues(init_statick_ws):
 
 def test_print_no_issues(caplog):
     """Test that expected error message is logged when no issues are found."""
-    LOGGER.info("Testing now.")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -1225,7 +1224,6 @@ def test_print_no_issues(caplog):
 
 def test_print_exit_status_errors(caplog):
     """Test that expected error status message is logged."""
-    LOGGER.info("Testing now.")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
     statick = Statick(args.get_user_paths())
@@ -1237,7 +1235,6 @@ def test_print_exit_status_errors(caplog):
 
 def test_print_exit_status_success(caplog):
     """Test that expected success status message is logged."""
-    LOGGER.info("Testing now.")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
     statick = Statick(args.get_user_paths())
