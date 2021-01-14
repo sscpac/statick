@@ -560,9 +560,7 @@ class Statick:
 
         for plugin_name in enabled_reporting_plugins:
             if plugin_name not in available_reporting_plugins:
-                logging.error(
-                    "Can't find specified reporting plugin %s!", plugin_name
-                )
+                logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 continue
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
