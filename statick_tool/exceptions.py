@@ -228,5 +228,6 @@ class Exceptions:
         """
         logging.warning(
             "[WARNING] File exceptions not available for %s tool "
-            "plugin due to lack of absolute paths for issues.", tool
+            "plugin due to lack of absolute paths for issues.",
+            tool,
         )
