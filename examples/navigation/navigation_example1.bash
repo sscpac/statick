@@ -18,4 +18,4 @@ if [ ! -d statick_example1 ]; then
     mkdir statick_example1
 fi
 
-statick_ws src/ --output-directory statick_example1/
+statick src/ --output-directory statick_example1/ -ws
