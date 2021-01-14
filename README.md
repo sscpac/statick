@@ -534,7 +534,7 @@ statick /home/user/ws/src --output-directory <output directory> -ws
 Statick can also run against a subset of the source directory in a ROS workspace.
 
 ```shell
-statick_ws /home/user/ws/src/subdir --output-directory <output directory>
+statick /home/user/ws/src/subdir --output-directory <output directory> -ws
 ```
 
 ## Troubleshooting
@@ -543,7 +543,7 @@ statick_ws /home/user/ws/src/subdir --output-directory <output directory>
 
 If you are running Statick against a ROS package and get an error that there is no rule to make target `clean`,
 and that the package is not CMake, it usually means that you did not specify a single package.
-For example, this is what happens when you tell Statick to analyze a ROS workspace and do not use `statick_ws`.
+For example, this is what happens when you tell Statick to analyze a ROS workspace and do not use the `-ws` flag.
 
 ```shell
 Running cmake discovery plugin...
