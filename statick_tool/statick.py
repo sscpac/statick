@@ -66,9 +66,8 @@ class Statick:
     def set_logging_level(args: argparse.Namespace) -> None:
         """Set the logging level to use for output.
 
-        Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL.
-        Specifying the level is case-insensitive (both upper-case and
-        lower-case are allowed).
+        Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL. Specifying the level is
+        case-insensitive (both upper-case and lower-case are allowed).
         """
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         log_level = args.log_level.upper()
