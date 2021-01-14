@@ -28,7 +28,7 @@ To get back to the previous behavior of scanning a single package at a time, use
 To have Statick figure out the number of available CPU cores and use all of them, use the flag `--max-procs -1`.
 To use a specific number of CPU cores (`N`) up to the maximum available, use the flag `--max-procs N`.
 
-Statick switch from raw `print()` statements to using the Python built-in logging module.
+Statick switched from raw `print()` statements to using the Python built-in logging module.
 Most output is now suppressed by default.
 To get back to the previous amount of output verbosity use the flag `--log INFO`.
 Previously, the `--show-tool-output` flag was used to add even more verbosity.
