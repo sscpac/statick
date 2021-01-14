@@ -12,6 +12,49 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.5.0 - 2021-01-14
+
+This release adds some breaking changes to the use of Statick, but all of the old functionality can still be accessed
+using the new approaches.
+
+To scan a ROS workspace with multiple packages there used to be a separate executable named `statick_ws`.
+That same functionality is now accessed via the main `statick` executable by passing in the `-ws` flag.
+Anywhere that you used to use `statick_ws <workspace_directory/src>`, change that to `statick <workspace_directory/src> -ws`.
+
+When scanning a ROS workspace all of the packages in that workspace will now be scanned in parallel.
+The default number of packages to scan in parallel is half the number of CPU cores on the current computer.
+This was selected as a compromise between running Statick on continuous integration servers and for local developers.
+To get back to the previous behavior of scanning a single package at a time, use the flag `--max-procs 1`.
+To have Statick figure out the number of available CPU cores and use all of them, use the flag `--max-procs -1`.
+To use a specific number of CPU cores (`N`) up to the maximum available, use the flag `--max-procs N`.
+
+Statick switch from raw `print()` statements to using the Python built-in logging module.
+Most output is now suppressed by default.
+To get back to the previous amount of output verbosity use the flag `--log INFO`.
+Previously, the `--show-tool-output` flag was used to add even more verbosity.
+That flag will work for the v0.5 releases, but will be removed for v0.6 releases.
+Instead you should now use the flag `--log DEBUG`.
+
+### Added
+
+- Allow `statick_ws` to scan packages in parallel using the multiprocess module. (Alex Xydes, @xydesa)
+- Make `statick_ws` a `-ws` flag on the main statick executable instead of a standalone executable. (Alex Xydes, @xydesa)
+- Convert use of print() and show tool output flags to the built-in Python logging module.
+- Add support for yml extension to yaml discovery plugin. (Alex Xydes, @xydesa)
+- Apply docformatter to format docstrings. Add that tool to the list to run at the self-check level.
+- Add reporting plugin to output issues to the console in JSON format. (Alex Xydes, @xydesa)
+
+### Fixed
+
+- Add mypy to requirements.txt.
+- Remove trailing colon from filename when adding issues for black tool.
+- Add parsing of black's internal parse error syntax. (Alex Xydes, @xydesa)
+- Check for a valid plugin context before accessing plugin context variables related to the existence of an output directory.
+
+### Removed
+
+- Remove unused files that are duplicated by CI files that show how to install packages.
+
 ## v0.4.11 - 2020-12-22
 
 ### Added
@@ -19,9 +62,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - A big speedup improvement of roughly 3x was implemented for the discovery phase.
   The main discovery plugin will now walk through the filesystem once per package and cache information about absolute
   file paths and `file` command output.
-  Each discovery plugin can now use that cached information instead of walking the filesystem itself. (@xydesa)
+  Each discovery plugin can now use that cached information instead of walking the filesystem itself. (Alex Xydes, @xydesa)
 - Any directory with `COLCON_IGNORE` (and all of its subdirectories) will be ignored by `statick_ws`.
-  This is a standard file used by ROS2 to indicate that a ROS2 package should be ignored. (@xydesa)
+  This is a standard file used by ROS2 to indicate that a ROS2 package should be ignored. (Alex Xydes, @xydesa)
 
 ## v0.4.10 - 2020-12-15
 
@@ -30,14 +73,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Add support to ROS discovery plugin for ROS2 Python-only packages that do not contain `CMakeLists.txt`.
   Second attempt that fixed some bugs from first attempt.
 - Add section to the `README` about `statick_ws` usage.
-- Convert `lizard` tool plugin to use Python API and support user flags. (@jhdcs)
+- Convert `lizard` tool plugin to use Python API and support user flags. (Jacob Hassold, @jhdcs)
 
 ### Fixed
 
 - Remove `~/_clang-format` after each unit test where it is copied to the home directory.
 - Fix bug in lizard tool plugin where the directory to scan for files was not set properly.
-  Thanks @jhdcs for finding the bug.
-- Ignoring any subdirectories in `statick_ws` if the current directory contains `CATKIN_IGNORE` or `AMENT_IGNORE`. (@xydesa)
+  Thanks Jacob Hassold (@jhdcs) for finding the bug.
+- Ignoring any subdirectories in `statick_ws` if the current directory contains `CATKIN_IGNORE` or `AMENT_IGNORE`.
+  (Alex Xydes, @xydesa)
 
 ## v0.4.9 - 2020-12-09
 
@@ -95,7 +139,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 
 ### Fixed
 
-- Fix for running `cmake_discovery_plugin` with some ROS 2 packages that contain messages. (@xydesa)
+- Fix for running `cmake_discovery_plugin` with some ROS 2 packages that contain messages. (Alex Xydes, @xydesa)
 
 ## v0.4.4 - 2020-10-16
 
@@ -155,7 +199,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
   Ubuntu 20.04 with ROS Noetic.
 - Bug fixed that would cause certain regular expression comparisons to fail.
 - Code coverage reports are now more accurate by using multiple operating systems.
-- Better handling of loading yaml by adding exceptions. (@xydesa)
+- Better handling of loading yaml by adding exceptions. (Alex Xydes, @xydesa)
 - Improved parsing of pyflakes output.
 
 ### Removed
@@ -219,7 +263,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 - A bug in how type hints were applied caused issues with Python 3.5, which is the
   default on Ubuntu 16.04-based operating systems.
   Switching to comment-style type hints for variables made Statick work with Python 3.5 again.
-  Thanks to @kogut for discovering the issue.
+  Thanks to Greg Kogut (@kogut) for discovering the issue.
 
 ## v0.3.5 - 2020-03-18
 
@@ -275,7 +319,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 
 ### Added
 
-- Ability for Jenkins Warning NG reporting plugin to handle severity as int or string type. (@axydes)
+- Ability for Jenkins Warning NG reporting plugin to handle severity as int or string type. (Alex Xydes, @axydes)
 
 ### Fixed
 
@@ -287,9 +331,9 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 
 - Reporting plugin for the
   [Jenkins Warnings Next Generation](https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin)
-  plugin. (@axydes)
+  plugin. (Alex Xydes, @axydes)
   - Updated Jenkinsfile template to reflect usage of new plugin.
-- Renamed file writing reporting plugin to write Jenkins warnings reporting plugin. (@axydes)
+- Renamed file writing reporting plugin to write Jenkins warnings reporting plugin. (Alex Xydes, @axydes)
 - More helpful, explicit error messages from the clang-format tool plugin.
 
 ### Fixed
@@ -325,12 +369,12 @@ statick my-project
 ### Added
 
 - Skipping integration tests for tool plugins where the tool is not available via pip.
-- Statick works better on Ubuntu 18.04. (@kogut)
+- Statick works better on Ubuntu 18.04. (Greg Kogut, @kogut)
 
 ### Fixed
 
 - Clang-format tool now supports multiple language specifications in the configuration file.
-  The fix also allowed for increased unit test coverage of the tool. (@xydesa)
+  The fix also allowed for increased unit test coverage of the tool. (Alex Xydes, @xydesa)
 
 ### Removed
 
@@ -365,7 +409,7 @@ statick my-project
 
 ### Fixed
 
-- Install patterns updated to prevent picking up the `plugin_mapping` directory multiple times. (@kkredit)
+- Install patterns updated to prevent picking up the `plugin_mapping` directory multiple times. (Kevin Kredit, @kkredit)
 - Handle more varied output from pyflakes tool.
 
 ### Removed
@@ -431,9 +475,9 @@ statick my-project
 
 ### Added
 
-- Started keeping a Changelog (@creffett)
+- Started keeping a Changelog (Chris Reffett, @creffett)
 - Configuration support for tex tools (chktex and lacheck plugins in separate repository)
 
 ### Fixed
 
-- Fix backtrace when Statick is run with a nonexistent file as a profile (@creffett)
+- Fix backtrace when Statick is run with a nonexistent file as a profile (Chris Reffett, @creffett)
