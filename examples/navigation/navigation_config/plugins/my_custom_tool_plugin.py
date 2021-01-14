@@ -33,14 +33,14 @@ class MyCustomToolPlugin(ToolPlugin):
             output = subprocess.check_output(subproc_args,
                                              stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as ex:
-            logging.info("Problem %d", ex.returncode)
-            logging.info("%s", ex.output)
+            logging.warning("Problem %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w") as fname:
-            fname.write(output)
+        with open(self.get_name() + ".log", "w") as fid:
+            fid.write(output)
 
         issues = self.parse_output(output)
         return issues
