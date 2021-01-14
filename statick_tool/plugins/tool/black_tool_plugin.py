@@ -35,13 +35,13 @@ class BlackToolPlugin(ToolPlugin):
             except subprocess.CalledProcessError as ex:
                 # Return code 123 means there was an internal error
                 if ex.returncode == 123:
-                    logging.info("Black encountered internal error")
-                    logging.info("%s", ex.output)
+                    logging.warning("Black encountered internal error")
+                    logging.warning("black exception: %s", ex.output)
 
                 # Return code 1 just means "found problems"
                 elif ex.returncode != 1:
-                    logging.info("Problem %d", ex.returncode)
-                    logging.info("%s", ex.output)
+                    logging.warning("Problem %d", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
                 output = ex.output
@@ -55,9 +55,9 @@ class BlackToolPlugin(ToolPlugin):
             total_output.append(output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
+            with open(self.get_name() + ".log", "w") as fid:
                 for output in total_output:
-                    fname.write(output)
+                    fid.write(output)
 
         issues = self.parse_output(total_output)
         return issues

@@ -155,7 +155,7 @@ class Exceptions:
             try:
                 compiled_re = re.compile(exception_re)  # type: Pattern[str]
             except re.error:
-                logging.info(
+                logging.warning(
                     "Invalid regular expression in exception: %s", exception_re
                 )
                 continue

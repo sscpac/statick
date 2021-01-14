@@ -20,8 +20,9 @@ class Resources:
         for path in paths:
             if os.path.exists(path) and os.path.isdir(path):
                 self.paths.append(os.path.abspath(path))
+                logging.debug("Adding %s to resources path", path)
             elif os.path.exists(path) and not os.path.isdir(path):
-                logging.error("%s is not a directory", path)
+                logging.error("%s is not a directory and not used as a path", path)
             else:
                 logging.error("Could not find path %s", path)
 

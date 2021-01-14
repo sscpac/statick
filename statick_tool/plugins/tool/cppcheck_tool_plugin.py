@@ -68,7 +68,7 @@ class CppcheckToolPlugin(ToolPlugin):
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
                 if user_version is not None and ver != float(user_version):
-                    logging.info(
+                    logging.warning(
                         "You need version %s of cppcheck, but you have %s. "
                         "See README.md for instuctions on how to install the "
                         "proper version",
@@ -78,13 +78,13 @@ class CppcheckToolPlugin(ToolPlugin):
                     return None
 
         except OSError as ex:
-            logging.info("Cppcheck not found! (%s)", ex)
+            logging.warning("Cppcheck not found! (%s)", ex)
             return None
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            logging.info("Cppcheck failed! Returncode = %d", ex.returncode)
-            logging.info("Exception output: %s", ex.output)
+            logging.warning("Cppcheck failed! Returncode = %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         files = []  # type: List[str]
@@ -116,15 +116,15 @@ class CppcheckToolPlugin(ToolPlugin):
             )
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            logging.info("cppcheck failed! Returncode = %d", ex.returncode)
-            logging.info("%s", ex.output)
+            logging.warning("cppcheck failed! Returncode = %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
-                fname.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output)
         return issues

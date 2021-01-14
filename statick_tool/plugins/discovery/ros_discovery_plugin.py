@@ -72,7 +72,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                 ) as exc:
                     # No valid XML found, so we are not going to find the build type.
                     package["ros"] = False
-                    logging.info("  Invalid XML in %s: %s", package_file, exc)
+                    logging.warning("  Invalid XML in %s: %s", package_file, exc)
                     return
                 if self.deep_get(output, "package.export.build_type") == "ament_python":
                     logging.info("  Package is ROS%s.", ros_version)

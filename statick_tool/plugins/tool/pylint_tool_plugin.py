@@ -37,12 +37,12 @@ class PylintToolPlugin(ToolPlugin):
                 if ex.returncode != 32:
                     output = ex.output
                 else:
-                    logging.info("Problem %d", ex.returncode)
-                    logging.info("%s", ex.output)
+                    logging.warning("Problem %d", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
             except OSError as ex:
-                logging.info("Couldn't find pylint executable! (%s)", ex)
+                logging.warning("Couldn't find pylint executable! (%s)", ex)
                 return None
 
             logging.debug("%s: %s", src, output)
@@ -50,9 +50,9 @@ class PylintToolPlugin(ToolPlugin):
             total_output.append(output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
+            with open(self.get_name() + ".log", "w") as fid:
                 for output in total_output:
-                    fname.write(output)
+                    fid.write(output)
 
         issues = self.parse_output(total_output)
         return issues

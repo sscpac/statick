@@ -26,7 +26,7 @@ class SpotbugsToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists("mvn"):
-            logging.info(
+            logging.warning(
                 "Couldn't find 'mvn' command, can't run Spotbugs Maven integration"
             )
             return None
@@ -75,12 +75,12 @@ class SpotbugsToolPlugin(ToolPlugin):
                 )
             except subprocess.CalledProcessError as ex:
                 output = ex.output
-                logging.info("spotbugs failed! Returncode = %d", ex.returncode)
-                logging.info("%s", ex.output)
+                logging.warning("spotbugs failed! Returncode = %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
             except OSError as ex:
-                logging.info("Couldn't find maven! (%s)", ex)
+                logging.warning("Couldn't find maven! (%s)", ex)
                 return None
 
             logging.debug("%s", output)
@@ -97,8 +97,8 @@ class SpotbugsToolPlugin(ToolPlugin):
                     issues += self.parse_output(outfile.read())  # type: ignore
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(total_output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(total_output)
 
         return issues
 
@@ -110,7 +110,7 @@ class SpotbugsToolPlugin(ToolPlugin):
         try:
             output_xml = etree.fromstring(output)
         except etree.ParseError as ex:
-            logging.info(
+            logging.warning(
                 "Couldn't parse Spotbugs output (%s)! Provided output was:\n%s",
                 ex,
                 output,
@@ -130,7 +130,7 @@ class SpotbugsToolPlugin(ToolPlugin):
                         file_path = joined_path
                         break
             if not file_path:
-                logging.info(
+                logging.warning(
                     "Couldn't find file for class %s", file_entry.attrib["classname"]
                 )
                 file_path = java_path_string

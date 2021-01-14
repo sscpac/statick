@@ -97,8 +97,8 @@ class ClangFormatToolPlugin(ToolPlugin):
                     total_output.append(output)
 
         except (IOError, OSError) as ex:
-            logging.info("clang-format binary failed: %s", clang_format_bin)
-            logging.info("Error = %s", ex.strerror)
+            logging.warning("clang-format binary failed: %s", clang_format_bin)
+            logging.warning("%s exception: %s", self.get_name(), ex.strerror)
             if (
                 self.plugin_context
                 and self.plugin_context.args.clang_format_raise_exception
@@ -107,9 +107,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             return []
 
         except subprocess.CalledProcessError as ex:
-            logging.info("clang-format binary failed: %s.", clang_format_bin)
-            logging.info("Returncode: %d", ex.returncode)
-            logging.info("Error: %s", ex.output)
+            logging.warning("clang-format binary failed: %s.", clang_format_bin)
+            logging.warning("Returncode: %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             if (
                 self.plugin_context
                 and self.plugin_context.args.clang_format_raise_exception
@@ -121,9 +121,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
+            with open(self.get_name() + ".log", "w") as fid:
                 for output in total_output:
-                    fname.write(output)
+                    fid.write(output)
 
         issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
@@ -170,14 +170,14 @@ class ClangFormatToolPlugin(ToolPlugin):
                             raise exc
 
         except (IOError, OSError) as ex:
-            logging.info("%s", exc_msg)
-            logging.info("Error: %s", ex.strerror)
+            logging.warning("%s", exc_msg)
+            logging.warning("%s exception: %s", self.get_name(), ex.strerror)
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
             return False
 
         except subprocess.CalledProcessError as ex:
-            logging.info("%s Returncode = %d", exc_msg, ex.returncode)
+            logging.warning("%s Returncode = %d", exc_msg, ex.returncode)
             if self.plugin_context.args.clang_format_raise_exception:
                 return None
 

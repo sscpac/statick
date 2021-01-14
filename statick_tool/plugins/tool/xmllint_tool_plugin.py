@@ -33,12 +33,12 @@ class XmllintToolPlugin(ToolPlugin):
                 if ex.returncode == 1:
                     output = ex.output
                 else:
-                    logging.info("Problem %d", ex.returncode)
-                    logging.info("%s", ex.output)
+                    logging.warning("Problem %d", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
             except OSError as ex:
-                logging.info("Couldn't find xmllint executable! (%s)", ex)
+                logging.warning("Couldn't find xmllint executable! (%s)", ex)
                 return None
 
             logging.debug("%s", output)
@@ -46,9 +46,9 @@ class XmllintToolPlugin(ToolPlugin):
             total_output.append(output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
+            with open(self.get_name() + ".log", "w") as fid:
                 for output in total_output:
-                    f.write(output)
+                    fid.write(output)
 
         issues = self.parse_output(total_output)
         return issues

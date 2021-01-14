@@ -66,8 +66,9 @@ class Statick:
     def set_logging_level(args: argparse.Namespace) -> None:
         """Set the logging level to use for output.
 
-        Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL. Specifying the level is
-        case-insensitive (both upper-case and lower-case are allowed).
+        Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL.
+        Specifying the level is case-insensitive (both upper-case and
+        lower-case are allowed).
         """
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         log_level = args.log_level.upper()
@@ -92,9 +93,9 @@ class Statick:
         try:
             self.config = Config(self.resources.get_file(config_filename))
         except OSError as ex:
-            logging.info("Failed to access config file %s: %s", config_filename, ex)
+            logging.error("Failed to access config file %s: %s", config_filename, ex)
         except ValueError as ex:
-            logging.info("Config file %s has errors: %s", config_filename, ex)
+            logging.error("Config file %s has errors: %s", config_filename, ex)
 
     def get_exceptions(self, args: argparse.Namespace) -> None:
         """Get Statick exceptions."""
@@ -104,11 +105,11 @@ class Statick:
         try:
             self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
         except OSError as ex:
-            logging.info(
+            logging.error(
                 "Failed to access exceptions file %s: %s", exceptions_filename, ex
             )
         except ValueError as ex:
-            logging.info("Exceptions file %s has errors: %s", exceptions_filename, ex)
+            logging.error("Exceptions file %s has errors: %s", exceptions_filename, ex)
 
     def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
@@ -129,7 +130,8 @@ class Statick:
             dest="log_level",
             type=str,
             default="WARNING",
-            help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR, CRITICAL)",
+            help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR"
+            ", CRITICAL)",
         )
         args.add_argument(
             "--show-tool-output",
@@ -186,7 +188,8 @@ class Statick:
             dest="max_procs",
             type=int,
             default=int(multiprocessing.cpu_count() / 2),
-            help="Maximum number of CPU cores to use, only used when running on a workspace",
+            help="Maximum number of CPU cores to use, only used when running on a"
+            "workspace",
         )
         args.add_argument(
             "--packages-file",
@@ -219,17 +222,17 @@ class Statick:
             profile_filename = args.profile
         profile_resource = self.resources.get_file(profile_filename)
         if profile_resource is None:
-            logging.info("Could not find profile file %s!", profile_filename)
+            logging.error("Could not find profile file %s!", profile_filename)
             return None
         try:
             profile = Profile(profile_resource)
         except OSError as ex:
             # This isn't quite redundant with the profile_resource check: it's possible
             # that something else triggers an OSError, like permissions.
-            logging.info("Failed to access profile file %s: %s", profile_filename, ex)
+            logging.error("Failed to access profile file %s: %s", profile_filename, ex)
             return None
         except ValueError as ex:
-            logging.info("Profile file %s has errors: %s", profile_filename, ex)
+            logging.error("Profile file %s has errors: %s", profile_filename, ex)
             return None
 
         package = Package(os.path.basename(path), path)
@@ -237,7 +240,9 @@ class Statick:
 
         return level
 
-    def run(  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+    # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
+    # pylint: disable=too-many-statements
+    def run(
         self, path: str, args: argparse.Namespace
     ) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:
         """Run scan tools against targets on path."""
@@ -245,18 +250,18 @@ class Statick:
 
         path = os.path.abspath(path)
         if not os.path.exists(path):
-            logging.info("No package found at %s!", path)
+            logging.error("No package found at %s!", path)
             return None, False
 
         package = Package(os.path.basename(path), path)
         level = self.get_level(path, args)  # type: Optional[str]
         logging.info("level: %s", level)
         if level is None:
-            logging.info("Level is not valid.")
+            logging.error("Level is not valid.")
             return None, False
 
         if not self.config or not self.config.has_level(level):
-            logging.info("Can't find specified level %s in config!", level)
+            logging.error("Can't find specified level %s in config!", level)
             return None, False
 
         orig_path = os.getcwd()
@@ -385,7 +390,7 @@ class Statick:
                 issues[plugin_name] = tool_issues
                 logging.info("%s tool plugin done.", plugin.get_name())
             else:
-                logging.info("%s tool plugin failed", plugin.get_name())
+                logging.error("%s tool plugin failed", plugin.get_name())
                 success = False
 
             plugins_to_run.remove(plugin_name)
@@ -416,6 +421,9 @@ class Statick:
 
         return issues, success
 
+    # pylint: enable=too-many-locals, too-many-return-statements, too-many-branches
+    # pylint: enable=too-many-statements
+
     def run_workspace(
         self, parsed_args: argparse.Namespace
     ) -> Tuple[
@@ -423,7 +431,8 @@ class Statick:
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
         """Run statick on a workspace.
 
-        --max-procs can be set to the desired number of CPUs to use for processing a workspace.
+        --max-procs can be set to the desired number of CPUs to use for processing a
+        workspace.
         This defaults to half the available CPUs.
         Setting this to -1 will cause statick.run_workspace to use all available CPUs.
         """
@@ -535,7 +544,7 @@ class Statick:
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
             if not self.config or not self.config.has_level(level):
-                logging.info("Can't find specified level %s in config!", level)
+                logging.warning("Can't find specified level %s in config!", level)
                 enabled_reporting_plugins = list(available_reporting_plugins)
             else:
                 enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
@@ -551,7 +560,9 @@ class Statick:
 
         for plugin_name in enabled_reporting_plugins:
             if plugin_name not in available_reporting_plugins:
-                logging.info("Can't find specified reporting plugin %s!", plugin_name)
+                logging.warning(
+                    "Can't find specified reporting plugin %s!", plugin_name
+                )
                 continue
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
@@ -589,7 +600,7 @@ class Statick:
             sys.stderr = old_stderr
             logging.info(sio.getvalue())
         else:
-            logging.info("Failed to run statick on package %s!", package.name)
+            logging.error("Failed to run statick on package %s!", package.name)
             sys.stdout = old_stdout
             sys.stderr = old_stderr
             logging.info(sio.getvalue())

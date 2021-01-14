@@ -56,19 +56,19 @@ class ShellcheckToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                logging.info("shellcheck failed! Returncode = %d", ex.returncode)
-                logging.info("%s", ex.output)
+                logging.warning("shellcheck failed! Returncode = %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
         except OSError as ex:
-            logging.info("Couldn't find %s! (%s)", shellcheck_bin, ex)
+            logging.warning("Couldn't find %s! (%s)", shellcheck_bin, ex)
             return None
 
         logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(json.loads(output))
         return issues

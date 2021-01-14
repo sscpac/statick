@@ -30,21 +30,22 @@ class MakeToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 make_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
-            logging.debug("%s", output)
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            logging.info("Make failed! Returncode = %d", ex.returncode)
-            logging.info("Exception output: %s", ex.output)
+            logging.warning("Make failed! Returncode = %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         except OSError as ex:
-            logging.info("Couldn't find make executable! (%s)", ex)
+            logging.warning("Couldn't find make executable! (%s)", ex)
             return None
 
+        logging.debug("%s", output)
+
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
-                fname.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(package, output)
         return issues

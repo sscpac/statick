@@ -89,21 +89,21 @@ class UncrustifyToolPlugin(ToolPlugin):
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            logging.info("uncrustify failed! Returncode = %d", ex.returncode)
-            logging.info("%s", ex.output)
+            logging.warning("uncrustify failed! Returncode = %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         except OSError as ex:
-            logging.info("Couldn't find uncrustify executable! (%s)", ex)
+            logging.warning("Couldn't find uncrustify executable! (%s)", ex)
             return None
 
         for output in total_output:
             logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
+            with open(self.get_name() + ".log", "w") as fid:
                 for output in total_output:
-                    fname.write(output)
+                    fid.write(output)
 
         issues = self.parse_output(total_output)
         return issues

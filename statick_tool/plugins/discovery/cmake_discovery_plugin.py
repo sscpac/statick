@@ -102,20 +102,21 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )  # type: str
-            logging.debug("%s", output)
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            logging.info("Problem running CMake! Returncode = %d", str(ex.returncode))
-            logging.info("From %s, running %s", os.getcwd(), subproc_args)
-            logging.info("%s", ex.output)
+            logging.warning("Problem running CMake! Returncode = %d", ex.returncode)
+            logging.warning("From %s, running %s", os.getcwd(), subproc_args)
+            logging.warning("CMake output: %s", ex.output)
 
         except OSError:
-            logging.info("Couldn't find cmake executable!")
+            logging.warning("Couldn't find cmake executable!")
             return
 
+        logging.debug("%s", output)
+
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open("cmake.log", "w") as fname:
-                fname.write(output)
+            with open("cmake.log", "w") as fid:
+                fid.write(output)
 
         self.process_output(output, package)
 

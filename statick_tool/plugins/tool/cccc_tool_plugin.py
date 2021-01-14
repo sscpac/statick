@@ -70,12 +70,12 @@ class CCCCToolPlugin(ToolPlugin):
                 if ex.returncode == 1:
                     log_output = ex.output
                 else:
-                    logging.info("Problem %d", ex.returncode)
-                    logging.info("%s", ex.output)
+                    logging.warning("Problem %d", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
             except OSError as ex:
-                logging.info("Couldn't find cccc executable! (%s)", ex)
+                logging.warning("Couldn't find cccc executable! (%s)", ex)
                 return None
 
             logging.debug("%s", log_output)
