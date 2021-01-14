@@ -11,6 +11,7 @@ to be ignored. The path for the issue is set in the tool plugin that
 generates the issues.
 """
 import fnmatch
+import logging
 import os
 import re
 from typing import Any, Dict, List, Match, Optional, Pattern
@@ -154,8 +155,8 @@ class Exceptions:
             try:
                 compiled_re = re.compile(exception_re)  # type: Pattern[str]
             except re.error:
-                print(
-                    "Invalid regular expression in exception: {}".format(exception_re)
+                logging.warning(
+                    "Invalid regular expression in exception: %s", exception_re
                 )
                 continue
             for tool, tool_issues in list(issues.items()):
@@ -225,7 +226,8 @@ class Exceptions:
 
         Warning will only be printed once per tool.
         """
-        print(
-            "[WARNING] File exceptions not available for {} tool "
-            "plugin due to lack of absolute paths for issues.".format(tool)
+        logging.warning(
+            "[WARNING] File exceptions not available for %s tool "
+            "plugin due to lack of absolute paths for issues.",
+            tool,
         )

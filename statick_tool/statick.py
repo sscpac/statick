@@ -22,8 +22,6 @@ from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
-logging.basicConfig()
-
 
 class Statick:
     """Code analysis front-end."""
@@ -64,6 +62,30 @@ class Statick:
         self.config = None  # type: Optional[Config]
         self.exceptions = None  # type: Optional[Exceptions]
 
+    @staticmethod
+    def set_logging_level(args: argparse.Namespace) -> None:
+        """Set the logging level to use for output.
+
+        Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL. Specifying the level is
+        case-insensitive (both upper-case and lower-case are allowed).
+        """
+        valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        log_level = args.log_level.upper()
+        if log_level not in valid_levels:
+            log_level = "WARNING"
+        if args.show_tool_output:
+            log_level = "DEBUG"
+        args.log_level = log_level
+        logging.basicConfig(level=log_level)
+        logging.root.setLevel(log_level)
+        logging.info("Log level set to %s", args.log_level.upper())
+
+        if args.show_tool_output:
+            logging.warning(
+                "The --show-tool-output argument has been deprecated since v0.5.0."
+                " Use log level of DEBUG instead. The argument will be removed in v0.6."
+            )
+
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
         config_filename = "config.yaml"
@@ -72,9 +94,9 @@ class Statick:
         try:
             self.config = Config(self.resources.get_file(config_filename))
         except OSError as ex:
-            print("Failed to access config file {}: {}".format(config_filename, ex))
+            logging.error("Failed to access config file %s: %s", config_filename, ex)
         except ValueError as ex:
-            print("Config file {} has errors: {}".format(config_filename, ex))
+            logging.error("Config file %s has errors: %s", config_filename, ex)
 
     def get_exceptions(self, args: argparse.Namespace) -> None:
         """Get Statick exceptions."""
@@ -84,13 +106,11 @@ class Statick:
         try:
             self.exceptions = Exceptions(self.resources.get_file(exceptions_filename))
         except OSError as ex:
-            print(
-                "Failed to access exceptions file {}: {}".format(
-                    exceptions_filename, ex
-                )
+            logging.error(
+                "Failed to access exceptions file %s: %s", exceptions_filename, ex
             )
         except ValueError as ex:
-            print("Exceptions file {} has errors: {}".format(exceptions_filename, ex))
+            logging.error("Exceptions file %s has errors: %s", exceptions_filename, ex)
 
     def get_ignore_packages(self) -> List[str]:
         """Get packages to ignore during scan process."""
@@ -105,6 +125,14 @@ class Statick:
             dest="output_directory",
             type=str,
             help="Directory to write output files to",
+        )
+        args.add_argument(
+            "--log",
+            dest="log_level",
+            type=str,
+            default="WARNING",
+            help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR"
+            ", CRITICAL)",
         )
         args.add_argument(
             "--show-tool-output",
@@ -161,7 +189,8 @@ class Statick:
             dest="max_procs",
             type=int,
             default=int(multiprocessing.cpu_count() / 2),
-            help="Maximum number of CPU cores to use, only used when running on a workspace",
+            help="Maximum number of CPU cores to use, only used when running on a"
+            "workspace",
         )
         args.add_argument(
             "--packages-file",
@@ -194,17 +223,17 @@ class Statick:
             profile_filename = args.profile
         profile_resource = self.resources.get_file(profile_filename)
         if profile_resource is None:
-            print("Could not find profile file {}!".format(profile_filename))
+            logging.error("Could not find profile file %s!", profile_filename)
             return None
         try:
             profile = Profile(profile_resource)
         except OSError as ex:
             # This isn't quite redundant with the profile_resource check: it's possible
             # that something else triggers an OSError, like permissions.
-            print("Failed to access profile file {}: {}".format(profile_filename, ex))
+            logging.error("Failed to access profile file %s: %s", profile_filename, ex)
             return None
         except ValueError as ex:
-            print("Profile file {} has errors: {}".format(profile_filename, ex))
+            logging.error("Profile file %s has errors: %s", profile_filename, ex)
             return None
 
         package = Package(os.path.basename(path), path)
@@ -212,7 +241,9 @@ class Statick:
 
         return level
 
-    def run(  # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches, too-many-statements
+    # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
+    # pylint: disable=too-many-statements
+    def run(
         self, path: str, args: argparse.Namespace
     ) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:
         """Run scan tools against targets on path."""
@@ -220,24 +251,26 @@ class Statick:
 
         path = os.path.abspath(path)
         if not os.path.exists(path):
-            print("No package found at {}!".format(path))
+            logging.error("No package found at %s!", path)
             return None, False
 
         package = Package(os.path.basename(path), path)
         level = self.get_level(path, args)  # type: Optional[str]
-        print("level: {}".format(level))
+        logging.info("level: %s", level)
         if level is None:
-            print("Level is not valid.")
+            logging.error("Level is not valid.")
             return None, False
 
         if not self.config or not self.config.has_level(level):
-            print("Can't find specified level {} in config!".format(level))
+            logging.error("Can't find specified level %s in config!", level)
             return None, False
 
         orig_path = os.getcwd()
         if args.output_directory:
             if not os.path.isdir(args.output_directory):
-                print("Output directory not found at {}!".format(args.output_directory))
+                logging.error(
+                    "Output directory not found at %s!", args.output_directory
+                )
                 return None, False
 
             output_dir = os.path.join(args.output_directory, package.name + "-" + level)
@@ -246,39 +279,33 @@ class Statick:
                 try:
                     os.mkdir(output_dir)
                 except OSError as ex:
-                    print(
-                        "Unable to create output directory at {}: {}".format(
-                            output_dir, ex
-                        )
+                    logging.error(
+                        "Unable to create output directory at %s: %s", output_dir, ex
                     )
                     return None, False
-            print("Writing output to: {}".format(output_dir))
+            logging.info("Writing output to: %s", output_dir)
 
             os.chdir(output_dir)
 
-        print("------")
-        print(
-            "Scanning package {} ({}) at level {}".format(
-                package.name, package.path, level
-            )
+        logging.info("------")
+        logging.info(
+            "Scanning package %s (%s) at level %s", package.name, package.path, level
         )
 
         issues = {}  # type: Dict[str, List[Issue]]
 
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
-            print(
-                "Package {} is configured to be ignored by Statick.".format(
-                    package.name
-                )
+            logging.info(
+                "Package %s is configured to be ignored by Statick.", package.name
             )
             return issues, True
 
         plugin_context = PluginContext(args, self.resources, self.config)
 
-        print("---Discovery---")
+        logging.info("---Discovery---")
         if not DiscoveryPlugin.file_command_exists():
-            print(
+            logging.info(
                 "file command isn't available, discovery plugins will be less effective"
             )
 
@@ -288,7 +315,7 @@ class Statick:
         plugins_ran = []  # type: List[Any]
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
-                print("Can't find specified discovery plugin {}!".format(plugin_name))
+                logging.error("Can't find specified discovery plugin %s!", plugin_name)
                 return None, False
 
             plugin = self.discovery_plugins[plugin_name]
@@ -298,24 +325,22 @@ class Statick:
                 if dependency_plugin.get_name() in plugins_ran:
                     continue
                 dependency_plugin.set_plugin_context(plugin_context)
-                print(
-                    "Running {} discovery plugin...".format(
-                        dependency_plugin.get_name()
-                    )
+                logging.info(
+                    "Running %s discovery plugin...", dependency_plugin.get_name()
                 )
                 dependency_plugin.scan(package, level, self.exceptions)
-                print("{} discovery plugin done.".format(dependency_plugin.get_name()))
+                logging.info("%s discovery plugin done.", dependency_plugin.get_name())
                 plugins_ran.append(dependency_plugin.get_name())
 
             if plugin.get_name() not in plugins_ran:
                 plugin.set_plugin_context(plugin_context)
-                print("Running {} discovery plugin...".format(plugin.get_name()))
+                logging.info("Running %s discovery plugin...", plugin.get_name())
                 plugin.scan(package, level, self.exceptions)
-                print("{} discovery plugin done.".format(plugin.get_name()))
+                logging.info("%s discovery plugin done.", plugin.get_name())
                 plugins_ran.append(plugin.get_name())
-        print("---Discovery---")
+        logging.info("---Discovery---")
 
-        print("---Tools---")
+        logging.info("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
@@ -324,7 +349,7 @@ class Statick:
             plugin_name = plugins_to_run[0]
 
             if plugin_name not in self.tool_plugins:
-                print("Can't find specified tool plugin {}!".format(plugin_name))
+                logging.error("Can't find specified tool plugin %s!", plugin_name)
                 return None, False
 
             if args.force_tool_list is not None:
@@ -333,7 +358,7 @@ class Statick:
                     plugin_name not in force_tool_list
                     and plugin_name not in plugin_dependencies
                 ):
-                    print("Skipping plugin not in force list {}!".format(plugin_name))
+                    logging.info("Skipping plugin not in force list %s!", plugin_name)
                     plugins_to_run.remove(plugin_name)
                     continue
 
@@ -345,9 +370,10 @@ class Statick:
             for dependency_name in dependencies:
                 if dependency_name not in plugins_ran:
                     if dependency_name not in enabled_plugins:
-                        print(
-                            "Plugin {} depends on plugin {} which isn't "
-                            "enabled!".format(plugin_name, dependency_name)
+                        logging.error(
+                            "Plugin %s depends on plugin %s which isn't enabled!",
+                            plugin_name,
+                            dependency_name,
                         )
                         return None, False
                     plugin_dependencies.append(dependency_name)
@@ -359,44 +385,45 @@ class Statick:
             if not dependencies_met:
                 continue
 
-            print("Running {} tool plugin...".format(plugin.get_name()))
+            logging.info("Running %s tool plugin...", plugin.get_name())
             tool_issues = plugin.scan(package, level)
             if tool_issues is not None:
                 issues[plugin_name] = tool_issues
-                print("{} tool plugin done.".format(plugin.get_name()))
+                logging.info("%s tool plugin done.", plugin.get_name())
             else:
-                print("{} tool plugin failed".format(plugin.get_name()))
+                logging.error("%s tool plugin failed", plugin.get_name())
                 success = False
 
             plugins_to_run.remove(plugin_name)
             plugins_ran.append(plugin_name)
-        print("---Tools---")
+        logging.info("---Tools---")
 
         if self.exceptions is not None:
             issues = self.exceptions.filter_issues(package, issues)
 
         os.chdir(orig_path)
 
-        print("---Reporting---")
+        logging.info("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
         if not reporting_plugins:
             reporting_plugins = self.reporting_plugins.keys()  # type: ignore
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins.keys():
-                print("Can't find specified reporting plugin {}!".format(plugin_name))
+                logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 return None, False
 
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
-            print("Running {} reporting plugin...".format(plugin.get_name()))
+            logging.info("Running %s reporting plugin...", plugin.get_name())
             plugin.report(package, issues, level)
-            print("{} reporting plugin done.".format(plugin.get_name()))
-        print("---Reporting---")
-        print("Done!")
+            logging.info("%s reporting plugin done.", plugin.get_name())
+        logging.info("---Reporting---")
+        logging.info("Done!")
 
         return issues, success
 
-    # , args: argparse.Namespace
+    # pylint: enable=too-many-locals, too-many-return-statements, too-many-branches
+    # pylint: enable=too-many-statements
 
     def run_workspace(
         self, parsed_args: argparse.Namespace
@@ -405,7 +432,8 @@ class Statick:
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
         """Run statick on a workspace.
 
-        --max-procs can be set to the desired number of CPUs to use for processing a workspace.
+        --max-procs can be set to the desired number of CPUs to use for processing a
+        workspace.
         This defaults to half the available CPUs.
         Setting this to -1 will cause statick.run_workspace to use all available CPUs.
         """
@@ -418,7 +446,7 @@ class Statick:
         if parsed_args.output_directory:
             out_dir = parsed_args.output_directory
             if not os.path.isdir(out_dir):
-                print("Output directory not found at " + out_dir + "!")
+                logging.error("Output directory not found at %s!", out_dir)
                 return None, False
 
         ignore_packages = self.get_ignore_packages()
@@ -450,7 +478,7 @@ class Statick:
                         if package.strip() and package[0] != "#"
                     ]
             except OSError:
-                print("Packages file not found")
+                logging.error("Packages file not found")
                 return None, False
             packages = [
                 package for package in packages if package.name in packages_file_list
@@ -458,10 +486,8 @@ class Statick:
 
         if parsed_args.list_packages:
             for package in packages:
-                print(
-                    "{:40}: {}".format(
-                        package.name, self.get_level(package.path, parsed_args)
-                    )
+                logging.info(
+                    "%s: %s", package.name, self.get_level(package.path, parsed_args)
                 )
             return None, True
 
@@ -470,7 +496,7 @@ class Statick:
         num_packages = len(packages)
         mp_args = []
         if multiprocessing.get_start_method() == "fork":
-            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            logging.info("-- Scanning %d packages --", num_packages)
             for package in packages:
                 count += 1
                 mp_args.append((parsed_args, count, package, num_packages))
@@ -478,11 +504,11 @@ class Statick:
             with multiprocessing.Pool(parsed_args.max_procs) as pool:
                 total_issues = pool.starmap(self.scan_package, mp_args)
         else:
-            print(
-                "Statick's plugin manager does not currently support multiprocessing without"
-                " UNIX's fork function. Falling back to a single process."
+            logging.warning(
+                "Statick's plugin manager does not currently support multiprocessing"
+                " without UNIX's fork function. Falling back to a single process."
             )
-            print("-- Scanning {} packages --".format(num_packages), flush=True)
+            logging.info("-- Scanning %d packages --", num_packages)
             for package in packages:
                 count += 1
                 pkg_issues = self.scan_package(
@@ -490,8 +516,8 @@ class Statick:
                 )
                 total_issues.append(pkg_issues)
 
-        print("-- All packages run --")
-        print("-- overall report --")
+        logging.info("-- All packages run --")
+        logging.info("-- overall report --")
 
         success = True
         issues = {}  # type: Dict[str, List[Issue]]
@@ -519,7 +545,7 @@ class Statick:
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
             if not self.config or not self.config.has_level(level):
-                print("Can't find specified level {} in config!".format(level))
+                logging.error("Can't find specified level %s in config!", level)
                 enabled_reporting_plugins = list(available_reporting_plugins)
             else:
                 enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
@@ -535,13 +561,13 @@ class Statick:
 
         for plugin_name in enabled_reporting_plugins:
             if plugin_name not in available_reporting_plugins:
-                print("Can't find specified reporting plugin {}!".format(plugin_name))
+                logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 continue
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
-            print("Running {} reporting plugin...".format(plugin.get_name()))
+            logging.info("Running %s reporting plugin...", plugin.get_name())
             plugin.report(dummy_all_package, issues, level)
-            print("{} reporting plugin done.".format(plugin.get_name()))
+            logging.info("%s reporting plugin done.", plugin.get_name())
 
         return issues, success
 
@@ -558,32 +584,39 @@ class Statick:
         old_stderr = sys.stderr
         sys.stdout = sio
         sys.stderr = sio
-        print(
-            "-- Scanning package "
-            + package.name
-            + " ("
-            + str(count)
-            + " of "
-            + str(num_packages)
-            + ") --"
+        logging.info(
+            "-- Scanning package %s (%d of %d) --", package.name, count, num_packages
         )
         issues, dummy = self.run(package.path, parsed_args)
         if issues is not None:
-            print(
-                "-- Done scanning package "
-                + package.name
-                + " ("
-                + str(count)
-                + " of "
-                + str(num_packages)
-                + ") --"
+            logging.info(
+                "-- Done scanning package %s (%d of %d) --",
+                package.name,
+                count,
+                num_packages,
             )
             sys.stdout = old_stdout
             sys.stderr = old_stderr
-            print(sio.getvalue(), flush=True)
+            logging.info(sio.getvalue())
         else:
-            print("Failed to run statick on package " + package.name + "!")
+            logging.error("Failed to run statick on package %s!", package.name)
             sys.stdout = old_stdout
             sys.stderr = old_stderr
-            print(sio.getvalue(), flush=True)
+            logging.info(sio.getvalue())
         return issues
+
+    @staticmethod
+    def print_no_issues() -> None:
+        """Print that no information about issues was found."""
+        logging.error(
+            "Something went wrong, no information about issues."
+            " Statick exiting with errors."
+        )
+
+    @staticmethod
+    def print_exit_status(status: bool) -> None:
+        """Print Statick exit status."""
+        if status:
+            logging.info("Statick exiting with success.")
+        else:
+            logging.error("Statick exiting with errors.")

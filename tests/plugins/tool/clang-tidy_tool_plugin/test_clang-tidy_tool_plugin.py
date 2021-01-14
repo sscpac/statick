@@ -26,12 +26,6 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 def setup_clang_tidy_tool_plugin(use_plugin_context=True, binary=None):
     """Initialize and return an instance of the clang-tidy plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
     arg_parser.add_argument("--clang-tidy-bin", dest="clang_tidy_bin")
     arg_parser.add_argument(
         "--mapping-file-suffix", dest="mapping_file_suffix", type=str

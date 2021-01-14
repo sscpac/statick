@@ -18,12 +18,6 @@ from statick_tool.resources import Resources
 def setup_cmake_discovery_plugin(add_plugin_context=True, cmake_flags=""):
     """Create an instance of the CMake discovery plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
 
     resources = Resources(
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]

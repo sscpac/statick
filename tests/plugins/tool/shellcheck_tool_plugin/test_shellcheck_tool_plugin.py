@@ -20,12 +20,6 @@ from statick_tool.tool_plugin import ToolPlugin
 def setup_shellcheck_tool_plugin(binary=None):
     """Construct and return an instance of the Shellcheck plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
     arg_parser.add_argument("--shellcheck-bin", dest="shellcheck_bin")
 
     resources = Resources(

@@ -1,4 +1,5 @@
 """Apply Cpplint tool and gather results."""
+import logging
 import os
 import re
 import subprocess
@@ -25,7 +26,7 @@ class CpplintToolPlugin(ToolPlugin):
             return []
 
         if "cpplint" not in package:
-            print("  cpplint not found!")
+            logging.warning("  cpplint not found!")
             return None
 
         flags = []  # type: List[str]
@@ -46,20 +47,19 @@ class CpplintToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("cpplint failed! Returncode = {}".format(str(ex.returncode)))
-                print("{}".format(ex.output))
+                logging.warning("cpplint failed! Returncode = %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find cpplint executable! ({})".format(ex))
+            logging.warning("Couldn't find cpplint executable! (%s)", ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output)
         return issues

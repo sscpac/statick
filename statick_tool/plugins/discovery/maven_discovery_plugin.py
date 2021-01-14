@@ -1,5 +1,6 @@
 """Discover Maven POM files to analyze."""
 import fnmatch
+import logging
 import os
 from collections import OrderedDict
 from typing import List, Optional
@@ -44,8 +45,8 @@ class MavenDiscoveryPlugin(DiscoveryPlugin):
         top_poms = list(OrderedDict.fromkeys(top_poms))
         all_poms = list(OrderedDict.fromkeys(all_poms))
 
-        print("  {} Maven POM files found.".format(len(all_poms)))
-        print("  {} top-level Maven POM files found.".format(len(top_poms)))
+        logging.info("  %d Maven POM files found.", len(all_poms))
+        logging.info("  %d top-level Maven POM files found.", len(top_poms))
 
         package["all_poms"] = all_poms
         package["top_poms"] = top_poms

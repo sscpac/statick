@@ -1,4 +1,5 @@
 """Discovery plugin to find ROS packages."""
+import logging
 import os
 from functools import reduce
 from typing import Any, Dict, Optional, Union
@@ -48,7 +49,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
             and os.path.isfile(package_file)
             and ros_version is not None
         ):
-            print("  Package is ROS{}.".format(ros_version))
+            logging.info("  Package is ROS%s.", ros_version)
             package["ros"] = True
             if ros_version == "1":
                 package["catkin"] = True
@@ -71,10 +72,10 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                 ) as exc:
                     # No valid XML found, so we are not going to find the build type.
                     package["ros"] = False
-                    print("  Invalid XML in {}: {}".format(package_file, exc))
+                    logging.warning("  Invalid XML in %s: %s", package_file, exc)
                     return
                 if self.deep_get(output, "package.export.build_type") == "ament_python":
-                    print("  Package is ROS{}.".format(ros_version))
+                    logging.info("  Package is ROS%s.", ros_version)
                     package["ros"] = True
         else:
             package["ros"] = False

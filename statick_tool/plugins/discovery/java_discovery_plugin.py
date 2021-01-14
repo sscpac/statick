@@ -1,4 +1,5 @@
 """Discover Java files to analyze."""
+import logging
 from collections import OrderedDict
 from typing import List, Optional
 
@@ -32,30 +33,28 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         java_src_files = list(OrderedDict.fromkeys(java_src_files))
         java_class_files = list(OrderedDict.fromkeys(java_class_files))
 
-        print("  {} java source files found.".format(len(java_src_files)))
+        logging.info("  %d java source files found.", len(java_src_files))
         if exceptions:
             original_src_file_count = len(java_src_files)
             java_src_files = exceptions.filter_file_exceptions_early(
                 package, java_src_files
             )
             if original_src_file_count > len(java_src_files):
-                print(
-                    "  After filtering, {} java source files will be scanned.".format(
-                        len(java_src_files)
-                    )
+                logging.info(
+                    "  After filtering, %d java source files will be scanned.",
+                    len(java_src_files),
                 )
 
-        print("  {} java class files found.".format(len(java_class_files)))
+        logging.info("  %d java class files found.", len(java_class_files))
         if exceptions:
             original_class_file_count = len(java_class_files)
             java_class_files = exceptions.filter_file_exceptions_early(
                 package, java_class_files
             )
             if original_class_file_count > len(java_class_files):
-                print(
-                    "  After filtering, {} java class files will be scanned.".format(
-                        len(java_class_files)
-                    )
+                logging.info(
+                    "  After filtering, %d java class files will be scanned.",
+                    len(java_class_files),
                 )
 
         package["java_src"] = java_src_files

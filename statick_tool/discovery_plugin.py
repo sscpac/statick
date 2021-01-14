@@ -1,4 +1,5 @@
 """Discovery plugin."""
+import logging
 import os
 import subprocess
 import sys
@@ -42,12 +43,12 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             return
 
         for root, _, files in os.walk(package.path):
-            for f in files:
-                full_path = os.path.join(root, f)
+            for fname in files:
+                full_path = os.path.join(root, fname)
                 abs_path = os.path.abspath(full_path)
                 file_output = self.get_file_cmd_output(full_path)
                 file_dict = {
-                    "name": f.lower(),
+                    "name": fname.lower(),
                     "path": abs_path,
                     "file_cmd_out": file_output,
                 }
@@ -78,8 +79,10 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             )  # type: str
             return output.lower()
         except subprocess.CalledProcessError as ex:
-            print("Failed to run 'file' command. Returncode = {}".format(ex.returncode))
-            print("Exception output: {}".format(ex.output))
+            logging.warning(
+                "Failed to run 'file' command. Returncode = %d", ex.returncode
+            )
+            logging.warning("Exception output: %s", ex.output)
             return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:

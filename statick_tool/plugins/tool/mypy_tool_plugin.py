@@ -1,4 +1,5 @@
 """Apply mypy tool and gather results."""
+import logging
 import re
 import subprocess
 import sys
@@ -16,9 +17,8 @@ class MypyToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "mypy"
 
-    def scan(  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
-        self, package: Package, level: str
-    ) -> Optional[List[Issue]]:
+    # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         if "python_src" not in package:
             return []
@@ -41,28 +41,29 @@ class MypyToolPlugin(ToolPlugin):
                 )
 
             except (IOError, OSError) as ex:
-                print("mypy binary failed: {}".format(tool_bin))
-                print("Error = {}".format(str(ex.strerror)))
+                logging.warning("mypy binary failed: %s", tool_bin)
+                logging.warning("Error = %s", ex.strerror)
                 return []
 
             except subprocess.CalledProcessError as ex:
-                print("mypy binary failed: {}.".format(tool_bin))
-                print("Returncode: {}".format(str(ex.returncode)))
-                print("Error: {}".format(ex.output))
+                logging.warning("mypy binary failed: %s.", tool_bin)
+                logging.warning("Returncode: %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 total_output.append(ex.output)
                 continue
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            for output in total_output:
-                print("{}".format(output))
+        for output in total_output:
+            logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
+            with open(self.get_name() + ".log", "w") as fid:
                 for output in total_output:
-                    fname.write(output)
+                    fid.write(output)
 
         issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
+
+    # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""

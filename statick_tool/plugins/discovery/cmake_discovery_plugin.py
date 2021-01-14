@@ -1,5 +1,6 @@
 """Discovery plugin to find CMake-based projects."""
 import argparse
+import logging
 import os
 import re
 import shutil
@@ -43,11 +44,11 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         package["headers"] = []
 
         if not os.path.isfile(cmake_file):
-            print("  Package is not cmake.")
+            logging.info("  Package is not cmake.")
             package["cmake"] = False
             return
 
-        print("  Found cmake package {}".format(cmake_file))
+        logging.info("  Found cmake package %s", cmake_file)
 
         cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
@@ -101,25 +102,25 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )  # type: str
-            if self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            print("Problem running CMake! Returncode = {}".format(str(ex.returncode)))
-            print("From {}, running {}".format(os.getcwd(), subproc_args))
-            print("{}".format(ex.output))
+            logging.warning("Problem running CMake! Returncode = %d", ex.returncode)
+            logging.warning("From %s, running %s", os.getcwd(), subproc_args)
+            logging.warning("CMake output: %s", ex.output)
 
         except OSError:
-            print("Couldn't find cmake executable!")
+            logging.warning("Couldn't find cmake executable!")
             return
 
+        logging.debug("%s", output)
+
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open("cmake.log", "w") as fname:
-                fname.write(output)
+            with open("cmake.log", "w") as fid:
+                fid.write(output)
 
         self.process_output(output, package)
 
-        print("  {} make targets found.".format(len(package["make_targets"])))
+        logging.info("  %d make targets found.", len(package["make_targets"]))
 
     @classmethod
     def process_output(  # pylint: disable=too-many-locals
@@ -177,7 +178,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                 roslint = os.path.normpath(match_lint.group(1))
                 cpplint = os.path.join(roslint, "cpplint")
                 if os.path.isfile(cpplint):
-                    print("  cpplint script from roslint found at {}".format(cpplint))
+                    logging.info("  cpplint script from roslint found at %s", cpplint)
                     package["cpplint"] = cpplint
                 else:
                     package["cpplint"] = "cpplint"

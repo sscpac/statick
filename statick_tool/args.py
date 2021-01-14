@@ -3,6 +3,7 @@
 Enable usage of user-paths argument before parsing other arguments.
 """
 import argparse
+import logging
 import os
 from typing import Any, List, Optional
 
@@ -37,7 +38,7 @@ class Args:
                 if os.path.exists(path) and os.path.isdir(path):
                     user_paths.append(path)
                 else:
-                    print("Could not find user path {}!".format(path))
+                    logging.error("Could not find user path %s!", path)
         return user_paths
 
     def get_args(self, args: Optional[List[str]] = None) -> argparse.Namespace:

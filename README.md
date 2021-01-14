@@ -85,7 +85,12 @@ apt install clang-tidy
 statick <path of package> --output-directory <output path>
 ```
 
-This will run the default level and print the results to the console.
+This will run the default _level_ and print the results to the console.
+
+To see more detailed output use the `--log` argument.
+Valid levels are: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`.
+Specifying the log level is case-insensitive (both upper-case and lower-case are allowed).
+See the [logging][logging] module documentation for more details.
 
 ## Concepts
 
@@ -150,22 +155,22 @@ Statick has _levels_ of configuration to support testing each _package_ in the d
 _Levels_ are defined in the `config.yaml` file.
 Some projects only care about static analysis at a minimal level and do not care about linting for style at all.
 Other projects want all the bells and whistles that static analysis and linting have to offer.
-That's okay with Statick -- just make a level to match your project needs.
+That's okay with Statick -- just make a _level_ to match your project needs.
 
 Each _level_ specifies which plugins to run, and which flags to use for each plugin.
-If your project only has Python files then your level only needs to run the Python _discovery_ plugin.
-If you only want to run _tool_ plugins for _pylint_ and _pyflakes_, a level is how you configure Statick to look for
+If your project only has Python files then your _level_ only needs to run the Python _discovery_ plugin.
+If you only want to run _tool_ plugins for _pylint_ and _pyflakes_, a _level_ is how you configure Statick to look for
 issues using only those tools.
 If you are not using Jenkins then you can specify that you only want the _reporting_ plugin to run that prints issues
 to a console.
 
-Each _level_ can be stand-alone or it can _inherit_ from a separate level.
+Each _level_ can be stand-alone or it can _inherit_ from a separate _level_.
 This allows users to gradually build up _levels_ to apply to various packages.
-All _packages_ can start by being required to pass a _threshold_ level.
-An _objective_ level can build on the _threshold_ level with more tools or more strict flags for each tool.
+All _packages_ can start by being required to pass a _threshold_ _level_.
+An _objective_ _level_ can build on the _threshold_ _level_ with more tools or more strict flags for each tool.
 A gradual transition of packages from _threshold_ to _objective_ can be undertaken.
-Flags from the inherited level can be overridden by listing the same tool under the level's `tools` key with a new set
-of flags.
+Flags from the inherited _level_ can be overridden by listing the same tool under the _level's_ `tools` key with a new
+set of flags.
 
 In the following `config.yaml` example the `objective` _level_ inherits from and modifies the `threshold` _level_.
 The `pylint` flags from `threshold` are completely modified by the `objective` _level_, and the `clang-tidy` _tool_ is
@@ -235,7 +240,7 @@ packages:
   my_really_good_package: ultimate
 ```
 
-The `default` key lists the _level_ to run if no specific level listed for a package.
+The `default` key lists the _level_ to run if no specific _level_ listed for a package.
 
 The `packages` key lists _packages_ and override levels to run for those packages.
 
@@ -659,6 +664,7 @@ His commits were scrubbed from git history upon the initial public release.
 [docformatter]: https://github.com/myint/docformatter
 [flawfinder]: https://dwheeler.com/flawfinder/
 [lizard]: https://github.com/terryyin/lizard
+[logging]: https://docs.python.org/3/howto/logging.html
 [make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
 [mypy]: https://github.com/python/mypy
 [perlcritic]: http://perlcritic.com/

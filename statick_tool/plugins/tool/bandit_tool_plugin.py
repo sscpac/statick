@@ -1,6 +1,7 @@
 """Apply bandit tool and gather results."""
 import argparse
 import csv
+import logging
 import subprocess
 from typing import List, Optional
 
@@ -50,20 +51,19 @@ class BanditToolPlugin(ToolPlugin):
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 1:
-                print("bandit failed! Returncode = {}".format(str(ex.returncode)))
-                print("{}".format(ex.output))
+                logging.warning("bandit failed! Returncode = %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find {}! ({})".format(bandit_bin, ex))
+            logging.warning("Couldn't find %s! (%s)", bandit_bin, ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output.splitlines())
         return issues

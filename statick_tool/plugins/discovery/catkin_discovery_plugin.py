@@ -1,4 +1,5 @@
 """Discovery plugin to find catkin packages."""
+import logging
 import os
 from typing import Optional
 
@@ -27,8 +28,8 @@ class CatkinDiscoveryPlugin(DiscoveryPlugin):
         package_file = os.path.join(package.path, "package.xml")
 
         if os.path.isfile(cmake_file) and os.path.isfile(package_file):
-            print("  Package is catkin.")
+            logging.info("  Package is catkin.")
             package["catkin"] = True
         else:
-            print("  Package is not catkin.")
+            logging.info("  Package is not catkin.")
             package["catkin"] = False

@@ -1,5 +1,6 @@
 """Apply cppcheck tool and gather results."""
 import argparse
+import logging
 import os
 import re
 import subprocess
@@ -67,21 +68,23 @@ class CppcheckToolPlugin(ToolPlugin):
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
                 if user_version is not None and ver != float(user_version):
-                    print(
-                        "You need version {} of cppcheck, but you have {}. "
+                    logging.warning(
+                        "You need version %s of cppcheck, but you have %s. "
                         "See README.md for instuctions on how to install the "
-                        "proper version".format(user_version, match.group(2))
+                        "proper version",
+                        user_version,
+                        match.group(2),
                     )
                     return None
 
         except OSError as ex:
-            print("Cppcheck not found! ({})".format(ex))
+            logging.warning("Cppcheck not found! (%s)", ex)
             return None
 
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            print("Cppcheck failed! Returncode = {}".format(ex.returncode))
-            print("Exception output: {}".format(ex.output))
+            logging.warning("Cppcheck failed! Returncode = %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         files = []  # type: List[str]
@@ -113,16 +116,15 @@ class CppcheckToolPlugin(ToolPlugin):
             )
         except subprocess.CalledProcessError as ex:
             output = ex.output
-            print("cppcheck failed! Returncode = {}".format(ex.returncode))
-            print("{}".format(ex.output))
+            logging.warning("cppcheck failed! Returncode = %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
-                fname.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output)
         return issues

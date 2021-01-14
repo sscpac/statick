@@ -1,6 +1,7 @@
 """Unit tests of statick.py."""
 
 import contextlib
+import logging
 import os
 import shutil
 import subprocess
@@ -13,6 +14,8 @@ from statick_tool.args import Args
 from statick_tool.package import Package
 from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
 from statick_tool.statick import Statick
+
+LOGGER = logging.getLogger(__name__)
 
 
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment
@@ -1203,3 +1206,106 @@ def test_scan_package_with_issues(init_statick_ws):
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
     except OSError as ex:
         print("Error: {}".format(ex))
+
+
+def test_print_no_issues(caplog):
+    """Test that expected error message is logged when no issues are found."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.print_no_issues()
+    output = caplog.text.splitlines()[0]
+    assert (
+        "Something went wrong, no information about issues. Statick exiting with errors."
+        in output
+    )
+
+
+def test_print_exit_status_errors(caplog):
+    """Test that expected error status message is logged."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    statick = Statick(args.get_user_paths())
+
+    statick.print_exit_status(False)
+    output = caplog.text.splitlines()[0]
+    assert "Statick exiting with errors." in output
+
+
+def test_print_exit_status_success(caplog):
+    """Test that expected success status message is logged."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+    statick = Statick(args.get_user_paths())
+    logging.root.setLevel(logging.INFO)
+
+    statick.print_exit_status(True)
+    # This should contain logging output but is empty for INFO level.
+    output = caplog.text.splitlines()[0]
+    assert "Statick exiting with success." in output
+
+
+def test_print_logging_level():
+    """Test that log level is set as expected."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--log",
+        "ERROR",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    statick.set_logging_level(parsed_args)
+
+    logger = logging.getLogger()
+    assert logger.getEffectiveLevel() == logging.ERROR
+
+
+def test_print_logging_level_invalid():
+    """Test that log level is set to a valid level given garbage input."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--log",
+        "NOT_A_VALID_LEVEL",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    statick.set_logging_level(parsed_args)
+
+    logger = logging.getLogger()
+    assert logger.getEffectiveLevel() == logging.WARNING
+
+
+def test_show_tool_output_deprecated(caplog):
+    """Test that the deprecation warning is shown for --show-tool-output flag."""
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--log",
+        "INFO",
+        "--show-tool-output",
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    statick.set_logging_level(parsed_args)
+
+    print("caplog: {}".format(caplog.text))
+    output = caplog.text.splitlines()[1]
+    assert "The --show-tool-output argument has been deprecated since v0.5.0." in output

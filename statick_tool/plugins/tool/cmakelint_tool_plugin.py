@@ -1,4 +1,5 @@
 """Apply cmakelint tool and gather results."""
+import logging
 import os
 import re
 import subprocess
@@ -37,20 +38,19 @@ class CMakelintToolPlugin(ToolPlugin):
             if ex.returncode == 1:
                 output = ex.output
             else:
-                print("Problem {}".format(ex.returncode))
-                print("{}".format(ex.output))
+                logging.warning("Problem %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find cmakelint executable! ({})".format(ex))
+            logging.warning("Couldn't find cmakelint executable! (%s)", ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as f:
-                f.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(output)
         return issues

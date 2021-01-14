@@ -19,12 +19,6 @@ from statick_tool.tool_plugin import ToolPlugin
 def setup_mypy_tool_plugin():
     """Create and return an instance of the Mypy plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
 
     resources = Resources(
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]

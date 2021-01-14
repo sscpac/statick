@@ -1,5 +1,6 @@
 """Tests for the resources module."""
 
+import logging
 import os
 import tempfile
 
@@ -12,6 +13,8 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     from backports.tempfile import (  # pylint: disable=wrong-import-order
         TemporaryDirectory,
     )
+
+LOGGER = logging.getLogger(__name__)
 
 
 def test_resources_init():
@@ -39,32 +42,34 @@ def test_resources_init_empty():
     assert resources.paths[0] == os.path.dirname(statick_tool.resources.__file__)
 
 
-def test_resources_init_invalid(capsys):
+def test_resources_init_invalid(caplog):
     """
     Test initialization of the resources module with an invalid dir.
 
     Expected results: resources.paths should have the directory which resources.py lives in
     and should print an error for the invalid directory
     """
+    LOGGER.info("Testing now.")
     resources = Resources(["invalid_directory"])
-    output = capsys.readouterr().out
     assert resources.paths
     assert resources.paths[0] == os.path.dirname(statick_tool.resources.__file__)
-    assert output.splitlines()[0] == "Could not find path invalid_directory"
+    assert "Could not find path invalid_directory" in caplog.text.splitlines()[0]
 
 
-def test_resources_init_file(capsys):
+def test_resources_init_file(caplog):
     """
     Test initialization of the resources module with an file as an arg.
 
     Expected results: resources.paths should have the directory which resources.py lives in
     and should print an error for the file
     """
-
+    LOGGER.info("Testing now.")
     with tempfile.NamedTemporaryFile() as tmpfile:
         resources = Resources([tmpfile.name])
-        output = capsys.readouterr().out
-        assert output.splitlines()[0] == "{} is not a directory".format(tmpfile.name)
+        assert (
+            "{} is not a directory".format(tmpfile.name) in caplog.text.splitlines()[0]
+        )
+
     assert resources.paths
     assert resources.paths[0] == os.path.dirname(statick_tool.resources.__file__)
 

@@ -1,5 +1,6 @@
 """Write Statick results to Jenkins Warnings-NG plugin json-log compatible output."""
 import json
+import logging
 import os
 from typing import Dict, List, Optional, Tuple
 
@@ -42,13 +43,13 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
         if not os.path.isdir(output_dir):
-            print("Unable to create output directory at {}!".format(output_dir))
+            logging.error("Unable to create output directory at %s!", output_dir)
             return None, False
 
         output_file = os.path.join(
             output_dir, package.name + "-" + level + ".json.statick"
         )
-        print("Writing output to {}".format(output_file))
+        logging.info("Writing output to %s", output_file)
         with open(output_file, "w") as out:
             for _, value in issues.items():
                 for issue in value:
@@ -61,9 +62,11 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
                         if int(issue.severity) > 4:
                             severity = "ERROR"
                     except ValueError as ex:
-                        print(
-                            "Invalid severity integer ({}), using default 'LOW' severity. "
-                            "Error = {}".format(issue.severity, ex)
+                        logging.warning(
+                            "Invalid severity integer (%s), using default 'LOW' "
+                            " severity. Error = %s",
+                            issue.severity,
+                            ex,
                         )
                     issue_dict = {
                         "fileName": issue.filename,

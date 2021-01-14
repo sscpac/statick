@@ -2,6 +2,7 @@
 
 Handles chaining user directories and the default statick resource directory.
 """
+import logging
 import os
 from typing import List, Optional
 
@@ -19,10 +20,11 @@ class Resources:
         for path in paths:
             if os.path.exists(path) and os.path.isdir(path):
                 self.paths.append(os.path.abspath(path))
+                logging.debug("Adding %s to resources path", path)
             elif os.path.exists(path) and not os.path.isdir(path):
-                print("{} is not a directory".format(path))
+                logging.error("%s is not a directory and not used as a path", path)
             else:
-                print("Could not find path {}".format(path))
+                logging.error("Could not find path %s", path)
 
         default_path = os.path.dirname(__file__)
         self.paths.append(default_path)

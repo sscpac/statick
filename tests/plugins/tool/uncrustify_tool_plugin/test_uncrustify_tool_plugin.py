@@ -27,12 +27,6 @@ def setup_uncrustify_tool_plugin(extra_path=None, use_plugin_context=True, binar
     """Initialize and return an instance of the uncrustify plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("--uncrustify-bin", dest="uncrustify_bin")
-    arg_parser.add_argument(
-        "--show-tool-output",
-        dest="show_tool_output",
-        action="store_false",
-        help="Show tool output",
-    )
 
     paths = []
     if extra_path:

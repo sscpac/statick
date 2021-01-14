@@ -1,5 +1,6 @@
 """Tool plugin."""
 import argparse
+import logging
 import os
 import shlex
 from typing import Any, Dict, List, Optional, Union
@@ -44,7 +45,8 @@ class ToolPlugin(IPlugin):  # type: ignore
             file_name
         )  # type: Union[Any, str, None]
         if self.plugin_context.args.mapping_file_suffix is not None:
-            # If the user specified a suffix, try to get the suffixed version of the file
+            # If the user specified a suffix, try to get the suffixed version of the
+            # file.
             suffixed_file_name = "plugin_mapping/{}-{}.txt".format(
                 self.get_name(), self.plugin_context.args.mapping_file_suffix
             )
@@ -63,7 +65,9 @@ class ToolPlugin(IPlugin):  # type: ignore
             for line in mapping_file.readlines():
                 split_line = line.strip().split(":")
                 if len(split_line) != 2:
-                    print("Warning: invalid line {} in file {}".format(line, file_name))
+                    logging.warning(
+                        "Invalid line %s in mapping file %s", line, file_name
+                    )
                     continue
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping

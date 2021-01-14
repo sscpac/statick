@@ -10,6 +10,7 @@ in a web browser.
 """
 import argparse
 import csv
+import logging
 import subprocess
 from typing import Any, Dict, List, Optional
 
@@ -69,16 +70,15 @@ class CCCCToolPlugin(ToolPlugin):
                 if ex.returncode == 1:
                     log_output = ex.output
                 else:
-                    print("Problem {}".format(ex.returncode))
-                    print("{}".format(ex.output))
+                    logging.warning("Problem %d", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
             except OSError as ex:
-                print("Couldn't find cccc executable! ({})".format(ex))
+                logging.warning("Couldn't find cccc executable! (%s)", ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                print("{}".format(log_output))  # type: ignore
+            logging.debug("%s", log_output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "wb") as flog:
