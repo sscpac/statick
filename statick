@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Executable script for running statick against a single package."""
 
-from __future__ import print_function
-
 import argparse
 import sys
 
