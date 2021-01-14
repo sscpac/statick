@@ -226,7 +226,7 @@ class Exceptions:
 
         Warning will only be printed once per tool.
         """
-        print(
-            "[WARNING] File exceptions not available for {} tool "
-            "plugin due to lack of absolute paths for issues.".format(tool)
+        logging.warning(
+            "[WARNING] File exceptions not available for %s tool "
+            "plugin due to lack of absolute paths for issues.", tool
         )
