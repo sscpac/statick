@@ -37,18 +37,18 @@ Instead you should now use the flag `--log DEBUG`.
 
 ### Added
 
-- Allow `statick_ws` to scan packages in parallel using the multiprocess module. (Alex Xydes, @xydesa)
-- Make `statick_ws` a `-ws` flag on the main statick executable instead of a standalone executable. (Alex Xydes, @xydesa)
+- Allow `statick_ws` to scan packages in parallel using the multiprocess module. (Alexander Xydes, @xydesa)
+- Make `statick_ws` a `-ws` flag on the main statick executable instead of a standalone executable. (Alexander Xydes, @xydesa)
 - Convert use of print() and show tool output flags to the built-in Python logging module.
-- Add support for yml extension to yaml discovery plugin. (Alex Xydes, @xydesa)
+- Add support for yml extension to yaml discovery plugin. (Alexander Xydes, @xydesa)
 - Apply docformatter to format docstrings. Add that tool to the list to run at the self-check level.
-- Add reporting plugin to output issues to the console in JSON format. (Alex Xydes, @xydesa)
+- Add reporting plugin to output issues to the console in JSON format. (Alexander Xydes, @xydesa)
 
 ### Fixed
 
 - Add mypy to requirements.txt.
 - Remove trailing colon from filename when adding issues for black tool.
-- Add parsing of black's internal parse error syntax. (Alex Xydes, @xydesa)
+- Add parsing of black's internal parse error syntax. (Alexander Xydes, @xydesa)
 - Check for a valid plugin context before accessing plugin context variables related to the existence of an output directory.
 
 ### Removed
@@ -62,9 +62,9 @@ Instead you should now use the flag `--log DEBUG`.
 - A big speedup improvement of roughly 3x was implemented for the discovery phase.
   The main discovery plugin will now walk through the filesystem once per package and cache information about absolute
   file paths and `file` command output.
-  Each discovery plugin can now use that cached information instead of walking the filesystem itself. (Alex Xydes, @xydesa)
+  Each discovery plugin can now use that cached information instead of walking the filesystem itself. (Alexander Xydes, @xydesa)
 - Any directory with `COLCON_IGNORE` (and all of its subdirectories) will be ignored by `statick_ws`.
-  This is a standard file used by ROS2 to indicate that a ROS2 package should be ignored. (Alex Xydes, @xydesa)
+  This is a standard file used by ROS2 to indicate that a ROS2 package should be ignored. (Alexander Xydes, @xydesa)
 
 ## v0.4.10 - 2020-12-15
 
@@ -81,7 +81,7 @@ Instead you should now use the flag `--log DEBUG`.
 - Fix bug in lizard tool plugin where the directory to scan for files was not set properly.
   Thanks Jacob Hassold (@jhdcs) for finding the bug.
 - Ignoring any subdirectories in `statick_ws` if the current directory contains `CATKIN_IGNORE` or `AMENT_IGNORE`.
-  (Alex Xydes, @xydesa)
+  (Alexander Xydes, @xydesa)
 
 ## v0.4.9 - 2020-12-09
 
@@ -139,7 +139,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 
 ### Fixed
 
-- Fix for running `cmake_discovery_plugin` with some ROS 2 packages that contain messages. (Alex Xydes, @xydesa)
+- Fix for running `cmake_discovery_plugin` with some ROS 2 packages that contain messages. (Alexander Xydes, @xydesa)
 
 ## v0.4.4 - 2020-10-16
 
@@ -199,7 +199,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
   Ubuntu 20.04 with ROS Noetic.
 - Bug fixed that would cause certain regular expression comparisons to fail.
 - Code coverage reports are now more accurate by using multiple operating systems.
-- Better handling of loading yaml by adding exceptions. (Alex Xydes, @xydesa)
+- Better handling of loading yaml by adding exceptions. (Alexander Xydes, @xydesa)
 - Improved parsing of pyflakes output.
 
 ### Removed
@@ -319,7 +319,7 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 
 ### Added
 
-- Ability for Jenkins Warning NG reporting plugin to handle severity as int or string type. (Alex Xydes, @axydes)
+- Ability for Jenkins Warning NG reporting plugin to handle severity as int or string type. (Alexander Xydes, @axydes)
 
 ### Fixed
 
@@ -331,9 +331,9 @@ Date:   Tue Nov 17 08:17:55 2020 -0800
 
 - Reporting plugin for the
   [Jenkins Warnings Next Generation](https://wiki.jenkins.io/display/JENKINS/Warnings+Next+Generation+Plugin)
-  plugin. (Alex Xydes, @axydes)
+  plugin. (Alexander Xydes, @axydes)
   - Updated Jenkinsfile template to reflect usage of new plugin.
-- Renamed file writing reporting plugin to write Jenkins warnings reporting plugin. (Alex Xydes, @axydes)
+- Renamed file writing reporting plugin to write Jenkins warnings reporting plugin. (Alexander Xydes, @axydes)
 - More helpful, explicit error messages from the clang-format tool plugin.
 
 ### Fixed
@@ -374,7 +374,7 @@ statick my-project
 ### Fixed
 
 - Clang-format tool now supports multiple language specifications in the configuration file.
-  The fix also allowed for increased unit test coverage of the tool. (Alex Xydes, @xydesa)
+  The fix also allowed for increased unit test coverage of the tool. (Alexander Xydes, @xydesa)
 
 ### Removed
 
