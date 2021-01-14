@@ -62,6 +62,7 @@ class MypyToolPlugin(ToolPlugin):
 
         issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
+
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
