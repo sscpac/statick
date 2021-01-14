@@ -38,7 +38,7 @@ class Args:
                 if os.path.exists(path) and os.path.isdir(path):
                     user_paths.append(path)
                 else:
-                    logging.warning("Could not find user path %s!", path)
+                    logging.error("Could not find user path %s!", path)
         return user_paths
 
     def get_args(self, args: Optional[List[str]] = None) -> argparse.Namespace:

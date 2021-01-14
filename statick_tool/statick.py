@@ -503,7 +503,7 @@ class Statick:
             with multiprocessing.Pool(parsed_args.max_procs) as pool:
                 total_issues = pool.starmap(self.scan_package, mp_args)
         else:
-            logging.info(
+            logging.warning(
                 "Statick's plugin manager does not currently support multiprocessing"
                 " without UNIX's fork function. Falling back to a single process."
             )
@@ -544,7 +544,7 @@ class Statick:
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
             if not self.config or not self.config.has_level(level):
-                logging.warning("Can't find specified level %s in config!", level)
+                logging.error("Can't find specified level %s in config!", level)
                 enabled_reporting_plugins = list(available_reporting_plugins)
             else:
                 enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
@@ -560,7 +560,7 @@ class Statick:
 
         for plugin_name in enabled_reporting_plugins:
             if plugin_name not in available_reporting_plugins:
-                logging.warning(
+                logging.error(
                     "Can't find specified reporting plugin %s!", plugin_name
                 )
                 continue
