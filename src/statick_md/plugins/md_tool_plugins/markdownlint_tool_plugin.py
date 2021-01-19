@@ -1,7 +1,6 @@
 """Apply markdownlint tool and gather results."""
 
-from __future__ import print_function
-
+import logging
 import re
 import subprocess
 
@@ -52,25 +51,22 @@ class MarkdownlintToolPlugin(ToolPlugin):
                 if ex.returncode == 1:  # markdownlint returns 1 upon linting errors
                     total_output.append(ex.output)
                 else:
-                    print(
-                        "{} failed! Returncode = {}".format(
-                            tool_bin, str(ex.returncode)
-                        )
+                    logging.warning(
+                        "%s failed! Returncode = %d", tool_bin, ex.returncode
                     )
-                    print("{}".format(ex.output))
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
             except OSError as ex:
-                print("Couldn't find {}! ({})".format(tool_bin, ex))
+                logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
                 return None
 
-        if self.plugin_context.args.show_tool_output:
-            for output in total_output:
-                print("{}".format(output))
+        for output in total_output:
+            logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fid:
             for output in total_output:
-                f.write(output)
+                fid.write(output)
 
         issues = self.parse_output(total_output)
         return issues
