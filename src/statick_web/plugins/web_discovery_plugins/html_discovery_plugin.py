@@ -1,7 +1,6 @@
 """Discover HTML files to analyze."""
 
-from __future__ import print_function
-
+import logging
 from collections import OrderedDict
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -29,15 +28,13 @@ class HTMLDiscoveryPlugin(DiscoveryPlugin):
 
         src_files = list(OrderedDict.fromkeys(src_files))
 
-        print("  {} HTML source files found.".format(len(src_files)))
+        logging.info("  %d HTML source files found.", len(src_files))
         if exceptions:
             original_file_count = len(src_files)
             src_files = exceptions.filter_file_exceptions_early(package, src_files)
             if original_file_count > len(src_files):
-                print(
-                    "  After filtering, {} HTML files will be scanned.".format(
-                        len(src_files)
-                    )
+                logging.info(
+                    "  After filtering, %d HTML files will be scanned.", len(src_files)
                 )
 
         package["html_src"] = src_files

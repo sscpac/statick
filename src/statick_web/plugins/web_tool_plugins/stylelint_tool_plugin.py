@@ -1,8 +1,7 @@
 """Apply stylelint tool and gather results."""
 
-from __future__ import print_function
-
 import json
+import logging
 import subprocess
 
 from statick_tool.issue import Issue
@@ -55,25 +54,22 @@ class StylelintToolPlugin(ToolPlugin):
                 if ex.returncode == 2:  # returns 2 upon linting errors
                     total_output.append(ex.output.strip())
                 else:
-                    print(
-                        "{} failed! Returncode = {}".format(
-                            tool_bin, str(ex.returncode)
-                        )
+                    logging.warning(
+                        "%s failed! Returncode = %d", tool_bin, ex.returncode
                     )
-                    print("{}".format(ex.output))
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 
             except OSError as ex:
-                print("Couldn't find {}! ({})".format(tool_bin, ex))
+                logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
                 return None
 
-        if self.plugin_context.args.show_tool_output:
-            for output in total_output:
-                print("{}".format(output))
+        for output in total_output:
+            logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w") as f:
+        with open(self.get_name() + ".log", "w") as fid:
             for output in total_output:
-                f.write(output)
+                fid.write(output)
 
         issues = self.parse_output(total_output)
         return issues
@@ -107,6 +103,6 @@ class StylelintToolPlugin(ToolPlugin):
                         )
 
                 except ValueError as ex:
-                    print("ValueError: {}".format(ex))
+                    logging.warning("ValueError: %s", ex)
 
         return issues
