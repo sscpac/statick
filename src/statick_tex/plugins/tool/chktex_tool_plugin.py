@@ -3,6 +3,7 @@ Apply chktex tool and gather results.
 
 Chktex documentation at http://mirrors.rit.edu/CTAN/systems/doc/chktex/ChkTeX.pdf.
 """
+import logging
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -38,23 +39,22 @@ class ChktexToolPlugin(ToolPlugin):  # type: ignore
                 # Return code 1 just means "found problems"
                 # Return code 2 provides correct output with test cases used so far
                 if ex.returncode != 1 and ex.returncode != 2:
-                    print("Problem {}".format(ex.returncode))
-                    print("{}".format(ex.output))
+                    logging.warning("Problem %s", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
                 output = ex.output
 
             except OSError as ex:
-                print("Couldn't find {}! ({})".format(tool_bin, ex))
+                logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
                 return None
 
-            if self.plugin_context and self.plugin_context.args.show_tool_output:
-                print("{}".format(output))
+            logging.debug("%s", output)
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as fname:
+        with open(self.get_name() + ".log", "w") as fid:
             for output in total_output:
-                fname.write(output)
+                fid.write(output)
 
         issues = self.parse_output(total_output)  # type: List[Issue]
         return issues

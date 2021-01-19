@@ -1,4 +1,5 @@
 """Discover TeX files to analyze."""
+import logging
 from collections import OrderedDict
 from typing import List, Tuple
 
@@ -34,15 +35,13 @@ class TexDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
 
         tex_files = list(OrderedDict.fromkeys(tex_files))
 
-        print("  {} TeX files found.".format(len(tex_files)))
+        logging.info("  %d TeX files found.", len(tex_files))
         if exceptions:
             original_file_count = len(tex_files)  # type: int
             tex_files = exceptions.filter_file_exceptions_early(package, tex_files)
             if original_file_count > len(tex_files):
-                print(
-                    "  After filtering, {} TeX files will be scanned.".format(
-                        len(tex_files)
-                    )
+                logging.info(
+                    "  After filtering, %d TeX files will be scanned.", len(tex_files)
                 )
 
         package["tex"] = tex_files
