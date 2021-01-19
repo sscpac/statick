@@ -18,7 +18,7 @@ class CatkinDiscoveryPlugin(DiscoveryPlugin):
         return "catkin"
 
     @deprecated(
-        "A more generic version of this plugin is the ros_discovery_plugin. This plugin will be removed in a future version."  # NOLINT
+        "This plugin has been deprecated since v0.4.6. A more generic version of this plugin is the ros_discovery_plugin. This plugin will be removed in v0.6."  # NOLINT
     )
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
