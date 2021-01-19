@@ -42,11 +42,13 @@ class DocformatterToolPlugin(ToolPlugin):
                 return []
 
             except subprocess.CalledProcessError as ex:
-                logging.warning("docformatter binary failed: %s.", tool_bin)
-                logging.warning("Returncode: %d", ex.returncode)
-                logging.warning("%s exception: %s", self.get_name(), ex.output)
-                total_output.append(ex.output)
-                continue
+                if ex.returncode == 3:
+                    total_output.append(ex.output)
+                else:
+                    logging.warning("docformatter binary failed: %s.", tool_bin)
+                    logging.warning("Returncode: %d", ex.returncode)
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
+                    continue
 
         for output in total_output:
             logging.debug("%s", output)
@@ -80,7 +82,7 @@ class DocformatterToolPlugin(ToolPlugin):
                             self.get_name(),
                             "format",
                             "3",
-                            "docformatter",
+                            "would reformat",
                             None,
                         )
                     )
