@@ -1,7 +1,4 @@
 """Discover PDDL files to analyze."""
-import fnmatch
-import os
-from collections import OrderedDict
 from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -19,16 +16,12 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for PDDL files."""
         pddl_files = []  # type: List[str]
-        globs = ["*.pddl"]  # type: List[str]
 
-        root = ""  # type: str
-        for root, _, files in os.walk(package.path):
-            for glob in globs:
-                for f in fnmatch.filter(files, glob):
-                    full_path = os.path.join(root, f)
-                    pddl_files.append(os.path.abspath(full_path))
+        self.find_files(package)
 
-        pddl_files = list(OrderedDict.fromkeys(pddl_files))
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".pddl"):
+                pddl_files.append(file_dict["path"])
 
         print("  {} PDDL files found.".format(len(pddl_files)))
         if exceptions:
