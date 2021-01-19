@@ -1,5 +1,6 @@
 """Apply Validate tool and gather results."""
 import argparse
+import logging
 import subprocess
 from typing import List, Optional
 
@@ -47,20 +48,19 @@ class ValValidateToolPlugin(ToolPlugin):  # type: ignore
         except subprocess.CalledProcessError as ex:
             output = ex.output
             if ex.returncode != 255:
-                print("Validate failed! Returncode = {}".format(str(ex.returncode)))
-                print("{}".format(ex.output))
+                logging.warning("Validate failed! Returncode = %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
         except OSError as ex:
-            print("Couldn't find {}! ({})".format(validate_bin, ex))
+            logging.warning("Couldn't find %s! (%s)", validate_bin, ex)
             return None
 
-        if self.plugin_context and self.plugin_context.args.show_tool_output:
-            print("{}".format(output))
+        logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fname:
-                fname.write(output)
+            with open(self.get_name() + ".log", "w") as fid:
+                fid.write(output)
 
         issues = self.parse_output(
             output, package["pddl_domain_src"][0]

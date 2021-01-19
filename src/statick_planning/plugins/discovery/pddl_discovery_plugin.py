@@ -1,4 +1,5 @@
 """Discover PDDL files to analyze."""
+import logging
 from typing import List
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -23,15 +24,13 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
             if file_dict["name"].endswith(".pddl"):
                 pddl_files.append(file_dict["path"])
 
-        print("  {} PDDL files found.".format(len(pddl_files)))
+        logging.info("  %d PDDL files found.", len(pddl_files))
         if exceptions:
             original_file_count = len(pddl_files)  # type: int
             pddl_files = exceptions.filter_file_exceptions_early(package, pddl_files)
             if original_file_count > len(pddl_files):
-                print(
-                    "  After filtering, {} PDDL files will be scanned.".format(
-                        len(pddl_files)
-                    )
+                logging.info(
+                    "  After filtering, %d PDDL files will be scanned.", len(pddl_files)
                 )
 
         package["pddl_domain_src"] = []
