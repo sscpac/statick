@@ -172,6 +172,15 @@ def test_add_user_config():
     assert "-Wall" in flags
 
 
+def test_get_config_from_missing_file():
+    """Test that None is returned when the configuration file does not exist."""
+    base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+    config = Config(base_config_file)
+    config_from_file = config.get_config_from_file("")
+
+    assert config_from_file is None
+
+
 @mock.patch("statick_tool.config.open")
 def test_user_config_value_error(mock_open):
     """Test the behavior when Config base file throws a YAMLError."""

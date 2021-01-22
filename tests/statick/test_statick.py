@@ -337,7 +337,7 @@ def test_run_output_is_not_directory(mocked_mkdir, init_statick):
 
 
 def test_run_force_tool_list(init_statick):
-    """Test running Statick against a missing directory."""
+    """Test running Statick with only a subset of tools."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -788,6 +788,26 @@ def init_statick_ws():
     ]
     yield (statick, args, argv)
 
+    # cleanup
+    try:
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
+            )
+        )
+        shutil.rmtree(
+            os.path.join(
+                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
+            )
+        )
+    except OSError as ex:
+        print("Error: {}".format(ex))
+
 
 def test_run_workspace(init_statick_ws):
     """Test running Statick on a workspace."""
@@ -1050,9 +1070,7 @@ def test_run_workspace_with_issues(init_statick_ws):
             "--profile",
             os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
             "--config",
-            os.path.join(
-                os.path.dirname(__file__), "rsc", "config.yaml"
-            ),
+            os.path.join(os.path.dirname(__file__), "rsc", "config.yaml"),
             "--exceptions",
             os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
         ]
@@ -1061,6 +1079,7 @@ def test_run_workspace_with_issues(init_statick_ws):
     parsed_args = args.get_args(sys.argv)
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
+    print("parsed_args: {}".format(parsed_args))
 
     issues, success = statick.run_workspace(parsed_args)
 
@@ -1182,9 +1201,9 @@ def test_scan_package_with_issues(init_statick_ws):
         "--profile",
         os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
         "--config",
-        os.path.join(
-            os.path.dirname(__file__), "rsc", "config.yaml"
-        ),
+        os.path.join(os.path.dirname(__file__), "rsc", "config.yaml"),
+        "--exceptions",
+        os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
     ]
 
     parsed_args = args.get_args(sys.argv)

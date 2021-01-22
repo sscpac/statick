@@ -26,17 +26,6 @@ class Config:
         if user_file:
             self.get_user_levels(user_file)
 
-    def get_base_levels(self, base_file: str) -> None:
-        """Get base configuration levels from file."""
-        if base_file:
-            with open(base_file) as fid:
-                try:
-                    self.config = yaml.safe_load(fid)
-                except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
-                    raise ValueError(
-                        "{} is not a valid YAML file: {}".format(base_file, ex)
-                    ) from ex
-
     def get_user_levels(self, user_file: str) -> None:
         """Get configuration levels from user file.
 
