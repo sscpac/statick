@@ -1,5 +1,7 @@
 levels:
-  sei_cert:
+  custom:
+    reporting:
+      - not_a_plugin
     tool:
       pylint:
         flags:

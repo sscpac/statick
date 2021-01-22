@@ -1,7 +1,9 @@
 """Unit tests for the Config module."""
 import os
 
+import mock
 import pytest
+import yaml
 
 from statick_tool.config import Config
 
@@ -154,3 +156,38 @@ def test_config_get_reporintg_config():
 
     reporting_config = config.get_reporting_config("write_to_file", "example", "flags")
     assert not reporting_config
+
+
+def test_add_user_config():
+    """Test that the Config module adds user levels that inherit from base levels."""
+    base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+    user_config_file = os.path.join(os.path.dirname(__file__), "rsc", "user.yaml")
+
+    config = Config(base_config_file, user_config_file)
+
+    flags = config.get_tool_config("catkin_lint", "custom", "flags")
+    assert flags == "--unit_test"
+
+    flags = config.get_tool_config("make", "custom", "flags")
+    assert "-Wall" in flags
+
+
+@mock.patch("statick_tool.config.open")
+def test_user_config_value_error(mock_open):
+    """Test the behavior when Config base file throws a YAMLError."""
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+
+    mock_open.side_effect = yaml.YAMLError("error")
+    with pytest.raises(yaml.YAMLError):
+        Config(config_file)
+
+
+@mock.patch("statick_tool.config.open")
+def test_get_user_levels_value_error(mock_open):
+    """Test the behavior when Config user file throws a YAMLError."""
+    user_config_file = os.path.join(os.path.dirname(__file__), "rsc", "user.yaml")
+
+    config = Config("")
+    mock_open.side_effect = yaml.YAMLError("error")
+    with pytest.raises(yaml.YAMLError):
+        config.get_user_levels(user_config_file)

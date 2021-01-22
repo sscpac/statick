@@ -88,15 +88,29 @@ class Statick:
 
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
-        config_filename = "config.yaml"
+        base_config_filename = "config.yaml"
+        user_config_filename = ""
         if args.config is not None:
-            config_filename = args.config
+            user_config_filename = args.config
         try:
-            self.config = Config(self.resources.get_file(config_filename))
+            self.config = Config(
+                self.resources.get_file(base_config_filename),
+                self.resources.get_file(user_config_filename),
+            )
         except OSError as ex:
-            logging.error("Failed to access config file %s: %s", config_filename, ex)
+            logging.error(
+                "Failed to access configuration file %s or %s: %s",
+                base_config_filename,
+                user_config_filename,
+                ex,
+            )
         except ValueError as ex:
-            logging.error("Config file %s has errors: %s", config_filename, ex)
+            logging.error(
+                "Configuration file %s or %s has errors: %s",
+                base_config_filename,
+                user_config_filename,
+                ex,
+            )
 
     def get_exceptions(self, args: argparse.Namespace) -> None:
         """Get Statick exceptions."""

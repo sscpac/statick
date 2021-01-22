@@ -1,0 +1,6 @@
+levels:
+  custom:
+    inherits_from: "threshold"
+    tool:
+      catkin_lint:
+        flags: "--unit_test"

@@ -1,2 +1,4 @@
 levels:
-  sei_cert:
+  custom:
+    tools:
+      - pylint

@@ -1,4 +1,4 @@
 levels:
-  sei_cert:
+  missing_tool:
     tool:
       - clang-tidy
