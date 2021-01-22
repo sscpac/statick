@@ -308,8 +308,10 @@ def test_run_missing_config(init_statick):
         print("Error: {}".format(ex))
 
 
-def test_run_output_is_not_directory(init_statick):
+@mock.patch("os.mkdir")
+def test_run_output_is_not_directory(mocked_mkdir, init_statick):
     """Test running Statick against a missing directory."""
+    mocked_mkdir.side_effect = OSError("error")
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -861,8 +863,10 @@ def test_run_workspace_max_proc(init_statick_ws):
     assert success
 
 
-def test_run_workspace_output_is_not_a_directory(init_statick_ws):
+@mock.patch("os.mkdir")
+def test_run_workspace_output_is_not_a_directory(mocked_mkdir, init_statick_ws):
     """Test running Statick on a workspace."""
+    mocked_mkdir.side_effect = OSError("error")
     statick = init_statick_ws[0]
     args = init_statick_ws[1]
     sys.argv = [
