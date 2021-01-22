@@ -2,20 +2,25 @@
 
 import logging
 from collections import OrderedDict
+from typing import List, Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
+from statick_tool.exceptions import Exceptions
+from statick_tool.package import Package
 
 
-class MarkdownDiscoveryPlugin(DiscoveryPlugin):
+class MarkdownDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
     """Discover Markdown files to analyze."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of discovery type."""
         return "markdown"
 
-    def scan(self, package, level, exceptions=None):
+    def scan(
+        self, package: Package, level: str, exceptions: Optional[Exceptions] = None
+    ) -> None:
         """Scan package looking for Markdown files."""
-        src_files = []
+        src_files = []  # type: List[str]
 
         self.find_files(package)
 

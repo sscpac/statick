@@ -93,14 +93,13 @@ def test_markdownlint_tool_plugin_scan_valid_with_issues():
         os.path.join(os.path.dirname(__file__), "valid_package", "test.md")
     ]
     issues = plugin.scan(package, "level")
-    # We expect to have camelcase warnings and no-unused-var errors.
     assert len(issues) == 2
 
 
 def test_markdownlint_tool_plugin_parse_valid():
     """Verify that we can parse the expected output of markdownlint."""
     plugin = setup_markdownlint_tool_plugin()
-    output = "test.md:305 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 3]"
+    output = "test.md:305:3 MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 3]"
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "test.md"
