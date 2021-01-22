@@ -3,19 +3,22 @@
 import logging
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class JSHintToolPlugin(ToolPlugin):
+class JSHintToolPlugin(ToolPlugin):  # type: ignore
     """Apply jshint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "jshint"
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         tool_bin = "jshint"
 
@@ -27,20 +30,20 @@ class JSHintToolPlugin(ToolPlugin):
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags = []
+        flags = []  # type: List[str]
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += ["-e", ".js,.html", "--extract", "auto", "--reporter", "unix"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        files = []
+        files = []  # type: List[str]
         if "html_src" in package:
             files += package["html_src"]
         if "javascript_src" in package:
             files += package["javascript_src"]
 
-        total_output = []
+        total_output = []  # type: List[str]
 
         for src in files:
             try:
@@ -48,7 +51,6 @@ class JSHintToolPlugin(ToolPlugin):
                 output = subprocess.check_output(
                     exe, stderr=subprocess.STDOUT, universal_newlines=True
                 )
-                total_output.append(output)
 
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 2:  # jshint returns 2 upon linting errors
@@ -71,19 +73,21 @@ class JSHintToolPlugin(ToolPlugin):
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
 
-    def parse_output(self, total_output):
+    # pylint: enable=too-many-locals
+
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         jshint_re = r"(.+):(\d+):(\d+):\s(.+)"
-        parse = re.compile(jshint_re)
-        issues = []
+        parse = re.compile(jshint_re)  # type: Pattern[str]
+        issues = []  # type: List[Issue]
 
         for output in total_output:
             lines = output.split("\n")
             for line in lines:
-                match = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     filename = match.group(1)
                     line_number = match.group(2)

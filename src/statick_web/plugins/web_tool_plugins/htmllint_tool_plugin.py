@@ -3,19 +3,22 @@
 import logging
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class HTMLLintToolPlugin(ToolPlugin):
+class HTMLLintToolPlugin(ToolPlugin):  # type: ignore
     """Apply HTML tidy tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "htmllint"
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         tool_bin = "htmllint"
 
@@ -27,13 +30,13 @@ class HTMLLintToolPlugin(ToolPlugin):
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags = []
+        flags = []  # type: List[str]
         if format_file_name is not None:
             flags += ["--rc", format_file_name]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        total_output = []
+        total_output = []  # type: List[str]
 
         for src in package["html_src"]:
             try:
@@ -65,19 +68,21 @@ class HTMLLintToolPlugin(ToolPlugin):
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
 
-    def parse_output(self, total_output):
+    # pylint: enable=too-many-locals
+
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         re_str = r"(.+):\s.+\s(\d+),\s.+,\s(.+)"
-        parse = re.compile(re_str)
-        issues = []
+        parse = re.compile(re_str)  # type: Pattern[str]
+        issues = []  # type: List[Issue]
 
         for output in total_output:
             lines = output.split("\n")
             for line in lines:
-                match = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     filename = match.group(1)
                     line_number = match.group(2)

@@ -3,19 +3,22 @@
 import logging
 import re
 import subprocess
+from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
+from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class ESLintToolPlugin(ToolPlugin):
+class ESLintToolPlugin(ToolPlugin):  # type: ignore
     """Apply eslint tool and gather results."""
 
-    def get_name(self):
+    def get_name(self) -> str:
         """Get name of tool."""
         return "eslint"
 
-    def scan(self, package, level):  # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals
+    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
         tool_bin = "eslint"
 
@@ -27,20 +30,20 @@ class ESLintToolPlugin(ToolPlugin):
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags = []
+        flags = []  # type: List[str]
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += ["--ext", ".js,.html", "-f", "unix"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        files = []
+        files = []  # type: List[str]
         if "html_src" in package:
             files += package["html_src"]
         if "javascript_src" in package:
             files += package["javascript_src"]
 
-        total_output = []
+        total_output = []  # type: List[str]
 
         for src in files:
             try:
@@ -71,20 +74,22 @@ class ESLintToolPlugin(ToolPlugin):
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues = self.parse_output(total_output)  # type: List[Issue]
         return issues
 
-    def parse_output(self, total_output):  # pylint: disable=too-many-locals
+    # pylint: enable=too-many-locals
+
+    def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         eslint_re = r"(.+):(\d+):(\d+):\s(.+)\s\[(.+)\/(.+)\]"
-        parse = re.compile(eslint_re)
-        issues = []
+        parse = re.compile(eslint_re)  # type: Pattern[str]
+        issues = []  # type: List[Issue]
 
         for output in total_output:
             lines = output.split("\n")
             count = 0
             for line in lines:
-                match = parse.match(line)
+                match = parse.match(line)  # type: Optional[Match[str]]
                 if match:
                     severity_str = match.group(5).lower()
                     severity = 3
@@ -95,18 +100,14 @@ class ESLintToolPlugin(ToolPlugin):
 
                     count += 1
 
-                    filename = match.group(1)
-                    line_number = match.group(2)
-                    issue_type = match.group(6)
-                    message = match.group(4)
                     issues.append(
                         Issue(
-                            filename,
-                            line_number,
+                            match.group(1),
+                            match.group(2),
                             self.get_name(),
-                            issue_type,
+                            match.group(6),
                             severity,
-                            message,
+                            match.group(4),
                             None,
                         )
                     )
