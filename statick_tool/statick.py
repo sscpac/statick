@@ -272,7 +272,9 @@ class Statick:
                     os.mkdir(args.output_directory)
                 except OSError as ex:
                     logging.error(
-                        "Unable to create output directory at %s: %s", args.output_directory, ex
+                        "Unable to create output directory at %s: %s",
+                        args.output_directory,
+                        ex,
                     )
                     return None, False
 
