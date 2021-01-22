@@ -95,7 +95,7 @@ def test_docformatter_tool_plugin_parse_valid():
     assert issues[0].tool == "docformatter"
     assert issues[0].issue_type == "format"
     assert issues[0].severity == "3"
-    assert issues[0].message == "docformatter"
+    assert issues[0].message == "would reformat"
 
 
 def test_docformatter_tool_plugin_parse_invalid():

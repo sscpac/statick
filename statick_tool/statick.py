@@ -282,10 +282,15 @@ class Statick:
         orig_path = os.getcwd()
         if args.output_directory:
             if not os.path.isdir(args.output_directory):
-                logging.error(
-                    "Output directory not found at %s!", args.output_directory
-                )
-                return None, False
+                try:
+                    os.mkdir(args.output_directory)
+                except OSError as ex:
+                    logging.error(
+                        "Unable to create output directory at %s: %s",
+                        args.output_directory,
+                        ex,
+                    )
+                    return None, False
 
             output_dir = os.path.join(args.output_directory, package.name + "-" + level)
 
@@ -460,8 +465,13 @@ class Statick:
         if parsed_args.output_directory:
             out_dir = parsed_args.output_directory
             if not os.path.isdir(out_dir):
-                logging.error("Output directory not found at %s!", out_dir)
-                return None, False
+                try:
+                    os.mkdir(out_dir)
+                except OSError as ex:
+                    logging.error(
+                        "Unable to create output directory at %s: %s", out_dir, ex
+                    )
+                    return None, False
 
         ignore_packages = self.get_ignore_packages()
         ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
