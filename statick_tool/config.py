@@ -15,7 +15,7 @@ class Config:
     Sets what flags are used for each plugin at those levels.
     """
 
-    def __init__(self, base_file: Optional[str], user_file: str = "") -> None:
+    def __init__(self, base_file: Optional[str], user_file: Optional[str] = "") -> None:
         """Initialize configuration."""
         if base_file is None or not os.path.exists(base_file):
             self.config = []  # type: Any
@@ -40,7 +40,7 @@ class Config:
                         self.config["levels"][level] = user_config["levels"][level]
 
     @staticmethod
-    def get_config_from_file(filename: str) -> Optional[Any]:
+    def get_config_from_file(filename: str) -> Any:
         """Get level configuration from a file."""
         if filename:
             with open(filename) as fid:
