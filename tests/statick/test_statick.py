@@ -788,26 +788,6 @@ def init_statick_ws():
     ]
     yield (statick, args, argv)
 
-    # cleanup
-    try:
-        shutil.rmtree(
-            os.path.join(
-                os.path.dirname(__file__), "test_workspace", "all_packages-sei_cert"
-            )
-        )
-        shutil.rmtree(
-            os.path.join(
-                os.path.dirname(__file__), "test_workspace", "test_package-sei_cert"
-            )
-        )
-        shutil.rmtree(
-            os.path.join(
-                os.path.dirname(__file__), "test_workspace", "test_package2-sei_cert"
-            )
-        )
-    except OSError as ex:
-        print("Error: {}".format(ex))
-
 
 def test_run_workspace(init_statick_ws):
     """Test running Statick on a workspace."""
@@ -1205,8 +1185,6 @@ def test_scan_package_with_issues(init_statick_ws):
         os.path.join(
             os.path.dirname(__file__), "rsc", "config.yaml"
         ),
-        "--exceptions",
-        os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
     ]
 
     parsed_args = args.get_args(sys.argv)

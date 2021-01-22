@@ -21,7 +21,7 @@ class Config:
             self.config = []  # type: Any
             return
 
-        self.get_base_levels(base_file)
+        self.config = self.get_config_from_file(base_file)
 
         if user_file:
             self.get_user_levels(user_file)
@@ -43,19 +43,26 @@ class Config:
         Any uniquely named levels in user file will be included in available levels.
         User levels can inherit from the base levels.
         """
+        user_config = self.get_config_from_file(user_file)
         if user_file:
-            with open(user_file) as fid:
-                try:
-                    user_config = yaml.safe_load(fid)
-                except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
-                    raise ValueError(
-                        "{} is not a valid YAML file: {}".format(user_file, ex)
-                    ) from ex
-
             if "levels" in user_config:
                 for level in user_config["levels"]:
                     if level not in self.config["levels"]:
                         self.config["levels"][level] = user_config["levels"][level]
+
+    @staticmethod
+    def get_config_from_file(filename: str) -> Optional[Any]:
+        """Get level configuration from a file."""
+        if filename:
+            with open(filename) as fid:
+                try:
+                    return yaml.safe_load(fid)
+                except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
+                    raise ValueError(
+                        "{} is not a valid YAML file: {}".format(filename, ex)
+                    ) from ex
+
+        return None
 
     def has_level(self, level: Optional[str]) -> bool:
         """Check if given level exists in config."""
