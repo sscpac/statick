@@ -572,7 +572,7 @@ def test_run_no_reporting_plugins(init_statick):
     """
     Test that no reporting plugins returns unsuccessful.
 
-    Expected results: issues is None and success is False
+    Expected results: no issues and success is True
     """
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
@@ -595,8 +595,9 @@ def test_run_no_reporting_plugins(init_statick):
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
     issues, success = statick.run(path, parsed_args)
-    assert issues is None
-    assert not success
+    for tool in issues:
+        assert not issues[tool]
+    assert success
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:

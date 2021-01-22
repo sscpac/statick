@@ -1,7 +1,5 @@
 levels:
   custom:
-    reporting:
-      - not_a_plugin
     tool:
       pylint:
         flags:
