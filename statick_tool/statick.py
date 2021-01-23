@@ -597,20 +597,20 @@ class Statick:
         )
         issues, dummy = self.run(package.path, parsed_args)
         if issues is not None:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+            logging.info(sio.getvalue())
             logging.info(
                 "-- Done scanning package %s (%d of %d) --",
                 package.name,
                 count,
                 num_packages,
             )
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
-            logging.info(sio.getvalue())
         else:
-            logging.error("Failed to run statick on package %s!", package.name)
             sys.stdout = old_stdout
             sys.stderr = old_stderr
             logging.info(sio.getvalue())
+            logging.error("Failed to run statick on package %s!", package.name)
         if old_handler is not None:
             handler.flush()
             logger.removeHandler(handler)
