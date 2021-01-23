@@ -3,6 +3,7 @@ import argparse
 import copy
 import io
 import logging
+from logging.handlers import MemoryHandler
 import multiprocessing
 import os
 import sys
@@ -579,6 +580,13 @@ class Statick:
         num_packages: int,
     ) -> Optional[Dict[str, List[Issue]]]:
         """Scan each package in a separate process while buffering output."""
+        logger = logging.getLogger()
+        old_handler = None
+        if logger.handlers[0]:
+            old_handler = logger.handlers[0]
+            handler = MemoryHandler(10000, flushLevel=logging.ERROR, target=old_handler)
+            logger.removeHandler(old_handler)
+        logger.addHandler(handler)
         sio = io.StringIO()
         old_stdout = sys.stdout
         old_stderr = sys.stderr
@@ -603,6 +611,10 @@ class Statick:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
             logging.info(sio.getvalue())
+        if old_handler is not None:
+            handler.flush()
+            logger.removeHandler(handler)
+            logger.addHandler(old_handler)
         return issues
 
     @staticmethod
