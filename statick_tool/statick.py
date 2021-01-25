@@ -6,6 +6,7 @@ import logging
 import multiprocessing
 import os
 import sys
+from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
 from yapsy.PluginManager import PluginManager
@@ -589,15 +590,30 @@ class Statick:
         num_packages: int,
     ) -> Optional[Dict[str, List[Issue]]]:
         """Scan each package in a separate process while buffering output."""
+        logger = logging.getLogger()
+        old_handler = None
+        if logger.handlers[0]:
+            old_handler = logger.handlers[0]
+            handler = MemoryHandler(10000, flushLevel=logging.ERROR, target=old_handler)
+            logger.removeHandler(old_handler)
+        logger.addHandler(handler)
+
+        logging.info(
+            "-- Scanning package %s (%d of %d) --", package.name, count, num_packages
+        )
+
         sio = io.StringIO()
         old_stdout = sys.stdout
         old_stderr = sys.stderr
         sys.stdout = sio
         sys.stderr = sio
-        logging.info(
-            "-- Scanning package %s (%d of %d) --", package.name, count, num_packages
-        )
+
         issues, dummy = self.run(package.path, parsed_args)
+
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
+        logging.info(sio.getvalue())
+
         if issues is not None:
             logging.info(
                 "-- Done scanning package %s (%d of %d) --",
@@ -605,14 +621,14 @@ class Statick:
                 count,
                 num_packages,
             )
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
-            logging.info(sio.getvalue())
         else:
             logging.error("Failed to run statick on package %s!", package.name)
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
-            logging.info(sio.getvalue())
+
+        if old_handler is not None:
+            handler.flush()
+            logger.removeHandler(handler)
+            logger.addHandler(old_handler)
+
         return issues
 
     @staticmethod
