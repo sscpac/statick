@@ -37,6 +37,12 @@ class Config:
         if user_file:
             if "levels" in user_config:
                 for level in user_config["levels"]:
+                    level_config = user_config["levels"][level]
+                    if (
+                        "inherits_from" in level_config
+                        and level_config["inherits_from"] == level
+                    ):
+                        level_config["inherits_from"] = ""
                     self.config["levels"][level] = user_config["levels"][level]
 
     @staticmethod

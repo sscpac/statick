@@ -204,6 +204,22 @@ def test_user_level_extends_override_level():
     assert "-Wall" in flags
 
 
+def test_user_level_override_base_level_with_same_name():
+    """Test that user level that overrides a base level with same name finds flags.."""
+    base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+    user_config_file = os.path.join(
+        os.path.dirname(__file__), "rsc", "user-level-same-name.yaml"
+    )
+
+    config = Config(base_config_file, user_config_file)
+
+    flags = config.get_tool_config("pylint", "threshold", "flags")
+    assert flags == "--user-override"
+
+    flags = config.get_tool_config("make", "threshold", "flags")
+    assert flags is None
+
+
 def test_get_config_from_missing_file():
     """Test that None is returned when the configuration file does not exist."""
     base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
