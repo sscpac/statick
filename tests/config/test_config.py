@@ -175,7 +175,9 @@ def test_add_user_config():
 def test_user_level_overrides_base_level():
     """Test that user level overrides base level in configuration."""
     base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
-    user_config_file = os.path.join(os.path.dirname(__file__), "rsc", "user-override.yaml")
+    user_config_file = os.path.join(
+        os.path.dirname(__file__), "rsc", "user-override.yaml"
+    )
 
     config = Config(base_config_file, user_config_file)
 
