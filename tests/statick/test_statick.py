@@ -570,7 +570,7 @@ def test_run_discovery_dependency(init_statick):
 
 def test_run_no_reporting_plugins(init_statick):
     """
-    Test that no reporting plugins returns unsuccessful.
+    Test that no reporting plugins returns successful.
 
     Expected results: no issues and success is True
     """
