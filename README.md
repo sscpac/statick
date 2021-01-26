@@ -433,11 +433,16 @@ statick src/my_pkg --user-paths my_project_config --profile custom-profile.yaml
 
 To run Statick with a custom _configuration_ containing custom _levels_, use `custom-config.yaml` with custom levels
 defined and `custom-profile.yaml` that calls out the use of the custom _levels_ for your _packages_.
-Those filenames can be any name you want to use.
 Custom _levels_ are allowed to override, inherit from, and extend base levels.
 If you create a _level_ that inherits from a base level of the same name, the new user-defined level will completely
 override the base level.
 This chaining of configuration files is limited to a single custom configuration file.
+
+The filenames used for configurations can be any name you want to use.
+If you select `config.yaml` then that will become the base configuration file and none of the levels in the main
+Statick package will be available to extend.
+This would allow you to include a second custom configuration file on the `--user-paths` path with a name other than
+`config.yaml`.
 
 ```shell
 statick src/my_pkg --user-paths my_project_config --profile custom-profile.yaml --config custom-config.yaml
