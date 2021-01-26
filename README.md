@@ -435,6 +435,8 @@ To run Statick with a custom _configuration_ containing custom _levels_, use `cu
 defined and `custom-profile.yaml` that calls out the use of the custom _levels_ for your _packages_.
 Those filenames can be any name you want to use.
 Custom _levels_ are allowed to override, inherit from, and extend base levels.
+If you create a _level_ that inherits from a base level of the same name, the new user-defined level will completely
+override the base level.
 This chaining of configuration files is limited to a single custom configuration file.
 
 ```shell

@@ -23,7 +23,7 @@ class Config:
 
         self.config = self.get_config_from_file(base_file)
 
-        if user_file:
+        if user_file and os.path.exists(user_file):
             self.get_user_levels(user_file)
 
     def get_user_levels(self, user_file: str) -> None:
