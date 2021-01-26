@@ -175,9 +175,7 @@ def test_add_user_config():
 def test_user_level_overrides_base_level():
     """Test that user level overrides base level in configuration."""
     base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
-    user_config_file = os.path.join(
-        os.path.dirname(__file__), "rsc", "user-override.yaml"
-    )
+    user_config_file = os.path.join(os.path.dirname(__file__), "rsc", "user-override.yaml")
 
     config = Config(base_config_file, user_config_file)
 
@@ -187,8 +185,19 @@ def test_user_level_overrides_base_level():
     flags = config.get_tool_config("make", "sei_cert", "flags")
     assert flags is None
 
+
+def test_user_level_extends_override_level():
+    """Test that user level extends a level that overrides a base level."""
+    base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+    user_config_file = os.path.join(os.path.dirname(__file__), "rsc", "user-extend.yaml")
+
+    config = Config(base_config_file, user_config_file)
+
+    flags = config.get_tool_config("pylint", "sei_cert", "flags")
+    assert flags == "--user-override"
+
     flags = config.get_tool_config("make", "sei_cert", "flags")
-    assert flags is None
+    assert "-Wall" in flags
 
 
 def test_get_config_from_missing_file():
