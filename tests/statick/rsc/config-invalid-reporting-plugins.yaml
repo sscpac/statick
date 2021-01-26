@@ -1,4 +1,9 @@
 levels:
-  custom:
+  missing_reporting_plugin:
+    discovery:
+      - python
     reporting:
       - not_a_plugin
+    tool:
+      pyflakes:
+        flags: ""

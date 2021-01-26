@@ -619,7 +619,9 @@ def test_run_invalid_reporting_plugins(init_statick):
         "--path",
         os.path.dirname(__file__),
         "--profile",
-        os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "profile-missing-reporting-plugin.yaml"
+        ),
         "--config",
         os.path.join(
             os.path.dirname(__file__), "rsc", "config-invalid-reporting-plugins.yaml"
@@ -1037,6 +1039,12 @@ def test_run_workspace_invalid_reporting_plugins(init_statick_ws):
     sys.argv = init_statick_ws[2]
     sys.argv.extend(
         [
+            "--profile",
+            os.path.join(
+                os.path.dirname(__file__),
+                "rsc",
+                "profile-missing-reporting-plugin.yaml",
+            ),
             "--config",
             os.path.join(
                 os.path.dirname(__file__),
@@ -1059,7 +1067,7 @@ def test_run_workspace_invalid_reporting_plugins(init_statick_ws):
 
 def test_run_workspace_with_issues(init_statick_ws):
     """
-    Test that invalid reporting plugins returns unsuccessful.
+    Test that existing issues are found in a workspace.
 
     Expected results: issues is empty and success is True
     """
