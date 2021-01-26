@@ -30,8 +30,9 @@ class Config:
         """Get configuration levels from user file.
 
         Any levels in user file will be included in available levels.
-        User levels can inherit from the base levels. If user levels and base levels
-        have the same name the user level will override the base level.
+        User levels can inherit from the base levels. If user levels and
+        base levels have the same name the user level will override the
+        base level.
         """
         user_config = self.get_config_from_file(user_file)
         if user_file:
