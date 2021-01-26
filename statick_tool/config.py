@@ -29,15 +29,15 @@ class Config:
     def get_user_levels(self, user_file: str) -> None:
         """Get configuration levels from user file.
 
-        Any uniquely named levels in user file will be included in available levels.
-        User levels can inherit from the base levels.
+        Any levels in user file will be included in available levels.
+        User levels can inherit from the base levels. If user levels and base levels
+        have the same name the user level will override the base level.
         """
         user_config = self.get_config_from_file(user_file)
         if user_file:
             if "levels" in user_config:
                 for level in user_config["levels"]:
-                    if level not in self.config["levels"]:
-                        self.config["levels"][level] = user_config["levels"][level]
+                    self.config["levels"][level] = user_config["levels"][level]
 
     @staticmethod
     def get_config_from_file(filename: str) -> Any:
