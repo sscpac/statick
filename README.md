@@ -438,6 +438,10 @@ defined and `custom-profile.yaml` that calls out the use of the custom _levels_ 
 statick src/my_pkg --user-paths my_project_config --profile custom-profile.yaml --config custom-config.yaml
 ```
 
+Note that any custom _level_ must be unique from the levels defined in the base configuration that comes with Statick.
+Custom levels are allowed to inherit from and extend base levels.
+This chaining of configuration files is limited to a single custom configuration file.
+
 ### Custom Cppcheck Configuration
 
 Some _tools_ support the use of a custom version.
