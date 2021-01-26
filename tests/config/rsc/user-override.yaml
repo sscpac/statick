@@ -1,0 +1,9 @@
+levels:
+  sei_cert:
+    discovery:
+      - python
+    reporting:
+      - print_to_console
+    tool:
+      pylint:
+        flags: "--user-override"
