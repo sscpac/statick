@@ -48,6 +48,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   * [Custom Configuration](#custom-configuration)
   * [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
   * [Custom CMake Flags](#custom-cmake-flags)
+  * [Custom Clang Format Configuration](#custom-clang-format-configuration)
 * [Custom Plugins](#custom-plugins)
 * [ROS Workspaces](#ros-workspaces)
 * [Examples](#examples)
@@ -467,6 +468,32 @@ The equals sign and double quotes must be used when specifying `--cmake-flags`.
 ```shell
 statick src/my_pkg --cmake-flags="-DFIRST_FLAG=x,-DSECOND_FLAG=y"
 ```
+
+### Custom Clang Format Configuration
+
+To use a custom configuration file for `clang-format` you currently have to copy your configuration file into the
+home directory.
+The reason for this is that `clang-format` does not have any flags that allow for specifying a configuration file.
+When `clang-format` is run as part of Statick it ends up using the configuration file in the home directory.
+
+When you have multiple projects it can be fairly easy to use a configuration file that is different from the one meant
+for the current package.
+Therefore, Statick runs a check to make sure the specified configuration file is the same one that is in the home directory.
+
+In order to actually use a custom configuration file you have to tell Statick to look in a _user path_ that contains
+your desired `clang-format` configuration.
+You also have to copy that file into your home directory.
+The _user path_ is specified with the `--user-paths` flag when running Statick.
+
+```shell
+user_path_root
+ |- rsc
+     |- _clang-format
+```
+
+For the file in the home directory, the Statick plugin for `clang-format` will first look for `~/_clang-format`.
+If that file does not exist then it will look for `~/.clang-format`.
+The resource file (in your _user path_) must be named `_clang-format`.
 
 ## Custom Plugins
 
