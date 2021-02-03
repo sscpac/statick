@@ -648,6 +648,24 @@ For _tool_ plugins that are not available via pip it is recommended to skip test
 Before submitting a change, please run tox to check that you have not introduced any regressions or violated any code
 style guidelines.
 
+Running `tox` for all the tests shows code coverage from unit tests, but the process takes tens of seconds.
+When developing unit tests and trying to find out if they pass it can be frustrating to run all of the tests for small
+changes.
+Instead of `tox` you can use `pytest` directly in order to run only the unit tests in a single file.
+If you have a unit test file at `tests/my_module/test_my_module.py` you can easily run all the unit tests in that file
+and save yourself a lot of time during development.
+
+```shell
+python3 -m pytest tests/my_module/test_my_module.py --cov=statick_tool/
+```
+
+To run all the tests specify the `tests` directory.
+Any subdirectory will run all the tests in that subdirectory.
+
+```shell
+python3 -m pytest tests/ --cov=statick_tool/
+```
+
 ### Mypy
 
 Statick uses [mypy](http://mypy-lang.org/) to check that type hints are being followed properly.
