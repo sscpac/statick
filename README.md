@@ -656,7 +656,7 @@ If you have a unit test file at `tests/my_module/test_my_module.py` you can easi
 and save yourself a lot of time during development.
 
 ```shell
-python3 -m pytest tests/my_module/test_my_module.py
+python3 -m pytest tests/my_module/test_my_module.py --cov=statick_tool/
 ```
 
 ### Mypy
