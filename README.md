@@ -659,6 +659,13 @@ and save yourself a lot of time during development.
 python3 -m pytest tests/my_module/test_my_module.py --cov=statick_tool/
 ```
 
+To run all the tests specify the `tests` directory.
+Any subdirectory will run all the tests in that subdirectory.
+
+```shell
+python3 -m pytest tests/ --cov=statick_tool/
+```
+
 ### Mypy
 
 Statick uses [mypy](http://mypy-lang.org/) to check that type hints are being followed properly.
