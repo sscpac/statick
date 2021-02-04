@@ -656,14 +656,14 @@ If you have a unit test file at `tests/my_module/test_my_module.py` you can easi
 and save yourself a lot of time during development.
 
 ```shell
-python3 -m pytest tests/my_module/test_my_module.py --cov=statick_tool/
+python3 -m pytest --cov=statick_tool/ tests/my_module/test_my_module.py
 ```
 
-To run all the tests specify the `tests` directory.
+To run all the tests and get a report with branch coverage specify the `tests` directory.
 Any subdirectory will run all the tests in that subdirectory.
 
 ```shell
-python3 -m pytest tests/ --cov=statick_tool/
+python3 -m pytest --cov=statick_tool/ --cov-report term-missing --cov-report html --cov-branch tests/
 ```
 
 ### Mypy

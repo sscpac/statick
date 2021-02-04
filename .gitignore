@@ -23,6 +23,7 @@ docs/_build
 .mypy_cache
 .pytest_cache
 .tox
+htmlcov
 output-*/
 tests/plugins/tool/clang-format_tool_plugin/_clang-format
 tests/statick/statick-*
