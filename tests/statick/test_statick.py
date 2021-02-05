@@ -337,7 +337,7 @@ def test_run_output_is_not_directory(mocked_mkdir, init_statick):
 
 
 def test_run_force_tool_list(init_statick):
-    """Test running Statick against a missing directory."""
+    """Test running Statick with only a subset of tools."""
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -416,7 +416,7 @@ def test_run_invalid_discovery_plugin(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -448,7 +448,7 @@ def test_run_invalid_tool_plugin(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -470,6 +470,8 @@ def test_run_missing_tool_dependency(init_statick):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-missing-tool.yaml"),
         "--force-tool-list",
         "clang-tidy",
         "--config",
@@ -486,7 +488,7 @@ def test_run_missing_tool_dependency(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-missing_tool"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -508,6 +510,8 @@ def test_run_tool_dependency(init_statick):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
         "--config",
         os.path.join(
             os.path.dirname(__file__), "rsc", "config-enabled-dependency.yaml"
@@ -525,7 +529,7 @@ def test_run_tool_dependency(init_statick):
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -544,6 +548,8 @@ def test_run_discovery_dependency(init_statick):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
         "--config",
         os.path.join(
             os.path.dirname(__file__), "rsc", "config-discovery-dependency.yaml"
@@ -557,16 +563,16 @@ def test_run_discovery_dependency(init_statick):
     _, success = statick.run(path, parsed_args)
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
 
 def test_run_no_reporting_plugins(init_statick):
     """
-    Test that no reporting plugins returns unsuccessful.
+    Test that no reporting plugins returns successful.
 
-    Expected results: issues is None and success is False
+    Expected results: no issues and success is True
     """
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
@@ -576,6 +582,8 @@ def test_run_no_reporting_plugins(init_statick):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
         "--config",
         os.path.join(
             os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
@@ -591,7 +599,7 @@ def test_run_no_reporting_plugins(init_statick):
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -610,6 +618,10 @@ def test_run_invalid_reporting_plugins(init_statick):
     sys.argv = [
         "--path",
         os.path.dirname(__file__),
+        "--profile",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "profile-missing-reporting-plugin.yaml"
+        ),
         "--config",
         os.path.join(
             os.path.dirname(__file__), "rsc", "config-invalid-reporting-plugins.yaml"
@@ -624,7 +636,7 @@ def test_run_invalid_reporting_plugins(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 
@@ -1027,6 +1039,12 @@ def test_run_workspace_invalid_reporting_plugins(init_statick_ws):
     sys.argv = init_statick_ws[2]
     sys.argv.extend(
         [
+            "--profile",
+            os.path.join(
+                os.path.dirname(__file__),
+                "rsc",
+                "profile-missing-reporting-plugin.yaml",
+            ),
             "--config",
             os.path.join(
                 os.path.dirname(__file__),
@@ -1049,7 +1067,7 @@ def test_run_workspace_invalid_reporting_plugins(init_statick_ws):
 
 def test_run_workspace_with_issues(init_statick_ws):
     """
-    Test that invalid reporting plugins returns unsuccessful.
+    Test that existing issues are found in a workspace.
 
     Expected results: issues is empty and success is True
     """
@@ -1058,10 +1076,10 @@ def test_run_workspace_with_issues(init_statick_ws):
     sys.argv = init_statick_ws[2]
     sys.argv.extend(
         [
+            "--profile",
+            os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
             "--config",
-            os.path.join(
-                os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
-            ),
+            os.path.join(os.path.dirname(__file__), "rsc", "config.yaml"),
             "--exceptions",
             os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
         ]
@@ -1070,10 +1088,11 @@ def test_run_workspace_with_issues(init_statick_ws):
     parsed_args = args.get_args(sys.argv)
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
+    print("parsed_args: {}".format(parsed_args))
 
     issues, success = statick.run_workspace(parsed_args)
 
-    # we expect two docstring errors
+    # We expect two docstring errors.
     assert len(issues["pylint"]) == 2
     assert not success
 
@@ -1188,10 +1207,10 @@ def test_scan_package_with_issues(init_statick_ws):
         os.path.dirname(__file__),
         "--path",
         os.path.join(os.path.dirname(__file__), "test_package"),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
         "--config",
-        os.path.join(
-            os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
-        ),
+        os.path.join(os.path.dirname(__file__), "rsc", "config.yaml"),
         "--exceptions",
         os.path.join(os.path.dirname(__file__), "rsc", "exceptions.yaml"),
     ]
@@ -1207,7 +1226,7 @@ def test_scan_package_with_issues(init_statick_ws):
     assert len(issues["pylint"]) == 1
 
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-custom"))
     except OSError as ex:
         print("Error: {}".format(ex))
 

@@ -1,5 +1,5 @@
 levels:
-  sei_cert:
+  custom:
     tool:
       pylint:
         flags:
