@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 
 - Allow custom configuration levels to inherit from base levels.
-  The base level is either the ones that are supplied by Statick, or set in `config.yaml` on a `--user-paths` path.
+  The base levels are either the ones that are supplied by Statick, or those set in `config.yaml` on a `--user-paths` path.
   The custom configuration levels must be in a file on the `--user-paths` path.
 - Automatically creating the output directory if it does not exist. (Alexander Xydes, @xydesa)
 - Add a reporting plugin that does nothing.
