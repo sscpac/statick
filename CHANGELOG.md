@@ -12,6 +12,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.5.1 - 2021-02-08
+
+### Added
+
+- Allow custom configuration levels to inherit from base levels.
+  The base level is either the ones that are supplied by Statick, or set in `config.yaml` on a `--user-paths` path.
+  The custom configuration levels must be in a file on the `--user-paths` path.
+- Automatically creating the output directory if it does not exist. (Alexander Xydes, @xydesa)
+- Add a reporting plugin that does nothing.
+  This can be helpful when a reporting plugin is required but you do not want any side effects.
+  One use case is piping Statick output to a separate process.
+- Add documentation on how to use pytest for running a subset of unit tests.
+  Shows how to get line coverage and branch coverage metrics.
+  This can help speed up Statick developers workflow.
+
+### Fixed
+
+- Batch all log statements inside a statick ws subprocess and only output at the end of the subprocess.
+  This groups all console output for a single package together.
+  Previously, the output from multiple packages would be interleaved and difficult to read. (Alexander Xydes, @xydesa)
+- Only outputting warning about docformatter failing if returncode is not 3, which is used to indicate that files
+  would be formatted. (Alexander Xydes, @xydesa)
+- Improve the deprecation warning message for the catkin discovery plugin.
+  Gives the version number when the plugin will be removed.
+- Add documentation on how to use custom configurations for the clang-format tool.
+  This used to be institutinal knowledge and the usage was not clear.
+
 ## v0.5.0 - 2021-01-14
 
 This release adds some breaking changes to the use of Statick, but all of the old functionality can still be accessed
