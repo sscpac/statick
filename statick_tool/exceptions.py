@@ -197,7 +197,7 @@ class Exceptions:
                         self.print_exception_warning(tool)
                         warning_printed = True
                     continue
-                lines = open(issue.filename, "r+", encoding="utf-8").readlines()
+                lines = open(issue.filename, encoding="utf-8").readlines()
                 line_number = int(issue.line_number) - 1
                 if line_number < len(lines) and "NOLINT" in lines[line_number]:
                     to_remove.append(issue)
