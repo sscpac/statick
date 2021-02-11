@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.5.2 - 2021-02-11
+
+### Fixed
+
+- In the Exceptions module, open files in read-only mode when filtering the lines for the NOLINT string.
+  Attempting to open files owned by root in read-write mode was causing a `PermissionError` and Statick would crash.
+
 ## v0.5.1 - 2021-02-08
 
 ### Added
