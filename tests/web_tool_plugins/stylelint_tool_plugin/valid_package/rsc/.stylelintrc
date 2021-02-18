@@ -1,5 +1,5 @@
 extends:
-  - stylelint-config-standard
+  - /usr/local/lib/node_modules/stylelint-config-standard
 
 rules:
   declaration-colon-space-after:
