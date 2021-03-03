@@ -19,6 +19,7 @@
 # Original code from ament_lint.
 # https://github.com/ament/ament_lint/blob/master/ament_clang_format/ament_clang_format/main.py
 
+import logging
 from xml.etree import ElementTree
 
 
@@ -33,12 +34,10 @@ class ClangFormatXMLParser:
             try:
                 root = ElementTree.fromstring(xml)
             except ElementTree.ParseError as exc:
-                print("Invalid XML in clang format output: %s" % str(exc))
-                return None
+                logging.error("Invalid XML in clang format output: %s", str(exc))
+                return report
 
             replacements = root.findall("replacement")
-            if not replacements:
-                return report
 
             with open(filename, "r") as fid:
                 content = fid.read()

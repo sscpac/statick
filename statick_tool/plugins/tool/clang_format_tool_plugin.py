@@ -9,8 +9,8 @@ from typing import List, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
-from statick_tool.tool_plugin import ToolPlugin
 from statick_tool.plugins.tool.clang_format_parser import ClangFormatXMLParser
+from statick_tool.tool_plugin import ToolPlugin
 
 
 class ClangFormatToolPlugin(ToolPlugin):
@@ -227,14 +227,12 @@ class ClangFormatToolPlugin(ToolPlugin):
         else:
             parser = ClangFormatXMLParser()
             for output, filename in zip(total_output, files):
-                if filename.startswith("/usr"):
-                    continue
                 report = parser.parse_xml_output(output, filename)
                 for issue in report:
                     issues.append(
                         Issue(
                             filename,
-                            issue["line_no"],
+                            str(issue["line_no"]),
                             self.get_name(),
                             "format",
                             "1",
