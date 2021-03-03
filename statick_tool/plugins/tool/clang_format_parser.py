@@ -20,18 +20,16 @@
 # https://github.com/ament/ament_lint/blob/master/ament_clang_format/ament_clang_format/main.py
 
 import logging
-from typing import List, TypedDict
+from typing import Any, Dict, List
 from xml.etree import ElementTree
-
-Data = TypedDict("Data", {"line_no": int, "deletion": str, "addition": str})
 
 
 class ClangFormatXMLParser:
     """Parse XML output from the clang-format tool."""
 
-    def parse_xml_output(self, output: str, filename: str) -> List[Data]:
+    def parse_xml_output(self, output: str, filename: str) -> List[Dict[Any, Any]]:
         """Parse XML output from the clang-format tool."""
-        report = []  # type: List[Data]
+        report = []  # type: List[Dict[Any, Any]]
         xmls = output.split("<?xml version='1.0'?>")[1:]
         for xml in xmls:
             try:
@@ -51,14 +49,14 @@ class ClangFormatXMLParser:
 
     def generate_report(  # pylint: disable=too-many-locals
         self, content: str, replacements: List[ElementTree.Element]
-    ) -> List[Data]:
+    ) -> List[Dict[Any, Any]]:
         """Go through content and generate report of issues discovered."""
-        report = []  # type: List[Data]
+        report = []  # type: List[Dict[Any, Any]]
         for replacement in replacements:
             offset = int(replacement.get("offset", 0))
             length = int(replacement.get("length", 0))
             replace_text = replacement.text or ""
-            data = {"line_no": 0, "deletion": "", "addition": ""}  # type: Data
+            data = {"line_no": 0, "deletion": "", "addition": ""}  # type: Dict[Any, Any]
             # to-be-replaced snippet
             original = content[offset : offset + length]
             # map global offset to line number and offset in line
