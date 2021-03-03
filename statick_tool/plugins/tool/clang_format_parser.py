@@ -56,7 +56,11 @@ class ClangFormatXMLParser:
             offset = int(replacement.get("offset", 0))
             length = int(replacement.get("length", 0))
             replace_text = replacement.text or ""
-            data = {"line_no": 0, "deletion": "", "addition": ""}  # type: Dict[Any, Any]
+            data = {
+                "line_no": 0,
+                "deletion": "",
+                "addition": "",
+            }  # type: Dict[Any, Any]
             # to-be-replaced snippet
             original = content[offset : offset + length]
             # map global offset to line number and offset in line
