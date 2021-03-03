@@ -108,7 +108,9 @@ jobs:
 
       # The --allow-untyped-decorators flag is only used while we are using the `deprecated` module.
       # When the deprecations are removed we can remove that mypy flag as well.
+      # Need Python 3.8 or higher for TypedDict support.
       - name: Test with mypy
+        if: matrix.python-version >= 3.8
         run: |
           mypy --ignore-missing-imports --allow-untyped-decorators --strict statick statick_tool/
 
