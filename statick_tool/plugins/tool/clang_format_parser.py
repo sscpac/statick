@@ -20,15 +20,18 @@
 # https://github.com/ament/ament_lint/blob/master/ament_clang_format/ament_clang_format/main.py
 
 import logging
+from typing import List, TypedDict
 from xml.etree import ElementTree
+
+Data = TypedDict("Data", {"line_no": int, "deletion": str, "addition": str})
 
 
 class ClangFormatXMLParser:
     """Parse XML output from the clang-format tool."""
 
-    def parse_xml_output(self, output, filename):
+    def parse_xml_output(self, output: str, filename: str) -> List[Data]:
         """Parse XML output from the clang-format tool."""
-        report = []
+        report = []  # type: List[Data]
         xmls = output.split("<?xml version='1.0'?>")[1:]
         for xml in xmls:
             try:
@@ -44,43 +47,40 @@ class ClangFormatXMLParser:
 
             return self.generate_report(content, replacements)
 
-    def generate_report(self, content, replacements):
+        return report
+
+    def generate_report(  # pylint: disable=too-many-locals
+        self, content: str, replacements: List[ElementTree.Element]
+    ) -> List[Data]:
         """Go through content and generate report of issues discovered."""
-        report = []
+        report = []  # type: List[Data]
         for replacement in replacements:
-            data = {
-                "offset": int(replacement.get("offset")),
-                "length": int(replacement.get("length")),
-                "replacement": replacement.text or "",
-            }
+            offset = int(replacement.get("offset", 0))
+            length = int(replacement.get("length", 0))
+            replace_text = replacement.text or ""
+            data = {"line_no": 0, "deletion": "", "addition": ""}  # type: Data
             # to-be-replaced snippet
-            data["original"] = content[
-                data["offset"]: data["offset"] + data["length"]
-            ]
+            original = content[offset : offset + length]
             # map global offset to line number and offset in line
-            index_of_line_start = self.find_index_of_line_start(
-                content, data["offset"]
-            )
-            index_of_line_end = self.find_index_of_line_end(
-                content, data["offset"] + data["length"]
-            )
+            index_of_line_start = self.find_index_of_line_start(content, offset)
+            index_of_line_end = self.find_index_of_line_end(content, offset + length)
             data["line_no"] = self.get_line_number(content, index_of_line_start)
-            data["offset_in_line"] = data["offset"] - index_of_line_start
+            offset_in_line = offset - index_of_line_start
 
             # generate diff like changes
             subcontent = content[index_of_line_start:index_of_line_end]
             data["deletion"] = subcontent
             data["addition"] = (
-                subcontent[0: data["offset_in_line"]]
-                + data["replacement"]
-                + subcontent[data["offset_in_line"] + data["length"]:]
+                subcontent[0:offset_in_line]
+                + replace_text
+                + subcontent[offset_in_line + length :]
             )
 
             # make common control characters visible
             mapping = {"\n": "\\n", "\r": "\\r", "\t": "\\t"}
             for old, new in mapping.items():
-                data["replacement"] = data["replacement"].replace(old, new)
-                data["original"] = data["original"].replace(old, new)
+                replace_text = replace_text.replace(old, new)
+                original = original.replace(old, new)
 
             mapping = {"\r": "\n"}
             for old, new in mapping.items():
@@ -100,14 +100,14 @@ class ClangFormatXMLParser:
         return report
 
     @classmethod
-    def find_index_of_line_start(cls, data, offset):
+    def find_index_of_line_start(cls, data: str, offset: int) -> int:
         """Find where line starts."""
         index_1 = data.rfind("\n", 0, offset) + 1
         index_2 = data.rfind("\r", 0, offset) + 1
         return max(index_1, index_2)
 
     @classmethod
-    def find_index_of_line_end(cls, data, offset):
+    def find_index_of_line_end(cls, data: str, offset: int) -> int:
         """Find where line ends."""
         index_1 = data.find("\n", offset)
         if index_1 == -1:
@@ -118,6 +118,6 @@ class ClangFormatXMLParser:
         return min(index_1, index_2)
 
     @classmethod
-    def get_line_number(cls, data, offset):
+    def get_line_number(cls, data: str, offset: int) -> int:
         """Get line number where violation occurs."""
         return data[0:offset].count("\n") + data[0:offset].count("\r") + 1

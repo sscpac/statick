@@ -310,6 +310,16 @@ with
     assert issues[0].message == msg
 
 
+def test_clang_format_tool_plugin_parse_valid_issue_per_line_no_replacements():
+    """Verify that no issues are found per file when no replacements are found."""
+    cftp = setup_clang_format_tool_plugin(issue_per_line=True)
+    output = ""
+    files = []
+    issues = cftp.parse_output([output], files)
+
+    assert not issues
+
+
 def test_clang_format_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of clang_format."""
     cftp = setup_clang_format_tool_plugin()
@@ -445,6 +455,13 @@ def test_clang_format_tool_plugin_check_configuration_oserror(mock_open):
     cftp = setup_clang_format_tool_plugin(do_raise=True)
     check = cftp.check_configuration("clang-format")
     assert check is None
+
+
+def test_clang_format_parser_parse_empty_output():
+    """Test that empty XML output gives an empty report."""
+    cfp = ClangFormatXMLParser()
+    report = cfp.parse_xml_output("", "")
+    assert not report
 
 
 def test_clang_format_parser_line_start():
