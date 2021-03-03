@@ -18,7 +18,7 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 def setup_clang_format_tool_plugin(
-    use_plugin_context=True, binary=None, do_raise=False
+    use_plugin_context=True, binary=None, do_raise=False, issue_per_line=False
 ):
     """Initialize and return an instance of the clang-format plugin."""
     arg_parser = argparse.ArgumentParser()
@@ -33,6 +33,19 @@ def setup_clang_format_tool_plugin(
         arg_parser.add_argument(
             "--clang-format-raise-exception",
             dest="clang_format_raise_exception",
+            action="store_true",
+        )
+
+    if issue_per_line:
+        arg_parser.add_argument(
+            "--clang-format-issue-per-line",
+            dest="clang_format_issue_per_line",
+            action="store_false",
+        )
+    else:
+        arg_parser.add_argument(
+            "--clang-format-issue-per-line",
+            dest="clang_format_issue_per_line",
             action="store_true",
         )
 

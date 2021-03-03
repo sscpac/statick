@@ -10,6 +10,7 @@ from typing import List, Match, Optional, Pattern
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
+from statick_tool.plugins.tool.clang_format_parser import ClangFormatXMLParser
 
 
 class ClangFormatToolPlugin(ToolPlugin):
@@ -40,6 +41,12 @@ class ClangFormatToolPlugin(ToolPlugin):
             help="clang-format ignore exception on mismatched " "configuration file",
         )
         args.set_defaults(clang_format_raise_exception=True)
+        args.add_argument(
+            "--clang-format-issue-per-line",
+            dest="clang_format_issue_per_line",
+            action="store_true",
+            help="clang-format will report an issue per line of diff instead of per file",
+        )
 
     def scan(
         self, package: Package, level: str
@@ -89,7 +96,11 @@ class ClangFormatToolPlugin(ToolPlugin):
                     stderr=subprocess.STDOUT,
                     universal_newlines=True,
                 )
-                output = src + "\n" + output
+                if (
+                    not self.plugin_context
+                    or not self.plugin_context.args.clang_format_issue_per_line
+                ):
+                    output = src + "\n" + output
                 if (
                     self.plugin_context
                     and self.plugin_context.args.clang_format_raise_exception
@@ -125,7 +136,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues = self.parse_output(total_output, files)  # type: List[Issue]
         return issues
 
     def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
@@ -183,30 +194,55 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         return True
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(self, total_output: List[str], files: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
         parse = re.compile(clangformat_re)  # type: Pattern[str]
         issues = []
 
-        for output in total_output:
-            lines = output.splitlines()
-            filename = lines[0]
-            count = 0
-            for line in lines:
-                match = parse.match(line)  # type: Optional[Match[str]]
-                if match:
-                    count += 1
-            if count > 0:
-                issues.append(
-                    Issue(
-                        filename,
-                        "0",
-                        self.get_name(),
-                        "format",
-                        "1",
-                        str(count) + " replacements",
-                        None,
+        if (
+            not self.plugin_context
+            or not self.plugin_context.args.clang_format_issue_per_line
+        ):
+            for output in total_output:
+                lines = output.splitlines()
+                filename = lines[0]
+                count = 0
+                for line in lines:
+                    match = parse.match(line)  # type: Optional[Match[str]]
+                    if match:
+                        count += 1
+                if count > 0:
+                    issues.append(
+                        Issue(
+                            filename,
+                            "0",
+                            self.get_name(),
+                            "format",
+                            "1",
+                            str(count) + " replacements",
+                            None,
+                        )
                     )
-                )
+        else:
+            parser = ClangFormatXMLParser()
+            for output, filename in zip(total_output, files):
+                if filename.startswith("/usr"):
+                    continue
+                report = parser.parse_xml_output(output, filename)
+                for issue in report:
+                    issues.append(
+                        Issue(
+                            filename,
+                            issue["line_no"],
+                            self.get_name(),
+                            "format",
+                            "1",
+                            "Replace\n{}\nwith\n{}\n".format(
+                                issue["deletion"], issue["addition"]
+                            ),
+                            None,
+                        )
+                    )
+
         return issues
