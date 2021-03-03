@@ -496,9 +496,7 @@ def test_clang_format_parser_line_number():
     assert cfp.get_line_number(data, offset) == 3
 
 
-@mock.patch(
-    "statick_tool.plugins.tool.clang_format_parser.ElementTree.fromstring"
-)
+@mock.patch("statick_tool.plugins.tool.clang_format_parser.ElementTree.fromstring")
 def test_clang_format_tool_plugin_scan_element_tree_parse_error(mock_fromstring):
     """
     Test what happens when an ElementTree.ParseError is raised (usually means clang-format hit an error).
