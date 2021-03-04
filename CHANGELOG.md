@@ -12,6 +12,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.5.3 - 2021-03-04
+
+### Added
+
+- Add option to the `clang-format` tool to report any issues found per line.
+  The per line differences are shown in diff format.
+  This output is an alternative to the current option of a single issue per file.
+  The default is to still output a single issue per file.
+  The ability to parse `clang-format` XML output and format in diff style was borrowed from
+  [ament_lint](https://github.com/ament/ament_lint), developed mainly by Dirk Thomas (@dirk-thomas).
+
+### Fixed
+
+### Removed
+
 ## v0.5.2 - 2021-02-11
 
 ### Fixed
