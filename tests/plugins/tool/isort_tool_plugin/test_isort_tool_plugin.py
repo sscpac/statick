@@ -2,8 +2,10 @@
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -32,6 +34,8 @@ def setup_isort_tool_plugin():
 
 def test_isort_tool_plugin_found():
     """Test that the plugin manager can find the Isort plugin."""
+    if sys.version_info.major == 3 and sys.version_info.minor < 6:
+        pytest.skip("isort is only available for Python 3.6+, unable to test")
     manager = PluginManager()
     # Get the path to statick_tool/__init__.py, get the directory part, and
     # add 'plugins' to that to get the standard plugins dir
@@ -58,6 +62,8 @@ def test_isort_tool_plugin_found():
 
 def test_isort_tool_plugin_scan_valid():
     """Integration test: Make sure the isort output hasn't changed."""
+    if sys.version_info.major == 3 and sys.version_info.minor < 6:
+        pytest.skip("isort is only available for Python 3.6+, unable to test")
     itp = setup_isort_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -104,6 +110,8 @@ def test_isort_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
     Expected result: issues is None
     """
+    if sys.version_info.major == 3 and sys.version_info.minor < 6:
+        pytest.skip("isort is only available for Python 3.6+, unable to test")
     mock_subprocess_check_output.side_effect = OSError("mocked error")
     itp = setup_isort_tool_plugin()
     package = Package(
@@ -123,6 +131,8 @@ def test_isort_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output)
 
     Expected result: issues is None
     """
+    if sys.version_info.major == 3 and sys.version_info.minor < 6:
+        pytest.skip("isort is only available for Python 3.6+, unable to test")
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
         0, "", output="mocked error"
     )
