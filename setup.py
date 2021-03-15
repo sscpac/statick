@@ -50,6 +50,7 @@ setup(
         "cpplint",
         "deprecated",
         "flawfinder",
+        "isort",
         "lizard",
         "pycodestyle",
         "pydocstyle",

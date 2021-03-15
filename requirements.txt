@@ -5,6 +5,7 @@ cpplint
 deprecated
 docformatter
 flawfinder
+isort
 lizard
 mypy
 pycodestyle
