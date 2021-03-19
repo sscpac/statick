@@ -84,9 +84,7 @@ class JsonReportingPlugin(ReportingPlugin):
         if not os.path.isdir(output_dir):
             logging.error("Unable to create output directory at %s!", output_dir)
             return False
-        output_file = os.path.join(
-            output_dir, package.name + "-" + level + ".json"
-        )
+        output_file = os.path.join(output_dir, package.name + "-" + level + ".json")
         logging.info("Writing output to %s", output_file)
         with open(output_file, "w") as out:
             out.write(line)
