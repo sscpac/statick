@@ -3,6 +3,8 @@ import json
 from collections import OrderedDict
 from typing import Dict, List, Optional, Tuple
 
+from deprecated import deprecated
+
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.reporting_plugin import ReportingPlugin
@@ -15,6 +17,9 @@ class PrintJsonReportingPlugin(ReportingPlugin):
         """Return the plugin name."""
         return "print_json"
 
+    @deprecated(
+        "The print_json reporting plugin has been deprecated since v0.5.4. A more generic version of this plugin is the json_reporting_plugin. This plugin will be removed in v0.6."  # NOLINT
+    )
     def report(
         self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:

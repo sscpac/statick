@@ -1,0 +1,6 @@
+levels:
+  level:
+    reporting:
+      json:
+        files: "True"
+        terminal: "True"
