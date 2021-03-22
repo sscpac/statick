@@ -103,7 +103,7 @@ class Config:
             type_config = level_config[plugin_type]
             if plugin in type_config:
                 plugin_config = type_config[plugin]
-                if key in plugin_config:
+                if plugin_config is not None and key in plugin_config:
                     return plugin_config[key]
         if "inherits_from" in level_config:
             inherited_level = level_config["inherits_from"]
