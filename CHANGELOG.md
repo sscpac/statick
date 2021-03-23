@@ -12,6 +12,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.5.4 - 2021-03-23
+
+### Added
+
+- Add new reporting plugin that will provide JSON output to the terminal and/or to a file.
+  To control the plugin outputs you can add the following to your existing level configuration.
+
+  ```yaml
+  levels:
+  x:
+    discovery:
+      discovery_plugin:
+    reporting:
+      json:
+        terminal: "True"
+        files: "True"
+    tool:
+      tool_plugin:
+        flags: ""
+  ```
+
+### Deprecated
+
+- The `print_json` reporting plugin is marked as deprecated and will be removed in v0.6 series.
+  The functionality is completely replaced with the `json` reporting plugin.
+
 ## v0.5.3 - 2021-03-04
 
 ### Added
