@@ -80,6 +80,18 @@ For example, on Ubuntu Linux if you want to use the `clang-tidy` _tool_ plugin y
 apt install clang-tidy
 ```
 
+If you want to install a custom version you can install from a git repository.
+Options are detailed from [PyPA][pip-git-install] documentation.
+Stack Overflow has a discussion about [installing a git branch][pip-install-git-repo-branch].
+The general idea is to install from a git repository with an optional branch or commit hash.
+Use one of the following commands.
+
+```shell
+python3 -m pip install git+https://github.com/user/statick.git
+python3 -m pip install git+https://github.com/user/statick.git@branch-name
+python3 -m pip install git+https://github.com/user/statick.git@hash
+```
+
 ## Basic Usage
 
 ```shell
@@ -723,6 +735,8 @@ His commits were scrubbed from git history upon the initial public release.
 [make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
 [mypy]: https://github.com/python/mypy
 [perlcritic]: http://perlcritic.com/
+[pip-git-install]: https://pip.pypa.io/en/stable/reference/pip_install/#git
+[pip-install-git-repo-branch]: https://stackoverflow.com/questions/20101834/pip-install-from-git-repo-branch
 [pycodestyle]: https://pycodestyle.pycqa.org/en/latest/
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
