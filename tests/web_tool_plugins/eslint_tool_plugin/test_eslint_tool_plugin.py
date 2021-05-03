@@ -16,7 +16,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_eslint_tool_plugin():
+def setup_eslint_tool_plugin(test_package="valid_package"):
     """Initialize and return an instance of the eslint plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -29,7 +29,7 @@ def setup_eslint_tool_plugin():
     resources = Resources(
         [
             os.path.join(os.path.dirname(statick_tool.__file__), "plugins"),
-            os.path.join(os.path.dirname(__file__), "valid_package"),
+            os.path.join(os.path.dirname(__file__), test_package),
         ]
     )
     config = Config(resources.get_file("config.yaml"))
@@ -67,14 +67,14 @@ def test_eslint_tool_plugin_found():
 
 def test_eslint_tool_plugin_scan_valid():
     """Integration test: Make sure the eslint output hasn't changed."""
-    plugin = setup_eslint_tool_plugin()
+    plugin = setup_eslint_tool_plugin(test_package="no_plugins")
     if not plugin.command_exists("eslint"):
         pytest.skip("Missing eslint executable.")
     package = Package(
-        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+        "no_plugins", os.path.join(os.path.dirname(__file__), "no_plugins")
     )
     package["javascript_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "test_no_issues.js")
+        os.path.join(os.path.dirname(__file__), "no_plugins", "test.js")
     ]
     issues = plugin.scan(package, "level")
     assert not issues
@@ -111,6 +111,20 @@ def test_eslint_tool_plugin_parse_valid():
     assert issues[0].issue_type == "quotes"
     assert issues[0].severity == 5
     assert issues[0].message == "Strings must use singlequote."
+
+
+def test_eslint_tool_plugin_parse_valid_error():
+    """Verify that we can parse the error output of eslint."""
+    plugin = setup_eslint_tool_plugin()
+    output = "test.js:1:1: Parsing error: Unexpected token < [Error]"
+    issues = plugin.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].filename == "test.js"
+    assert issues[0].line_number == "1"
+    assert issues[0].tool == "eslint"
+    assert issues[0].issue_type == "Parsing error"
+    assert issues[0].severity == 5
+    assert issues[0].message == "Unexpected token <"
 
 
 def test_eslint_tool_plugin_parse_invalid():
