@@ -79,7 +79,7 @@ jobs:
           sudo apt install uncrustify
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-18.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         run: |
           sudo apt update
           sudo apt install clang-format
