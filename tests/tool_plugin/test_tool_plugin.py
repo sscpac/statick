@@ -288,7 +288,7 @@ def test_tool_plugin_is_valid_executable_wrongextension_pathext(monkeypatch):
 
 
 def test_tool_plugin_command_exists_fullpath(monkeypatch):
-    """Test that command_exists works correctly (full path given). """
+    """Test that command_exists works correctly (full path given)."""
 
     # Monkeypatch the environment to clear PATHEXT
     monkeypatch.delenv("PATHEXT", raising=False)
@@ -303,7 +303,7 @@ def test_tool_plugin_command_exists_fullpath(monkeypatch):
 
 
 def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
-    """Test that command_exists works correctly (only filename given, command is on PATH). """
+    """Test that command_exists works correctly (only filename given, command is on PATH)."""
 
     # Monkeypatch the environment to clear PATHEXT
     monkeypatch.delenv("PATHEXT", raising=False)
@@ -320,7 +320,7 @@ def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
 
 
 def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
-    """Test that command_exists works correctly (only filename given, command is not on PATH). """
+    """Test that command_exists works correctly (only filename given, command is not on PATH)."""
 
     # Monkeypatch the environment to clear PATHEXT
     monkeypatch.delenv("PATHEXT", raising=False)
