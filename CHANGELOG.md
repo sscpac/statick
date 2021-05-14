@@ -24,6 +24,11 @@ See <https://github.com/sscpac/statick/discussions/290> for a discussion on Pyth
 - An alternate installation method that uses git+https has been described in the README.
   This method is useful for local installations and when trying new changes in Docker images.
 
+### Fixed
+
+- After upgrading the black tool there were formatting changes made to a unit test file.
+  Those formatting changes were applied.
+
 ## v0.5.4 - 2021-03-23
 
 ### Added
