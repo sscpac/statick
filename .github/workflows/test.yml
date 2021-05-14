@@ -9,8 +9,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04, windows-latest]
-        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+        os: [macos-latest, ubuntu-18.04, ubuntu-20.04, windows-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
       - uses: actions/checkout@v2
@@ -57,7 +57,7 @@ jobs:
       # Remove apt repos that are known to break from time to time.
       # See https://github.com/actions/virtual-environments/issues/323
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-16.04' || matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
@@ -79,7 +79,7 @@ jobs:
           sudo apt install uncrustify
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-18.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         run: |
           sudo apt update
           sudo apt install clang-format
@@ -98,14 +98,6 @@ jobs:
           sudo npm install -g markdownlint-cli@0.21.0
           rm nodesource_setup.sh
 
-      # Black is only available on Python 3.6+, but we still want to test Python 3.5 since that is
-      # default on Ubuntu 16.04. When Python 3.5 support is dropped we can add black to requirements.txt
-      # and remove this extra stage.
-      - name: Install black (Python 3.6+)
-        if: matrix.python-version >= 3.6
-        run: |
-          python -m pip install --upgrade black
-
       - name: Test with mypy
         run: |
           mypy --ignore-missing-imports --strict statick statick_tool/
@@ -123,7 +115,7 @@ jobs:
           statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if: matrix.os == 'ubuntu-16.04' || matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: "docs/"

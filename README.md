@@ -63,7 +63,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 
 ## Installation
 
-Statick requires Python 3.5+ to run, but can be used to analyze Python2 projects, among many other languages.
+Statick requires Python 3.6+ to run, but can be used to analyze Python2 projects, among many other languages.
 
 The recommended install method is
 
@@ -325,7 +325,7 @@ you are trying to create an _exception_ for.
 
 _Exceptions_ can either be global or package specific.
 To make them global, place them under a key named `global` at the root of the yaml file.
-To make them package spefific, place them in a key named after the package under a key named `packages` at the root
+To make them package specific, place them in a key named after the package under a key named `packages` at the root
 level of the yaml.
 
 The `ignore_packages` key is a list of package names that should be skipped when running Statick.
@@ -411,7 +411,7 @@ User-defined plugins are stored in the `plugins` directory.
 Configuration files used by the plugins are stored in the `rsc` directory.
 
 It is possible to use a comma-separated chain of _user paths_ with Statick.
-Statick will look for plugins and configuaration files in the order of the paths passed to it.
+Statick will look for plugins and configuration files in the order of the paths passed to it.
 Files from paths earlier in the list will override files from paths later in the list.
 An example is provided below.
 

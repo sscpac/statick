@@ -1,5 +1,6 @@
 PyYAML
 bandit
+black
 cmakelint
 cpplint
 docformatter
