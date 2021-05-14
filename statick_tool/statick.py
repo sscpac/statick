@@ -580,8 +580,7 @@ class Statick:
         if not enabled_reporting_plugins:
             enabled_reporting_plugins = list(available_reporting_plugins)
 
-        # Make a dummy plugincontext as well
-        plugin_context = PluginContext(parsed_args, None, None)  # type: ignore
+        plugin_context = PluginContext(parsed_args, self.resources, self.config)  # type: ignore
         plugin_context.args.output_directory = parsed_args.output_directory
 
         for plugin_name in enabled_reporting_plugins:

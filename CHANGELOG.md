@@ -12,6 +12,49 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.5.5 - 2021-05-14
+
+This is expected to be the final release that supports Python 3.5.
+Ubuntu 16.04 has reached end-of-life status.
+The final release of ROS Kinetic has been made.
+See <https://github.com/sscpac/statick/discussions/290> for a discussion on Python 3.5 support in Statick.
+
+### Added
+
+- An alternate installation method that uses git+https has been described in the README.
+  This method is useful for local installations and when trying new changes in Docker images.
+
+### Fixed
+
+- After upgrading the black tool there were formatting changes made to a unit test file.
+  Those formatting changes were applied.
+
+## v0.5.4 - 2021-03-23
+
+### Added
+
+- Add new reporting plugin that will provide JSON output to the terminal and/or to a file.
+  To control the plugin outputs you can add the following to your existing level configuration.
+
+  ```yaml
+  levels:
+  x:
+    discovery:
+      discovery_plugin:
+    reporting:
+      json:
+        terminal: "True"
+        files: "True"
+    tool:
+      tool_plugin:
+        flags: ""
+  ```
+
+### Deprecated
+
+- The `print_json` reporting plugin is marked as deprecated and will be removed in v0.6 series.
+  The functionality is completely replaced with the `json` reporting plugin.
+
 ## v0.5.3 - 2021-03-04
 
 ### Added
