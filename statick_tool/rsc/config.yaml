@@ -121,6 +121,8 @@ levels:
     tool:
       docformatter:
         flags: "--wrap-summaries 88 --wrap-descriptions 88"
+      isort:
+        flags: ""
       mypy:
         flags: "--ignore-missing-imports"
       pydocstyle:

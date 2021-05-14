@@ -6,7 +6,9 @@ import shlex
 import subprocess
 
 from statick_tool.issue import Issue  # pylint: disable=import-error
-from statick_tool.tool_plugin import ToolPlugin  # pylint: disable=import-error,no-name-in-module,syntax-error
+from statick_tool.tool_plugin import (
+    ToolPlugin,  # pylint: disable=import-error,no-name-in-module,syntax-error
+)
 
 
 class MyCustomToolPlugin(ToolPlugin):
@@ -20,8 +22,9 @@ class MyCustomToolPlugin(ToolPlugin):
     def scan(self, package, level):
         """Run tool and gather output."""
         flags = ["-rn"]
-        user_flags = self.plugin_context.config.get_tool_config(self.get_name(),
-                                                                level, "flags")
+        user_flags = self.plugin_context.config.get_tool_config(
+            self.get_name(), level, "flags"
+        )
         lex = shlex.shlex(user_flags, posix=True)
         lex.whitespace_split = True
         flags = flags + list(lex)
@@ -30,8 +33,7 @@ class MyCustomToolPlugin(ToolPlugin):
 
         try:
             subproc_args = ["grep"] + flags + [package.path]
-            output = subprocess.check_output(subproc_args,
-                                             stderr=subprocess.STDOUT)
+            output = subprocess.check_output(subproc_args, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as ex:
             logging.warning("Problem %d", ex.returncode)
             logging.warning("%s exception: %s", self.get_name(), ex.output)
@@ -54,8 +56,15 @@ class MyCustomToolPlugin(ToolPlugin):
         for line in output.split("\n"):
             match = parse.match(line)
             if match:
-                issues.append(Issue(match.group(1), match.group(2),
-                                    self.get_name(), "banned_pattern", "5",
-                                    "Banned pattern found: " + match.group(3)))
+                issues.append(
+                    Issue(
+                        match.group(1),
+                        match.group(2),
+                        self.get_name(),
+                        "banned_pattern",
+                        "5",
+                        "Banned pattern found: " + match.group(3),
+                    )
+                )
 
         return issues
