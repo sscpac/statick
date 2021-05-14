@@ -698,7 +698,7 @@ types of reports that can be viewed with a text editor or web browser.
 ```shell
 python3 -m pip install mypy
 mkdir report
-mypy --ignore-missing-imports --strict --allow-untyped-decorators --html-report report/ --txt-report report statick statick_tool/
+mypy --ignore-missing-imports --strict --html-report report/ --txt-report report statick statick_tool/
 ```
 
 It is hoped that in the future we will generate coverage reports from mypy and use those to check for regressions.

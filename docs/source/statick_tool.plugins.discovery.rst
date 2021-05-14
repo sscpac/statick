@@ -12,14 +12,6 @@ Module contents
 Submodules
 ----------
 
-statick_tool.plugins.discovery.catkin_discovery_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: statick_tool.plugins.discovery.catkin_discovery_plugin
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 statick_tool.plugins.discovery.c_discovery_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
