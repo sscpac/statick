@@ -83,8 +83,8 @@ def test_spotbugs_tool_plugin_scan_valid():
             ["mvn", "clean", "compile"], universal_newlines=True, cwd=package.path
         )
     except subprocess.CalledProcessError as ex:
-        print("Problem running Maven! Returncode = {}".format(str(ex.returncode)))
-        print("{}".format(ex.output))
+        print(f"Problem running Maven! Returncode = {str(ex.returncode}")
+        print(f"{ex.output}")
         pytest.fail("Failed running Maven")
 
     package["top_poms"] = [os.path.join(package.path, "pom.xml")]
@@ -119,8 +119,8 @@ def test_spotbugs_tool_plugin_scan_no_plugin_context():
             ["mvn", "clean", "compile"], universal_newlines=True, cwd=package.path
         )
     except subprocess.CalledProcessError as ex:
-        print("Problem running Maven! Returncode = {}".format(str(ex.returncode)))
-        print("{}".format(ex.output))
+        print(f"Problem running Maven! Returncode = {str(ex.returncode}")
+        print(f"{ex.output}")
         pytest.fail("Failed running Maven")
 
     package["top_poms"] = [os.path.join(package.path, "pom.xml")]
@@ -148,8 +148,8 @@ def test_spotbugs_tool_plugin_scan_custom_exclude():
             ["mvn", "clean", "compile"], universal_newlines=True, cwd=package.path
         )
     except subprocess.CalledProcessError as ex:
-        print("Problem running Maven! Returncode = {}".format(str(ex.returncode)))
-        print("{}".format(ex.output))
+        print(f"Problem running Maven! Returncode = {str(ex.returncode}")
+        print(f"{ex.output}")
         pytest.fail("Failed running Maven")
 
     package["top_poms"] = [os.path.join(package.path, "pom.xml")]

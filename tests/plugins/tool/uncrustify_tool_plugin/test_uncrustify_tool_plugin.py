@@ -97,8 +97,8 @@ def test_uncrustify_tool_plugin_scan_valid():
                 cwd=bin_dir,
             )
         except subprocess.CalledProcessError as ex:
-            print("Problem running CMake! Returncode = {}".format(str(ex.returncode)))
-            print("{}".format(ex.output))
+            print(f"Problem running CMake! Returncode = {str(ex.returncode)}")
+            print(f"{ex.output}")
             pytest.fail("Failed running CMake")
 
         package["make_targets"] = []

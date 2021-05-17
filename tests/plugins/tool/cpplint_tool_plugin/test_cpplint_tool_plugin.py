@@ -93,8 +93,8 @@ def test_cpplint_tool_plugin_scan_valid():
                 cwd=bin_dir,
             )
         except subprocess.CalledProcessError as ex:
-            print("Problem running CMake! Returncode = {}".format(str(ex.returncode)))
-            print("{}".format(ex.output))
+            print(f"Problem running CMake! Returncode = {str(ex.returncode)}")
+            print(f"{ex.output}")
             pytest.fail("Failed running CMake")
 
         package["make_targets"] = []
@@ -105,7 +105,7 @@ def test_cpplint_tool_plugin_scan_valid():
         package["headers"] = []
         package["cpplint"] = "cpplint"
         issues = ctp.scan(package, "level")
-    print("Line: {}".format(issues[2].message))
+    print(f"Line: {issues[2].message}")
     assert len(issues) == 4
     assert issues[2].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "test.c"
