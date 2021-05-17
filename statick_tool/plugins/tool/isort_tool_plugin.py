@@ -1,8 +1,7 @@
-"""
-Apply isort tool and gather results.
+"""Apply isort tool and gather results.
 
-The isort tool will only find if a file has issues with imports. To automatically fix
-the issues you can run `isort <file>`.
+The isort tool will only find if a file has issues with imports. To
+automatically fix the issues you can run `isort <file>`.
 """
 from typing import List
 
