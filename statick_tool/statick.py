@@ -74,18 +74,10 @@ class Statick:
         log_level = args.log_level.upper()
         if log_level not in valid_levels:
             log_level = "WARNING"
-        if args.show_tool_output:
-            log_level = "DEBUG"
         args.log_level = log_level
         logging.basicConfig(level=log_level)
         logging.root.setLevel(log_level)
         logging.info("Log level set to %s", args.log_level.upper())
-
-        if args.show_tool_output:
-            logging.warning(
-                "The --show-tool-output argument has been deprecated since v0.5.0."
-                " Use log level of DEBUG instead. The argument will be removed in v0.6."
-            )
 
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
@@ -148,12 +140,6 @@ class Statick:
             default="WARNING",
             help="Verbosity level of output to show (DEBUG, INFO, WARNING, ERROR"
             ", CRITICAL)",
-        )
-        args.add_argument(
-            "--show-tool-output",
-            dest="show_tool_output",
-            action="store_true",
-            help="Show tool output",
         )
         args.add_argument(
             "--check",

@@ -1309,26 +1309,3 @@ def test_print_logging_level_invalid():
 
     logger = logging.getLogger()
     assert logger.getEffectiveLevel() == logging.WARNING
-
-
-def test_show_tool_output_deprecated(caplog):
-    """Test that the deprecation warning is shown for --show-tool-output flag."""
-    args = Args("Statick tool")
-    args.parser.add_argument("--path", help="Path of package to scan")
-
-    statick = Statick(args.get_user_paths())
-    statick.gather_args(args.parser)
-    sys.argv = [
-        "--path",
-        os.path.dirname(__file__),
-        "--log",
-        "INFO",
-        "--show-tool-output",
-    ]
-    args.output_directory = os.path.dirname(__file__)
-    parsed_args = args.get_args(sys.argv)
-    statick.set_logging_level(parsed_args)
-
-    print("caplog: {}".format(caplog.text))
-    output = caplog.text.splitlines()[1]
-    assert "The --show-tool-output argument has been deprecated since v0.5.0." in output

@@ -98,11 +98,9 @@ jobs:
           sudo npm install -g markdownlint-cli@0.21.0
           rm nodesource_setup.sh
 
-      # The --allow-untyped-decorators flag is only used while we are using the `deprecated` module.
-      # When the deprecations are removed we can remove that mypy flag as well.
       - name: Test with mypy
         run: |
-          mypy --ignore-missing-imports --allow-untyped-decorators --strict statick statick_tool/
+          mypy --ignore-missing-imports --strict statick statick_tool/
 
       - name: Test with black
         if: matrix.python-version >= 3.6
