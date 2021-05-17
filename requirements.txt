@@ -5,6 +5,7 @@ cmakelint
 cpplint
 docformatter
 flawfinder
+isort
 lizard
 mypy
 pycodestyle

@@ -48,6 +48,7 @@ setup(
         "cmakelint",
         "cpplint",
         "flawfinder",
+        "isort",
         "lizard",
         "pycodestyle",
         "pydocstyle",

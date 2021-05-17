@@ -1,0 +1,3 @@
+[Core]
+Name = Isort Tool Plugin
+Module = isort_tool_plugin
