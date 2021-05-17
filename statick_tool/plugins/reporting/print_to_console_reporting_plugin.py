@@ -29,19 +29,20 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
         total = 0  # type: int
         for key, value in issues.items():
             unique_issues = list(OrderedDict.fromkeys(value))
-            print(f"Tool {key}: {len(unique_issues)} unique issues")
+            num_issues = len(unique_issues)
+            print(f"Tool {key}: {num_issues} unique issues")
             for issue in unique_issues:
                 if issue.cert_reference:
                     print(
                         f"  {issue.filename}:{issue.line_number}: "
-                        "{issue.tool}:{issue.issue_type}: {issue.message} "
-                        "({issue.cert_reference}) [{issue.severity}]"
+                        f"{issue.tool}:{issue.issue_type}: {issue.message} "
+                        f"({issue.cert_reference}) [{issue.severity}]"
                     )
                 else:
                     print(
                         f"  {issue.filename}:{issue.line_number}: "
-                        "{issue.tool}:{issue.issue_type} "
-                        "{issue.message} [{issue.severity}]"
+                        f"{issue.tool}:{issue.issue_type}: {issue.message} "
+                        f"[{issue.severity}]"
                     )
 
             total += len(unique_issues)
