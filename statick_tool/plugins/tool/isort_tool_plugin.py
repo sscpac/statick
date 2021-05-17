@@ -24,7 +24,7 @@ class IsortToolPlugin(ToolPlugin):
         total_output = []
 
         for src in package["python_src"]:
-            if not isort.check_file(src):
+            if not isort.check_file(src):  # type: ignore
                 total_output.append(src)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
