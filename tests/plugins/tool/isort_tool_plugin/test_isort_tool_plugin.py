@@ -96,7 +96,7 @@ def test_isort_tool_plugin_parse_valid():
 
 
 def test_isort_tool_plugin_parse_invalid():
-    """Verify that we can parse the normal output of isort."""
+    """Verify that invalid tool output results in no issues found by parser."""
     itp = setup_isort_tool_plugin()
     output = ["invalid text"]
     issues = itp.parse_output(output)
