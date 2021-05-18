@@ -11,6 +11,7 @@ import mock
 import pytest
 
 from statick_tool.args import Args
+from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
 from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
 from statick_tool.statick import Statick
@@ -1071,6 +1072,8 @@ def test_run_workspace_with_issues(init_statick_ws):
 
     Expected results: issues is empty and success is True
     """
+    if not DiscoveryPlugin.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     statick = init_statick_ws[0]
     args = init_statick_ws[1]
     sys.argv = init_statick_ws[2]
@@ -1200,6 +1203,8 @@ def test_scan_package(init_statick_ws):
 
 def test_scan_package_with_issues(init_statick_ws):
     """Test running Statick via the scan_package function used in multiprocessing."""
+    if not DiscoveryPlugin.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     statick = init_statick_ws[0]
     args = init_statick_ws[1]
     sys.argv = [
