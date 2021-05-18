@@ -4,6 +4,7 @@ import os
 import subprocess
 
 import mock
+import pytest
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
@@ -43,6 +44,8 @@ def modified_environ(*remove, **update):
 def test_discovery_plugin_find_files():
     """Test calling find files."""
     dp = DiscoveryPlugin()
+    if not dp.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -86,6 +89,8 @@ def test_discovery_plugin_find_files_multiple():
 def test_discovery_plugin_get_file_cmd_output():
     """Test get_file_cmd_output."""
     dp = DiscoveryPlugin()
+    if not dp.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
@@ -127,6 +132,8 @@ def test_discovery_plugin_get_file_cmd_output_calledprocess_error(
 def test_discovery_plugin_file_cmd_exists():
     """Test when file command exists."""
     dp = DiscoveryPlugin()
+    if not dp.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     assert dp.file_command_exists()
 
 
