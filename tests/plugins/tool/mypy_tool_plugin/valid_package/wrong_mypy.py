@@ -1,1 +1,1 @@
-my_str = "not an int"  # type: int
+my_str: int = "not an int"

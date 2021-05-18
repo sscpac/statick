@@ -30,14 +30,14 @@ class BanditToolPlugin(ToolPlugin):
         if not package["python_src"]:
             return []
 
-        bandit_bin = "bandit"  # type: str
+        bandit_bin: str = "bandit"
         if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
             bandit_bin = self.plugin_context.args.bandit_bin
 
-        flags = ["--format=csv"]  # type: List[str]
+        flags: List[str] = ["--format=csv"]
         flags += self.get_user_flags(level)
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "python_src" in package:
             files += package["python_src"]
 
@@ -65,12 +65,12 @@ class BanditToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output.splitlines())
+        issues: List[Issue] = self.parse_output(output.splitlines())
         return issues
 
     def parse_output(self, output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
 
         # Copy output for modification
         output_minus_log = list(output)

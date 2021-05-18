@@ -22,7 +22,7 @@ class PycodestyleToolPlugin(ToolPlugin):
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        total_output = []
+        total_output: List[str] = []
 
         tool_bin = "pycodestyle"
         for src in package["python_src"]:
@@ -54,18 +54,18 @@ class PycodestyleToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse = re.compile(tool_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(tool_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     if "," in match.group(3):
                         parts = match.group(3).split(",")

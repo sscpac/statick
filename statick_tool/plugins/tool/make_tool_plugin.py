@@ -23,7 +23,7 @@ class MakeToolPlugin(ToolPlugin):
             return []
 
         output = None
-        make_args = ["make", "statick_cmake_target"]
+        make_args: List[str] = ["make", "statick_cmake_target"]
 
         try:
             output = subprocess.check_output(["make", "clean"], universal_newlines=True)
@@ -47,7 +47,7 @@ class MakeToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(package, output)
+        issues: List[Issue] = self.parse_output(package, output)
         return issues
 
     @classmethod
@@ -86,18 +86,18 @@ class MakeToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
-        parse = re.compile(make_re)  # type: Pattern[str]
-        warning_parse = re.compile(make_warning_re)  # type: Pattern[str]
-        matches = []  # type: Any
+        parse: Pattern[str] = re.compile(make_re)
+        warning_parse: Pattern[str] = re.compile(make_warning_re)
+        matches: Any = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match = parse.match(line)  # type: Optional[Match[str]]
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 matches.append(match.groups())
 
         filtered_matches = self.filter_matches(matches, package)
-        issues = []  # type: List[Issue]
+        issues: List[Issue] = []
         for item in filtered_matches:
             cert_reference = None
             warning_list = warning_parse.match(item[4])

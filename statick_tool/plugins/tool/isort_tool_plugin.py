@@ -21,11 +21,11 @@ class IsortToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
-        flags = ["--check-only"]
+        flags: List[str] = ["--check-only"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        total_output = []
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             if not isort.check_file(src):  # type: ignore
@@ -36,12 +36,12 @@ class IsortToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
 
         for output in total_output:
             msg = "Imports are incorrectly sorted and/or formatted."

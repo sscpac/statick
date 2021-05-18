@@ -23,11 +23,11 @@ class DocformatterToolPlugin(ToolPlugin):
         if "python_src" not in package:
             return []
 
-        flags = ["-c"]  # type: List[str]
+        flags: List[str] = ["-c"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
         tool_bin = "docformatter"
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             try:
@@ -58,7 +58,7 @@ class DocformatterToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
@@ -67,13 +67,13 @@ class DocformatterToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         # Gives relative path to file.
         tool_re = r"(.+)[\\/](.+)"
-        parse = re.compile(tool_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(tool_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             lines = output.splitlines()
             for line in lines:
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issues.append(
                         Issue(

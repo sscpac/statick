@@ -19,8 +19,8 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for java files."""
-        java_src_files = []  # type: List[str]
-        java_class_files = []  # type: List[str]
+        java_src_files: List[str] = []
+        java_class_files: List[str] = []
 
         self.find_files(package)
 

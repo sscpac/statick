@@ -15,7 +15,7 @@ class Resources:
 
     def __init__(self, paths: List[str]) -> None:
         """Initialize resource handling."""
-        self.paths = []  # type: List[str]
+        self.paths: List[str] = []
 
         for path in paths:
             if os.path.exists(path) and os.path.isdir(path):

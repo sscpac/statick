@@ -18,11 +18,11 @@ class BlackToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags = ["--check"]
+        flags: List[str] = ["--check"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        total_output = []
+        total_output: List[str] = []
 
         tool_bin = "black"
         for src in package["python_src"]:
@@ -59,29 +59,29 @@ class BlackToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re_reformat = r"(.+)\s(.+)\s(.+)"
-        parse_reformat = re.compile(tool_re_reformat)  # type: Pattern[str]
+        parse_reformat: Pattern[str] = re.compile(tool_re_reformat)
 
         # example output for this regex:
         # error: cannot format /home/user/file: INTERNAL ERROR: message
         tool_re_error = r"\w+:\s(.+):\s(.+):\s(.+):\s(.+)"
-        parse_tool_error = re.compile(tool_re_error)  # type: Pattern[str]
+        parse_tool_error: Pattern[str] = re.compile(tool_re_error)
 
         # example output for this regex:
         # error: cannot format /home/user/file: Cannot parse: 1:3: {faulty_line}
         tool_re_parse_error = r"\w+:\s(.+):\s(.+):\s([0-9]+):([0-9]+):\s(.+)"
-        parse_error = re.compile(tool_re_parse_error)  # type: Pattern[str]
-        issues = []
+        parse_error: Pattern[str] = re.compile(tool_re_parse_error)
+        issues: List[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
                 if line.startswith("would reformat"):
-                    match = parse_reformat.match(line)  # type: Optional[Match[str]]
+                    match: Optional[Match[str]] = parse_reformat.match(line)
                     if match:
                         issues.append(
                             Issue(
@@ -95,12 +95,12 @@ class BlackToolPlugin(ToolPlugin):
                             )
                         )
                 if line.startswith("error"):
-                    match_tool_error = parse_tool_error.match(
+                    match_tool_error: Optional[Match[str]] = parse_tool_error.match(
                         line
-                    )  # type: Optional[Match[str]]
-                    match_parse_error = parse_error.match(
+                    )
+                    match_parse_error: Optional[Match[str]] = parse_error.match(
                         line
-                    )  # type: Optional[Match[str]]
+                    )
                     if match_parse_error:
                         issues.append(
                             Issue(

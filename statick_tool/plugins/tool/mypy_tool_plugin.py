@@ -23,15 +23,15 @@ class MypyToolPlugin(ToolPlugin):
         if "python_src" not in package:
             return []
 
-        flags = [
+        flags: List[str] = [
             "--show-absolute-path",
             "--show-error-codes",
             "--no-error-summary",
-        ]  # type: List[str]
+        ]
         user_flags = self.get_user_flags(level)
         flags += user_flags
         tool_bin = "mypy"
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             try:
@@ -60,7 +60,7 @@ class MypyToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
@@ -69,15 +69,15 @@ class MypyToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         # file:line: severity: msg type
         tool_re = r"(.+):(\d+):\s(.+):\s(.+)\s(.+)"
-        parse = re.compile(tool_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(tool_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             lines = output.splitlines()
             for line in lines:
                 if sys.platform != "win32" and not line.startswith("/"):
                     continue
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issue_type = match.group(5).strip("[]")
                     issues.append(

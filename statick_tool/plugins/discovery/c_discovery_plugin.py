@@ -19,7 +19,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for C files."""
-        c_files = []  # type: List[str]
+        c_files: List[str] = []
         c_extensions = (".c", ".cc", ".cpp", ".cxx", ".h", ".hxx", ".hpp")
         c_output = ("c source", "c program", "c++ source")
 

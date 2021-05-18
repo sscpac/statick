@@ -62,10 +62,10 @@ class CCCCToolPlugin(ToolPlugin):
 
         for src in package["c_src"]:
             try:
-                subproc_args = [cccc_bin] + [opts] + [src]  # type: List[str]
-                log_output = subprocess.check_output(
+                subproc_args: List[str] = [cccc_bin] + [opts] + [src]
+                log_output: bytes = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT
-                )  # type: bytes
+                )
             except subprocess.CalledProcessError as ex:
                 if ex.returncode == 1:
                     log_output = ex.output
@@ -87,7 +87,7 @@ class CCCCToolPlugin(ToolPlugin):
         with open(".cccc/cccc.xml") as fconfig:
             tool_output = xmltodict.parse(fconfig.read())
 
-        issues = self.parse_output(tool_output, package, config_file)
+        issues: List[Issue] = self.parse_output(tool_output, package, config_file)
         return issues
 
     def parse_output(  # pylint: disable=too-many-branches
@@ -99,7 +99,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         config = self.parse_config(config_file)
 
-        results = {}  # type: Dict[Any, Any]
+        results: Dict[Any, Any] = {}
         for module in output["CCCC_Project"]["structural_summary"]["module"]:
             if "name" not in module or isinstance(module, str):
                 break
@@ -128,7 +128,7 @@ class CCCCToolPlugin(ToolPlugin):
                     metrics[field] = {"value": module[field]["@value"]}
             results[module["name"]] = metrics
 
-        issues = self.find_issues(config, results, package)
+        issues: List[Issue] = self.find_issues(config, results, package)
 
         return issues
 
@@ -142,7 +142,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         `cccc --opt_outfile=cccc.opt`
         """
-        config = {}  # type: Dict[Any, Any]
+        config: Dict[Any, Any] = {}
 
         if config_file is None:
             return config
@@ -164,7 +164,7 @@ class CCCCToolPlugin(ToolPlugin):
         self, config: Dict[Any, Any], results: Dict[Any, Any], package: Package
     ) -> List[Issue]:
         """Identify issues by comparing tool results with tool configuration."""
-        issues = []
+        issues: List[Issue] = []
         dummy = []
 
         for key, val in results.items():

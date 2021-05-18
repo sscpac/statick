@@ -2,7 +2,7 @@
 import argparse
 import logging
 import subprocess
-from typing import List, Optional
+from typing import List
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -25,7 +25,7 @@ class PerlCriticToolPlugin(ToolPlugin):
             help="perlcritic binary path",
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
         if "perl_src" not in package:
             return []
@@ -39,7 +39,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
         flags += self.get_user_flags(level)
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "perl_src" in package:
             files += package["perl_src"]
 
@@ -67,13 +67,13 @@ class PerlCriticToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "wt") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output.splitlines())
+        issues: List[Issue] = self.parse_output(output.splitlines())
 
         return issues
 
     def parse_output(self, output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output:

@@ -26,7 +26,7 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
                 them.
             level: (:obj:`str`): Name of the level used in the scan
         """
-        total = 0  # type: int
+        total: int = 0
         for key, value in issues.items():
             unique_issues = list(OrderedDict.fromkeys(value))
             num_issues = len(unique_issues)

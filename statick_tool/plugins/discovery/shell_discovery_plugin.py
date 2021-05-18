@@ -19,7 +19,7 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for shell files."""
-        shell_files = []  # type: List[str]
+        shell_files: List[str] = []
         shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
         shell_output = ("shell script", "dash script", "zsh script")
 

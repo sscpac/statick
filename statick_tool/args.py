@@ -30,10 +30,10 @@ class Args:
 
     def get_user_paths(self, args: Any = None) -> List[str]:
         """Get a list of user paths containing config or plugins."""
-        user_paths = []  # type: List[str]
+        user_paths: List[str] = []
         args = self.pre_parser.parse_known_args(args)[0]
         if args.user_paths is not None:
-            paths = args.user_paths.split(",")  # type: List[str]
+            paths: List[str] = args.user_paths.split(",")
             for path in paths:
                 if os.path.exists(path) and os.path.isdir(path):
                     user_paths.append(path)

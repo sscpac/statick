@@ -56,15 +56,15 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
-        flags = [
+        flags: List[str] = [
             "-header-filter=" + package["src_dir"] + "/.*",
             "-p",
             package["bin_dir"] + "/compile_commands.json",
             "-extra-arg=-fopenmp=libomp",
-        ]  # type: List[str]
+        ]
         flags += self.get_user_flags(level)
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -96,7 +96,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(output)
         return issues
 
     @classmethod
@@ -112,12 +112,12 @@ class ClangTidyToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         clang_tidy_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)\]"
-        parse = re.compile(clang_tidy_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(clang_tidy_re)
+        issues: List[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match = parse.match(line)  # type: Optional[Match[str]]
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 if (
                     line[1] != "*"

@@ -19,8 +19,8 @@ class XMLDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for XML files."""
-        xml_files = []  # type: List[str]
-        xml_extensions = (".xml", ".launch")  # type: Tuple[str, str]
+        xml_files: List[str] = []
+        xml_extensions: Tuple[str, str] = (".xml", ".launch")
 
         self.find_files(package)
 

@@ -39,7 +39,7 @@ class CppcheckToolPlugin(ToolPlugin):
         ) or self.plugin_context is None:
             return []
 
-        flags = [
+        flags: List[str] = [
             "--report-progress",
             "--verbose",
             "--inline-suppr",
@@ -62,8 +62,8 @@ class CppcheckToolPlugin(ToolPlugin):
                 universal_newlines=True,
             )
             ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
-            parse = re.compile(ver_re)  # type: Pattern[str]
-            match = parse.match(output)  # type: Optional[Match[str]]
+            parse: Pattern[str] = re.compile(ver_re)
+            match: Optional[Match[str]] = parse.match(output)
             if match:
                 ver = float(match.group(2))
                 # If specific version is not specified just use the installed version.
@@ -87,8 +87,8 @@ class CppcheckToolPlugin(ToolPlugin):
             logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
-        files = []  # type: List[str]
-        include_dirs = []  # type: List[str]
+        files: List[str] = []
+        include_dirs: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -126,7 +126,7 @@ class CppcheckToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output)
+        issues: List[Issue] = self.parse_output(output)
         return issues
 
     # pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
@@ -142,11 +142,11 @@ class CppcheckToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
-        parse = re.compile(cppcheck_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(cppcheck_re)
+        issues: List[Issue] = []
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
-            match = parse.match(line)  # type: Optional[Match[str]]
+            match: Optional[Match[str]] = parse.match(line)
             if (
                 match
                 and line[1] != "*"

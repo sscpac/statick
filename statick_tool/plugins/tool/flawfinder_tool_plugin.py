@@ -21,9 +21,9 @@ class FlawfinderToolPlugin(ToolPlugin):
         if "c_src" not in package:
             return []
 
-        flags = ["--quiet", "-D", "--singleline"]
+        flags: List[str] = ["--quiet", "-D", "--singleline"]
         flags += self.get_user_flags(level)
-        total_output = []
+        total_output: List[str] = []
 
         for src in package["c_src"]:
             try:
@@ -49,18 +49,18 @@ class FlawfinderToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s*(.+)"
-        parse = re.compile(flawfinder_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(flawfinder_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issues.append(
                         Issue(
