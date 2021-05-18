@@ -40,17 +40,17 @@ class UncrustifyToolPlugin(ToolPlugin):
         if self.plugin_context.args.uncrustify_bin is not None:
             uncrustify_bin = self.plugin_context.args.uncrustify_bin
 
-        flags = []  # type: List[str]
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         try:
             format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
@@ -105,12 +105,12 @@ class UncrustifyToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
         for output in total_output:
             issues.append(
                 Issue(

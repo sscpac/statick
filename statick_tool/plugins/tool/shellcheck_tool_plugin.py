@@ -34,15 +34,15 @@ class ShellcheckToolPlugin(ToolPlugin):
         if "shell_src" not in package or not package["shell_src"]:
             return []
 
-        shellcheck_bin = "shellcheck"  # type: str
+        shellcheck_bin: str = "shellcheck"
         if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
             shellcheck_bin = self.plugin_context.args.shellcheck_bin
 
         # Get output in JSON format.
-        flags = ["-f", "json"]  # type: List[str]
+        flags: List[str] = ["-f", "json"]
         flags += self.get_user_flags(level)
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "shell_src" in package:
             files += package["shell_src"]
 
@@ -70,12 +70,12 @@ class ShellcheckToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(json.loads(output))
+        issues: List[Issue] = self.parse_output(json.loads(output))
         return issues
 
     def parse_output(self, output: Any) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []  # type: List[Issue]
+        issues: List[Issue] = []
         for item in output:
             if (
                 "level" not in item

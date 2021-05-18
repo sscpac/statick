@@ -18,10 +18,10 @@ class PyflakesToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags = []  # type: List[str]
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
-        total_output = []
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             try:
@@ -52,7 +52,7 @@ class PyflakesToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(  # pylint: disable=too-many-locals
@@ -60,14 +60,14 @@ class PyflakesToolPlugin(ToolPlugin):
     ) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re_first = r"(.+):(\d+):(\d+):\s(.+)"
-        parse_first = re.compile(tool_re_first)  # type: Pattern[str]
+        parse_first: Pattern[str] = re.compile(tool_re_first)
         tool_re_second = r"(.+):(\d+):( \'.*?\'|'.*?')\s(.+)"
-        parse_second = re.compile(tool_re_second)  # type: Pattern[str]
+        parse_second: Pattern[str] = re.compile(tool_re_second)
         tool_re_third = r"(.+)"
-        parse_third = re.compile(tool_re_third)  # type: Pattern[str]
+        parse_third: Pattern[str] = re.compile(tool_re_third)
         tool_re_fourth = r"(.+):(\d+):(\d+)( \'.*?\'|'.*?')\s(.+)"
-        parse_fourth = re.compile(tool_re_fourth)  # type: Pattern[str]
-        issues = []
+        parse_fourth: Pattern[str] = re.compile(tool_re_fourth)
+        issues: List[Issue] = []
         filename = ""
         line_number = "0"
         issue_type = ""
@@ -78,7 +78,7 @@ class PyflakesToolPlugin(ToolPlugin):
             found_match = False
             for line in output.splitlines():
                 if first_line:
-                    match = parse_first.match(line)  # type: Optional[Match[str]]
+                    match: Optional[Match[str]] = parse_first.match(line)
                     first_line = False
                     if match:
                         found_match = True
@@ -86,25 +86,23 @@ class PyflakesToolPlugin(ToolPlugin):
                         line_number = match.group(2)
                         issue_type = match.group(4)
                     else:
-                        match_second = parse_second.match(
-                            line
-                        )  # type: Optional[Match[str]]
+                        match_second: Optional[Match[str]] = parse_second.match(line)
                         if match_second:
                             found_match = True
                             filename = match_second.group(1)
                             line_number = match_second.group(2)
                             issue_type = match_second.group(4)
                         else:
-                            match_fourth = parse_fourth.match(
+                            match_fourth: Optional[Match[str]] = parse_fourth.match(
                                 line
-                            )  # type: Optional[Match[str]]
+                            )
                             if match_fourth:
                                 found_match = True
                                 filename = match_fourth.group(1)
                                 line_number = match_fourth.group(2)
                                 issue_type = match_fourth.group(5)
                 else:
-                    match_third = parse_third.match(line)  # type: Optional[Match[str]]
+                    match_third: Optional[Match[str]] = parse_third.match(line)
                     first_line = True
                     if match_third:
                         found_match = True

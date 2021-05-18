@@ -63,21 +63,21 @@ class LizardToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output)
+        issues: List[Issue] = self.parse_output(output)
 
         return issues
 
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
-        parse = re.compile(lizard_re)  # type: Pattern[str]
+        parse: Pattern[str] = re.compile(lizard_re)
         matches = []
         for line in output.splitlines():
-            match = parse.match(line)  # type: Optional[Match[str]]
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 matches.append(match.groups())
 
-        issues = []  # type: List[Issue]
+        issues: List[Issue] = []
         for item in matches:
             issue = Issue(
                 item[0], item[1], self.get_name(), item[2], "5", item[3], None

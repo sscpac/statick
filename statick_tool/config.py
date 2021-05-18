@@ -18,7 +18,7 @@ class Config:
     def __init__(self, base_file: Optional[str], user_file: Optional[str] = "") -> None:
         """Initialize configuration."""
         if base_file is None or not os.path.exists(base_file):
-            self.config = []  # type: Any
+            self.config: Any = []
             return
 
         self.config = self.get_config_from_file(base_file)
@@ -66,7 +66,7 @@ class Config:
     def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
         """Get what plugins are enabled for a certain level."""
         level_config = self.config["levels"][level]
-        plugins = []  # type: List[str]
+        plugins: List[str] = []
         if plugin_type in level_config and level_config[plugin_type] is not None:
             plugins += list(level_config[plugin_type])
         if "inherits_from" in level_config:

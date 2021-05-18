@@ -22,7 +22,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         if "catkin" not in package or not package["catkin"]:
             return []
 
-        flags = []  # type: List[str]
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
         try:
@@ -47,7 +47,7 @@ class CatkinLintToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(package, output)
+        issues: List[Issue] = self.parse_output(package, output)
         return issues
 
     @classmethod
@@ -83,12 +83,12 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Parse tool output and report issues."""
         lint_re = r"(.+):\s(.+)\((\d+)\):\s(.+):\s(.+)"
         lint2_re = r"(.+):\s(.+):\s(.+)"
-        parse = re.compile(lint_re)  # type: Pattern[str]
-        parse2 = re.compile(lint2_re)  # type: Pattern[str]
+        parse: Pattern[str] = re.compile(lint_re)
+        parse2: Pattern[str] = re.compile(lint2_re)
 
-        issues = []
+        issues: List[Issue] = []
         for line in output.splitlines():
-            match = parse.match(line)  # type: Optional[Match[str]]
+            match: Optional[Match[str]] = parse.match(line)
             if match:
                 if self.check_for_exceptions_has_file(match, package):
                     continue
@@ -107,7 +107,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                     )
                 )
             else:
-                match2 = parse2.match(line)  # type: Optional[Match[str]]
+                match2: Optional[Match[str]] = parse2.match(line)
 
                 if match2:
                     norm_path = os.path.normpath(package.path + "/package.xml")

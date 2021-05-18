@@ -19,7 +19,7 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for Perl files."""
-        perl_files = []  # type: List[str]
+        perl_files: List[str] = []
 
         self.find_files(package)
 

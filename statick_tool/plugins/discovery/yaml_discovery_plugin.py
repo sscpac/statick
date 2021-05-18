@@ -19,7 +19,7 @@ class YAMLDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for YAML files."""
-        yaml_files = []  # type: List[str]
+        yaml_files: List[str] = []
         yaml_extensions = (".yaml", ".yml")
 
         self.find_files(package)

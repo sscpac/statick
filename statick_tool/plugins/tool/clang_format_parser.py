@@ -29,7 +29,7 @@ class ClangFormatXMLParser:
 
     def parse_xml_output(self, output: str, filename: str) -> List[Dict[Any, Any]]:
         """Parse XML output from the clang-format tool."""
-        report = []  # type: List[Dict[Any, Any]]
+        report: List[Dict[Any, Any]] = []
         xmls = output.split("<?xml version='1.0'?>")[1:]
         for xml in xmls:
             try:
@@ -51,16 +51,16 @@ class ClangFormatXMLParser:
         self, content: str, replacements: List[ElementTree.Element]
     ) -> List[Dict[Any, Any]]:
         """Go through content and generate report of issues discovered."""
-        report = []  # type: List[Dict[Any, Any]]
+        report: List[Dict[Any, Any]] = []
         for replacement in replacements:
             offset = int(replacement.get("offset", 0))
             length = int(replacement.get("length", 0))
             replace_text = replacement.text or ""
-            data = {
+            data: Dict[Any, Any] = {
                 "line_no": 0,
                 "deletion": "",
                 "addition": "",
-            }  # type: Dict[Any, Any]
+            }
             # to-be-replaced snippet
             original = content[offset : offset + length]
             # map global offset to line number and offset in line

@@ -42,26 +42,26 @@ class Statick:
         )
         self.manager.collectPlugins()
 
-        self.discovery_plugins = {}  # type: Dict[str, Any]
+        self.discovery_plugins: Dict[str, Any] = {}
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
             self.discovery_plugins[
                 plugin_info.plugin_object.get_name()
             ] = plugin_info.plugin_object
 
-        self.tool_plugins = {}  # type: Dict[str, Any]
+        self.tool_plugins: Dict[str, Any] = {}
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
             self.tool_plugins[
                 plugin_info.plugin_object.get_name()
             ] = plugin_info.plugin_object
 
-        self.reporting_plugins = {}  # type: Dict[str, Any]
+        self.reporting_plugins: Dict[str, Any] = {}
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             self.reporting_plugins[
                 plugin_info.plugin_object.get_name()
             ] = plugin_info.plugin_object
 
-        self.config = None  # type: Optional[Config]
-        self.exceptions = None  # type: Optional[Exceptions]
+        self.config: Optional[Config] = None
+        self.exceptions: Optional[Exceptions] = None
 
     @staticmethod
     def set_logging_level(args: argparse.Namespace) -> None:
@@ -256,7 +256,7 @@ class Statick:
             return None, False
 
         package = Package(os.path.basename(path), path)
-        level = self.get_level(path, args)  # type: Optional[str]
+        level: Optional[str] = self.get_level(path, args)
         logging.info("level: %s", level)
         if level is None:
             logging.error("Level is not valid.")
@@ -298,7 +298,7 @@ class Statick:
             "Scanning package %s (%s) at level %s", package.name, package.path, level
         )
 
-        issues = {}  # type: Dict[str, List[Issue]]
+        issues: Dict[str, List[Issue]] = {}
 
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
@@ -318,7 +318,7 @@ class Statick:
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
             discovery_plugins = list(self.discovery_plugins.keys())
-        plugins_ran = []  # type: List[Any]
+        plugins_ran: List[Any] = []
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
                 logging.error("Can't find specified discovery plugin %s!", plugin_name)
@@ -350,7 +350,7 @@ class Statick:
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
-        plugin_dependencies = []  # type: List[str]
+        plugin_dependencies: List[str] = []
         while plugins_to_run:
             plugin_name = plugins_to_run[0]
 
@@ -531,7 +531,7 @@ class Statick:
         logging.info("-- overall report --")
 
         success = True
-        issues = {}  # type: Dict[str, List[Issue]]
+        issues: Dict[str, List[Issue]] = {}
         for issue in total_issues:
             if issue is not None:
                 for key, value in list(issue.items()):
@@ -544,7 +544,7 @@ class Statick:
                         if value:
                             success = False
 
-        enabled_reporting_plugins = []  # type: List[str]
+        enabled_reporting_plugins: List[str] = []
         available_reporting_plugins = {}
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
             available_reporting_plugins[

@@ -74,20 +74,20 @@ class ClangFormatToolPlugin(ToolPlugin):
         ):
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        check = self.check_configuration(clang_format_bin)  # type: Optional[bool]
+        check: Optional[bool] = self.check_configuration(clang_format_bin)
         if check is None:
             return None
         if not check:
             return []
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         try:
             for src in files:
@@ -136,7 +136,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output, files)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output, files)
         return issues
 
     def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
@@ -197,8 +197,8 @@ class ClangFormatToolPlugin(ToolPlugin):
     def parse_output(self, total_output: List[str], files: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
-        parse = re.compile(clangformat_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(clangformat_re)
+        issues: List[Issue] = []
 
         if (
             not self.plugin_context
@@ -209,7 +209,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 filename = lines[0]
                 count = 0
                 for line in lines:
-                    match = parse.match(line)  # type: Optional[Match[str]]
+                    match: Optional[Match[str]] = parse.match(line)
                     if match:
                         count += 1
                 if count > 0:

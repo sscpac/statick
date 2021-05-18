@@ -39,11 +39,11 @@ class ToolPlugin(IPlugin):  # type: ignore
 
     def load_mapping(self) -> Dict[str, str]:
         """Load a mapping between warnings and identifiers."""
-        file_name = "plugin_mapping/{}.txt".format(self.get_name())  # type: str
+        file_name: str = "plugin_mapping/{}.txt".format(self.get_name())
         assert self.plugin_context is not None
-        full_path = self.plugin_context.resources.get_file(
+        full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(
             file_name
-        )  # type: Union[Any, str, None]
+        )
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the
             # file.
@@ -60,7 +60,7 @@ class ToolPlugin(IPlugin):  # type: ignore
 
         if full_path is None:
             return {}
-        warning_mapping = {}  # type: Dict[str, str]
+        warning_mapping: Dict[str, str] = {}
         with open(full_path, "r") as mapping_file:
             for line in mapping_file.readlines():
                 split_line = line.strip().split(":")
@@ -78,7 +78,7 @@ class ToolPlugin(IPlugin):  # type: ignore
             name = self.get_name()  # pylint: disable=assignment-from-no-return
         assert self.plugin_context is not None
         user_flags = self.plugin_context.config.get_tool_config(name, level, "flags")
-        flags = []  # type: List[str]
+        flags: List[str] = []
         if user_flags:
             # See https://github.com/python/typeshed/issues/1476 for
             # justification to ignore.

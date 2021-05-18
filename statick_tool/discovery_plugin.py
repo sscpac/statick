@@ -74,9 +74,9 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
             return ""
 
         try:
-            output = subprocess.check_output(
+            output: str = subprocess.check_output(
                 ["file", full_path], universal_newlines=True
-            )  # type: str
+            )
             return output.lower()
         except subprocess.CalledProcessError as ex:
             logging.warning(

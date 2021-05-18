@@ -34,17 +34,17 @@ class SpotbugsToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return None
 
-        flags = [
+        flags: List[str] = [
             "-Dspotbugs.effort=Max",
             "-Dspotbugs.threshold=Low",
             "-Dspotbugs.xmlOutput=true",
         ]
         flags += self.get_user_flags(level)
 
-        include_file = self.plugin_context.config.get_tool_config(
+        include_file: Optional[str] = self.plugin_context.config.get_tool_config(
             self.get_name(), level, "include"
         )
-        exclude_file = self.plugin_context.config.get_tool_config(
+        exclude_file: Optional[str] = self.plugin_context.config.get_tool_config(
             self.get_name(), level, "exclude"
         )
         if include_file is not None:
@@ -61,8 +61,8 @@ class SpotbugsToolPlugin(ToolPlugin):
                 )
             ]
 
-        issues = []  # type: List[Issue]
-        total_output = ""
+        issues: List[Issue] = []
+        total_output: str = ""
         for pom in package["top_poms"]:
             try:
                 # The spotbugs:spotbugs-maven-plugin split is auto-concatenated
@@ -104,7 +104,7 @@ class SpotbugsToolPlugin(ToolPlugin):
 
     def parse_output(self, output: str) -> Optional[List[Issue]]:
         """Parse tool output and report issues."""
-        issues = []  # type: List[Issue]
+        issues: List[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         try:
@@ -115,7 +115,7 @@ class SpotbugsToolPlugin(ToolPlugin):
                 ex,
                 output,
             )
-            return None
+            return None  # This might be better to return empty issues list here.
         for file_entry in output_xml.findall("file"):
             # Generate the filename
             java_path_string = "{}.java".format(

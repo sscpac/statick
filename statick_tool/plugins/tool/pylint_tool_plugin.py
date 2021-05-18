@@ -18,13 +18,13 @@ class PylintToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags = [
+        flags: List[str] = [
             "--msg-template='{abspath}:{line}: [{msg_id}({symbol}), {obj}] {msg}'",
             "--reports=no",
         ]
         flags += self.get_user_flags(level)
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in package["python_src"]:
             try:
@@ -54,18 +54,18 @@ class PylintToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         pylint_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
-        parse = re.compile(pylint_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(pylint_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     if "," in match.group(3):
                         parts = match.group(3).split(",")

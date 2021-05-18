@@ -18,7 +18,7 @@ class PydocstyleToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags = []  # type: List[str]
+        flags: List[str] = []
         user_flags = self.get_user_flags(level)
         flags += user_flags
         total_output = []
@@ -53,7 +53,7 @@ class PydocstyleToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(  # pylint: disable=too-many-locals
@@ -61,10 +61,10 @@ class PydocstyleToolPlugin(ToolPlugin):
     ) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+)"
-        parse_first = re.compile(tool_re)  # type: Pattern[str]
+        parse_first: Pattern[str] = re.compile(tool_re)
         tool_re_second = r"\s(.+):\s(.+)"
-        parse_second = re.compile(tool_re_second)  # type: Pattern[str]
-        issues = []
+        parse_second: Pattern[str] = re.compile(tool_re_second)
+        issues: List[Issue] = []
         filename = ""
         line_number = "0"
         issue_type = ""
@@ -74,15 +74,13 @@ class PydocstyleToolPlugin(ToolPlugin):
             first_line = True
             for line in output.splitlines():
                 if first_line:
-                    match = parse_first.match(line)  # type: Optional[Match[str]]
+                    match: Optional[Match[str]] = parse_first.match(line)
                     first_line = False
                     if match:
                         filename = match.group(1)
                         line_number = match.group(2)
                 else:
-                    match_second = parse_second.match(
-                        line
-                    )  # type: Optional[Match[str]]
+                    match_second: Optional[Match[str]] = parse_second.match(line)
                     first_line = True
                     if match_second:
                         issue_type = match_second.group(1)

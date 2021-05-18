@@ -31,7 +31,7 @@ class Exceptions:
             raise ValueError("{} is not a valid file".format(filename))
         with open(filename) as fname:
             try:
-                self.exceptions = yaml.safe_load(fname)  # type: Dict[Any, Any]
+                self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
             except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
                 raise ValueError(
                     "{} is not a valid YAML file: {}".format(filename, ex)
@@ -39,7 +39,7 @@ class Exceptions:
 
     def get_ignore_packages(self) -> List[str]:
         """Get list of packages to skip when scanning a workspace."""
-        ignore = []  # type: List[str]
+        ignore: List[str] = []
         if (
             "ignore_packages" in self.exceptions
             and self.exceptions["ignore_packages"] is not None
@@ -49,7 +49,7 @@ class Exceptions:
 
     def get_exceptions(self, package: Package) -> Dict[Any, Any]:
         """Get specific exceptions for given package."""
-        exceptions = {"file": [], "message_regex": []}  # type: Dict[Any, Any]
+        exceptions: Dict[Any, Any] = {"file": [], "message_regex": []}
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
             global_exceptions = self.exceptions["global"]["exceptions"]
@@ -88,7 +88,7 @@ class Exceptions:
         plugins have been run (so that Statick doesn't run the tool plugins against
         files which will be ignored anyway).
         """
-        exceptions = self.get_exceptions(package)  # type: Dict[Any, Any]
+        exceptions: Dict[Any, Any] = self.get_exceptions(package)
         to_remove = []
         for filename in file_list:
             removed = False
@@ -117,20 +117,20 @@ class Exceptions:
             issues.items()
         ):
             warning_printed = False
-            to_remove = []  # type: List[Issue]
+            to_remove: List[Issue] = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:
                         self.print_exception_warning(tool)
                         warning_printed = True
                     continue
-                rel_path = os.path.relpath(issue.filename, package.path)  # type: str
+                rel_path: str = os.path.relpath(issue.filename, package.path)
                 for exception in exceptions:
                     if exception["tools"] == "all" or tool in exception["tools"]:
                         for pattern in exception["globs"]:
                             # Hack to avoid exceptions for everything on Travis CI.
-                            fname = issue.filename  # type: str
-                            prefix = "/home/travis/build/"  # type: str
+                            fname: str = issue.filename
+                            prefix: str = "/home/travis/build/"
                             if pattern == "*/build/*" and fname.startswith(prefix):
                                 fname = fname[len(prefix) :]
                             if fnmatch.fnmatch(fname, pattern) or fnmatch.fnmatch(
@@ -153,7 +153,7 @@ class Exceptions:
             if "globs" in exception:
                 exception_globs = exception["globs"]
             try:
-                compiled_re = re.compile(exception_re)  # type: Pattern[str]
+                compiled_re: Pattern[str] = re.compile(exception_re)
             except re.error:
                 logging.warning(
                     "Invalid regular expression in exception: %s", exception_re
@@ -166,15 +166,15 @@ class Exceptions:
                         if exception_globs:
                             for pattern in exception_globs:
                                 if fnmatch.fnmatch(issue.filename, pattern):
-                                    match = compiled_re.match(
+                                    match: Optional[Match[str]] = compiled_re.match(
                                         issue.message
-                                    )  # type: Optional[Match[str]]
+                                    )
                                     if match:
                                         to_remove.append(issue)
                         else:
-                            match_re = compiled_re.match(
+                            match_re: Optional[Match[str]] = compiled_re.match(
                                 issue.message
-                            )  # type: Optional[Match[str]]
+                            )
                             if match_re:
                                 to_remove.append(issue)
                 issues[tool] = [
@@ -189,8 +189,8 @@ class Exceptions:
         complex macro or something.
         """
         for tool, tool_issues in list(issues.items()):
-            warning_printed = False  # type: bool
-            to_remove = []  # type: List[Issue]
+            warning_printed: bool = False
+            to_remove: List[Issue] = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:

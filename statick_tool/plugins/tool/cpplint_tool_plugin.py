@@ -29,11 +29,11 @@ class CpplintToolPlugin(ToolPlugin):
             logging.warning("  cpplint not found!")
             return None
 
-        flags = []  # type: List[str]
+        flags: List[str] = []
         flags += self.get_user_flags(level)
         cpplint = package["cpplint"]
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -61,7 +61,7 @@ class CpplintToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output)
+        issues: List[Issue] = self.parse_output(output)
         return issues
 
     @classmethod
@@ -87,10 +87,10 @@ class CpplintToolPlugin(ToolPlugin):
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
-        parse = re.compile(lint_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(lint_re)
+        issues: List[Issue] = []
         for line in output.splitlines():
-            match = parse.match(line)  # type: Optional[Match[str]]
+            match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
                 norm_path = os.path.normpath(match.group(1))
                 issues.append(

@@ -18,10 +18,10 @@ class XmllintToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags = []  # type: List[str]
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for xml_file in package["xml"]:
             try:
@@ -50,18 +50,18 @@ class XmllintToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         xmllint_re = r"(.+):(\d+):\s(.+)\s:\s(.+)"
-        parse = re.compile(xmllint_re)  # type: Pattern[str]
-        issues = []
+        parse: Pattern[str] = re.compile(xmllint_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issues.append(
                         Issue(
