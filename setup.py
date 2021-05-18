@@ -45,6 +45,7 @@ setup(
     long_description_content_type="text/markdown",
     install_requires=[
         "bandit",
+        "black",
         "cmakelint",
         "cpplint",
         "flawfinder",
