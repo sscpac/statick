@@ -107,6 +107,8 @@ def test_shell_discovery_plugin_scan_invalid():
 def test_shell_discovery_plugin_scan_exceptions():
     """Test that the shell discovery plugin properly respects exceptions."""
     shdp = ShellDiscoveryPlugin()
+    if not shdp.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
