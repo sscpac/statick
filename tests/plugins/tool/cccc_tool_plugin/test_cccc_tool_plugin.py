@@ -82,7 +82,7 @@ def test_cccc_tool_plugin_scan_valid():
         os.path.join(os.path.dirname(__file__), "valid_package", "example.cpp")
     ]
     issues = ctp.scan(package, "level")
-    print("issues: {}".format(issues))
+    print(f"issues: {issues}")
     assert not issues
 
 
@@ -219,7 +219,7 @@ def test_cccc_tool_plugin_parse_missing_names():
     package["c_src"] = ["tmp/not_a_file.c"]
 
     issues = ctp.parse_output(output, package, config_file)
-    print("issues: {}".format(issues))
+    print(f"issues: {issues}")
     assert not issues
 
 

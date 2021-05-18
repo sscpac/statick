@@ -262,7 +262,7 @@ def test_run():
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_missing_path(init_statick):
@@ -281,7 +281,7 @@ def test_run_missing_path(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_missing_config(init_statick):
@@ -305,7 +305,7 @@ def test_run_missing_config(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 @mock.patch("os.mkdir")
@@ -333,7 +333,7 @@ def test_run_output_is_not_directory(mocked_mkdir, init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_force_tool_list(init_statick):
@@ -356,7 +356,7 @@ def test_run_force_tool_list(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_package_is_ignored(init_statick):
@@ -386,7 +386,7 @@ def test_run_package_is_ignored(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_invalid_discovery_plugin(init_statick):
@@ -418,7 +418,7 @@ def test_run_invalid_discovery_plugin(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_invalid_tool_plugin(init_statick):
@@ -450,7 +450,7 @@ def test_run_invalid_tool_plugin(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_missing_tool_dependency(init_statick):
@@ -490,7 +490,7 @@ def test_run_missing_tool_dependency(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-missing_tool"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_tool_dependency(init_statick):
@@ -531,7 +531,7 @@ def test_run_tool_dependency(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_discovery_dependency(init_statick):
@@ -565,7 +565,7 @@ def test_run_discovery_dependency(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_no_reporting_plugins(init_statick):
@@ -601,7 +601,7 @@ def test_run_no_reporting_plugins(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_invalid_reporting_plugins(init_statick):
@@ -638,7 +638,7 @@ def test_run_invalid_reporting_plugins(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_invalid_level(init_statick):
@@ -669,7 +669,7 @@ def test_run_invalid_level(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 @mock.patch("os.mkdir")
@@ -701,7 +701,7 @@ def test_run_mkdir_oserror(mocked_mkdir, init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_file_cmd_does_not_exist(init_statick):
@@ -736,7 +736,7 @@ def test_run_file_cmd_does_not_exist(init_statick):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 @mock.patch("subprocess.check_output")
@@ -770,7 +770,7 @@ def test_run_called_process_error(mock_subprocess_check_output):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 @pytest.fixture
@@ -809,7 +809,7 @@ def init_statick_ws():
             )
         )
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_workspace(init_statick_ws):
@@ -1088,7 +1088,7 @@ def test_run_workspace_with_issues(init_statick_ws):
     parsed_args = args.get_args(sys.argv)
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
-    print("parsed_args: {}".format(parsed_args))
+    print(f"parsed_args: {parsed_args}")
 
     issues, success = statick.run_workspace(parsed_args)
 
@@ -1148,7 +1148,7 @@ def test_run_workspace_invalid_level(init_statick_ws):
             )
         )
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_run_workspace_no_config(init_statick_ws):
@@ -1195,7 +1195,7 @@ def test_scan_package(init_statick_ws):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-sei_cert"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_scan_package_with_issues(init_statick_ws):
@@ -1228,7 +1228,7 @@ def test_scan_package_with_issues(init_statick_ws):
     try:
         shutil.rmtree(os.path.join(os.path.dirname(__file__), "test_package-custom"))
     except OSError as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def test_print_no_issues(caplog):
