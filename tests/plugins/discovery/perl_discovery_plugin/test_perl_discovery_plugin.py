@@ -2,6 +2,7 @@
 import contextlib
 import os
 
+import pytest
 from yapsy.PluginManager import PluginManager
 
 import statick_tool
@@ -87,6 +88,8 @@ def test_perl_discovery_plugin_scan_valid():
 def test_perl_discovery_plugin_scan_exceptions():
     """Test that the perl discovery plugin properly respects exceptions."""
     pldp = PerlDiscoveryPlugin()
+    if not pldp.file_command_exists():
+        pytest.skip("File command does not exist. Skipping test that requires it.")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
