@@ -98,9 +98,7 @@ class BlackToolPlugin(ToolPlugin):
                     match_tool_error: Optional[Match[str]] = parse_tool_error.match(
                         line
                     )
-                    match_parse_error: Optional[Match[str]] = parse_error.match(
-                        line
-                    )
+                    match_parse_error: Optional[Match[str]] = parse_error.match(line)
                     if match_parse_error:
                         issues.append(
                             Issue(
