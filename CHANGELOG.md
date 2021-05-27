@@ -12,6 +12,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.6.1 - 2021-05-27
+
+### Added
+
+- New plugin to run the `isort` tool.
+  Use of the `isort` tool has been added to the `self_check` level.
+- All print statements where variables are referenced have been converted to `f-strings`.
+- All type hints were changed from comment style to inline style.
+  The comment style of type hints was required when using Python 3.5.
+- The `black` tool was added to the Statick package requirements file.
+  The `black` tool is now run for the `self_check` level.
+  The tool was not installable with Python 3.5.
+
+### Fixed
+
+- Unit tests that rely on the `file` command to be present are now skipped if the file command does not exist.
+  These changes were developed and tested when running the unit tests in PowerShell on Windows 10.
+- For testing with Actions, the installed version of Node was upgraded from v10 to v14.
+  Node v10 is no longer supported.
+  Node v14 is recommended by the developers as it is a long-term support (LTS) release.
+
+### Removed
+
+- Deprecated discovery plugin `catkin` packages has been removed.
+  All functionality for discovering `catkin` packages is in the `ros` discovery plugin.
+- Deprecated reporting plugin for `print_json` has been removed.
+  All functionality for print `json` output is in the `json_reporting_plugin`.
+
 ## v0.6.0 - 2021-05-14
 
 ### Removed
