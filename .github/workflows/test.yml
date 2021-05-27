@@ -90,7 +90,7 @@ jobs:
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         run: |
           sudo apt install curl
-          curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+          curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
           sudo bash nodesource_setup.sh
           sudo apt install nodejs
           sudo npm install -g n
