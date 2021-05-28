@@ -30,17 +30,17 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags = []  # type: List[str]
+        flags: List[str] = []
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "md_src" in package:
             files += package["md_src"]
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in files:
             try:
@@ -71,7 +71,7 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals
@@ -80,15 +80,13 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
         """Parse tool output and report issues."""
         markdownlint_re = r"(.+):(\d+)\s([^\s]+)\s(.+)"
         markdownlint_re_with_col = r"(.+):(\d+):(\d+)\s([^\s]+)\s(.+)"
-        parse = re.compile(markdownlint_re)  # type: Pattern[str]
-        parse_with_col = re.compile(markdownlint_re_with_col)  # type: Pattern[str]
-        issues = []  # type: List[Issue]
+        parse: Pattern[str] = re.compile(markdownlint_re)
+        parse_with_col: Pattern[str] = re.compile(markdownlint_re_with_col)
+        issues: List[Issue] = []
 
         for output in total_output:
             for line in output.split("\n"):
-                match_with_col = parse_with_col.match(
-                    line
-                )  # type: Optional[Match[str]]
+                match_with_col: Optional[Match[str]] = parse_with_col.match(line)
                 if match_with_col:
                     issues.append(
                         Issue(
@@ -102,7 +100,7 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
                         )
                     )
                 else:
-                    match = parse.match(line)  # type: Optional[Match[str]]
+                    match: Optional[Match[str]] = parse.match(line)
                     if match:
                         issues.append(
                             Issue(
