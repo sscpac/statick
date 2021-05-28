@@ -48,8 +48,6 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             package["cmake"] = False
             return
 
-        logging.info("  Found cmake package %s", cmake_file)
-
         cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
 
