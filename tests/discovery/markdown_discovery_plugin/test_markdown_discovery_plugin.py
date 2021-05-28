@@ -78,5 +78,4 @@ def test_markdown_discovery_plugin_scan_exceptions():
         os.path.join(package.path, filename) for filename in expected_src
     ]
     # Neat trick to verify that two unordered lists are the same
-    print("package: {}".format(package["md_src"]))
     assert set(package["md_src"]) == set(expected_src_fullpath)
