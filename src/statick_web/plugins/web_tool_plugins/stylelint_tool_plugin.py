@@ -30,20 +30,20 @@ class StylelintToolPlugin(ToolPlugin):  # type: ignore
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags = []  # type: List[str]
+        flags: List[str] = []
         if format_file_name is not None:
             flags += ["--config", format_file_name]
         flags += ["-f", "json"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "html_src" in package:
             files += package["html_src"]
         if "css_src" in package:
             files += package["css_src"]
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in files:
             try:
@@ -74,14 +74,14 @@ class StylelintToolPlugin(ToolPlugin):  # type: ignore
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []  # type: List[Issue]
+        issues: List[Issue] = []
 
         for output in total_output:
             lines = output.split("\n")

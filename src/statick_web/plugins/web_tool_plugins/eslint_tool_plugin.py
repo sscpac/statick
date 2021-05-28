@@ -56,20 +56,20 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
 
         (format_file_name, copied_file) = self.get_format_file(level)
 
-        flags = []  # type: List[str]
+        flags: List[str] = []
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += ["--ext", ".js,.html", "-f", "unix"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        files = []  # type: List[str]
+        files: List[str] = []
         if "html_src" in package:
             files += package["html_src"]
         if "javascript_src" in package:
             files += package["javascript_src"]
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in files:
             try:
@@ -105,7 +105,7 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
                 fid.write(output)
                 logging.debug("%s", output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals
@@ -121,15 +121,15 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         """Parse tool output and report issues."""
         eslint_re = r"(.+):(\d+):(\d+):\s(.+)\s\[(.+)\/(.+)\]"
         eslint_error_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)]"
-        parse = re.compile(eslint_re)  # type: Pattern[str]
-        err_parse = re.compile(eslint_error_re)  # type: Pattern[str]
-        issues = []  # type: List[Issue]
+        parse: Pattern[str] = re.compile(eslint_re)
+        err_parse: Pattern[str] = re.compile(eslint_error_re)
+        issues: List[Issue] = []
 
         for output in total_output:
             lines = output.split("\n")
             for line in lines:
-                match = parse.match(line)  # type: Optional[Match[str]]
-                err_match = err_parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
+                err_match: Optional[Match[str]] = err_parse.match(line)
                 if match:
                     severity_str = match.group(5).lower()
                     severity = 3

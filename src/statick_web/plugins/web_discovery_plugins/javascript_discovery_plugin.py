@@ -20,7 +20,7 @@ class JavaScriptDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for JavaScript files."""
-        src_files = []  # type: List[str]
+        src_files: List[str] = []
 
         self.find_files(package)
 

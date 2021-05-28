@@ -30,13 +30,13 @@ class HTMLLintToolPlugin(ToolPlugin):  # type: ignore
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags = []  # type: List[str]
+        flags: List[str] = []
         if format_file_name is not None:
             flags += ["--rc", format_file_name]
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
         for src in package["html_src"]:
             try:
@@ -68,7 +68,7 @@ class HTMLLintToolPlugin(ToolPlugin):  # type: ignore
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals
@@ -76,13 +76,13 @@ class HTMLLintToolPlugin(ToolPlugin):  # type: ignore
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
         re_str = r"(.+):\s.+\s(\d+),\s.+,\s(.+)"
-        parse = re.compile(re_str)  # type: Pattern[str]
-        issues = []  # type: List[Issue]
+        parse: Pattern[str] = re.compile(re_str)
+        issues: List[Issue] = []
 
         for output in total_output:
             lines = output.split("\n")
             for line in lines:
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     filename = match.group(1)
                     line_number = match.group(2)
