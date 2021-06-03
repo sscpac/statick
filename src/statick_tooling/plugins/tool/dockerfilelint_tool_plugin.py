@@ -53,7 +53,8 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
                 total_output.append(output)
 
             except subprocess.CalledProcessError as ex:
-                if ex.returncode > 0:  # dockerfilelint returns the number of linting errors
+                # dockerfilelint returns the number of linting errors as the return code
+                if ex.returncode > 0:
                     total_output.append(ex.output)
                 else:
                     logging.warning(
@@ -82,7 +83,7 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 
-        logging.info(total_output)
+        # pylint: disable=too-many-nested-blocks
         for output in total_output:
             for line in output.split("\n"):
                 try:
@@ -109,4 +110,5 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
 
                 except ValueError as ex:
                     logging.warning("ValueError: %s", ex)
+        # pylint: enable=too-many-nested-blocks
         return issues
