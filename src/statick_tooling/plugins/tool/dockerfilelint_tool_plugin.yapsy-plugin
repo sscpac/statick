@@ -1,0 +1,3 @@
+[Core]
+Name = DockerfileLint Tool Plugin
+Module = dockerfilelint_tool_plugin
