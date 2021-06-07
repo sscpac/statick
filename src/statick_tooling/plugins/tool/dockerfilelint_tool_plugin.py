@@ -86,29 +86,30 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
         # pylint: disable=too-many-nested-blocks
         for output in total_output:
             for line in output.split("\n"):
-                try:
-                    err_dict = json.loads(line)["files"]
-                    for file_issues in err_dict:
-                        for issue in file_issues["issues"]:
-                            severity_str = issue["category"]
-                            severity = 1
-                            if severity_str == "Possible Bug":
-                                severity = 3
-                            elif severity_str == "Deprecation":
-                                severity = 5
-                            issues.append(
-                                Issue(
-                                    file_issues["file"],
-                                    issue["line"],
-                                    self.get_name(),
-                                    issue["title"],
-                                    severity,
-                                    issue["description"],
-                                    None,
+                if line:
+                    try:
+                        err_dict = json.loads(line)["files"]
+                        for file_issues in err_dict:
+                            for issue in file_issues["issues"]:
+                                severity_str = issue["category"]
+                                severity = 1
+                                if severity_str == "Possible Bug":
+                                    severity = 3
+                                elif severity_str == "Deprecation":
+                                    severity = 5
+                                issues.append(
+                                    Issue(
+                                        file_issues["file"],
+                                        issue["line"],
+                                        self.get_name(),
+                                        issue["title"],
+                                        severity,
+                                        issue["description"],
+                                        None,
+                                    )
                                 )
-                            )
 
-                except ValueError as ex:
-                    logging.warning("ValueError: %s", ex)
+                    except ValueError as ex:
+                        logging.warning("ValueError: %s, line: %s", ex, line)
         # pylint: enable=too-many-nested-blocks
         return issues
