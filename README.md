@@ -352,6 +352,7 @@ File Type | Extensions
 catkin    | `CMakeLists.txt` and `package.xml`
 C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
 CMake     | `CMakeLists.txt`
+groovy    | `.groovy`, `.gradle`, `Jenkinsfile*`
 java      | `.class`, `.java`
 Maven     | `pom.xml`
 Perl      | `.pl`
