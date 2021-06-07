@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class GroovyLintToolPlugin(ToolPlugin):  # type: ignore
+class GroovyLintToolPlugin(ToolPlugin):
     """Apply GroovyLint tool and gather results."""
 
     def get_name(self) -> str:
@@ -23,12 +23,14 @@ class GroovyLintToolPlugin(ToolPlugin):  # type: ignore
         tool_bin = "npm-groovy-lint"
 
         tool_config = ".groovylintrc.json"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        if self.plugin_context:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
-        format_file_name = self.plugin_context.resources.get_file(tool_config)
+        if self.plugin_context:
+            format_file_name = self.plugin_context.resources.get_file(tool_config)
 
         flags: List[str] = []
         if format_file_name is not None:
@@ -59,7 +61,9 @@ class GroovyLintToolPlugin(ToolPlugin):  # type: ignore
                 if ex.returncode == 1:
                     total_output.append(ex.output)
                 else:
-                    logging.warning("%s failed! Returncode = %d", tool_bin, ex.returncode)
+                    logging.warning(
+                        "%s failed! Returncode = %d", tool_bin, ex.returncode
+                    )
                     logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
 

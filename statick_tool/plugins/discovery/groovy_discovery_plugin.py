@@ -9,7 +9,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class GroovyDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
+class GroovyDiscoveryPlugin(DiscoveryPlugin):
     """Discover Groovy files to analyze."""
 
     def get_name(self) -> str:
