@@ -46,7 +46,6 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
         for src in files:
             try:
                 exe = [tool_bin] + flags + [src]
-                logging.info(" ".join(exe))
                 output = subprocess.check_output(
                     exe, stderr=subprocess.STDOUT, universal_newlines=True
                 )
