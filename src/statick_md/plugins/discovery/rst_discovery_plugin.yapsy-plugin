@@ -1,0 +1,3 @@
+[Core]
+Name = rst Discovery Plugin
+Module = rst_discovery_plugin
