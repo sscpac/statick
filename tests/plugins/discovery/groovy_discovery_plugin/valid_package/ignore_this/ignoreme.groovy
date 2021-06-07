@@ -1,0 +1,3 @@
+#!groovy
+
+println "Hello World!"

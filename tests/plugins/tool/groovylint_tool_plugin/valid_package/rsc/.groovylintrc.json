@@ -1,0 +1,6 @@
+{
+    "extends": "recommended-jenkinsfile",
+    "rules": {
+      "unused.UnusedVariable": "error"
+    }
+}
