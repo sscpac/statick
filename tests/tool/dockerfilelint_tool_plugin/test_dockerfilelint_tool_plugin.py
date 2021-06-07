@@ -109,7 +109,7 @@ def test_dockerfilelint_tool_plugin_parse_valid():
     assert issues[0].line_number == "2"
     assert issues[0].tool == "dockerfilelint"
     assert issues[0].issue_type == "Extra Arguments"
-    assert issues[0].severity == 3
+    assert issues[0].severity == "3"
     assert issues[0].message == "This command has extra arguments and will be ignored."
 
 

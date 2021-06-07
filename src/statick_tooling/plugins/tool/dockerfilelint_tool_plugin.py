@@ -92,11 +92,11 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
                         for file_issues in err_dict:
                             for issue in file_issues["issues"]:
                                 severity_str = issue["category"]
-                                severity = 1
+                                severity = "1"
                                 if severity_str == "Possible Bug":
-                                    severity = 3
+                                    severity = "3"
                                 elif severity_str == "Deprecation":
-                                    severity = 5
+                                    severity = "5"
                                 issues.append(
                                     Issue(
                                         file_issues["file"],
