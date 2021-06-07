@@ -1,0 +1,3 @@
+[Core]
+Name = NPM Groovy Lint Tool Plugin
+Module = groovylint_tool_plugin

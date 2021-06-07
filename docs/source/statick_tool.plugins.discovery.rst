@@ -30,6 +30,15 @@ statick_tool.plugins.discovery.cmake_discovery_plugin module
     :show-inheritance:
 
 
+statick_tool.plugins.discovery.groovy_discovery_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.discovery.groovy_discovery_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 statick_tool.plugins.discovery.java_discovery_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

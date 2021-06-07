@@ -1,0 +1,3 @@
+[Core]
+Name = Groovy Discovery Plugin
+Module = groovy_discovery_plugin
