@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
+- Groovy discovery plugin and tests.
+- [NPM Groovy Lint](https://nvuillam.github.io/npm-groovy-lint/) tool plugin and tests.
+
 ### Fixed
 
 ### Removed

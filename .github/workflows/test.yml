@@ -96,6 +96,7 @@ jobs:
           sudo npm install -g n
           sudo n stable
           sudo npm install -g markdownlint-cli@0.21.0
+          sudo npm install -g npm-groovy-lint
           rm nodesource_setup.sh
 
       - name: Test with mypy

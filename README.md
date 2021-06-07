@@ -367,30 +367,31 @@ The `.launch` extension is mapped to XML files due to use with ROS launch files.
 
 Tool | About
 :--- | :----
-[bandit][bandit]             | Bandit is a tool designed to find common security issues in Python code.
-[black][black]               | The uncompromising Python code formatter
-[catkin_lint][catkin_lint]   | Check catkin packages for common errors
-[cccc][cccc]                 | Source code counter and metrics tool for C++, C, and Java
-[clang-format][clang-format] | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.
-[clang-tidy][clang-tidy]     | Provide an extensible framework for diagnosing and fixing typical programming errors.
-[cmakelint][cmakelint]       | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.
-[cppcheck][cppcheck]         | static analysis of C/C++ code
-[cpplint][cpplint]           | Static code checker for C++
-[docformatter][docformatter] | Formats docstrings to follow PEP 257
-[flawfinder][flawfinder]     | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.
-[lizard][lizard]             | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages.
-[make][make]                 | C++ compiler.
-[mypy][mypy]                 | Optional static typing for Python 3 and 2 (PEP 484)
-[perlcritic][perlcritic]     | Critique Perl source code for best-practices.
-[pycodestyle][pycodestyle]   | Python style guide checker
-[pydocstyle][pydocstyle]     | A static analysis tool for checking compliance with Python docstring conventions.
-[pyflakes][pyflakes]         | A simple program which checks Python source files for errors
-[pylint][pylint]             | It's not just a linter that annoys you!
-[shellcheck][shellcheck]     | A static analysis tool for shell scripts
-[spotbugs][spotbugs]         | A tool for static analysis to look for bugs in Java code.
-[uncrustify][uncrustify]     | Code beautifier
-[xmllint][xmllint]           | Lint XML files.
-[yamllint][yamllint]         | A linter for YAML files.
+[bandit][bandit]                   | Bandit is a tool designed to find common security issues in Python code.
+[black][black]                     | The uncompromising Python code formatter
+[catkin_lint][catkin_lint]         | Check catkin packages for common errors
+[cccc][cccc]                       | Source code counter and metrics tool for C++, C, and Java
+[clang-format][clang-format]       | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.
+[clang-tidy][clang-tidy]           | Provide an extensible framework for diagnosing and fixing typical programming errors.
+[cmakelint][cmakelint]             | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.
+[cppcheck][cppcheck]               | static analysis of C/C++ code
+[cpplint][cpplint]                 | Static code checker for C++
+[docformatter][docformatter]       | Formats docstrings to follow PEP 257
+[flawfinder][flawfinder]           | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.
+[npm-groovy-lint][npm-groovy-lint] | This package will track groovy errors and correct a part of them.
+[lizard][lizard]                   | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages.
+[make][make]                       | C++ compiler.
+[mypy][mypy]                       | Optional static typing for Python 3 and 2 (PEP 484)
+[perlcritic][perlcritic]           | Critique Perl source code for best-practices.
+[pycodestyle][pycodestyle]         | Python style guide checker
+[pydocstyle][pydocstyle]           | A static analysis tool for checking compliance with Python docstring conventions.
+[pyflakes][pyflakes]               | A simple program which checks Python source files for errors
+[pylint][pylint]                   | It's not just a linter that annoys you!
+[shellcheck][shellcheck]           | A static analysis tool for shell scripts
+[spotbugs][spotbugs]               | A tool for static analysis to look for bugs in Java code.
+[uncrustify][uncrustify]           | Code beautifier
+[xmllint][xmllint]                 | Lint XML files.
+[yamllint][yamllint]               | A linter for YAML files.
 
 ## Customization
 
@@ -730,6 +731,7 @@ His commits were scrubbed from git history upon the initial public release.
 [cpplint]: https://github.com/cpplint/cpplint
 [docformatter]: https://github.com/myint/docformatter
 [flawfinder]: https://dwheeler.com/flawfinder/
+[npm-groovy-lint]: https://nvuillam.github.io/npm-groovy-lint/
 [lizard]: https://github.com/terryyin/lizard
 [logging]: https://docs.python.org/3/howto/logging.html
 [make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
