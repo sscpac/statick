@@ -31,7 +31,7 @@ statick_tool.plugins.discovery.cmake_discovery_plugin module
 
 
 statick_tool.plugins.discovery.groovy_discovery_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.discovery.groovy_discovery_plugin
     :members:
