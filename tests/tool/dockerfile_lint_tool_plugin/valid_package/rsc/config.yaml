@@ -1,0 +1,6 @@
+levels:
+  level:
+    tool:
+      dockerfile-lint:
+        flags: ""
+        config: "dockerfile_lint_rules.yaml"
