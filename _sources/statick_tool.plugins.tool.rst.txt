@@ -100,6 +100,14 @@ statick_tool.plugins.tool.flawfinder_tool_plugin module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.groovylint_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.groovylint_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.lizard_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
