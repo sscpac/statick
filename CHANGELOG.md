@@ -21,6 +21,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Fixed
 
+- Install missing library type stubs for PyYAML.
+  Needed for mypy to properly identify type hints.
+
 ### Removed
 
 ## v0.6.1 - 2021-05-27
