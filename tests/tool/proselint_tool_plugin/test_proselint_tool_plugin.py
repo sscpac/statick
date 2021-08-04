@@ -91,6 +91,10 @@ def test_proselint_tool_plugin_scan_missing_src():
     issues = plugin.scan(package, "level")
     assert not issues
 
+    package["md_src"] = []
+    issues = plugin.scan(package, "level")
+    assert not issues
+
 
 def test_proselint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the proselint output hasn't changed."""
@@ -132,6 +136,12 @@ def test_proselint_tool_plugin_parse_valid():
     issues = plugin.parse_output(output)
     assert len(issues) == 1
     assert issues[0].severity == "1"
+
+    errors = {"data": {"errors": [{"severity": "warning", "check": None, "line": None, "message": None}]}, "status": "success"}
+    output["test.md"] = json.dumps(errors)
+    issues = plugin.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].severity == "3"
 
     errors = {"data": {"errors": [{"severity": "error", "check": None, "line": None, "message": None}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
