@@ -2,6 +2,7 @@
 
 import json
 import logging
+import pathlib
 import subprocess
 from typing import List, Optional
 
@@ -30,9 +31,10 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
             tool_config = user_config
 
         format_file_name = self.plugin_context.resources.get_file(tool_config)
+        format_file_path = pathlib.Path(format_file_name).resolve().parent
         flags: List[str] = []
         if format_file_name is not None:
-            flags += ["-c", format_file_name]
+            flags += ["-c", str(format_file_path)]
         flags += ["-o", "json"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
