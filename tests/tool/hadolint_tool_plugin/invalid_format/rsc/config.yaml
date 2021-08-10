@@ -1,0 +1,6 @@
+levels:
+  level:
+    tool:
+      hadolint:
+        flags: ""
+        config: ".hadolint.yaml"
