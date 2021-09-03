@@ -28,7 +28,7 @@ class IsortToolPlugin(ToolPlugin):
         total_output: List[str] = []
 
         for src in package["python_src"]:
-            if not isort.check_file(src):  # type: ignore
+            if not isort.check_file(src):
                 total_output.append(src)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
