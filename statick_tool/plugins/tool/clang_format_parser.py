@@ -40,7 +40,7 @@ class ClangFormatXMLParser:
 
             replacements = root.findall("replacement")
 
-            with open(filename, "r") as fid:
+            with open(filename, "r", encoding="utf8") as fid:
                 content = fid.read()
 
             return self.generate_report(content, replacements)
