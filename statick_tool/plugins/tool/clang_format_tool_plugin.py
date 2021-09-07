@@ -132,7 +132,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
+            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 for output in total_output:
                     fid.write(output)
 
@@ -158,9 +158,9 @@ class ClangFormatToolPlugin(ToolPlugin):
                 default_file_name = ".clang-format"
 
             with open(
-                os.path.expanduser("~/" + default_file_name), "r"
+                os.path.expanduser("~/" + default_file_name), "r", encoding="utf8"
             ) as home_format_file, open(
-                format_file_name, "r"  # type: ignore
+                format_file_name, "r", encoding="utf8"  # type: ignore
             ) as format_file:
                 actual_format = home_format_file.read()
                 target_format = format_file.read()

@@ -44,7 +44,7 @@ class CatkinLintToolPlugin(ToolPlugin):
         logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
+            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
         issues: List[Issue] = self.parse_output(package, output)
@@ -55,8 +55,8 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Manual exceptions."""
         message = match.group(5)
         norm_path = os.path.normpath(package.path + "/" + match.group(2))
-        line = open(norm_path, "r").readlines()[int(match.group(3)) - 1].strip()
-
+        with open(norm_path, "r", encoding="utf8") as fid:
+            line = fid.readlines()[int(match.group(3)) - 1].strip()
         # There are a few cases where this is ok.
         if message == "variable CMAKE_CXX_FLAGS is modified":
             if line == 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")':

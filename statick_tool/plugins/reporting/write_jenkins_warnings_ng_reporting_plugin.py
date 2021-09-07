@@ -50,7 +50,7 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
             output_dir, package.name + "-" + level + ".json.statick"
         )
         logging.info("Writing output to %s", output_file)
-        with open(output_file, "w") as out:
+        with open(output_file, "w", encoding="utf8") as out:
             for _, value in issues.items():
                 for issue in value:
                     severity = "LOW"

@@ -113,7 +113,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open("cmake.log", "w") as fid:
+            with open("cmake.log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
         self.process_output(output, package)

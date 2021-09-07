@@ -49,7 +49,7 @@ class Config:
     def get_config_from_file(filename: str) -> Any:
         """Get level configuration from a file."""
         if filename:
-            with open(filename) as fid:
+            with open(filename, encoding="utf8") as fid:
                 try:
                     return yaml.safe_load(fid)
                 except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:

@@ -482,7 +482,7 @@ class Statick:
             packages_file_list = []
             try:
                 packages_file = os.path.abspath(parsed_args.packages_file)
-                with open(packages_file, "r") as fname:
+                with open(packages_file, "r", encoding="utf8") as fname:
                     packages_file_list = [
                         package.strip()
                         for package in fname.readlines()
