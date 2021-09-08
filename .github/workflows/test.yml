@@ -1,7 +1,7 @@
 ---
 name: Statick
 
-on:
+on: # NOLINT
   pull_request:
   push:
   schedule:
