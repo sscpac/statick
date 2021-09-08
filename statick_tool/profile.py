@@ -14,7 +14,7 @@ class Profile:  # pylint: disable=too-few-public-methods
         """Initialize profile."""
         if not filename:
             raise ValueError("{} is not a valid file".format(filename))
-        with open(filename) as fname:
+        with open(filename, encoding="utf8") as fname:
             try:
                 self.profile = yaml.safe_load(fname)
             except yaml.YAMLError as ex:

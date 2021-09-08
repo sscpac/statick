@@ -8,7 +8,7 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 
 import statick_tool
 
-with open("README.md") as f:
+with open("README.md", encoding="utf8") as f:
     LONG_DESCRIPTION = f.read()
 
 TEST_DEPS = [

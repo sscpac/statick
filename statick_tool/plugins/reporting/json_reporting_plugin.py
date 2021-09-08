@@ -86,7 +86,7 @@ class JsonReportingPlugin(ReportingPlugin):
             return False
         output_file = os.path.join(output_dir, package.name + "-" + level + ".json")
         logging.info("Writing output to %s", output_file)
-        with open(output_file, "w") as out:
+        with open(output_file, "w", encoding="utf8") as out:
             out.write(line)
 
         return True

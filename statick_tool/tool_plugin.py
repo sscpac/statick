@@ -61,7 +61,7 @@ class ToolPlugin(IPlugin):  # type: ignore
         if full_path is None:
             return {}
         warning_mapping: Dict[str, str] = {}
-        with open(full_path, "r") as mapping_file:
+        with open(full_path, "r", encoding="utf8") as mapping_file:
             for line in mapping_file.readlines():
                 split_line = line.strip().split(":")
                 if len(split_line) != 2:

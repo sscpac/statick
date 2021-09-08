@@ -41,7 +41,7 @@ class MyCustomToolPlugin(ToolPlugin):
 
         logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w") as fid:
+        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
             fid.write(output)
 
         issues = self.parse_output(output)

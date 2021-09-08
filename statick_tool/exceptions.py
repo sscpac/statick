@@ -29,7 +29,7 @@ class Exceptions:
         """Initialize exceptions interface."""
         if not filename:
             raise ValueError("{} is not a valid file".format(filename))
-        with open(filename) as fname:
+        with open(filename, encoding="utf8") as fname:
             try:
                 self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
             except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
@@ -197,7 +197,8 @@ class Exceptions:
                         self.print_exception_warning(tool)
                         warning_printed = True
                     continue
-                lines = open(issue.filename, encoding="utf-8").readlines()
+                with open(issue.filename, encoding="utf-8") as fid:
+                    lines = fid.readlines()
                 line_number = int(issue.line_number) - 1
                 if line_number < len(lines) and "NOLINT" in lines[line_number]:
                     to_remove.append(issue)

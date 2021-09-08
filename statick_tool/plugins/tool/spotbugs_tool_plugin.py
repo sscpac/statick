@@ -92,12 +92,13 @@ class SpotbugsToolPlugin(ToolPlugin):
                 os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")
             ):
                 with open(
-                    os.path.join(os.path.dirname(pom), "target", "spotbugs.xml")
+                    os.path.join(os.path.dirname(pom), "target", "spotbugs.xml"),
+                    encoding="utf8",
                 ) as outfile:
                     issues += self.parse_output(outfile.read())  # type: ignore
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
+            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(total_output)
 
         return issues

@@ -93,7 +93,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         logging.debug("%s", output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w") as fid:
+            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
         issues: List[Issue] = self.parse_output(output)

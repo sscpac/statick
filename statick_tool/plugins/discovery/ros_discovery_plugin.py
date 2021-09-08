@@ -63,7 +63,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                                 "cmake_flags"
                             ] = "-DCMAKE_PREFIX_PATH=" + item.rstrip("/bin")
         elif os.path.isfile(package_file) and ros_version is not None:
-            with open(package_file) as fconfig:
+            with open(package_file, encoding="utf8") as fconfig:
                 try:
                     output = xmltodict.parse(fconfig.read())
                 except (

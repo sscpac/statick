@@ -71,7 +71,7 @@ class GroovyLintToolPlugin(ToolPlugin):
                 logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
                 return None
 
-        with open(self.get_name() + ".log", "w") as fid:
+        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
             for output in total_output:
                 fid.write(output)
                 logging.debug("%s", output)

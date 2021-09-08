@@ -84,7 +84,7 @@ class CCCCToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "wb") as flog:
                 flog.write(log_output)
 
-        with open(".cccc/cccc.xml") as fconfig:
+        with open(".cccc/cccc.xml", encoding="utf8") as fconfig:
             tool_output = xmltodict.parse(fconfig.read())
 
         issues: List[Issue] = self.parse_output(tool_output, package, config_file)
@@ -147,7 +147,7 @@ class CCCCToolPlugin(ToolPlugin):
         if config_file is None:
             return config
 
-        with open(config_file, "r") as csvfile:
+        with open(config_file, "r", encoding="utf8") as csvfile:
             reader = csv.DictReader(csvfile, delimiter="@")
             for row in reader:
                 if row["CCCC_FileExt"] == "CCCC_MetTmnt":
