@@ -1,7 +1,12 @@
 ---
 name: Statick
 
-on: [pull_request, push]  # NOLINT
+on: # NOLINT
+  pull_request:
+  push:
+  schedule:
+    - cron: '0 3 * * MON'
+  workflow_dispatch:
 
 jobs:
   build:
