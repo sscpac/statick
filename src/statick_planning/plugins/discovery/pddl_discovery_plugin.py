@@ -44,7 +44,7 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
     @classmethod
     def discover_pddl_file_type(cls, filename: str) -> str:
         """Determine the type of PDDL file that was discovered."""
-        with open(filename) as f_pddl:
+        with open(filename, encoding="utf-8") as f_pddl:
             for line in f_pddl.readlines():
                 if "(define" in line and "domain" in line:
                     return "domain"
