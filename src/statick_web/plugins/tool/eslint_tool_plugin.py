@@ -100,7 +100,7 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         if copied_file:
             self.remove_config_file(format_file_name)
 
-        with open(self.get_name() + ".log", "w") as fid:
+        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
             for output in total_output:
                 fid.write(output)
                 logging.debug("%s", output)
