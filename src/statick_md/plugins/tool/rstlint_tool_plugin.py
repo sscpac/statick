@@ -38,7 +38,7 @@ class RstlintToolPlugin(ToolPlugin):  # type: ignore
         for output in total_output:
             logging.debug("%s", str(output))
 
-        with open(self.get_name() + ".log", "w") as fid:
+        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
             for output in total_output:
                 fid.write(str(output))
 

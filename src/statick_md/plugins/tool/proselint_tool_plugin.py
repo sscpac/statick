@@ -13,6 +13,7 @@ import logging
 from typing import Any, Dict, List, Optional
 
 import proselint
+from proselint.config import default as proselint_default
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -41,14 +42,16 @@ class ProselintToolPlugin(ToolPlugin):  # type: ignore
         # https://github.com/amperser/proselint/issues/355
         output: Dict[str, Any] = {}
         for filename in files:
-            with open(filename) as fid:
-                errors = proselint.tools.errors_to_json(proselint.tools.lint(fid))
+            with open(filename, encoding="utf8") as fid:
+                errors = proselint.tools.errors_to_json(
+                    proselint.tools.lint(fid, config=proselint_default)
+                )
                 output[filename] = errors
 
         for key, value in output.items():
             logging.debug("%s: %s", key, value)
 
-        with open(self.get_name() + ".log", "w") as fid:
+        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
             for key, value in output.items():
                 combined = key + value
                 fid.write(combined)
