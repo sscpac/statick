@@ -1,7 +1,7 @@
 ---
 name: Statick
 
-on: [pull_request, push]  # NOLINT
+on: [pull_request, push, workflow_dispatch]  # NOLINT
 
 jobs:
   build:
