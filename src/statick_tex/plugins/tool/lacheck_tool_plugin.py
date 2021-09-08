@@ -47,7 +47,7 @@ class LacheckToolPlugin(ToolPlugin):  # type: ignore
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w") as fid:
+        with open(self.get_name() + ".log", "w", encoding="utf-8") as fid:
             for output in total_output:
                 fid.write(output)
 
