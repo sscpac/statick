@@ -48,18 +48,12 @@ class SpotbugsToolPlugin(ToolPlugin):
             self.get_name(), level, "exclude"
         )
         if include_file is not None:
-            flags += [
-                "-Dspotbugs.includeFilterFile={}".format(
-                    self.plugin_context.resources.get_file(include_file)
-                )
-            ]
+            include_file_path = self.plugin_context.resources.get_file(include_file)
+            flags += [f"-Dspotbugs.includeFilterFile={include_file_path}"]
 
         if exclude_file is not None:
-            flags += [
-                "-Dspotbugs.excludeFilterFile={}".format(
-                    self.plugin_context.resources.get_file(exclude_file)
-                )
-            ]
+            exclude_file_path = self.plugin_context.resources.get_file(exclude_file)
+            flags += [f"-Dspotbugs.excludeFilterFile={exclude_file_path}"]
 
         issues: List[Issue] = []
         total_output: str = ""
@@ -103,7 +97,9 @@ class SpotbugsToolPlugin(ToolPlugin):
 
         return issues
 
-    def parse_output(self, output: str) -> Optional[List[Issue]]:
+    def parse_output(  # pylint: disable=too-many-locals
+        self, output: str
+    ) -> Optional[List[Issue]]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
         # Load the plugin mapping if possible
@@ -119,9 +115,8 @@ class SpotbugsToolPlugin(ToolPlugin):
             return None  # This might be better to return empty issues list here.
         for file_entry in output_xml.findall("file"):
             # Generate the filename
-            java_path_string = "{}.java".format(
-                file_entry.attrib["classname"].replace(".", os.sep)
-            )
+            file_base = file_entry.attrib["classname"].replace(".", os.sep)
+            java_path_string = f"{file_base}.java"
             file_path = ""
             for source_dir in output_xml.findall("Project/SrcDir"):
                 if source_dir.text is not None:

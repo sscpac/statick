@@ -39,7 +39,7 @@ class ToolPlugin(IPlugin):  # type: ignore
 
     def load_mapping(self) -> Dict[str, str]:
         """Load a mapping between warnings and identifiers."""
-        file_name: str = "plugin_mapping/{}.txt".format(self.get_name())
+        file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
         full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(
             file_name
@@ -47,8 +47,9 @@ class ToolPlugin(IPlugin):  # type: ignore
         if self.plugin_context.args.mapping_file_suffix is not None:
             # If the user specified a suffix, try to get the suffixed version of the
             # file.
-            suffixed_file_name = "plugin_mapping/{}-{}.txt".format(
-                self.get_name(), self.plugin_context.args.mapping_file_suffix
+            suffixed_file_name = (
+                f"plugin_mapping/{self.get_name()}-"
+                f"{self.plugin_context.args.mapping_file_suffix}.txt"
             )
             suffixed_full_path = self.plugin_context.resources.get_file(
                 suffixed_file_name

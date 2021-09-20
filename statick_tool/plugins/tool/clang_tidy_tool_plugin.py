@@ -50,7 +50,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         )
 
         if user_version is not None:
-            clang_tidy_bin = "{}-{}".format(clang_tidy_bin, user_version)
+            clang_tidy_bin = f"{clang_tidy_bin}-{user_version}"
 
         # If the user explicitly specifies a binary, let that override the user_version
         if self.plugin_context.args.clang_tidy_bin is not None:

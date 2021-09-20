@@ -65,7 +65,7 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         clang_format_bin = "clang-format"
         if user_version is not None:
-            clang_format_bin = "{}-{}".format(clang_format_bin, user_version)
+            clang_format_bin = f"{clang_format_bin}-{user_version}"
 
         # If the user explicitly specifies a binary, let that override the user_version
         if (
@@ -148,10 +148,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             default_file_name = "_clang-format"
             format_file_name = self.plugin_context.resources.get_file(default_file_name)
             exc_msg = (
-                "_clang-format or .clang-format style is not correct. There is "
-                "one located in {}. Put this file in your home directory.".format(
-                    format_file_name
-                )
+                "_clang-format or .clang-format style is not correct. "
+                f"There is one located in {format_file_name}. "
+                "Put this file in your home directory."
             )
 
             if not os.path.isfile(os.path.expanduser("~/" + default_file_name)):
@@ -194,7 +193,9 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         return True
 
-    def parse_output(self, total_output: List[str], files: List[str]) -> List[Issue]:
+    def parse_output(  # pylint: disable=too-many-locals
+        self, total_output: List[str], files: List[str]
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
         parse: Pattern[str] = re.compile(clangformat_re)
@@ -229,6 +230,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             for output, filename in zip(total_output, files):
                 report = parser.parse_xml_output(output, filename)
                 for issue in report:
+                    msg: str = (
+                        f"Replace\n{issue['deletion']}\nwith\n{issue['addition']}\n"
+                    )
                     issues.append(
                         Issue(
                             filename,
@@ -236,9 +240,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                             self.get_name(),
                             "format",
                             "1",
-                            "Replace\n{}\nwith\n{}\n".format(
-                                issue["deletion"], issue["addition"]
-                            ),
+                            msg,
                             None,
                         )
                     )
