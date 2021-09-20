@@ -230,7 +230,9 @@ class ClangFormatToolPlugin(ToolPlugin):
             for output, filename in zip(total_output, files):
                 report = parser.parse_xml_output(output, filename)
                 for issue in report:
-                    msg: str = f"Replace\n{issue['deletion']}with\n{issue['addition']}"
+                    msg: str = (
+                        f"Replace\n{issue['deletion']}\nwith\n{issue['addition']}\n"
+                    )
                     issues.append(
                         Issue(
                             filename,

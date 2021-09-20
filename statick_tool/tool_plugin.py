@@ -49,7 +49,7 @@ class ToolPlugin(IPlugin):  # type: ignore
             # file.
             suffixed_file_name = (
                 f"plugin_mapping/{self.get_name()}-"
-                "{self.plugin_context.args.mapping_file_suffix}.txt"
+                f"{self.plugin_context.args.mapping_file_suffix}.txt"
             )
             suffixed_full_path = self.plugin_context.resources.get_file(
                 suffixed_file_name

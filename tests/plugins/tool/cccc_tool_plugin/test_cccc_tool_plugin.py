@@ -192,7 +192,7 @@ def test_cccc_tool_plugin_parse_valid():
         assert issues[1].severity == "5"
         assert (
             issues[1].message
-            == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, theshold: 1000.0"
+            == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, theshold: 100.0"
         )
 
 
