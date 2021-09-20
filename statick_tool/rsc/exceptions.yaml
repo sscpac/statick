@@ -105,6 +105,12 @@ global:
         regex: ".+: Class .+ inherits from object, can be safely removed from bases in python3"
 
 packages:
+  statick:
+    exceptions:
+      file:
+        # Causes pylint crash when trying to import lizard module.
+        - tools: [pylint]
+          globs: ["statick_tool/plugins/tool/lizard_tool_plugin.py"]
 
 ignore_packages:
   []

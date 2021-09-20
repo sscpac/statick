@@ -54,7 +54,7 @@ class Config:
                     return yaml.safe_load(fid)
                 except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
                     raise ValueError(
-                        "{} is not a valid YAML file: {}".format(filename, ex)
+                        f"{filename} is not a valid YAML file: {ex}"
                     ) from ex
 
         return None

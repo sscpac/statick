@@ -28,14 +28,12 @@ class Exceptions:
     def __init__(self, filename: Optional[str]) -> None:
         """Initialize exceptions interface."""
         if not filename:
-            raise ValueError("{} is not a valid file".format(filename))
+            raise ValueError(f"{filename} is not a valid file")
         with open(filename, encoding="utf8") as fname:
             try:
                 self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
             except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
-                raise ValueError(
-                    "{} is not a valid YAML file: {}".format(filename, ex)
-                ) from ex
+                raise ValueError(f"{filename} is not a valid YAML file: {ex}") from ex
 
     def get_ignore_packages(self) -> List[str]:
         """Get list of packages to skip when scanning a workspace."""

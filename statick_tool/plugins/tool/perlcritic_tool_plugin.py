@@ -82,7 +82,7 @@ class PerlCriticToolPlugin(ToolPlugin):
             if len(split_line) < 5:
                 continue
             cert_reference = None
-            if split_line[2].replace("::", "__") in warnings_mapping.keys():
+            if split_line[2].replace("::", "__") in warnings_mapping:
                 cert_reference = warnings_mapping[split_line[2].replace("::", "__")]
 
             issues.append(

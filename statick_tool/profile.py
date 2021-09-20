@@ -13,18 +13,16 @@ class Profile:  # pylint: disable=too-few-public-methods
     def __init__(self, filename: str) -> None:
         """Initialize profile."""
         if not filename:
-            raise ValueError("{} is not a valid file".format(filename))
+            raise ValueError(f"{filename} is not a valid file")
         with open(filename, encoding="utf8") as fname:
             try:
                 self.profile = yaml.safe_load(fname)
             except yaml.YAMLError as ex:
-                raise ValueError(
-                    "{} is not a valid YAML file: {}".format(filename, ex)
-                ) from ex
+                raise ValueError("f{filename} is not a valid YAML file: {ex}") from ex
             if self.profile is None:
-                raise ValueError("{} is empty, can't continue!".format(filename))
+                raise ValueError(f"{filename} is empty, can't continue!")
             if "default" not in self.profile:
-                raise ValueError("No 'default' key found in {}!".format(filename))
+                raise ValueError(f"No 'default' key found in {filename}!")
 
     def get_package_level(self, package: Package) -> Union[str, Any]:
         """Get which scan level to use for a given package."""

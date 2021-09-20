@@ -179,7 +179,7 @@ class CCCCToolPlugin(ToolPlugin):
                     thresh_warn = float(config[val_id]["warn"])
                     msg = key + " - " + config[val_id]["name"]
                     if result > thresh_error:
-                        msg += " - value: {}, theshold: {}".format(result, thresh_error)
+                        msg += f" - value: {result}, theshold: {thresh_warn}"
                         issues.append(
                             Issue(
                                 package["c_src"][0],
@@ -192,7 +192,7 @@ class CCCCToolPlugin(ToolPlugin):
                             )
                         )
                     elif result > thresh_warn:
-                        msg += " - value: {}, theshold: {}".format(result, thresh_warn)
+                        msg += f" - value: {result}, theshold: {thresh_warn}"
                         issues.append(
                             Issue(
                                 package["c_src"][0],
