@@ -5,7 +5,7 @@ on: # NOLINT
   pull_request:
   push:
   schedule:
-    - cron: '0 3 * * MON'
+    - cron: '0 10 * * MON'
   workflow_dispatch:
 
 jobs:
