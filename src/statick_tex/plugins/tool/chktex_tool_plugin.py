@@ -35,9 +35,9 @@ class ChktexToolPlugin(ToolPlugin):  # type: ignore
                 )
 
             except subprocess.CalledProcessError as ex:
-                # Return code 1 just means "found problems"
-                # Return code 2 provides correct output with test cases used so far
-                if ex.returncode != 1 and ex.returncode != 2:
+                # Return code 1 means "found problems".
+                # Return code 2 provides correct output with test cases used so far.
+                if ex.returncode not in (1, 2):
                     logging.warning("Problem %s", ex.returncode)
                     logging.warning("%s exception: %s", self.get_name(), ex.output)
                     return None
