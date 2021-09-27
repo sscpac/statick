@@ -138,6 +138,16 @@ class DockerfileULintToolPlugin(ToolPlugin):  # type: ignore
                         )
 
             except ValueError as ex:
-                logging.warning("ValueError: %s", ex)
+                issues.append(
+                    Issue(
+                        "EXCEPTION",
+                        "0",
+                        self.get_name(),
+                        "ValueError",
+                        "5",
+                        str(ex),
+                        None,
+                    )
+                )
         # pylint: enable=too-many-nested-blocks
         return issues

@@ -19,7 +19,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_dockerfilelint_tool_plugin():
+def setup_dockerfilelint_tool_plugin(package="valid_package"):
     """Initialize and return an instance of the dockerfilelint plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
@@ -32,7 +32,7 @@ def setup_dockerfilelint_tool_plugin():
     resources = Resources(
         [
             os.path.join(os.path.dirname(statick_tool.__file__), "plugins"),
-            os.path.join(os.path.dirname(__file__), "valid_package"),
+            os.path.join(os.path.dirname(__file__), package),
         ]
     )
     config = Config(resources.get_file("config.yaml"))
@@ -116,9 +116,51 @@ def test_dockerfilelint_tool_plugin_parse_valid():
 def test_dockerfilelint_tool_plugin_parse_invalid():
     """Verify that invalid output of dockerfilelint is ignored."""
     plugin = setup_dockerfilelint_tool_plugin()
-    output = "invalid text"
-    issues = plugin.parse_output(output)
-    assert not issues
+    output = "invalid text\n"
+    issues = plugin.parse_output([output])
+    assert len(issues) == 1
+    assert issues[0].filename == "EXCEPTION"
+    assert issues[0].line_number == "0"
+    assert issues[0].tool == "dockerfilelint"
+    assert issues[0].issue_type == "ValueError"
+    assert issues[0].severity == "5"
+    assert issues[0].message == "Expecting value: line 1 column 1 (char 0), on line: invalid text"
+
+
+def test_dockerfilelint_tool_plugin_scan_invalid_rc_file():
+    """Integration test: Make sure the dockerfilelint output hasn't changed."""
+    plugin = setup_dockerfilelint_tool_plugin(package="invalidrc_package")
+    if not plugin.command_exists("dockerfilelint"):
+        pytest.skip("Missing dockerfilelint executable.")
+    package = Package(
+        "invalidrc_package", os.path.join(os.path.dirname(__file__), "invalidrc_package")
+    )
+    package["dockerfile_src"] = [
+        os.path.join(os.path.dirname(__file__), "invalidrc_package", "Dockerfile")
+    ]
+    issues = plugin.scan(package, "level")
+    # Expecting 1 issue for each of the following lines:
+    # /usr/local/lib/node_modules/dockerfilelint/lib/messages.js:14
+    # if (name in rules) {
+    #          ^
+    # TypeError: Cannot use 'in' operator to search for 'latest_tag' in null
+    # at Object.build (/usr/local/lib/node_modules/dockerfilelint/lib/messages.js:14:14)
+    # at /usr/local/lib/node_modules/dockerfilelint/lib/index.js:150:31
+    # at Array.forEach (<anonymous>)
+    # at runLine (/usr/local/lib/node_modules/dockerfilelint/lib/index.js:149:37)
+    # at Object.module.exports.run (/usr/local/lib/node_modules/dockerfilelint/lib/index.js:62:18)
+    # at processContent (/usr/local/lib/node_modules/dockerfilelint/bin/dockerfilelint:92:50)
+    # at /usr/local/lib/node_modules/dockerfilelint/bin/dockerfilelint:86:3
+    # at Array.forEach (<anonymous>)
+    # at Object.<anonymous> (/usr/local/lib/node_modules/dockerfilelint/bin/dockerfilelint:65:8)
+    # at Module._compile (internal/modules/cjs/loader.js:1063:30)
+    assert len(issues) == 14
+    assert issues[2].filename == "EXCEPTION"
+    assert issues[2].line_number == "0"
+    assert issues[2].tool == "dockerfilelint"
+    assert issues[2].issue_type == "ValueError"
+    assert issues[2].severity == "5"
+    assert issues[2].message == "Expecting value: line 1 column 14 (char 13), on line:              ^"
 
 
 @mock.patch(
@@ -149,7 +191,13 @@ def test_dockerfilelint_tool_plugin_scan_calledprocesserror(
         2, "", output="mocked error"
     )
     issues = plugin.scan(package, "level")
-    assert not issues
+    assert len(issues) == 1
+    assert issues[0].filename == "EXCEPTION"
+    assert issues[0].line_number == "0"
+    assert issues[0].tool == "dockerfilelint"
+    assert issues[0].issue_type == "ValueError"
+    assert issues[0].severity == "5"
+    assert issues[0].message == "Expecting value: line 1 column 1 (char 0), on line: mocked error"
 
 
 @mock.patch(
