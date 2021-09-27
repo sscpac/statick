@@ -26,7 +26,7 @@ def setup_val_validate_tool_plugin(binary=None):
         action="store_false",
         help="Show tool output",
     )
-    arg_parser.add_argument("--validate-bin", dest="validate_bin")
+    arg_parser.add_argument("--val-validate-bin", dest="val_validate_bin")
 
     resources = Resources(
         [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
@@ -35,8 +35,9 @@ def setup_val_validate_tool_plugin(binary=None):
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
     vtp = ValValidateToolPlugin()
+    print(f"binary: {binary}")
     if binary:
-        plugin_context.args.validate_bin = binary
+        plugin_context.args.val_validate_bin = binary
     vtp.set_plugin_context(plugin_context)
     return vtp
 
@@ -114,7 +115,7 @@ def test_val_validate_tool_plugin_no_sources():
     assert not issues
 
 
-def test_spellcheck_tool_plugin_scan_wrong_binary():
+def test_val_validate_tool_plugin_scan_wrong_binary():
     """
     Test what happens when the specified tool binary does not exist.
 
