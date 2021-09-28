@@ -79,6 +79,24 @@ def test_hadolint_tool_plugin_found():
     )
 
 
+def test_hadolint_tool_plugin_gather_args():
+    """Test that the hadolint tool plugin arguments are collected."""
+    arg_parser = argparse.ArgumentParser()
+    plugin = setup_hadolint_tool_plugin()
+    plugin.gather_args(arg_parser)
+    args = arg_parser.parse_args([])
+    assert args.hadolint_bin is None
+    assert not args.hadolint_docker
+
+    args = arg_parser.parse_args(["--hadolint-docker"])
+    assert args.hadolint_bin is None
+    assert args.hadolint_docker
+
+    args = arg_parser.parse_args(["--hadolint-bin", "test-bin"])
+    assert args.hadolint_bin == "test-bin"
+    assert not args.hadolint_docker
+
+
 def test_hadolint_tool_plugin_parse_valid():
     """Verify that we can parse the expected output of hadolint."""
     plugin = setup_hadolint_tool_plugin()
