@@ -21,11 +21,14 @@ class DockerfileDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
     ) -> None:
         """Scan package looking for Dockerfile files."""
         src_files: List[str] = []
+        yaml_extensions = (".yaml", ".yml")
 
         self.find_files(package)
 
         for file_dict in package.files.values():
-            if file_dict["name"].startswith("dockerfile"):
+            if file_dict["name"].startswith("dockerfile") and not file_dict[
+                "name"
+            ].endswith(yaml_extensions):
                 src_files.append(file_dict["path"])
 
         src_files = list(OrderedDict.fromkeys(src_files))
