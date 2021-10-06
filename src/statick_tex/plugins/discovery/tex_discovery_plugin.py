@@ -17,8 +17,8 @@ class TexDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for TeX files."""
-        tex_files = []  # type: List[str]
-        tex_extensions = (".tex", ".bib")  # type: Tuple[str, str]
+        tex_files: List[str] = []
+        tex_extensions: Tuple[str, str] = (".tex", ".bib")
         tex_ignore_extensions = (".sty", ".log", ".cls")
         tex_output = ["latex document", "bibtex text file", "latex 2e document"]
 
@@ -37,7 +37,7 @@ class TexDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
 
         logging.info("  %d TeX files found.", len(tex_files))
         if exceptions:
-            original_file_count = len(tex_files)  # type: int
+            original_file_count: int = len(tex_files)
             tex_files = exceptions.filter_file_exceptions_early(package, tex_files)
             if original_file_count > len(tex_files):
                 logging.info(

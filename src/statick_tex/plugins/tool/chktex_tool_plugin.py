@@ -21,15 +21,15 @@ class ChktexToolPlugin(ToolPlugin):  # type: ignore
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
-        flags = []  # type: List[str]
-        user_flags = self.get_user_flags(level)  # type: List[str]
+        flags: List[str] = []
+        user_flags: List[str] = self.get_user_flags(level)
         flags += user_flags
-        total_output = []  # type: List[str]
+        total_output: List[str] = []
 
-        tool_bin = "chktex"  # type: str
+        tool_bin: str = "chktex"
         for src in package["tex"]:
             try:
-                subproc_args = [tool_bin, src] + flags  # type: List[str]
+                subproc_args: List[str] = [tool_bin, src] + flags
                 output = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
                 )
@@ -55,22 +55,22 @@ class ChktexToolPlugin(ToolPlugin):  # type: ignore
             for output in total_output:
                 fid.write(output)
 
-        issues = self.parse_output(total_output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(total_output)
         return issues
 
     def parse_output(self, total_output: List[str]) -> List[Issue]:
         """Parse tool output and report issues."""
-        tool_re = r"(.+)\s(\d+)\s(.+)\s(.+)\s(.+)\s(\d+):\s(.+)"  # type: str
-        parse = re.compile(tool_re)  # type: Pattern[str]
-        issues = []  # type: List[Issue]
-        filename = ""  # type: str
-        line_number = "0"  # type: str
-        issue_type = ""  # type: str
-        message = ""  # type: str
+        tool_re: str = r"(.+)\s(\d+)\s(.+)\s(.+)\s(.+)\s(\d+):\s(.+)"
+        parse: Pattern[str] = re.compile(tool_re)
+        issues: List[Issue] = []
+        filename: str = ""
+        line_number: str = "0"
+        issue_type: str = ""
+        message: str = ""
 
         for output in total_output:
             for line in output.splitlines():
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     if match.group(1) == "Warning":
                         filename = match.group(4)
