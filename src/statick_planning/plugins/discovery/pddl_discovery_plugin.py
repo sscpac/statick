@@ -16,7 +16,7 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
 
     def scan(self, package: Package, level: str, exceptions: Exceptions = None) -> None:
         """Scan package looking for PDDL files."""
-        pddl_files = []  # type: List[str]
+        pddl_files: List[str] = []
 
         self.find_files(package)
 
@@ -26,7 +26,7 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
 
         logging.info("  %d PDDL files found.", len(pddl_files))
         if exceptions:
-            original_file_count = len(pddl_files)  # type: int
+            original_file_count: int = len(pddl_files)
             pddl_files = exceptions.filter_file_exceptions_early(package, pddl_files)
             if original_file_count > len(pddl_files):
                 logging.info(

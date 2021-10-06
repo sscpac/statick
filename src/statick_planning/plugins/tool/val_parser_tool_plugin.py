@@ -41,7 +41,7 @@ class ValParserToolPlugin(ToolPlugin):  # type: ignore
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
             return []
 
-        flags = []
+        flags: List[str] = []
         flags += self.get_user_flags(level)
 
         parser_bin = "Parser"
@@ -49,12 +49,12 @@ class ValParserToolPlugin(ToolPlugin):  # type: ignore
             parser_bin = self.plugin_context.args.val_parser_bin
 
         try:
-            subproc_args = (
+            subproc_args: List[str] = (
                 [parser_bin]
                 + flags
                 + package["pddl_domain_src"]
                 + package["pddl_problem_src"]
-            )  # type: List[str]
+            )
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
@@ -76,14 +76,14 @@ class ValParserToolPlugin(ToolPlugin):  # type: ignore
             with open(self.get_name() + ".log", "w", encoding="utf-8") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(output)  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(output)
         return issues
 
     def parse_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
-        tool_re = r"(.+):\s(.+):\s(.+):\s(.+):\s(.+)\s(.+)"  # type: str
-        parse = re.compile(tool_re)  # type: Pattern[str]
-        issues = []
+        tool_re: str = r"(.+):\s(.+):\s(.+):\s(.+):\s(.+)\s(.+)"
+        parse: Pattern[str] = re.compile(tool_re)
+        issues: List[Issue] = []
         issue_found = False
 
         for line in output.splitlines():
@@ -94,7 +94,7 @@ class ValParserToolPlugin(ToolPlugin):  # type: ignore
                 continue
 
             if issue_found:
-                match = parse.match(line)  # type: Optional[Match[str]]
+                match: Optional[Match[str]] = parse.match(line)
                 if match:
                     warning_level = "1"
                     if match.group(4) == "Warning":

@@ -40,7 +40,7 @@ class ValValidateToolPlugin(ToolPlugin):  # type: ignore
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
             return []
 
-        flags = ["-v"]
+        flags: List[str] = ["-v"]
         flags += self.get_user_flags(level)
 
         validate_bin = "Validate"
@@ -48,12 +48,12 @@ class ValValidateToolPlugin(ToolPlugin):  # type: ignore
             validate_bin = self.plugin_context.args.val_validate_bin
 
         try:
-            subproc_args = (
+            subproc_args: List[str] = (
                 [validate_bin]
                 + flags
                 + package["pddl_domain_src"]
                 + package["pddl_problem_src"]
-            )  # type: List[str]
+            )
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
@@ -75,14 +75,12 @@ class ValValidateToolPlugin(ToolPlugin):  # type: ignore
             with open(self.get_name() + ".log", "w", encoding="utf-8") as fid:
                 fid.write(output)
 
-        issues = self.parse_output(
-            output, package["pddl_domain_src"][0]
-        )  # type: List[Issue]
+        issues: List[Issue] = self.parse_output(output, package["pddl_domain_src"][0])
         return issues
 
     def parse_output(self, output: str, filename: str) -> List[Issue]:
         """Parse tool output and report issues."""
-        issues = []
+        issues: List[Issue] = []
         issue_found = False
         for item in output.splitlines():
             if item.startswith("Error:"):
