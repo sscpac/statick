@@ -148,6 +148,8 @@ def test_clang_tidy_tool_plugin_scan_no_plugin_context():
 
 def test_clang_tidy_tool_plugin_scan_custom_version():
     """Test that issues are found when a custom version is specified."""
+    if sys.platform == "win32":
+        pytest.skip("Running CMake on GitHub Windows runner is failing. Skipping test.")
     cttp = setup_clang_tidy_tool_plugin()
     if not cttp.command_exists("cmake"):
         pytest.skip("Can't find CMake, unable to test clang_tidy plugin")
