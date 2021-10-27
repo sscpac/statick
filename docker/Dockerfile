@@ -2,8 +2,8 @@ FROM ubuntu:20.04
 
 LABEL "name"="Statick"
 LABEL "version"="0.0"
-LABEL "repository"="https://github.com/sscpac/statick-action.git"
-LABEL "homepage"="https://github.com/sscpac/statick-action"
+LABEL "repository"="https://github.com/sscpac/statick.git"
+LABEL "homepage"="https://github.com/sscpac/statick"
 LABEL "maintainer"="Thomas Denewiler <tdenewiler@gmail.com>"
 
 ENV DEBIAN_FRONTEND=noninteractive
