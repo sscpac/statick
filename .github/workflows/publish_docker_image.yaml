@@ -1,6 +1,6 @@
 name: Create and publish a Docker image
 
-on:
+on: # NOLINT
   release:
     types: [published]
   workflow_dispatch:
