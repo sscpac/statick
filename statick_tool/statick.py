@@ -414,7 +414,7 @@ class Statick:
         if not reporting_plugins:
             reporting_plugins = self.reporting_plugins.keys()  # type: ignore
         for plugin_name in reporting_plugins:
-            if plugin_name not in self.reporting_plugins.keys():
+            if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 return None, False
 
