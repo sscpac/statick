@@ -462,6 +462,7 @@ class Statick:
 
         ignore_packages = self.get_ignore_packages()
         ignore_files = ["AMENT_IGNORE", "CATKIN_IGNORE", "COLCON_IGNORE"]
+        package_indicators = ["package.xml", "setup.py", "pyproject.toml"]
 
         packages = []
         for root, dirs, files in os.walk(parsed_args.path):
@@ -471,7 +472,7 @@ class Statick:
             for sub_dir in dirs:
                 full_dir = os.path.join(root, sub_dir)
                 files = os.listdir(full_dir)
-                if "package.xml" in files and not any(
+                if any(item in package_indicators for item in files) and not any(
                     item in files for item in ignore_files
                 ):
                     if ignore_packages and sub_dir in ignore_packages:
