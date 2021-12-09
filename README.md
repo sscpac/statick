@@ -567,27 +567,32 @@ within the workspace.
 Each ROS package will then get a unique directory of results in the Statick output directory.
 This can be helpful for presenting results using various reporting plugins.
 
-For example, suppose you have the following directory layout for the ROS workspace.
+Stand-alone Python packages are also identified as individual packages to scan when using the `-ws` flag.
+Statick looks for a `setup.py` or `pyproject.toml` file in a directory to identify Python packages.
+
+For example, suppose you have the following directory layout for the workspace.
 
 * /home/user/ws
   * src
-    * package1
-    * package2
+    * python_package1
+    * ros_package1
+    * ros_package2
     * subdir
-      * package3
-      * package4
-      * package5
+      * python_package2
+      * ros_package3
+      * ros_package4
+      * ros_package5
   * build
   * devel
 
-Statick should be run against the ROS workspace source directory.
+Statick should be run against the workspace source directory.
 Note that you can provide relative paths to the source directory.
 
 ```shell
 statick /home/user/ws/src --output-directory <output directory> -ws
 ```
 
-Statick can also run against a subset of the source directory in a ROS workspace.
+Statick can also run against a subset of the source directory in a workspace.
 
 ```shell
 statick /home/user/ws/src/subdir --output-directory <output directory> -ws
