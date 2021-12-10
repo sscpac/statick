@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-18.04, ubuntu-20.04, windows-latest]
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
 
     steps:
       - uses: actions/checkout@v2
@@ -118,7 +118,7 @@ jobs:
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
         uses: ammaraskar/sphinx-action@master
         with:
-          docs-folder: "docs/"
+          docs-folder: 'docs/'
 
       - name: Test with tox
         run: |
