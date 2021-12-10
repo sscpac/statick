@@ -4,7 +4,7 @@ name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
 on:  # NOLINT
   push:
     tags:
-      - "*"
+      - '*'
 
 jobs:
   build-n-publish:
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: '3.8'
 
       - uses: actions/cache@v1
         if: startsWith(runner.os, 'Linux')
@@ -68,7 +68,7 @@ jobs:
       - name: Sphinx lint
         uses: ammaraskar/sphinx-action@master
         with:
-          docs-folder: "docs/"
+          docs-folder: 'docs/'
 
       - name: Publish documentation
         uses: peaceiris/actions-gh-pages@v3
