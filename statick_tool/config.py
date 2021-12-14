@@ -67,40 +67,32 @@ class Config:
     def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
         """Get what plugins are enabled for a certain level."""
         plugins: List[str] = []
-        print(f"level: {level}")
-        print(f"plugin_type: {plugin_type}")
-        print(f"config: {self.config['levels'][level]}")
         for level_type in self.config["levels"][level]:
-            print(f"level_type: {level_type}")
-            print(f"level[{level_type}]: {self.config['levels'][level][level_type]}")
-            if plugin_type in level_type and self.config["levels"][level][plugin_type] is not None:
-                print(f"Found desired plugin type {plugin_type}")
+            if (
+                plugin_type in level_type
+                and self.config["levels"][level][plugin_type] is not None
+            ):
                 plugins += list(self.config["levels"][level][plugin_type])
             if "inherits_from" in self.config["levels"][level]:
                 for inherited_level in self.config["levels"][level]["inherits_from"]:
-                    print(f"inherited_level: {inherited_level}")
-                    enabled_plugins = self.get_enabled_plugins(inherited_level, plugin_type)
+                    enabled_plugins = self.get_enabled_plugins(
+                        inherited_level, plugin_type
+                    )
                     for plugin in enabled_plugins:
                         if plugin not in plugins:
                             plugins.append(plugin)
-                    print(f"plugins for {inherited_level}: {plugins}")
-                # plugins.append(list(OrderedDict.fromkeys(plugins)))
-        print(f"**** {plugin_type} plugins: {plugins} ****")
         return plugins
 
     def get_enabled_tool_plugins(self, level: str) -> List[str]:
         """Get what tool plugins are enabled for a certain level."""
-        print("Enabled tool plugins:")
         return self.get_enabled_plugins(level, "tool")
 
     def get_enabled_discovery_plugins(self, level: str) -> List[str]:
         """Get what discovery plugins are enabled for a certain level."""
-        print("Enabled discovery plugins:")
         return self.get_enabled_plugins(level, "discovery")
 
     def get_enabled_reporting_plugins(self, level: str) -> List[str]:
         """Get what reporting plugins are enabled for a certain level."""
-        print("Enabled reporting plugins:")
         return self.get_enabled_plugins(level, "reporting")
 
     def get_plugin_config(  # pylint: disable=too-many-arguments
@@ -112,8 +104,6 @@ class Config:
         default: Optional[str] = None,
     ) -> Optional[Union[str, Any]]:
         """Get flags to use for a plugin at a certain level."""
-        print(f"level: {level}")
-        # print(f"config['levels']: {self.config['levels']}")
         if level not in self.config["levels"]:
             return default
         level_config = self.config["levels"][level]
@@ -132,7 +122,6 @@ class Config:
                 )
                 if config is not None:
                     configs += config
-            print(f"plugin config: {configs}")
             return configs
         return default
 
@@ -140,19 +129,16 @@ class Config:
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
         """Get tool flags to use for a plugin at a certain level."""
-        print("Get tool config.")
         return self.get_plugin_config("tool", plugin, level, key, default)
 
     def get_discovery_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
         """Get discovery flags to use for a plugin at a certain level."""
-        print("Get discovery config.")
         return self.get_plugin_config("discovery", plugin, level, key, default)
 
     def get_reporting_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
         """Get reporting flags to use for a plugin at a certain level."""
-        print("Get reporting config.")
         return self.get_plugin_config("reporting", plugin, level, key, default)
