@@ -19,15 +19,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Tests run on Python 3.10.
 - Docker image created and published on each new release.
   Image forms the basis of the new Statick Github Action.
-  See <https://github.com/sscpac/statick-action>. (@gregtkogut)
-- Test workflow runs on a weekly, scheduled timer. (@gregtkogut)
-- Test workflow can be manually triggered to run. (@gregtkogut)
+  See <https://github.com/sscpac/statick-action>. (Greg Kogut, @gregtkogut)
+- Test workflow runs on a weekly, scheduled timer. (Greg Kogut, @gregtkogut)
+- Test workflow can be manually triggered to run. (Greg Kogut, @gregtkogut)
 - Stand-alone Python packages are discovered as part of running Statick in workspace mode.
   A Python package is identified as any directory containing a file named `setup.py` or `pyproject.toml`.
 
 ### Fixed
 
-- Explicitly specify `encoding` when using the `open` command on files, as recommended by pylint. (@gregtkogut)
+- Explicitly specify `encoding` when using the `open` command on files, as recommended by pylint. (Greg Kogut, @gregtkogut)
 
 ### Removed
 
