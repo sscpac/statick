@@ -1,4 +1,4 @@
-default: combined
+default: sei_cert
 
 packages:
 
