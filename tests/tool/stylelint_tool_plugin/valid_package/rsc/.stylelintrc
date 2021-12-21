@@ -10,7 +10,7 @@
   },
   "overrides": [
     {
-      "files": ["../*.html"],
+      "files": ["/**/*.html"],
       "customSyntax": "postcss-html",
     }
   ],
