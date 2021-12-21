@@ -1,7 +1,17 @@
-extends:
-  - /usr/local/lib/node_modules/stylelint-config-standard
-
-rules:
-  declaration-colon-space-after:
-    - always
-    - severity: warning
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "declaration-colon-space-after": [
+      "always",
+      {
+        "severity": "warning"
+      }
+    ],
+  },
+  "overrides": [
+    {
+      "files": ["../*.html"],
+      "customSyntax": "postcss-html",
+    }
+  ],
+}
