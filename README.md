@@ -59,7 +59,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   * [Tests](#tests)
   * [Mypy](#mypy)
   * [Formatting](#formatting)
-* [Third Party Plugins](#third-party-plugins)
+* [External Plugins](#external-plugins)
 * [Original Author](#original-author)
 
 ## Installation
@@ -722,13 +722,12 @@ black statick statick_tool tests
 docformatter -i --wrap-summaries 88 --wrap-descriptions 88 <file>
 ```
 
-## Third Party Plugins
+## External Plugins
 
 Known third party Statick plugins.
 
 | Plugin Name      | Repository Location                              |
 | :--------------- | :----------------------------------------------- |
-| statick-action   | <https://github.com/sscpac/statick-action>       |
 | statick-fortify  | <https://github.com/soartech/statick-fortify>    |
 | statick-md       | <https://github.com/sscpac/statick-md>           |
 | statick-planning | <https://github.com/tdenewiler/statick-planning> |
