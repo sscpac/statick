@@ -12,6 +12,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.7.0 - 2022-01-04
+
+### Removed
+
+- Drop support for Python 3.6 due to end-of-life of that distribution.
+  See <https://endoflife.date/python>.
+  To continue using Statick with Python 3.6 [pin the version](https://pip.pypa.io/en/stable/user_guide/)
+  used to the `0.6` tags.
+  An example is at the discussion at <https://github.com/sscpac/statick/discussions/376>.
+
 ## v0.6.3 - 2021-12-14
 
 ### Added
