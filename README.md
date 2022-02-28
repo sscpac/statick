@@ -42,6 +42,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 * [Existing Plugins](#existing-plugins)
   * [Discovery Plugins](#discovery-plugins)
   * [Tool Plugins](#tool-plugins)
+  * [External Plugins](#external-plugins)
 * [Customization](#customization)
   * [User Paths](#user-paths)
   * [Custom Profile](#custom-profile)
@@ -393,6 +394,19 @@ Tool | About
 [uncrustify][uncrustify]           | Code beautifier
 [xmllint][xmllint]                 | Lint XML files.
 [yamllint][yamllint]               | A linter for YAML files.
+
+### External Plugins
+
+Known external Statick plugins.
+
+| Plugin Name      | Repository Location                              |
+| :--------------- | :----------------------------------------------- |
+| statick-fortify  | <https://github.com/soartech/statick-fortify>    |
+| statick-md       | <https://github.com/sscpac/statick-md>           |
+| statick-planning | <https://github.com/tdenewiler/statick-planning> |
+| statick-tex      | <https://github.com/tdenewiler/statick-tex>      |
+| statick-tooling  | <https://github.com/sscpac/statick-tooling>      |
+| statick-web      | <https://github.com/sscpac/statick-web>          |
 
 ## Customization
 
