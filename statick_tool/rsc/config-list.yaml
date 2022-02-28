@@ -47,5 +47,3 @@ levels:
       c:
       documentation:
       python:
-    reporting:
-      write_jenkins_warnings_ng:
