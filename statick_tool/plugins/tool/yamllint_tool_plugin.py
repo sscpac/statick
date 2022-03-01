@@ -21,9 +21,13 @@ class YamllintToolPlugin(ToolPlugin):
         flags: List[str] = ["-f", "parsable"]
         flags += self.get_user_flags(level)
 
+        files: List[str] = []
+        if "yaml" in package:
+            files += package["yaml"]
+
         total_output: List[str] = []
 
-        for yaml_file in package["yaml"]:
+        for yaml_file in files:
             try:
                 subproc_args = ["yamllint", yaml_file] + flags
                 output = subprocess.check_output(
