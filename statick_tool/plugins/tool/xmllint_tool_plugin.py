@@ -21,13 +21,9 @@ class XmllintToolPlugin(ToolPlugin):
         flags: List[str] = []
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
-        if "xml" in package:
-            files += package["xml"]
-
         total_output: List[str] = []
 
-        for xml_file in files:
+        for xml_file in package["xml"]:
             try:
                 subproc_args = ["xmllint", xml_file] + flags
                 output = subprocess.check_output(
