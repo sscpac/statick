@@ -44,6 +44,6 @@ levels:
 
   combined:
     inherits_from:
-      c:
-      documentation:
-      python:
+      - "c"
+      - "documentation"
+      - "python"

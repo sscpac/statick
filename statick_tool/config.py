@@ -121,7 +121,8 @@ class Config:
                 )
                 if config is not None:
                     configs += config
-            return configs
+            if configs:
+                return configs
         return default
 
     def get_tool_config(
