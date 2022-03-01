@@ -36,9 +36,13 @@ class HTMLLintToolPlugin(ToolPlugin):  # type: ignore
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
+        files: List[str] = []
+        if "html_src" in package:
+            files += package["html_src"]
+
         total_output: List[str] = []
 
-        for src in package["html_src"]:
+        for src in files:
             try:
                 exe = [tool_bin] + flags + [src]
                 output = subprocess.check_output(
