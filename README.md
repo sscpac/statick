@@ -212,7 +212,8 @@ levels:
         flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
 
   objective:
-    inherits_from: "threshold"
+    inherits_from:
+      - "threshold"
     tool:
       pylint:
         flags: "--disable=I0011,W0141,W0142,W0511
@@ -460,11 +461,13 @@ statick src/my_pkg --user-paths my_project_config --profile custom-profile.yaml
 
 ### Custom Configuration
 
-To run Statick with a custom _configuration_ containing custom _levels_, use `custom-config.yaml` with custom levels
-defined and `custom-profile.yaml` that calls out the use of the custom _levels_ for your _packages_.
+To run Statick with a custom _configuration_ containing custom _levels_, use `custom-config.yaml` (the filename is
+arbitrary) with custom levels defined and `custom-profile.yaml` that calls out the use of the custom _levels_ for your
+_packages_.
 Custom _levels_ are allowed to override, inherit from, and extend base levels.
-If you create a _level_ that inherits from a base level of the same name, the new user-defined level will completely
-override the base level.
+A custom _level_ can inherit from a list of base levels.
+If you create a _level_ that inherits from a base level of the same name, the new user-defined _level_ will completely
+override the base _level_.
 This chaining of configuration files is limited to a single custom configuration file.
 
 The filenames used for configurations can be any name you want to use.
