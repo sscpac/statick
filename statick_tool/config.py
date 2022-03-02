@@ -133,7 +133,14 @@ class Config:
     @deprecated(
         "Found inherits_from flag as a string. This usage has been deprecated since v0.7.0. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
     )  # NOLINT
-    def get_plugin_config_string(self, plugin_type, plugin, level, key, default):
+    def get_plugin_config_string(
+        self,
+        plugin_type: str,
+        plugin: str,
+        level: str,
+        key: str,
+        default: Optional[str] = None,
+    ) -> Optional[str]:
         """Get flags at a specific level when level is specified as a string."""
         return self.get_plugin_config(plugin_type, plugin, level, key, default)
 
