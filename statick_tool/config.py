@@ -6,6 +6,7 @@ import os
 from typing import Any, List, Optional, Union
 
 import yaml
+from deprecated import deprecated
 
 
 class Config:
@@ -114,6 +115,10 @@ class Config:
                     return plugin_config[key]
         if "inherits_from" in level_config:
             inherited_level = level_config["inherits_from"]
+            if isinstance(inherited_level, str):
+                return self.get_plugin_config_string(
+                    plugin_type, plugin, inherited_level, key, default
+                )
             configs = ""
             for inherited_level in self.config["levels"][level]["inherits_from"]:
                 config = self.get_plugin_config(
@@ -124,6 +129,13 @@ class Config:
             if configs:
                 return configs
         return default
+
+    @deprecated(
+        "Found inherits_from flag as a string. This usage has been deprecated since v0.7.0. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
+    )  # NOLINT
+    def get_plugin_config_string(self, plugin_type, plugin, level, key, default):
+        """Get flags at a specific level when level is specified as a string."""
+        return self.get_plugin_config(plugin_type, plugin, level, key, default)
 
     def get_tool_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None

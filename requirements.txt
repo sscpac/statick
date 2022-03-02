@@ -3,6 +3,7 @@ bandit
 black
 cmakelint
 cpplint
+deprecated
 docformatter
 flawfinder
 isort
