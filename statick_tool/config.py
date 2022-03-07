@@ -131,7 +131,7 @@ class Config:
         return default
 
     @deprecated(
-        "Found inherits_from flag as a string. This usage has been deprecated since v0.7.0. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
+        "Found inherits_from flag as a string. This usage has been deprecated since v0.7.1. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
     )  # NOLINT
     def get_plugin_config_string(
         self,
