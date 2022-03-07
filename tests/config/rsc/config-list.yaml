@@ -47,3 +47,8 @@ levels:
       - "c"
       - "documentation"
       - "python"
+
+  extend_base:
+    inherits_from:
+      - "c"
+      - "sei_cert"

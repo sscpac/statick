@@ -88,10 +88,10 @@ def test_config_inherits_from_multiple_levels():
     assert "python" in plugins
 
     plugins = config.get_enabled_plugins("combined", "tool")
+    assert "black" in plugins
     assert "catkin_lint" in plugins
     assert "cppcheck" in plugins
     assert "cpplint" in plugins
-    assert "black" in plugins
     assert "docformatter" in plugins
     assert "isort" in plugins
     assert "mypy" in plugins
@@ -235,7 +235,7 @@ def test_user_level_extends_override_level():
 
 
 def test_user_level_override_base_level_with_same_name():
-    """Test that user level that overrides a base level with same name finds flags.."""
+    """Test that user level that overrides a base level with same name finds flags."""
     base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
     user_config_file = os.path.join(
         os.path.dirname(__file__), "rsc", "user-level-same-name.yaml"
@@ -248,6 +248,32 @@ def test_user_level_override_base_level_with_same_name():
 
     flags = config.get_tool_config("make", "threshold", "flags")
     assert flags is None
+
+
+def test_config_extend_combine_base_level():
+    """Test that user level that inherits from a base level combines plugins."""
+    base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+    user_config_file = os.path.join(
+        os.path.dirname(__file__), "rsc", "config-list.yaml"
+    )
+    config = Config(base_config_file, user_config_file)
+
+    plugins = config.get_enabled_plugins("extend_base", "discovery")
+    assert "C" in plugins
+
+    plugins = config.get_enabled_plugins("extend_base", "reporting")
+    assert "print_to_console" in plugins
+    assert "write_jenkins_warnings_ng" in plugins
+
+    plugins = config.get_enabled_plugins("extend_base", "tool")
+    assert "bandit" in plugins
+    assert "catkin_lint" in plugins
+    assert "clang-tidy" in plugins
+    assert "cppcheck" in plugins
+    assert "cpplint" in plugins
+    assert "flawfinder" in plugins
+    assert "perlcritic" in plugins
+    assert "spotbugs" in plugins
 
 
 def test_get_config_from_missing_file():

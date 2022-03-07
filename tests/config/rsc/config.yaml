@@ -1,5 +1,8 @@
 levels:
   sei_cert:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       make:
         flags: "-Wcast-align -Wchar-subscripts -Wformat-security -Wformat -Wimplicit-int -Wincompatible-pointer-types -Wint-conversion -Wint-to-pointer-cast -Wparentheses -Winvalid-offsetof -Wsequence-point -Wdelete-incomplete -Wdelete-non-virtual-dtor -Winvalid-offsetof -Wreorder -Wreturn-type -Wuninitialized -Wunused-parameter -Wunreachable-code -Wunused-value -Wvarargs -Wtrigraphs -Wvarargs -Wformat -Wcast-qual"
