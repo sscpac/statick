@@ -3,10 +3,10 @@
 Sets what flags are used for each plugin at those levels.
 """
 import os
-from collections import OrderedDict
 from typing import Any, List, Optional, Union
 
 import yaml
+from deprecated import deprecated
 
 
 class Config:
@@ -39,7 +39,8 @@ class Config:
                 for level in user_config["levels"]:
                     level_config = user_config["levels"][level]
                     if (
-                        "inherits_from" in level_config
+                        level_config is not None
+                        and "inherits_from" in level_config
                         and level_config["inherits_from"] == level
                     ):
                         level_config["inherits_from"] = ""
@@ -65,14 +66,21 @@ class Config:
 
     def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
         """Get what plugins are enabled for a certain level."""
-        level_config = self.config["levels"][level]
         plugins: List[str] = []
-        if plugin_type in level_config and level_config[plugin_type] is not None:
-            plugins += list(level_config[plugin_type])
-        if "inherits_from" in level_config:
-            inherited_level = level_config["inherits_from"]
-            plugins += self.get_enabled_plugins(inherited_level, plugin_type)
-        plugins = list(OrderedDict.fromkeys(plugins))
+        for level_type in self.config["levels"][level]:
+            if (
+                plugin_type in level_type
+                and self.config["levels"][level][plugin_type] is not None
+            ):
+                plugins += list(self.config["levels"][level][plugin_type])
+            if "inherits_from" in self.config["levels"][level]:
+                for inherited_level in self.config["levels"][level]["inherits_from"]:
+                    enabled_plugins = self.get_enabled_plugins(
+                        inherited_level, plugin_type
+                    )
+                    for plugin in enabled_plugins:
+                        if plugin not in plugins:
+                            plugins.append(plugin)
         return plugins
 
     def get_enabled_tool_plugins(self, level: str) -> List[str]:
@@ -96,7 +104,7 @@ class Config:
         default: Optional[str] = None,
     ) -> Optional[Union[str, Any]]:
         """Get flags to use for a plugin at a certain level."""
-        if level not in self.config["levels"].keys():
+        if level not in self.config["levels"]:
             return default
         level_config = self.config["levels"][level]
         if plugin_type in level_config:
@@ -107,10 +115,34 @@ class Config:
                     return plugin_config[key]
         if "inherits_from" in level_config:
             inherited_level = level_config["inherits_from"]
-            return self.get_plugin_config(
-                plugin_type, plugin, inherited_level, key, default
-            )
+            if isinstance(inherited_level, str):
+                return self.get_plugin_config_string(
+                    plugin_type, plugin, inherited_level, key, default
+                )
+            configs = ""
+            for inherited_level in self.config["levels"][level]["inherits_from"]:
+                config = self.get_plugin_config(
+                    plugin_type, plugin, inherited_level, key, default
+                )
+                if config is not None:
+                    configs += config
+            if configs:
+                return configs
         return default
+
+    @deprecated(
+        "Found inherits_from flag as a string. This usage has been deprecated since v0.7.1. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
+    )  # NOLINT
+    def get_plugin_config_string(
+        self,
+        plugin_type: str,
+        plugin: str,
+        level: str,
+        key: str,
+        default: Optional[str] = None,
+    ) -> Optional[str]:
+        """Get flags at a specific level when level is specified as a string."""
+        return self.get_plugin_config(plugin_type, plugin, level, key, default)
 
     def get_tool_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
