@@ -1,0 +1,49 @@
+levels:
+  c:
+    discovery:
+      C:
+        flags: ""
+    reporting:
+      print_to_console:
+    tool:
+      catkin_lint:
+        flags: "-W2 --ignore DESCRIPTION_BOILERPLATE,DESCRIPTION_MEANINGLESS,GLOBAL_VAR_COLLISION,LINK_DIRECTORY,LITERAL_PROJECT_NAME,TARGET_NAME_COLLISION"
+      cppcheck:
+        flags: "-j 4 --suppress=unreadVariable --suppress=unusedPrivateFunction --suppress=unusedStructMember
+                --enable=warning,style --config-exclude=/usr --template='[{file}:{line}]: ({severity} {id}) {message}'"
+      cpplint:
+        # These flags must remain on one line to not break the flag parsing
+        flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
+
+  python:
+    discovery:
+      python:
+        flags: ""
+    reporting:
+      print_to_console:
+    tool:
+      black:
+        flags: ""
+      docformatter:
+        flags: "--wrap-summaries 88 --wrap-descriptions 88"
+      isort:
+        flags: ""
+      mypy:
+        flags: "--ignore-missing-imports"
+      pydocstyle:
+        flags: ""
+
+  documentation:
+    reporting:
+      write_jenkins_warnings_ng:
+    tool:
+      xmllint:
+        flags: ""
+      yamllint:
+        flags: ""
+
+  combined:
+    inherits_from:
+      - "c"
+      - "documentation"
+      - "python"

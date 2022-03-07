@@ -74,6 +74,36 @@ def test_config_enabled_plugins_inherits():
     assert "yamllint" in plugins
 
 
+def test_config_inherits_from_multiple_levels():
+    """
+    Test that the Config module supports a level that inherits from multiple child levels.
+
+    Expected result: plugins listed in combined config file are returned
+    """
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config-list.yaml")
+    config = Config(config_file)
+
+    plugins = config.get_enabled_plugins("combined", "discovery")
+    assert "C" in plugins
+    assert "python" in plugins
+
+    plugins = config.get_enabled_plugins("combined", "tool")
+    assert "catkin_lint" in plugins
+    assert "cppcheck" in plugins
+    assert "cpplint" in plugins
+    assert "black" in plugins
+    assert "docformatter" in plugins
+    assert "isort" in plugins
+    assert "mypy" in plugins
+    assert "pydocstyle" in plugins
+    assert "xmllint" in plugins
+    assert "yamllint" in plugins
+
+    plugins = config.get_enabled_plugins("combined", "reporting")
+    assert "print_to_console" in plugins
+    assert "write_jenkins_warnings_ng" in plugins
+
+
 def test_config_enabled_tool_plugins():
     """
     Test that the Config module identifies enabled tool plugins for a given level.
