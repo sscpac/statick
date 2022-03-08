@@ -12,6 +12,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.7.1 - 2022-03-08
+
+### Added
+
+- A level can inherit from multiple child levels.
+  This makes it easier to tailor levels for specific file types and tools, then combine the targeted levels into a
+  more comprehensive level for projects that have heterogeneous file types.
+
+### Fixed
+
+- Ensure file type key is in package information before reading the variable.
+  This makes all the tool plugins consistent in how they read in package information.
+- Change test workflow to not fail if Codecov upload fails.
+  Codecov uploads are not stable and result in false Action failures.
+
+### Deprecated
+
+- When using the `inherits_from` flag for a level the flag should be a list instead of a string.
+  This change was made to support levels that can inherit from multiple child levels.
+  Support for string `inherits_from` flags will continue through the v0.7 releases.
+  The README and unit tests have example of how to specify the `inherits_from` flag as a list.
+
 ## v0.7.0 - 2022-01-04
 
 ### Removed
