@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.7.2 - 2022-03-09
+
+### Fixed
+
+- Add deprecated module to the required install dependencies.
+  Fixes crash when running Statick.
+
 ## v0.7.1 - 2022-03-08
 
 ### Added
