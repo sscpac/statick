@@ -48,6 +48,7 @@ setup(
         "black",
         "cmakelint",
         "cpplint",
+        "deprecated",
         "flawfinder",
         "isort",
         "lizard",
