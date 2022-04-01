@@ -56,29 +56,30 @@ class CCCCToolPlugin(ToolPlugin):
             cccc_config = self.plugin_context.args.cccc_config
         config_file = self.plugin_context.resources.get_file(cccc_config)
         if config_file is not None:
-            opts = "--opt_infile=" + config_file
+            opts = ["--opt_infile=" + config_file]
         else:
             return []
+        opts.append(" --lang=c++")
 
-        for src in package["c_src"]:
-            try:
-                subproc_args: List[str] = [cccc_bin] + [opts] + [src]
-                log_output: bytes = subprocess.check_output(
-                    subproc_args, stderr=subprocess.STDOUT
-                )
-            except subprocess.CalledProcessError as ex:
-                if ex.returncode == 1:
-                    log_output = ex.output
-                else:
-                    logging.warning("Problem %d", ex.returncode)
-                    logging.warning("%s exception: %s", self.get_name(), ex.output)
-                    return None
-
-            except OSError as ex:
-                logging.warning("Couldn't find cccc executable! (%s)", ex)
+        try:
+            subproc_args: List[str] = [cccc_bin] + opts + package["c_src"]
+            logging.debug(' ' .join(subproc_args))
+            log_output: bytes = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT
+            )
+        except subprocess.CalledProcessError as ex:
+            if ex.returncode == 1:
+                log_output = ex.output
+            else:
+                logging.warning("Problem %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
-            logging.debug("%s", log_output)
+        except OSError as ex:
+            logging.warning("Couldn't find cccc executable! (%s)", ex)
+            return None
+
+        logging.debug("%s", log_output)
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "wb") as flog:
@@ -98,35 +99,40 @@ class CCCCToolPlugin(ToolPlugin):
             return []
 
         config = self.parse_config(config_file)
+        logging.debug(config)
 
         results: Dict[Any, Any] = {}
-        for module in output["CCCC_Project"]["structural_summary"]["module"]:
-            if "name" not in module or isinstance(module, str):
-                break
-            results[module["name"]] = {}
-            metrics = {}
-            for field in module:
-                if "@value" in module[field]:
-                    metrics[field] = {"value": module[field]["@value"]}
-            results[module["name"]] = metrics
+        logging.debug(output)
+        if "structural_summary" in output["CCCC_Project"] and "module" in output["CCCC_Project"]["structural_summary"]:
+            for module in output["CCCC_Project"]["structural_summary"]["module"]:
+                if "name" not in module or isinstance(module, str):
+                    break
+                results[module["name"]] = {}
+                metrics = {}
+                for field in module:
+                    if "@value" in module[field]:
+                        metrics[field] = {"value": module[field]["@value"]}
+                results[module["name"]] = metrics
 
-        for module in output["CCCC_Project"]["procedural_summary"]["module"]:
-            if "name" not in module or isinstance(module, str):
-                break
-            metrics = results[module["name"]]
-            for field in module:
-                if "@value" in module[field]:
-                    metrics[field] = {"value": module[field]["@value"]}
-            results[module["name"]] = metrics
+        if "procedural_summary" in output["CCCC_Project"] and "module" in output["CCCC_Project"]["procedural_summary"]:
+            for module in output["CCCC_Project"]["procedural_summary"]["module"]:
+                if "name" not in module or isinstance(module, str):
+                    break
+                metrics = results[module["name"]]
+                for field in module:
+                    if "@value" in module[field]:
+                        metrics[field] = {"value": module[field]["@value"]}
+                results[module["name"]] = metrics
 
-        for module in output["CCCC_Project"]["oo_design"]["module"]:
-            if "name" not in module or isinstance(module, str):
-                break
-            metrics = results[module["name"]]
-            for field in module:
-                if "@value" in module[field]:
-                    metrics[field] = {"value": module[field]["@value"]}
-            results[module["name"]] = metrics
+        if "oo_design" in output["CCCC_Project"] and "module" in output["CCCC_Project"]["oo_design"]:
+            for module in output["CCCC_Project"]["oo_design"]["module"]:
+                if "name" not in module or isinstance(module, str):
+                    break
+                metrics = results[module["name"]]
+                for field in module:
+                    if "@value" in module[field]:
+                        metrics[field] = {"value": module[field]["@value"]}
+                results[module["name"]] = metrics
 
         issues: List[Issue] = self.find_issues(config, results, package)
 
