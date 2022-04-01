@@ -72,7 +72,7 @@ class CCCCToolPlugin(ToolPlugin):
 
             try:
                 subproc_args: List[str] = [cccc_bin] + temp_opts + [src]
-                logging.debug(' ' .join(subproc_args))
+                logging.debug(" ".join(subproc_args))
                 log_output: bytes = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT
                 )
@@ -112,11 +112,15 @@ class CCCCToolPlugin(ToolPlugin):
 
         results: Dict[Any, Any] = {}
         logging.debug(yaml.dump(output))
-        if "structural_summary" in output["CCCC_Project"] and output["CCCC_Project"]["structural_summary"] and "module" in output["CCCC_Project"]["structural_summary"]:
+        if (
+            "structural_summary" in output["CCCC_Project"]
+            and output["CCCC_Project"]["structural_summary"]
+            and "module" in output["CCCC_Project"]["structural_summary"]
+        ):
             for module in output["CCCC_Project"]["structural_summary"]["module"]:
                 if "name" not in module or isinstance(module, str):
                     break
-                metrics = {}
+                metrics: Dict[Any, Any] = {}
                 for field in module:
                     metrics[field] = {}
                     if "@value" in module[field]:
@@ -125,7 +129,11 @@ class CCCCToolPlugin(ToolPlugin):
                         metrics[field]["level"] = module[field]["@level"]
                 results[module["name"]] = metrics
 
-        if "procedural_summary" in output["CCCC_Project"] and output["CCCC_Project"]["procedural_summary"] and "module" in output["CCCC_Project"]["procedural_summary"]:
+        if (
+            "procedural_summary" in output["CCCC_Project"]
+            and output["CCCC_Project"]["procedural_summary"]
+            and "module" in output["CCCC_Project"]["procedural_summary"]
+        ):
             for module in output["CCCC_Project"]["procedural_summary"]["module"]:
                 if "name" not in module or isinstance(module, str):
                     break
@@ -138,7 +146,11 @@ class CCCCToolPlugin(ToolPlugin):
                         metrics[field]["level"] = module[field]["@level"]
                 results[module["name"]] = metrics
 
-        if "oo_design" in output["CCCC_Project"] and output["CCCC_Project"]["oo_design"] and "module" in output["CCCC_Project"]["oo_design"]:
+        if (
+            "oo_design" in output["CCCC_Project"]
+            and output["CCCC_Project"]["oo_design"]
+            and "module" in output["CCCC_Project"]["oo_design"]
+        ):
             for module in output["CCCC_Project"]["oo_design"]["module"]:
                 if "name" not in module or isinstance(module, str):
                     break
@@ -203,13 +215,18 @@ class CCCCToolPlugin(ToolPlugin):
                     thresh_error = float(config[val_id]["error"])
                     thresh_warn = float(config[val_id]["warn"])
                     msg = key + " - " + config[val_id]["name"]
-                    msg += f" - value: {result}, thresholds warning: {thresh_warn}, error: {thresh_error}"
+                    msg += f" - value: {result}, thresholds warning: {thresh_warn}"
+                    msg += f", error: {thresh_error}"
                     level_str = "none"
                     statick_level = "0"
-                    if ("level" in val[item] and val[item]["level"] == "2") or (result > thresh_error):
+                    if ("level" in val[item] and val[item]["level"] == "2") or (
+                        result > thresh_error
+                    ):
                         level_str = "error"
                         statick_level = "5"
-                    elif ("level" in val[item] and val[item]["level"] == "1") or (result > thresh_warn):
+                    elif ("level" in val[item] and val[item]["level"] == "1") or (
+                        result > thresh_warn
+                    ):
                         level_str = "warn"
                         statick_level = "3"
 
