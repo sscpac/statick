@@ -39,7 +39,7 @@ class CCCCToolPlugin(ToolPlugin):
             "--cccc-config", dest="cccc_config", type=str, help="cccc config file"
         )
 
-    def scan(  # pylint: disable=too-many-branches
+    def scan(  # pylint: disable=too-many-branches,too-many-locals
         self, package: Package, level: str
     ) -> Optional[List[Issue]]:
         """Run tool and gather output."""
@@ -66,7 +66,7 @@ class CCCCToolPlugin(ToolPlugin):
         issues: List[Issue] = []
 
         for src in package["c_src"]:
-            tool_output_dir: str = "." + Path(src).name + "-cccc"
+            tool_output_dir: str = ".cccc-" + Path(src).name
             temp_opts = opts
             temp_opts.append("--outdir=" + tool_output_dir)
 
@@ -217,27 +217,30 @@ class CCCCToolPlugin(ToolPlugin):
                     msg = key + " - " + config[val_id]["name"]
                     msg += f" - value: {result}, thresholds warning: {thresh_warn}"
                     msg += f", error: {thresh_error}"
-                    level_str = "none"
-                    statick_level = "0"
                     if ("level" in val[item] and val[item]["level"] == "2") or (
                         result > thresh_error
                     ):
-                        level_str = "error"
-                        statick_level = "5"
-                    elif ("level" in val[item] and val[item]["level"] == "1") or (
-                        result > thresh_warn
-                    ):
-                        level_str = "warn"
-                        statick_level = "3"
-
-                    if statick_level != "0":
                         issues.append(
                             Issue(
                                 src,
                                 "0",
                                 self.get_name(),
-                                level_str,
-                                statick_level,
+                                "error",
+                                "5",
+                                msg,
+                                None,
+                            )
+                        )
+                    elif ("level" in val[item] and val[item]["level"] == "1") or (
+                        result > thresh_warn
+                    ):
+                        issues.append(
+                            Issue(
+                                src,
+                                "0",
+                                self.get_name(),
+                                "warn",
+                                "3",
                                 msg,
                                 None,
                             )
