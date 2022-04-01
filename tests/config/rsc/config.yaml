@@ -1,5 +1,8 @@
 levels:
   sei_cert:
+    reporting:
+      print_to_console:
+      write_jenkins_warnings_ng:
     tool:
       make:
         flags: "-Wcast-align -Wchar-subscripts -Wformat-security -Wformat -Wimplicit-int -Wincompatible-pointer-types -Wint-conversion -Wint-to-pointer-cast -Wparentheses -Winvalid-offsetof -Wsequence-point -Wdelete-incomplete -Wdelete-non-virtual-dtor -Winvalid-offsetof -Wreorder -Wreturn-type -Wuninitialized -Wunused-parameter -Wunreachable-code -Wunused-value -Wvarargs -Wtrigraphs -Wvarargs -Wformat -Wcast-qual"
@@ -36,7 +39,8 @@ levels:
         flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
 
   objective_minus_pylint:
-    inherits_from: "threshold"
+    inherits_from:
+      - "threshold"
     tool:
       clang-tidy:
         # These flags must remain on one line to not break the flag parsing
@@ -55,7 +59,8 @@ levels:
         flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
 
   example:
-    inherits_from: "threshold"
+    inherits_from:
+      - "threshold"
     discovery:
       cmake:
         flags: ""

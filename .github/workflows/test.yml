@@ -57,6 +57,7 @@ jobs:
           python -m pip install --upgrade setuptools
           python -m pip install --upgrade tox
           python -m pip install --upgrade tox-gh-actions
+          python -m pip install --upgrade types-deprecated
           python -m pip install --upgrade types-PyYAML
           python -m pip install --upgrade wheel
 
@@ -127,7 +128,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: false
 
       - name: Self check
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
