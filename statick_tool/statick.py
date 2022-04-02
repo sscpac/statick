@@ -428,9 +428,6 @@ class Statick:
 
         return issues, success
 
-    # pylint: enable=too-many-locals, too-many-return-statements, too-many-branches
-    # pylint: enable=too-many-statements
-
     def run_workspace(
         self, parsed_args: argparse.Namespace
     ) -> Tuple[

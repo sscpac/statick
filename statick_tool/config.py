@@ -133,7 +133,7 @@ class Config:
     @deprecated(
         "Found inherits_from flag as a string. This usage has been deprecated since v0.7.1. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
     )  # NOLINT
-    def get_plugin_config_string(
+    def get_plugin_config_string(  # pylint: disable=too-many-arguments
         self,
         plugin_type: str,
         plugin: str,
