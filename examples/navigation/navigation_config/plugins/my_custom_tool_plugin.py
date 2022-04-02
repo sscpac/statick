@@ -14,8 +14,7 @@ from statick_tool.tool_plugin import (
 class MyCustomToolPlugin(ToolPlugin):
     """Run grep."""
 
-    @classmethod
-    def get_name(cls):
+    def get_name(self):
         """Get name of tool."""
         return "my_custom_tool"
 
