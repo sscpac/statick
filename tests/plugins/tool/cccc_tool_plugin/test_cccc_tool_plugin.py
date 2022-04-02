@@ -291,3 +291,25 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
     )
     issues = ctp.scan(package, "level")
     assert not issues
+
+
+
+@mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.xmltodict.parse")
+def test_cccc_tool_plugin_scan_filenotfound(mock_xmltodict_parse):
+    """
+    Test what happens when a CalledProcessError is hit (such as if cccc encounters an error).
+
+    Expected result: issues is an empty list
+    """
+    mock_xmltodict_parse.side_effect = FileNotFoundError()
+    ctp = setup_cccc_tool_plugin()
+    if not ctp.command_exists("cccc"):
+        pytest.skip("Missing cccc executable.")
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["c_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "example.cpp")
+    ]
+    issues = ctp.scan(package, "level")
+    assert not issues

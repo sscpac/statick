@@ -94,8 +94,11 @@ class CCCCToolPlugin(ToolPlugin):
                 with open(self.get_name() + ".log", "wb") as flog:
                     flog.write(log_output)
 
-            with open(tool_output_dir + "/cccc.xml", encoding="utf8") as fresults:
-                tool_output = xmltodict.parse(fresults.read(), dict_constructor=dict)
+            try:
+                with open(tool_output_dir + "/cccc.xml", encoding="utf8") as fresults:
+                    tool_output = xmltodict.parse(fresults.read(), dict_constructor=dict)
+            except FileNotFoundError:
+                continue
 
             issues.extend(self.parse_output(tool_output, src, config_file))
         return issues
