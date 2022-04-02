@@ -293,7 +293,6 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
     assert not issues
 
 
-
 @mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.xmltodict.parse")
 def test_cccc_tool_plugin_scan_filenotfound(mock_xmltodict_parse):
     """
