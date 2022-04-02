@@ -96,7 +96,9 @@ class CCCCToolPlugin(ToolPlugin):
 
             try:
                 with open(tool_output_dir + "/cccc.xml", encoding="utf8") as fresults:
-                    tool_output = xmltodict.parse(fresults.read(), dict_constructor=dict)
+                    tool_output = xmltodict.parse(
+                        fresults.read(), dict_constructor=dict
+                    )
             except FileNotFoundError:
                 continue
 
