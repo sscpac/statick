@@ -48,7 +48,7 @@ class ClangFormatToolPlugin(ToolPlugin):
             help="clang-format will report an issue per line of diff instead of per file",
         )
 
-    def scan(
+    def scan(  # pylint: disable=too-many-return-statements, too-many-branches
         self, package: Package, level: str
     ) -> Optional[
         List[Issue]
