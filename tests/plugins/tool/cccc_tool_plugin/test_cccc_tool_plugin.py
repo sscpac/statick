@@ -160,7 +160,7 @@ def test_cccc_tool_plugin_parse_valid():
     )
     package["c_src"] = ["tmp/not_a_file.c"]
 
-    issues = ctp.parse_output(output, package, config_file)
+    issues = ctp.parse_output(output, "tmp/not_a_file.c", config_file)
     assert len(issues) == 2
     assert issues[0].filename == "tmp/not_a_file.c"
     assert issues[0].line_number == "0"
@@ -171,28 +171,28 @@ def test_cccc_tool_plugin_parse_valid():
         assert issues[0].severity == "5"
         assert (
             issues[0].message
-            == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, theshold: 1000.0"
+            == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, thresholds warning: 100.0, error: 1000.0"
         )
 
         assert issues[1].issue_type == "warn"
         assert issues[1].severity == "3"
         assert (
             issues[1].message
-            == "Example1 - Fan in (concrete uses only) - value: 7.0, theshold: 6.0"
+            == "Example1 - Fan in (concrete uses only) - value: 7.0, thresholds warning: 6.0, error: 12.0"
         )
     else:
         assert issues[0].issue_type == "warn"
         assert issues[0].severity == "3"
         assert (
             issues[0].message
-            == "Example1 - Fan in (concrete uses only) - value: 7.0, theshold: 6.0"
+            == "Example1 - Fan in (concrete uses only) - value: 7.0, thresholds warning: 6.0, error: 12.0"
         )
 
         assert issues[1].issue_type == "error"
         assert issues[1].severity == "5"
         assert (
             issues[1].message
-            == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, theshold: 100.0"
+            == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, thresholds warning: 100.0, error: 1000.0"
         )
 
 
@@ -289,5 +289,26 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
         1, "", output=b"mocked error"
     )
+    issues = ctp.scan(package, "level")
+    assert not issues
+
+
+@mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.xmltodict.parse")
+def test_cccc_tool_plugin_scan_filenotfound(mock_xmltodict_parse):
+    """
+    Test what happens when a FileNotFoundError is hit (such as if cccc has no output for a file).
+
+    Expected result: issues is an empty list
+    """
+    mock_xmltodict_parse.side_effect = FileNotFoundError()
+    ctp = setup_cccc_tool_plugin()
+    if not ctp.command_exists("cccc"):
+        pytest.skip("Missing cccc executable.")
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["c_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "example.cpp")
+    ]
     issues = ctp.scan(package, "level")
     assert not issues

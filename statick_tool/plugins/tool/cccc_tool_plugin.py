@@ -12,9 +12,11 @@ import argparse
 import csv
 import logging
 import subprocess
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import xmltodict
+import yaml
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -37,7 +39,7 @@ class CCCCToolPlugin(ToolPlugin):
             "--cccc-config", dest="cccc_config", type=str, help="cccc config file"
         )
 
-    def scan(  # pylint: disable=too-many-branches
+    def scan(  # pylint: disable=too-many-branches,too-many-locals
         self, package: Package, level: str
     ) -> Optional[List[Issue]]:
         """Run tool and gather output."""
@@ -56,13 +58,20 @@ class CCCCToolPlugin(ToolPlugin):
             cccc_config = self.plugin_context.args.cccc_config
         config_file = self.plugin_context.resources.get_file(cccc_config)
         if config_file is not None:
-            opts = "--opt_infile=" + config_file
+            opts = ["--opt_infile=" + config_file]
         else:
             return []
+        opts.append(" --lang=c++")
+
+        issues: List[Issue] = []
 
         for src in package["c_src"]:
+            tool_output_dir: str = ".cccc-" + Path(src).name
+            opts.append("--outdir=" + tool_output_dir)
+
             try:
-                subproc_args: List[str] = [cccc_bin] + [opts] + [src]
+                subproc_args: List[str] = [cccc_bin] + opts + [src]
+                logging.debug(" ".join(subproc_args))
                 log_output: bytes = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT
                 )
@@ -80,55 +89,85 @@ class CCCCToolPlugin(ToolPlugin):
 
             logging.debug("%s", log_output)
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "wb") as flog:
-                flog.write(log_output)
+            if self.plugin_context and self.plugin_context.args.output_directory:
+                with open(self.get_name() + ".log", "ab") as flog:
+                    flog.write(log_output)
 
-        with open(".cccc/cccc.xml", encoding="utf8") as fconfig:
-            tool_output = xmltodict.parse(fconfig.read())
+            try:
+                with open(tool_output_dir + "/cccc.xml", encoding="utf8") as fresults:
+                    tool_output = xmltodict.parse(
+                        fresults.read(), dict_constructor=dict
+                    )
+            except FileNotFoundError:
+                continue
 
-        issues: List[Issue] = self.parse_output(tool_output, package, config_file)
+            issues.extend(self.parse_output(tool_output, src, config_file))
         return issues
 
     def parse_output(  # pylint: disable=too-many-branches
-        self, output: Dict[Any, Any], package: Package, config_file: str
+        self, output: Dict[Any, Any], src: str, config_file: str
     ) -> List[Issue]:
         """Parse tool output and report issues."""
         if "CCCC_Project" not in output:
             return []
 
         config = self.parse_config(config_file)
+        logging.debug(config)
 
         results: Dict[Any, Any] = {}
-        for module in output["CCCC_Project"]["structural_summary"]["module"]:
-            if "name" not in module or isinstance(module, str):
-                break
-            results[module["name"]] = {}
-            metrics = {}
-            for field in module:
-                if "@value" in module[field]:
-                    metrics[field] = {"value": module[field]["@value"]}
-            results[module["name"]] = metrics
+        logging.debug(yaml.dump(output))
+        if (
+            "structural_summary" in output["CCCC_Project"]
+            and output["CCCC_Project"]["structural_summary"]
+            and "module" in output["CCCC_Project"]["structural_summary"]
+        ):
+            for module in output["CCCC_Project"]["structural_summary"]["module"]:
+                if "name" not in module or isinstance(module, str):
+                    break
+                metrics: Dict[Any, Any] = {}
+                for field in module:
+                    metrics[field] = {}
+                    if "@value" in module[field]:
+                        metrics[field]["value"] = module[field]["@value"]
+                    if "@level" in module[field]:
+                        metrics[field]["level"] = module[field]["@level"]
+                results[module["name"]] = metrics
 
-        for module in output["CCCC_Project"]["procedural_summary"]["module"]:
-            if "name" not in module or isinstance(module, str):
-                break
-            metrics = results[module["name"]]
-            for field in module:
-                if "@value" in module[field]:
-                    metrics[field] = {"value": module[field]["@value"]}
-            results[module["name"]] = metrics
+        if (
+            "procedural_summary" in output["CCCC_Project"]
+            and output["CCCC_Project"]["procedural_summary"]
+            and "module" in output["CCCC_Project"]["procedural_summary"]
+        ):
+            for module in output["CCCC_Project"]["procedural_summary"]["module"]:
+                if "name" not in module or isinstance(module, str):
+                    break
+                metrics = results[module["name"]]
+                for field in module:
+                    metrics[field] = {}
+                    if "@value" in module[field]:
+                        metrics[field]["value"] = module[field]["@value"]
+                    if "@level" in module[field]:
+                        metrics[field]["level"] = module[field]["@level"]
+                results[module["name"]] = metrics
 
-        for module in output["CCCC_Project"]["oo_design"]["module"]:
-            if "name" not in module or isinstance(module, str):
-                break
-            metrics = results[module["name"]]
-            for field in module:
-                if "@value" in module[field]:
-                    metrics[field] = {"value": module[field]["@value"]}
-            results[module["name"]] = metrics
+        if (
+            "oo_design" in output["CCCC_Project"]
+            and output["CCCC_Project"]["oo_design"]
+            and "module" in output["CCCC_Project"]["oo_design"]
+        ):
+            for module in output["CCCC_Project"]["oo_design"]["module"]:
+                if "name" not in module or isinstance(module, str):
+                    break
+                metrics = results[module["name"]]
+                for field in module:
+                    metrics[field] = {}
+                    if "@value" in module[field]:
+                        metrics[field]["value"] = module[field]["@value"]
+                    if "@level" in module[field]:
+                        metrics[field]["level"] = module[field]["@level"]
+                results[module["name"]] = metrics
 
-        issues: List[Issue] = self.find_issues(config, results, package)
+        issues: List[Issue] = self.find_issues(config, results, src)
 
         return issues
 
@@ -161,12 +200,14 @@ class CCCCToolPlugin(ToolPlugin):
         return config
 
     def find_issues(
-        self, config: Dict[Any, Any], results: Dict[Any, Any], package: Package
+        self, config: Dict[Any, Any], results: Dict[Any, Any], src: str
     ) -> List[Issue]:
         """Identify issues by comparing tool results with tool configuration."""
         issues: List[Issue] = []
         dummy = []
 
+        logging.debug("Results")
+        logging.debug(results)
         for key, val in results.items():
             for item in val.keys():
                 val_id = self.convert_name_to_id(item)
@@ -178,11 +219,14 @@ class CCCCToolPlugin(ToolPlugin):
                     thresh_error = float(config[val_id]["error"])
                     thresh_warn = float(config[val_id]["warn"])
                     msg = key + " - " + config[val_id]["name"]
-                    if result > thresh_error:
-                        msg += f" - value: {result}, theshold: {thresh_warn}"
+                    msg += f" - value: {result}, thresholds warning: {thresh_warn}"
+                    msg += f", error: {thresh_error}"
+                    if ("level" in val[item] and val[item]["level"] == "2") or (
+                        result > thresh_error
+                    ):
                         issues.append(
                             Issue(
-                                package["c_src"][0],
+                                src,
                                 "0",
                                 self.get_name(),
                                 "error",
@@ -191,11 +235,12 @@ class CCCCToolPlugin(ToolPlugin):
                                 None,
                             )
                         )
-                    elif result > thresh_warn:
-                        msg += f" - value: {result}, theshold: {thresh_warn}"
+                    elif ("level" in val[item] and val[item]["level"] == "1") or (
+                        result > thresh_warn
+                    ):
                         issues.append(
                             Issue(
-                                package["c_src"][0],
+                                src,
                                 "0",
                                 self.get_name(),
                                 "warn",
