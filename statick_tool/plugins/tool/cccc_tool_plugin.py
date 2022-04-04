@@ -91,7 +91,7 @@ class CCCCToolPlugin(ToolPlugin):
             logging.debug("%s", log_output)
 
             if self.plugin_context and self.plugin_context.args.output_directory:
-                with open(self.get_name() + ".log", "wb") as flog:
+                with open(self.get_name() + ".log", "ab") as flog:
                     flog.write(log_output)
 
             try:
