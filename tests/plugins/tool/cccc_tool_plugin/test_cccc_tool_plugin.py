@@ -296,7 +296,7 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
 @mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.xmltodict.parse")
 def test_cccc_tool_plugin_scan_filenotfound(mock_xmltodict_parse):
     """
-    Test what happens when a CalledProcessError is hit (such as if cccc encounters an error).
+    Test what happens when a FileNotFoundError is hit (such as if cccc has no output for a file).
 
     Expected result: issues is an empty list
     """
