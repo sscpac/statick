@@ -67,11 +67,10 @@ class CCCCToolPlugin(ToolPlugin):
 
         for src in package["c_src"]:
             tool_output_dir: str = ".cccc-" + Path(src).name
-            temp_opts = opts
-            temp_opts.append("--outdir=" + tool_output_dir)
+            opts.append("--outdir=" + tool_output_dir)
 
             try:
-                subproc_args: List[str] = [cccc_bin] + temp_opts + [src]
+                subproc_args: List[str] = [cccc_bin] + opts + [src]
                 logging.debug(" ".join(subproc_args))
                 log_output: bytes = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT
