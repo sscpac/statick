@@ -51,15 +51,19 @@ class RstlintToolPlugin(ToolPlugin):  # type: ignore
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 
+        # Have to ignore some type hints as they are an addition to SystemMessage
+        # and not in the typeshed stubs.
+        # https://github.com/twolfson/restructuredtext-lint#restructuredtext_lintlintcontent-filepathnone-rst_prolognone
+        # https://github.com/python/typeshed/blob/master/stubs/docutils/docutils/utils/__init__.pyi
         for output in total_output:
             issues.append(
                 Issue(
-                    output.source,
-                    output.line,
+                    output.source,  # type: ignore
+                    output.line,  # type: ignore
                     self.get_name(),
-                    output.type,
+                    output.type,  # type: ignore
                     output.level,
-                    output.message,
+                    output.message,  # type: ignore
                     None,
                 )
             )
