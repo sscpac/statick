@@ -1,8 +1,10 @@
 """Unit tests for the isort plugin."""
 import argparse
 import os
+import subprocess
 import sys
 
+import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -105,3 +107,43 @@ def test_isort_tool_plugin_parse_valid():
     assert issues[0].severity == "3"
     assert issues[0].message == "Imports are incorrectly sorted and/or formatted."
     assert issues[1].filename == "/tmp/y.py"
+
+
+@mock.patch("statick_tool.plugins.tool.isort_tool_plugin.subprocess.check_output")
+def test_isort_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means isort doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError("mocked error")
+    itp = setup_isort_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "sample.py")
+    ]
+    issues = itp.scan(package, "level")
+    assert not issues
+
+
+@mock.patch("statick_tool.plugins.tool.isort_tool_plugin.subprocess.check_output")
+def test_isort_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means isort hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        0, "", output="mocked error"
+    )
+    itp = setup_isort_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "sample.py")
+    ]
+    issues = itp.scan(package, "level")
+    assert len(issues) == 1
