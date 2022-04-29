@@ -78,7 +78,6 @@ def test_isort_tool_plugin_scan_flags():
     """Integration test: Make sure the isort output uses custom flags."""
     custom_rsc_path = os.path.dirname(__file__)
     itp = setup_isort_tool_plugin(custom_rsc_path=custom_rsc_path)
-    # itp = setup_isort_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
