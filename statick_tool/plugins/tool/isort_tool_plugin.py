@@ -5,7 +5,6 @@ the issues you can run `isort <file>`.
 """
 import logging
 import subprocess
-
 from typing import List
 
 from statick_tool.issue import Issue
@@ -32,7 +31,6 @@ class IsortToolPlugin(ToolPlugin):
         for src in package["python_src"]:
             try:
                 subproc_args = [tool_bin, src] + flags
-                print(f"subproc_args: {subproc_args}")
                 output = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
                 )
