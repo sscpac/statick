@@ -1,8 +1,10 @@
 """Unit tests for the isort plugin."""
 import argparse
 import os
+import subprocess
 import sys
 
+import mock
 import pytest
 from yapsy.PluginManager import PluginManager
 
@@ -15,13 +17,16 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_isort_tool_plugin():
+def setup_isort_tool_plugin(custom_rsc_path=None):
     """Create and return an instance of the Isort plugin."""
     arg_parser = argparse.ArgumentParser()
 
-    resources = Resources(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
+    if custom_rsc_path is not None:
+        resources = Resources([custom_rsc_path])
+    else:
+        resources = Resources(
+            [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
+        )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
@@ -60,8 +65,6 @@ def test_isort_tool_plugin_found():
 
 def test_isort_tool_plugin_scan_valid():
     """Integration test: Make sure the isort output hasn't changed."""
-    if sys.version_info.major == 3 and sys.version_info.minor < 6:
-        pytest.skip("isort is only available for Python 3.6+, unable to test")
     itp = setup_isort_tool_plugin()
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
@@ -71,6 +74,20 @@ def test_isort_tool_plugin_scan_valid():
     ]
     issues = itp.scan(package, "level")
     assert len(issues) == 1
+
+
+def test_isort_tool_plugin_scan_flags():
+    """Integration test: Make sure the isort output uses custom flags."""
+    custom_rsc_path = os.path.dirname(__file__)
+    itp = setup_isort_tool_plugin(custom_rsc_path=custom_rsc_path)
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "whitespace.py")
+    ]
+    issues = itp.scan(package, "level")
+    assert not issues
 
 
 def test_isort_tool_plugin_parse_valid():
@@ -90,3 +107,43 @@ def test_isort_tool_plugin_parse_valid():
     assert issues[0].severity == "3"
     assert issues[0].message == "Imports are incorrectly sorted and/or formatted."
     assert issues[1].filename == "/tmp/y.py"
+
+
+@mock.patch("statick_tool.plugins.tool.isort_tool_plugin.subprocess.check_output")
+def test_isort_tool_plugin_scan_oserror(mock_subprocess_check_output):
+    """
+    Test what happens when an OSError is raised (usually means isort doesn't exist).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = OSError("mocked error")
+    itp = setup_isort_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "sample.py")
+    ]
+    issues = itp.scan(package, "level")
+    assert not issues
+
+
+@mock.patch("statick_tool.plugins.tool.isort_tool_plugin.subprocess.check_output")
+def test_isort_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised (usually means isort hit an error).
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        0, "", output="mocked error"
+    )
+    itp = setup_isort_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "sample.py")
+    ]
+    issues = itp.scan(package, "level")
+    assert len(issues) == 1

@@ -3,9 +3,9 @@
 The isort tool will only find if a file has issues with imports. To automatically fix
 the issues you can run `isort <file>`.
 """
+import logging
+import subprocess
 from typing import List
-
-import isort
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -21,6 +21,7 @@ class IsortToolPlugin(ToolPlugin):
 
     def scan(self, package: Package, level: str) -> List[Issue]:
         """Run tool and gather output."""
+        tool_bin = "isort"
         flags: List[str] = ["--check-only"]
         user_flags = self.get_user_flags(level)
         flags += user_flags
@@ -28,8 +29,23 @@ class IsortToolPlugin(ToolPlugin):
         total_output: List[str] = []
 
         for src in package["python_src"]:
-            if not isort.check_file(src):
-                total_output.append(src)
+            try:
+                subproc_args = [tool_bin, src] + flags
+                output = subprocess.check_output(
+                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+                )
+
+            except (IOError, OSError) as ex:
+                logging.warning("isort binary failed: %s", tool_bin)
+                logging.warning("Error = %s", ex.strerror)
+                return []
+
+            except subprocess.CalledProcessError as ex:
+                logging.warning("isort binary failed: %s.", tool_bin)
+                logging.warning("Returncode: %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
+                total_output.append(ex.output)
+                continue
 
         if self.plugin_context and self.plugin_context.args.output_directory:
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
