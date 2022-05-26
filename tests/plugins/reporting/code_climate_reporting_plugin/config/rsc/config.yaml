@@ -1,0 +1,6 @@
+levels:
+  level:
+    reporting:
+      code_climate:
+        files: "True"
+        terminal: "True"

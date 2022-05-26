@@ -1,0 +1,120 @@
+"""Prints the Statick reports out to the terminal or file in JSON format."""
+import hashlib
+import json
+import logging
+import os
+from collections import OrderedDict
+from typing import Dict, List, Optional, Tuple
+
+from statick_tool.issue import Issue
+from statick_tool.package import Package
+from statick_tool.reporting_plugin import ReportingPlugin
+
+
+class CodeClimateReportingPlugin(ReportingPlugin):
+    """Prints the Statick reports out to the terminal or file in JSON format."""
+
+    def get_name(self) -> str:
+        """Return the plugin name."""
+        return "code_climate"
+
+    def report(
+        self, package: Package, issues: Dict[str, List[Issue]], level: str
+    ) -> Tuple[Optional[None], bool]:
+        """Go through the issues list and print them in JSON format.
+
+        Args:
+            package (:obj:`Package`): The Package object that was analyzed.
+            issues (:obj:`dict` of :obj:`str` to :obj:`Issue`): The issues
+                found by the Statick analysis, keyed by the tool that found
+                them.
+            level: (:obj:`str`): Name of the level used in the scan.
+        """
+        if not self.plugin_context or not self.plugin_context.config:
+            return None, False
+
+        file_output = False
+        terminal_output = False
+        file_output_str = self.plugin_context.config.get_reporting_config(
+            self.get_name(), level, "files"
+        )
+        if file_output_str and file_output_str.lower() == "true":
+            file_output = True
+        terminal_output_str = self.plugin_context.config.get_reporting_config(
+            self.get_name(), level, "terminal"
+        )
+        if terminal_output_str and terminal_output_str.lower() == "true":
+            terminal_output = True
+
+        all_issues = []
+        for _, value in issues.items():
+            for issue in value:
+                severity = "info"
+                try:
+                    if int(issue.severity) > 0:
+                        severity = "minor"
+                    if int(issue.severity) > 2:
+                        severity = "major"
+                    if int(issue.severity) > 4:
+                        severity = "critical"
+                except ValueError as ex:
+                    logging.warning(
+                        "Invalid severity integer (%s), using default 'info' "
+                        " severity. Error = %s",
+                        issue.severity,
+                        ex,
+                    )
+                issue_dict = OrderedDict()
+                issue_dict["type"] = "issue"
+                issue_dict["check_name"] = issue.tool
+                issue_dict["severity"] = severity
+                issue_dict["categories"] = []
+
+                # gitlab only uses the description field, so including issue.tool here too
+                description = (
+                    issue.tool + ": " + issue.issue_type + ": " + issue.message
+                )
+                if issue.cert_reference:
+                    description += ", CERT Reference: " + issue.cert_reference
+                    issue_dict["categories"].append("Security")
+                issue_dict["description"] = description
+
+                issue_dict["location"] = OrderedDict()
+                issue_dict["location"]["path"] = issue.filename
+                issue_dict["location"]["lines"] = OrderedDict()
+                issue_dict["location"]["lines"]["begin"] = issue.line_number
+
+                fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
+                issue_dict["fingerprint"] = fingerprint.hexdigest()
+
+                all_issues.append(issue_dict)
+        line = json.dumps(all_issues)
+
+        if file_output:
+            if not self.write_output(package, level, line):
+                return None, False
+
+        if terminal_output:
+            print(line)
+
+        return None, True
+
+    def write_output(self, package: Package, level: str, line: str) -> bool:
+        """Write JSON output to a file."""
+        if not self.plugin_context:
+            return False
+
+        output_dir = os.path.join(
+            self.plugin_context.args.output_directory, package.name + "-" + level
+        )
+        if not os.path.exists(output_dir):
+            os.mkdir(output_dir)
+        if not os.path.isdir(output_dir):
+            logging.error("Unable to create output directory at %s!", output_dir)
+            return False
+        output_file = os.path.join(output_dir, package.name + "-" + level + ".json")
+        logging.info("Writing output to %s", output_file)
+        with open(output_file, "w", encoding="utf8") as out:
+            out.write(line)
+
+        return True

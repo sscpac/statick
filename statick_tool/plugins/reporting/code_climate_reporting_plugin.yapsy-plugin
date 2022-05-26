@@ -1,0 +1,3 @@
+[Core]
+Name = Code Climate Reporting Plugin
+Module = code_climate_reporting_plugin
