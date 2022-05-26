@@ -65,7 +65,9 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         return None, True
 
     @classmethod
-    def get_issue_dict(cls, issue: Issue, category_mapping: Dict[str, str]) -> Dict[str, Any]:
+    def get_issue_dict(
+        cls, issue: Issue, category_mapping: Dict[str, str]
+    ) -> Dict[str, Any]:
         """Convert Issue object into dictionary."""
         severity = "info"
         try:
@@ -94,9 +96,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
             categories.add(category_mapping[issue.issue_type])
 
         # gitlab only uses the description field, so including issue.tool here too
-        description = (
-            issue.tool + ": " + issue.issue_type + ": " + issue.message
-        )
+        description = issue.tool + ": " + issue.issue_type + ": " + issue.message
         if issue.cert_reference:
             description += ", CERT Reference: " + issue.cert_reference
             categories.add("Security")
