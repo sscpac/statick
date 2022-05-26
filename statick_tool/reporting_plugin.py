@@ -37,7 +37,10 @@ class ReportingPlugin(IPlugin):  # type: ignore
         full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(
             file_name
         )
-        if self.plugin_context.args.mapping_file_suffix is not None:
+        if (
+            "mapping_file_suffix" in self.plugin_context.args
+            and self.plugin_context.args.mapping_file_suffix is not None
+        ):
             # If the user specified a suffix, try to get the suffixed version of the
             # file.
             suffixed_file_name = (
