@@ -46,6 +46,9 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         if terminal_output_str and terminal_output_str.lower() == "true":
             terminal_output = True
 
+        # Load the plugin mapping if possible
+        category_mapping = self.load_mapping()
+
         all_issues = []
         for _, value in issues.items():
             for issue in value:
@@ -68,7 +71,12 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 issue_dict["type"] = "issue"
                 issue_dict["check_name"] = issue.tool
                 issue_dict["severity"] = severity
-                issue_dict["categories"] = []
+                issue_dict["categories"] = set()
+
+                if issue.tool in category_mapping:
+                    issue_dict["categories"].add(category_mapping[issue.tool])
+                if issue.issue_type in category_mapping:
+                    issue_dict["categories"].add(category_mapping[issue.issue_type])
 
                 # gitlab only uses the description field, so including issue.tool here too
                 description = (
@@ -76,7 +84,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 )
                 if issue.cert_reference:
                     description += ", CERT Reference: " + issue.cert_reference
-                    issue_dict["categories"].append("Security")
+                    issue_dict["categories"].add("Security")
                 issue_dict["description"] = description
 
                 issue_dict["location"] = OrderedDict()
@@ -84,6 +92,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 issue_dict["location"]["lines"] = OrderedDict()
                 issue_dict["location"]["lines"]["begin"] = issue.line_number
 
+                issue_dict["categories"] = list(issue_dict["categories"])
                 fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
                 issue_dict["fingerprint"] = fingerprint.hexdigest()
 
