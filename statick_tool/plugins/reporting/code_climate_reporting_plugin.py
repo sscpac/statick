@@ -52,51 +52,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         all_issues = []
         for _, value in issues.items():
             for issue in value:
-                severity = "info"
-                try:
-                    if int(issue.severity) > 0:
-                        severity = "minor"
-                    if int(issue.severity) > 2:
-                        severity = "major"
-                    if int(issue.severity) > 4:
-                        severity = "critical"
-                except ValueError as ex:
-                    logging.warning(
-                        "Invalid severity integer (%s), using default 'info' "
-                        " severity. Error = %s",
-                        issue.severity,
-                        ex,
-                    )
-                issue_dict: Dict[str, Any] = OrderedDict()
-                issue_dict["type"] = "issue"
-                issue_dict["check_name"] = issue.tool
-                issue_dict["severity"] = severity
-                categories = set()
-
-                if issue.tool in category_mapping:
-                    categories.add(category_mapping[issue.tool])
-                if issue.issue_type in category_mapping:
-                    categories.add(category_mapping[issue.issue_type])
-
-                # gitlab only uses the description field, so including issue.tool here too
-                description = (
-                    issue.tool + ": " + issue.issue_type + ": " + issue.message
-                )
-                if issue.cert_reference:
-                    description += ", CERT Reference: " + issue.cert_reference
-                    categories.add("Security")
-                issue_dict["description"] = description
-
-                issue_dict["location"] = OrderedDict()
-                issue_dict["location"]["path"] = issue.filename
-                issue_dict["location"]["lines"] = OrderedDict()
-                issue_dict["location"]["lines"]["begin"] = issue.line_number
-
-                issue_dict["categories"] = list(categories)
-                fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
-                issue_dict["fingerprint"] = fingerprint.hexdigest()
-
-                all_issues.append(issue_dict)
+                all_issues.append(self.get_issue_dict(issue, category_mapping))
         line = json.dumps(all_issues)
 
         if file_output:
@@ -107,6 +63,54 @@ class CodeClimateReportingPlugin(ReportingPlugin):
             print(line)
 
         return None, True
+
+    @classmethod
+    def get_issue_dict(cls, issue: Issue, category_mapping: Dict[str, str]) -> Dict[str, Any]:
+        """Convert Issue object into dictionary."""
+        severity = "info"
+        try:
+            if int(issue.severity) > 0:
+                severity = "minor"
+            if int(issue.severity) > 2:
+                severity = "major"
+            if int(issue.severity) > 4:
+                severity = "critical"
+        except ValueError as ex:
+            logging.warning(
+                "Invalid severity integer (%s), using default 'info' "
+                " severity. Error = %s",
+                issue.severity,
+                ex,
+            )
+        issue_dict: Dict[str, Any] = OrderedDict()
+        issue_dict["type"] = "issue"
+        issue_dict["check_name"] = issue.tool
+        issue_dict["severity"] = severity
+        categories = set()
+
+        if issue.tool in category_mapping:
+            categories.add(category_mapping[issue.tool])
+        if issue.issue_type in category_mapping:
+            categories.add(category_mapping[issue.issue_type])
+
+        # gitlab only uses the description field, so including issue.tool here too
+        description = (
+            issue.tool + ": " + issue.issue_type + ": " + issue.message
+        )
+        if issue.cert_reference:
+            description += ", CERT Reference: " + issue.cert_reference
+            categories.add("Security")
+        issue_dict["description"] = description
+
+        issue_dict["location"] = OrderedDict()
+        issue_dict["location"]["path"] = issue.filename
+        issue_dict["location"]["lines"] = OrderedDict()
+        issue_dict["location"]["lines"]["begin"] = issue.line_number
+
+        issue_dict["categories"] = list(categories)
+        fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
+        issue_dict["fingerprint"] = fingerprint.hexdigest()
+        return issue_dict
 
     def write_output(self, package: Package, level: str, line: str) -> bool:
         """Write JSON output to a file."""
