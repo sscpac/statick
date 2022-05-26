@@ -4,7 +4,7 @@ import json
 import logging
 import os
 from collections import OrderedDict
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -67,16 +67,16 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                         issue.severity,
                         ex,
                     )
-                issue_dict = OrderedDict()
+                issue_dict: Dict[str, Any] = OrderedDict()
                 issue_dict["type"] = "issue"
                 issue_dict["check_name"] = issue.tool
                 issue_dict["severity"] = severity
-                issue_dict["categories"] = set()
+                categories = set()
 
                 if issue.tool in category_mapping:
-                    issue_dict["categories"].add(category_mapping[issue.tool])
+                    categories.add(category_mapping[issue.tool])
                 if issue.issue_type in category_mapping:
-                    issue_dict["categories"].add(category_mapping[issue.issue_type])
+                    categories.add(category_mapping[issue.issue_type])
 
                 # gitlab only uses the description field, so including issue.tool here too
                 description = (
@@ -84,7 +84,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 )
                 if issue.cert_reference:
                     description += ", CERT Reference: " + issue.cert_reference
-                    issue_dict["categories"].add("Security")
+                    categories.add("Security")
                 issue_dict["description"] = description
 
                 issue_dict["location"] = OrderedDict()
@@ -92,7 +92,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 issue_dict["location"]["lines"] = OrderedDict()
                 issue_dict["location"]["lines"]["begin"] = issue.line_number
 
-                issue_dict["categories"] = list(issue_dict["categories"])
+                issue_dict["categories"] = list(categories)
                 fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
                 issue_dict["fingerprint"] = fingerprint.hexdigest()
 
