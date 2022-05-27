@@ -77,7 +77,7 @@ def test_code_climate_reporting_plugin_report_cc_output():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+                Issue("test.txt", 1, "black", "format", "1", "This is a test", None)
             ]
         }
         _, success = plugin.report(package, issues, "level")
@@ -108,7 +108,7 @@ def test_code_climate_reporting_plugin_report_gitlab_output():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+                Issue("test.txt", 1, "tool_a", "type", "3", "This is a test", None)
             ]
         }
         _, success = plugin.report(package, issues, "level")
@@ -137,10 +137,33 @@ def test_code_climate_reporting_plugin_report_cert_reference():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", "CERT")
+                Issue("test.txt", 1, "tool_a", "type", "5", "This is a test", "CERT")
             ]
         }
         _, success = plugin.report(package, issues, "level")
+        assert success
+
+
+def test_code_climate_reporting_plugin_invalid_severity():
+    """Test the output of the reporting plugin where the issue has an invalid severity type."""
+    with TemporaryDirectory() as tmp_dir:
+        plugin = setup_code_climate_reporting_plugin(tmp_dir)
+        package = Package(
+            "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+        )
+        issues = {
+            "tool_a": [
+                Issue("test.txt", 1, "tool_a", "type", "invalid_severity", "This is a test", None)
+            ]
+        }
+        _, success = plugin.report(package, issues, "level")
+        with open(
+            os.path.join(
+                tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
+            )
+        ) as cc_file:
+            cc_json = json.load(cc_file)[0]
+            assert cc_json["severity"] == "info"
         assert success
 
 
