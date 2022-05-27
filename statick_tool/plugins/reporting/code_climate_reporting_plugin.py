@@ -33,25 +33,21 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         if not self.plugin_context or not self.plugin_context.config:
             return None, False
 
-        file_output = False
-        terminal_output = False
-        file_output_str = self.plugin_context.config.get_reporting_config(
-            self.get_name(), level, "files"
+        file_output = self.plugin_context.config.str_to_bool(
+            self.plugin_context.config.get_reporting_config(
+                self.get_name(), level, "files"
+            )
         )
-        if file_output_str and file_output_str.lower() == "true":
-            file_output = True
-        terminal_output_str = self.plugin_context.config.get_reporting_config(
-            self.get_name(), level, "terminal"
+        terminal_output = self.plugin_context.config.str_to_bool(
+            self.plugin_context.config.get_reporting_config(
+                self.get_name(), level, "terminal"
+            )
         )
-        if terminal_output_str and terminal_output_str.lower() == "true":
-            terminal_output = True
-
-        gitlab = False
-        gitlab_str = self.plugin_context.config.get_reporting_config(
-            self.get_name(), level, "gitlab"
+        gitlab = self.plugin_context.config.str_to_bool(
+            self.plugin_context.config.get_reporting_config(
+                self.get_name(), level, "gitlab"
+            )
         )
-        if gitlab_str and gitlab_str.lower() == "true":
-            gitlab = True
 
         # Load the plugin mapping if possible
         category_mapping = self.load_mapping()

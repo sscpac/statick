@@ -95,6 +95,20 @@ class Config:
         """Get what reporting plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "reporting")
 
+    @classmethod
+    def str_to_bool(cls, val: Optional[Union[str, Any]]) -> bool:
+        """Convert a string to a bool."""
+        if val is None:
+            return False
+        truth_values = ["y", "yes", "t", "true", "on", "1"]
+        false_values = ["n", "no", "f", "false", "off", "0"]
+        temp = val.lower()
+        if temp in truth_values:
+            return True
+        if temp in false_values:
+            return False
+        return False
+
     def get_plugin_config(  # pylint: disable=too-many-arguments
         self,
         plugin_type: str,
