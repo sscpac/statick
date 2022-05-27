@@ -149,6 +149,24 @@ def test_config_enabled_reporting_plugins():
     assert "write_to_file" in plugins
 
 
+def test_config_str_to_bool():
+    """Test the str_to_bool function."""
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
+    config = Config(config_file)
+
+    truth_values = ["y", "yes", "t", "true", "on", "1"]
+    false_values = ["n", "no", "f", "false", "off", "0"]
+
+    assert not config.str_to_bool("flags")
+    assert not config.str_to_bool(None)
+
+    for val in false_values:
+        assert not config.str_to_bool(val)
+
+    for val in truth_values:
+        assert config.str_to_bool(val)
+
+
 def test_config_get_tool_config():
     """
     Test that the Config module gives correct config for tools.
