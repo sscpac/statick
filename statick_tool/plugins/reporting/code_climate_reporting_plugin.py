@@ -46,13 +46,20 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         if terminal_output_str and terminal_output_str.lower() == "true":
             terminal_output = True
 
+        gitlab = False
+        gitlab_str = self.plugin_context.config.get_reporting_config(
+            self.get_name(), level, "gitlab"
+        )
+        if gitlab_str and gitlab_str.lower() == "true":
+            gitlab = True
+
         # Load the plugin mapping if possible
         category_mapping = self.load_mapping()
 
         all_issues = []
         for _, value in issues.items():
             for issue in value:
-                all_issues.append(self.get_issue_dict(issue, category_mapping))
+                all_issues.append(self.get_issue_dict(issue, category_mapping, gitlab))
         line = json.dumps(all_issues)
 
         if file_output:
@@ -66,7 +73,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
 
     @classmethod
     def get_issue_dict(
-        cls, issue: Issue, category_mapping: Dict[str, str]
+        cls, issue: Issue, category_mapping: Dict[str, str], gitlab: bool
     ) -> Dict[str, Any]:
         """Convert Issue object into dictionary."""
         severity = "info"
@@ -85,11 +92,10 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 ex,
             )
         issue_dict: Dict[str, Any] = OrderedDict()
-        issue_dict["type"] = "issue"
-        issue_dict["check_name"] = issue.tool
-        issue_dict["severity"] = severity
-        categories = set()
 
+        issue_dict["severity"] = severity
+
+        categories = set()
         if issue.tool in category_mapping:
             categories.add(category_mapping[issue.tool])
         if issue.issue_type in category_mapping:
@@ -107,7 +113,13 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         issue_dict["location"]["lines"] = OrderedDict()
         issue_dict["location"]["lines"]["begin"] = int(issue.line_number)
 
-        issue_dict["categories"] = list(categories)
+        # Exclude fields not used by gitlab if the report is too large (>10MB)
+        # https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#no-code-quality-report-is-displayed-in-a-merge-request
+        if not gitlab:
+            issue_dict["type"] = "issue"
+            issue_dict["check_name"] = issue.tool
+            issue_dict["categories"] = list(categories)
+
         fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
         issue_dict["fingerprint"] = fingerprint.hexdigest()
         return issue_dict
