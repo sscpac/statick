@@ -105,7 +105,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         issue_dict["location"] = OrderedDict()
         issue_dict["location"]["path"] = issue.filename
         issue_dict["location"]["lines"] = OrderedDict()
-        issue_dict["location"]["lines"]["begin"] = issue.line_number
+        issue_dict["location"]["lines"]["begin"] = int(issue.line_number)
 
         issue_dict["categories"] = list(categories)
         fingerprint = hashlib.md5(json.dumps(issue_dict).encode())
