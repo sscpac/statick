@@ -1,5 +1,6 @@
 """Unit tests for the JSON reporting plugin."""
 import argparse
+import json
 import os
 
 from yapsy.PluginManager import PluginManager
@@ -23,13 +24,15 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
     )
 
 
-def setup_code_climate_reporting_plugin(file_path, use_plugin_context=True):
+def setup_code_climate_reporting_plugin(
+    file_path, use_plugin_context=True, config_filename="config.yaml"
+):
     """Create an instance of the file writer plugin."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("output_directory")
 
     resources = Resources([os.path.join(os.path.dirname(__file__), "config")])
-    config = Config(resources.get_file("config.yaml"))
+    config = Config(resources.get_file(config_filename))
     plugin = CodeClimateReportingPlugin()
     if use_plugin_context:
         plugin_context = PluginContext(
@@ -63,6 +66,66 @@ def test_code_climate_reporting_plugin_found():
         plugin_info.name == "Code Climate Reporting Plugin"
         for plugin_info in manager.getPluginsOfCategory("Reporting")
     )
+
+
+def test_code_climate_reporting_plugin_report_cc_output():
+    """Test the gitlab output of the reporting plugin."""
+    with TemporaryDirectory() as tmp_dir:
+        plugin = setup_code_climate_reporting_plugin(tmp_dir)
+        package = Package(
+            "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+        )
+        issues = {
+            "tool_a": [
+                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+            ]
+        }
+        _, success = plugin.report(package, issues, "level")
+        with open(
+            os.path.join(
+                tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
+            )
+        ) as cc_file:
+            cc_json = json.load(cc_file)[0]
+            assert "type" in cc_json
+            assert "check_name" in cc_json
+            assert "categories" in cc_json
+            assert "severity" in cc_json
+            assert "description" in cc_json
+            assert "location" in cc_json
+            assert "fingerprint" in cc_json
+        assert success
+
+
+def test_code_climate_reporting_plugin_report_gitlab_output():
+    """Test the gitlab output of the reporting plugin."""
+    with TemporaryDirectory() as tmp_dir:
+        plugin = setup_code_climate_reporting_plugin(
+            tmp_dir, True, "config-gitlab.yaml"
+        )
+        package = Package(
+            "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+        )
+        issues = {
+            "tool_a": [
+                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+            ]
+        }
+        _, success = plugin.report(package, issues, "level")
+        with open(
+            os.path.join(
+                tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
+            )
+        ) as cc_file:
+            cc_json = json.load(cc_file)[0]
+            assert "type" not in cc_json
+            assert "check_name" not in cc_json
+            assert "categories" not in cc_json
+            assert "severity" in cc_json
+            assert "description" in cc_json
+            assert "location" in cc_json
+            assert "fingerprint" in cc_json
+        assert success
 
 
 def test_code_climate_reporting_plugin_report_cert_reference():
