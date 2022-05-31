@@ -12,6 +12,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.8.0 - 2022-05-31
+
+Bugs were fixed in the `cccc` and `isort` tool plugins.
+The nature of the bugs in each tool resulted in under-reporting of issues discovered by using the tools.
+By fixing the tool plugins it is possible that users may find that more issues are now discovered using
+the same tool configurations as before.
+If a user does not want to fix the additional warnings yet they can pin the version of Statick to `statick<=0.7`.
+
+### Added
+
+- [Code Climate](https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types) reporting plugin.
+  This plugin can be used to provide output in GitLab merge requests via the
+  [Code Quality](https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#implementing-a-custom-tool)
+  feature. (#416)
+- List of existing reporting plugins to README. (#417)
+- Survey of metrics for software quality assurance to docs. (#413)
+
+### Changed
+
+- Update Docker image tag to remove the `v` prefix. (#409)
+
+### Fixed
+
+- Support for user flags passed to the isort tool (#414).
+- Collect output of CCCC tool for each file individually instead of using the output from the last file it ran on. (#412)
+  NOTE: This change will likely result in more issues being found by this tool.
+
 ## v0.7.2 - 2022-03-09
 
 ### Fixed
