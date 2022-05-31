@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## v0.8.0 - 2022-05-31
 
+Bugs were fixed in the `cccc` and `isort` tool plugins.
+The nature of the bugs in each tool resulted in under-reporting of issues discovered by using the tools.
+By fixing the tool plugins it is possible that users may find that more issues are now discovered using the same tool configurations as before.
+If a user does not want to fix the additional warnings yet they can pin the version of Statick to `statick<=0.7`.
+
 ### Added
 
 - Code Climate reporting plugin (#416)
