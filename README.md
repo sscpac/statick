@@ -42,6 +42,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 * [Existing Plugins](#existing-plugins)
   * [Discovery Plugins](#discovery-plugins)
   * [Tool Plugins](#tool-plugins)
+  * [Reporting Plugins](#reporting-plugins)
   * [External Plugins](#external-plugins)
 * [Customization](#customization)
   * [User Paths](#user-paths)
@@ -395,6 +396,16 @@ Tool | About
 [uncrustify][uncrustify]           | Code beautifier
 [xmllint][xmllint]                 | Lint XML files.
 [yamllint][yamllint]               | A linter for YAML files.
+
+### Reporting Plugins
+
+Reporter | About
+:--- | :----
+[code-climate][code-climate] | Output issues in valid Code Climate JSON (or optionally strictly [Gitlab][gitlab-cc] compatible) to stdout or as a file.
+do_nothing | Does nothing.
+[json][json] | Output issues as a JSON list either to stdout or as a file.
+print_to_console | Print the issues to stdout.
+[write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output.
 
 ### External Plugins
 
@@ -772,3 +783,7 @@ His commits were scrubbed from git history upon the initial public release.
 [uncrustify]: https://github.com/uncrustify/uncrustify
 [xmllint]: http://xmlsoft.org/
 [yamllint]: https://yamllint.readthedocs.io/en/stable/
+[code-climate]: https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types
+[gitlab-cc]: https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#implementing-a-custom-tool
+[json]: https://www.json.org/json-en.html
+[jenkins-warnings-ng]: https://plugins.jenkins.io/warnings-ng/
