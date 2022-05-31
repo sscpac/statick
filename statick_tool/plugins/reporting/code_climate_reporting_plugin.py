@@ -1,4 +1,4 @@
-"""Prints the Statick reports out to the terminal or file in JSON format."""
+"""Prints the Statick reports out to the terminal or file in Code Climate JSON."""
 import hashlib
 import json
 import logging
@@ -12,7 +12,7 @@ from statick_tool.reporting_plugin import ReportingPlugin
 
 
 class CodeClimateReportingPlugin(ReportingPlugin):
-    """Prints the Statick reports out to the terminal or file in JSON format."""
+    """Prints the Statick reports out to the terminal or file in Code Climate JSON."""
 
     def get_name(self) -> str:
         """Return the plugin name."""
