@@ -21,18 +21,20 @@ If a user does not want to fix the additional warnings yet they can pin the vers
 
 ### Added
 
-- Code Climate reporting plugin (#416)
-- List of existing reporting plugins to README (#417).
-- Add survey of metrics for software quality assurance to docs. (#413)
+- [Code Climate](https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types) reporting plugin.
+  This plugin can be used to provide output in GitLab merge requests via the
+  [Code Quality](https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#implementing-a-custom-tool) feature. (#416)
+- List of existing reporting plugins to README. (#417)
+- Survey of metrics for software quality assurance to docs. (#413)
 
 ### Changed
 
-- Updated docker image tag to remove the `v` prefix (#409).
+- Update Docker image tag to remove the `v` prefix. (#409)
 
 ### Fixed
 
 - Support for user flags passed to the isort tool (#414).
-- Collecting output of cccc tool for each file individually instead of using the output from the last file it ran on (#412).
+- Collect output of CCCC tool for each file individually instead of using the output from the last file it ran on. (#412)
   NOTE: This change will likely result in more issues being found by this tool.
 
 ## v0.7.2 - 2022-03-09
