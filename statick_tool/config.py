@@ -96,7 +96,7 @@ class Config:
         return self.get_enabled_plugins(level, "reporting")
 
     @classmethod
-    def str_to_bool(cls, val: Optional[Union[str, Any]]) -> bool:
+    def str_to_bool(cls, val: Optional[str]) -> bool:
         """Convert a string to a bool."""
         if val is None:
             return False
