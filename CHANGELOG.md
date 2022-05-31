@@ -12,6 +12,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.8.0 - 2022-05-31
+
+### Added
+
+- Code Climate reporting plugin (#416)
+- List of existing reporting plugins to README (#417).
+- Add survey of metrics for software quality assurance to docs. (#413)
+
+### Changed
+
+- Updated docker image tag to remove the `v` prefix (#409).
+
+### Fixed
+
+- Support for user flags passed to the isort tool (#414).
+- Collecting output of cccc tool for each file individually instead of using the output from the last file it ran on (#412).
+  NOTE: This change will likely result in more issues being found by this tool.
+
 ## v0.7.2 - 2022-03-09
 
 ### Fixed
