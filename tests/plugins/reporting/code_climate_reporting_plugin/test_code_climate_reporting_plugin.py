@@ -81,6 +81,7 @@ def test_code_climate_reporting_plugin_report_cc_output():
             ]
         }
         _, success = plugin.report(package, issues, "level")
+        assert success
         with open(
             os.path.join(
                 tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
@@ -94,7 +95,6 @@ def test_code_climate_reporting_plugin_report_cc_output():
             assert "description" in cc_json
             assert "location" in cc_json
             assert "fingerprint" in cc_json
-        assert success
 
 
 def test_code_climate_reporting_plugin_report_gitlab_output():
@@ -112,6 +112,7 @@ def test_code_climate_reporting_plugin_report_gitlab_output():
             ]
         }
         _, success = plugin.report(package, issues, "level")
+        assert success
         with open(
             os.path.join(
                 tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
@@ -125,7 +126,6 @@ def test_code_climate_reporting_plugin_report_gitlab_output():
             assert "description" in cc_json
             assert "location" in cc_json
             assert "fingerprint" in cc_json
-        assert success
 
 
 def test_code_climate_reporting_plugin_report_cert_reference():
