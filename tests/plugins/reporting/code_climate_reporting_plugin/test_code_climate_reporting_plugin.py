@@ -84,7 +84,7 @@ def test_code_climate_reporting_plugin_report_cc_output():
         assert success
         with open(
             os.path.join(
-                tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
+                tmp_dir, "valid_package-level/valid_package-level.code-climate.json"
             )
         ) as cc_file:
             cc_json = json.load(cc_file)[0]
@@ -115,7 +115,7 @@ def test_code_climate_reporting_plugin_report_gitlab_output():
         assert success
         with open(
             os.path.join(
-                tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
+                tmp_dir, "valid_package-level/valid_package-level.code-climate.json"
             )
         ) as cc_file:
             cc_json = json.load(cc_file)[0]
@@ -159,7 +159,7 @@ def test_code_climate_reporting_plugin_invalid_severity():
         _, success = plugin.report(package, issues, "level")
         with open(
             os.path.join(
-                tmp_dir, "valid_package-level/valid_package-level-code-climate.json"
+                tmp_dir, "valid_package-level/valid_package-level.code-climate.json"
             )
         ) as cc_file:
             cc_json = json.load(cc_file)[0]

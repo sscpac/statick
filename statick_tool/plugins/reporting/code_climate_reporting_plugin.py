@@ -134,7 +134,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
             logging.error("Unable to create output directory at %s!", output_dir)
             return False
         output_file = os.path.join(
-            output_dir, package.name + "-" + level + "-code-climate.json"
+            output_dir, package.name + "-" + level + ".code-climate.json"
         )
         logging.info("Writing output to %s", output_file)
         with open(output_file, "w", encoding="utf8") as out:

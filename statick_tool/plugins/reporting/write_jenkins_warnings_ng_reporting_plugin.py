@@ -49,6 +49,14 @@ class WriteJenkinsWarningsNGReportingPlugin(ReportingPlugin):
         output_file = os.path.join(
             output_dir, package.name + "-" + level + ".json.statick"
         )
+        next_output_file = os.path.join(
+            output_dir, package.name + "-" + level + ".jenkins-ng.json"
+        )
+        logging.warning(
+            "Output filename will change in statick v0.9.0 from %s to %s",
+            output_file,
+            next_output_file,
+        )
         logging.info("Writing output to %s", output_file)
         with open(output_file, "w", encoding="utf8") as out:
             for _, value in issues.items():
