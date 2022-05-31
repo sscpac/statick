@@ -1,0 +1,107 @@
+diff --git a/README.md b/README.md
+index 12ada4a..81b8b8f 100644
+--- a/README.md
++++ b/README.md
+@@ -146,6 +146,17 @@ For example, `cppcheck` depends on the output of the `make` tool.
+ The _tool_ plugin then scans each package by invoking the binary associated with the tool.
+ The output of the scan is parsed to generate the list of issues discovered by Statick.
+ 
++#### Severity
++
++Statick uses an integer to represent issue severity.
++This is a common way to convert common severity strings to the integers that Statick uses:
++
++Integer | Severity String
++:------ | :--------------
++1       | info
++3       | warning
++5       | error
++
+ ### Reporting
+ 
+ _Reporting_ plugins output the issues found by the _tool_ plugins.
+diff --git a/statick_tool/issue.py b/statick_tool/issue.py
+index dd95fd1..5c9e64e 100644
+--- a/statick_tool/issue.py
++++ b/statick_tool/issue.py
+@@ -9,10 +9,10 @@ Issue = NamedTuple(
+     "Issue",
+     [
+         ("filename", str),
+-        ("line_number", str),
++        ("line_number", int),
+         ("tool", str),
+         ("issue_type", str),
+-        ("severity", str),
++        ("severity", int),
+         ("message", str),
+         ("cert_reference", Optional[str]),
+     ],
+diff --git a/statick_tool/plugins/tool/bandit_tool_plugin.py b/statick_tool/plugins/tool/bandit_tool_plugin.py
+index 34f8ce5..1744192 100644
+--- a/statick_tool/plugins/tool/bandit_tool_plugin.py
++++ b/statick_tool/plugins/tool/bandit_tool_plugin.py
+@@ -85,11 +85,11 @@ class BanditToolPlugin(ToolPlugin):
+ 
+         csvreader = csv.DictReader(output_minus_log)
+         for csv_line in csvreader:
+-            severity = "1"
++            severity = 1
+             if csv_line["issue_confidence"] == "MEDIUM":
+-                severity = "3"
++                severity = 3
+             elif csv_line["issue_confidence"] == "HIGH":
+-                severity = "5"
++                severity = 5
+             issues.append(
+                 Issue(
+                     csv_line["filename"],
+diff --git a/statick_tool/plugins/tool/cccc_tool_plugin.py b/statick_tool/plugins/tool/cccc_tool_plugin.py
+index 7322bbb..1b1a11a 100644
+--- a/statick_tool/plugins/tool/cccc_tool_plugin.py
++++ b/statick_tool/plugins/tool/cccc_tool_plugin.py
+@@ -183,10 +183,10 @@ class CCCCToolPlugin(ToolPlugin):
+                         issues.append(
+                             Issue(
+                                 package["c_src"][0],
+-                                "0",
++                                0,
+                                 self.get_name(),
+                                 "error",
+-                                "5",
++                                5,
+                                 msg,
+                                 None,
+                             )
+@@ -196,10 +196,10 @@ class CCCCToolPlugin(ToolPlugin):
+                         issues.append(
+                             Issue(
+                                 package["c_src"][0],
+-                                "0",
++                                0,
+                                 self.get_name(),
+                                 "warn",
+-                                "3",
++                                3,
+                                 msg,
+                                 None,
+                             )
+diff --git a/statick_tool/plugins/tool/spotbugs_tool_plugin.py b/statick_tool/plugins/tool/spotbugs_tool_plugin.py
+index d4b97a1..b1ee5bd 100644
+--- a/statick_tool/plugins/tool/spotbugs_tool_plugin.py
++++ b/statick_tool/plugins/tool/spotbugs_tool_plugin.py
+@@ -135,11 +135,11 @@ class SpotbugsToolPlugin(ToolPlugin):
+                 )
+                 file_path = java_path_string
+             for issue in file_entry.findall("BugInstance"):
+-                severity = "1"
++                severity = 1
+                 if issue.attrib["priority"] == "Normal":
+-                    severity = "3"
++                    severity = 3
+                 elif issue.attrib["priority"] == "High":
+-                    severity = "5"
++                    severity = 5
+ 
+                 cert_reference = None
+                 if issue.attrib["type"] in warnings_mapping:

@@ -1,0 +1,77 @@
+diff --git a/statick_tool/plugins/tool/clang_format_tool_plugin.py b/statick_tool/plugins/tool/clang_format_tool_plugin.py
+index 4233ca9..17cc412 100644
+--- a/statick_tool/plugins/tool/clang_format_tool_plugin.py
++++ b/statick_tool/plugins/tool/clang_format_tool_plugin.py
+@@ -3,6 +3,7 @@
+ from __future__ import print_function
+ 
+ import difflib
++import os
+ import re
+ import subprocess
+ 
+@@ -60,18 +61,16 @@ class ClangFormatToolPlugin(ToolPlugin):
+         total_output = []
+ 
+         try:
+-            output = subprocess.check_output([clang_format_bin,
+-                                              "--dump-config"],
+-                                             stderr=subprocess.STDOUT,
+-                                             universal_newlines=True)
+             format_file_name = self.plugin_context.resources.get_file("_clang-format")
+-            with open(format_file_name, "r") as format_file:
++            with open(os.path.expanduser("~/_clang-format"), "r") as home_format_file, \
++                    open(format_file_name, "r") as format_file:
++                actual_format = home_format_file.read()
+                 target_format = format_file.read()
+-            diff = difflib.context_diff(output.splitlines(),
++            diff = difflib.context_diff(actual_format.splitlines(),
+                                         target_format.splitlines())
+             for line in diff:
+-                if line.startswith("+ ") or line.startswith("- ") or \
+-                   line.startswith("! "):
++                if (line.startswith("+ ") or line.startswith("- ") or
++                   line.startswith("! ")) and len(line) > 2:
+                     if line[2:].strip() and line[2:].strip()[0] != "#":
+                         # pylint: disable=line-too-long
+                         exc = subprocess.CalledProcessError(-1,
+@@ -91,6 +90,11 @@ class ClangFormatToolPlugin(ToolPlugin):
+                 if self.plugin_context.args.clang_format_raise_exception:
+                     total_output.append(output)
+ 
++        except IOError as ex:
++            print("clang-format failed! Error = {}".format(str(ex.strerror)))
++            if self.plugin_context.args.clang_format_raise_exception:
++                return None
++            return []
+         except subprocess.CalledProcessError as ex:
+             output = ex.output
+             print("clang-format failed! Returncode = {}".format(str(ex.returncode)))
+diff --git a/tests/plugins/tool/clang-format_tool_plugin/test_clang-format_tool_plugin.py b/tests/plugins/tool/clang-format_tool_plugin/test_clang-format_tool_plugin.py
+index 3c1d5d8..65d451a 100644
+--- a/tests/plugins/tool/clang-format_tool_plugin/test_clang-format_tool_plugin.py
++++ b/tests/plugins/tool/clang-format_tool_plugin/test_clang-format_tool_plugin.py
+@@ -165,6 +165,23 @@ def test_clang_format_tool_plugin_parse_invalid():
+ 
+ 
+ @mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
++def test_clang_format_tool_plugin_scan_ioerror(mock_subprocess_check_output):
++    """
++    Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
++
++    Expected result: issues is empty
++    """
++    mock_subprocess_check_output.side_effect = IOError("~/_clang-format")
++    cftp = setup_clang_format_tool_plugin()
++    package = Package('valid_package', os.path.join(os.path.dirname(__file__),
++                                                    'valid_package'))
++    package['make_targets'] = []
++    package['headers'] = []
++    issues = cftp.scan(package, 'level')
++    assert not issues
++
++
++@mock.patch('statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output')
+ def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
+     """
+     Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).

@@ -1,0 +1,81 @@
+cmake_minimum_required(VERSION 2.8)
+cmake_policy(SET CMP0048 NEW)
+project(statick)
+
+set(IGNORE_PROJECTS gtest)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STATICK_EXTRA_GCC_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${STATICK_EXTRA_GCC_FLAGS}")
+
+message(STATUS "STATICK FLAGS: ${STATICK_EXTRA_GCC_FLAGS}")
+
+add_custom_target(statick_cmake_target)
+
+macro(list_contains var value)
+  set(${var})
+  foreach (value2 ${ARGN})
+    if(${value} STREQUAL ${value2})
+      set(${var} TRUE)
+    endif()
+  endforeach()
+endmacro()
+
+macro(project)
+  _project(${ARGV})
+
+  list_contains(contains ${ARGV0} ${IGNORE_PROJECTS})
+  if(NOT contains)
+    message(STATUS "PROJECT: [NAME:${ARGV0}][SRC_DIR:${CMAKE_CURRENT_SOURCE_DIR}][BIN_DIR:${CMAKE_BINARY_DIR}]")
+
+    file(GLOB_RECURSE HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.[h|hpp|hxx]")
+    message(STATUS "HEADERS: ${HEADERS}")
+  endif()
+endmacro()
+
+function(add_statick_target)
+  foreach(ARG ${ARGV})
+    if(${ARG} MATCHES "IMPORTED")
+      return()
+    endif()
+  endforeach()
+
+  list_contains(contains ${PROJECT_NAME} ${IGNORE_PROJECTS})
+  if(contains)
+    return()
+  endif()
+
+  get_directory_property(TARGET_INCLUDE_DIRS INCLUDE_DIRECTORIES)
+  if(TARGET_INCLUDE_DIRS)
+    list(APPEND INCLUDE_DIRS ${TARGET_INCLUDE_DIRS})
+    list(REMOVE_DUPLICATES INCLUDE_DIRS)
+    set_property(GLOBAL PROPERTY _COMPLIANCE_PROJECT_${PROJECT_NAME}_INCLUDE_DIRS ${INCLUDE_DIRS})
+  endif()
+
+  get_directory_property(TARGET_INCLUDE_DIRS INCLUDE_DIRECTORIES)
+
+  get_target_property(TARGET_TYPE ${ARGV0} TYPE)
+  if (NOT ${TARGET_TYPE} MATCHES ".*INTERFACE.*")
+    get_target_property(TARGET_SOURCES ${ARGV0} SOURCES)
+  endif()
+
+  message(STATUS "TARGET: [NAME:${ARGV0}][SRC_DIR:${CMAKE_CURRENT_SOURCE_DIR}][INCLUDE_DIRS:${TARGET_INCLUDE_DIRS}][SRC:${TARGET_SOURCES}]")
+
+  add_dependencies(statick_cmake_target ${ARGV0})
+endfunction()
+
+macro(add_library)
+  _add_library(${ARGV})
+  add_statick_target(${ARGV})
+endmacro()
+
+macro(add_executable)
+  _add_executable(${ARGV})
+  add_statick_target(${ARGV})
+endmacro()
+
+add_subdirectory(${INPUT_DIR} ./build)
+
+find_package(roslint)
+if(roslint_FOUND)
+  message(STATUS "ROSLINT: ${ROSLINT_SCRIPTS_DIR}")
+endif()
