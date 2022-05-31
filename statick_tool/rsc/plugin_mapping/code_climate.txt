@@ -1,0 +1,44 @@
+format:Style
+syntax:Bug Risk
+bandit:Security
+black:Style
+catkin_lint:Bug Risk
+cccc:Complexity
+clang-format:Style
+clang-tidy:Bug Risk
+cmakelint:Bug Risk
+cppcheck:Bug Risk
+cpplint:Bug Risk
+docformatter:Style
+flawfinder:Bug Risk
+npm-groovy-lint:Bug Risk
+lizard:Complexity
+make:Bug Risk
+mypy:Clarity
+perlcritic:Bug Risk
+pycodestyle:Style
+pydocstyle:Style
+pyflakes:Bug Risk
+pylint:Bug Risk
+shellcheck:Bug Risk
+spotbugs:Bug Risk
+uncrustify:Style
+xmllint:Bug Risk
+yamllint:Bug Risk
+fortify:Security
+markdownlint:Style
+proselint:Style
+rstcheck:Bug Fix
+rst-lint:Bug Fix
+write-good:Style
+val_parser:Bug Fix
+val_validate:Bug Fix
+chktex:Bug Fix
+lacheck:Bug Fix
+dockerfilelint:Bug Fix
+dockerfile-lint:Bug Fix
+hadolint:Bug Fix
+eslint:Bug Fix
+htmllint:Bug Fix
+jshint:Bug Fix
+stylelint:Bug Fix
