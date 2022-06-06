@@ -30,7 +30,7 @@ levels:
       write_jenkins_warnings_ng:
     tool:
       pylint:
-        flags: "--disable=R,I,C0200,C0302,C0330,C0411,C0412,W0141,W0142,W0511,W0703,W1202
+        flags: "--disable=R,I,C0200,C0302,C0411,C0412,W0141,W0142,W0511,W0703,W1202
                 --max-line-length=100
                 --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
                 --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
@@ -75,8 +75,7 @@ levels:
         # Flags to maybe remove at a future date
         #  R0101 too-many-nested-blocks
         #  C0200 consider-using-enumerate
-        #  C0330 bad-continuation
-        flags: "--disable=R0101,C0200,C0330,I0011,I0012,W0141,W0142,W0511
+        flags: "--disable=R0101,C0200,I0011,I0012,W0141,W0142,W0511
                 --max-line-length=100
                 --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
                 --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
@@ -131,16 +130,12 @@ levels:
         flags: ""
       pyflakes:
         flags: ""
-      # Disabling bad-continuation so black formatting will work.
-      # https://github.com/psf/black/blob/master/README.md#how-black-wraps-lines
-      # https://github.com/psf/black/issues/48
-      # https://github.com/PyCQA/pylint/issues/289
       # Disabling unsubscriptable-object as it has issues in Python 3.9 with type hints, among other false positives.
       # https://github.com/PyCQA/pylint/issues/3139
       # https://github.com/PyCQA/pylint/issues/3882
       pylint:
         flags: "--good-names=f,i,j,k,ex,_
-                --disable=bad-continuation,unsubscriptable-object
+                --disable=unsubscriptable-object
                "
       shellcheck:
         flags: ""
