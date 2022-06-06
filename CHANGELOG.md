@@ -12,6 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.8.1 - 2022-06-06
+
+### Fixed
+
+- Update pylint configurations to not disable bad-continuation.
+  Pylint is warning that that option is no longer available.
+
 ## v0.8.0 - 2022-05-31
 
 Bugs were fixed in the `cccc` and `isort` tool plugins.
