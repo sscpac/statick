@@ -37,7 +37,7 @@ class ToolPlugin(IPlugin):  # type: ignore
         """Run tool and gather output."""
         files: List[str] = []
         for file_type in self.get_file_types():
-            if file_type in package:
+            if file_type in package and package[file_type]:
                 files += package[file_type]
 
         if files:
