@@ -160,7 +160,7 @@ def test_cccc_tool_plugin_parse_valid():
     )
     package["c_src"] = ["tmp/not_a_file.c"]
 
-    issues = ctp.parse_output(output, "tmp/not_a_file.c", config_file)
+    issues = ctp.parse_tool_output(output, "tmp/not_a_file.c", config_file)
     assert len(issues) == 2
     assert issues[0].filename == "tmp/not_a_file.c"
     assert issues[0].line_number == "0"
@@ -218,7 +218,7 @@ def test_cccc_tool_plugin_parse_missing_names():
     )
     package["c_src"] = ["tmp/not_a_file.c"]
 
-    issues = ctp.parse_output(output, package, config_file)
+    issues = ctp.parse_tool_output(output, package, config_file)
     print(f"issues: {issues}")
     assert not issues
 
@@ -234,7 +234,7 @@ def test_cccc_tool_plugin_parse_invalid():
 
     output = "invalid text"
     package = {"c_src": "/tmp/not_a_file.c"}
-    issues = ctp.parse_output(output, package, config_file)
+    issues = ctp.parse_tool_output(output, package, config_file)
     assert not issues
 
 

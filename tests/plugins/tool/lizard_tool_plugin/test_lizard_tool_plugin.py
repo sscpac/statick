@@ -90,7 +90,7 @@ def test_lizard_tool_plugin_parse_valid():
             os.path.join("valid_package", "test.c")
         )
     )
-    issues = ltp.parse_output(output)
+    issues = ltp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
     assert issues[0].line_number == "1"
@@ -106,7 +106,7 @@ def test_lizard_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of lizard."""
     ltp = setup_lizard_tool_plugin()
     output = "invalid text"
-    issues = ltp.parse_output(output)
+    issues = ltp.parse_tool_output(output)
     assert not issues
 
 

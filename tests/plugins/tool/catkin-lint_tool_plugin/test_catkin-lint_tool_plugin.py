@@ -156,12 +156,12 @@ def test_catkin_lint_tool_plugin_parse_output():
 def test_catkin_lint_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of catkin_lint."""
     cltp = setup_catkin_lint_tool_plugin()
-    output = "custom_pkg: notice: use ${PROJECT_NAME} instead of 'custom_pkg'"
+    output = ["custom_pkg: notice: use ${PROJECT_NAME} instead of 'custom_pkg'"]
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["catkin"] = "catkin"
-    issues = cltp.parse_output(package, output)
+    issues = cltp.parse_output(output, package)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join(package.path, "package.xml")
     assert issues[0].line_number == "1"
@@ -175,16 +175,16 @@ def test_catkin_lint_tool_plugin_parse_valid():
         "check both for this issue)"
     )
 
-    output = "custom_pkg: warning: target 'custom_target' is not installed"
-    issues = cltp.parse_output(package, output)
+    output = ["custom_pkg: warning: target 'custom_target' is not installed"]
+    issues = cltp.parse_output(output, package)
     assert issues[0].severity == "3"
 
-    output = "custom_pkg: error: missing build_depend on 'catkin'"
-    issues = cltp.parse_output(package, output)
+    output = ["custom_pkg: error: missing build_depend on 'catkin'"]
+    issues = cltp.parse_output(output, package)
     assert issues[0].severity == "5"
 
-    output = "custom_pkg: notice: missing build_depend on 'rostest'"
-    issues = cltp.parse_output(package, output)
+    output = ["custom_pkg: notice: missing build_depend on 'rostest'"]
+    issues = cltp.parse_output(output, package)
     assert (
         issues[0].message == "missing test_depend on 'rostest' "
         "(I can't really tell if this applies for "
@@ -192,8 +192,8 @@ def test_catkin_lint_tool_plugin_parse_valid():
         "check both for this issue)"
     )
 
-    output = "custom_pkg: notice: unconfigured build_depend on"
-    issues = cltp.parse_output(package, output)
+    output = ["custom_pkg: notice: unconfigured build_depend on"]
+    issues = cltp.parse_output(output, package)
     assert (
         issues[0].message == "unconfigured build_depend on "
         "(Make sure you aren't missing "
@@ -204,8 +204,8 @@ def test_catkin_lint_tool_plugin_parse_valid():
         "check both for this issue)"
     )
 
-    output = "custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"
-    issues = cltp.parse_output(package, output)
+    output = ["custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"]
+    issues = cltp.parse_output(output, package)
     assert (
         issues[0].message == "include_directories() needs missing directory '/include'"
     )
@@ -219,7 +219,7 @@ def test_catkin_lint_tool_plugin_parse_invalid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["catkin"] = "catkin"
-    issues = cltp.parse_output(package, output)
+    issues = cltp.parse_output(output, package)
     assert not issues
 
 

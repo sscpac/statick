@@ -148,7 +148,7 @@ def test_shellcheck_tool_plugin_parse_valid():
             },
         }
     ]
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.sh"
     assert issues[0].line_number == "3"
@@ -173,7 +173,7 @@ def test_shellcheck_tool_plugin_parse_valid():
             "fix": None,
         }
     ]
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.bash"
     assert issues[0].line_number == "4"
@@ -198,7 +198,7 @@ def test_shellcheck_tool_plugin_parse_valid():
             "fix": None,
         }
     ]
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert issues[0].severity == "1"
 
     output = [
@@ -214,7 +214,7 @@ def test_shellcheck_tool_plugin_parse_valid():
             "fix": None,
         }
     ]
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert issues[0].severity == "5"
 
     output = [
@@ -230,7 +230,7 @@ def test_shellcheck_tool_plugin_parse_valid():
             "fix": None,
         }
     ]
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert issues[0].severity == "3"
 
     output = [
@@ -238,7 +238,7 @@ def test_shellcheck_tool_plugin_parse_valid():
             "field": "not a real field",
         }
     ]
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert not issues
 
 
@@ -246,7 +246,7 @@ def test_shellcheck_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of shellcheck."""
     sctp = setup_shellcheck_tool_plugin()
     output = "invalid text"
-    issues = sctp.parse_output(output)
+    issues = sctp.parse_json_output(output)
     assert not issues
 
 

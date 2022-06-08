@@ -70,10 +70,10 @@ class ShellcheckToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_output(json.loads(output))
+        issues: List[Issue] = self.parse_json_output(json.loads(output))
         return issues
 
-    def parse_output(self, output: Any) -> List[Issue]:
+    def parse_json_output(self, output: Any) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
         for item in output:

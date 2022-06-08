@@ -101,10 +101,10 @@ class CCCCToolPlugin(ToolPlugin):
             except FileNotFoundError:
                 continue
 
-            issues.extend(self.parse_output(tool_output, src, config_file))
+            issues.extend(self.parse_tool_output(tool_output, src, config_file))
         return issues
 
-    def parse_output(  # pylint: disable=too-many-branches
+    def parse_tool_output(  # pylint: disable=too-many-branches
         self, output: Dict[Any, Any], src: str, config_file: str
     ) -> List[Issue]:
         """Parse tool output and report issues."""

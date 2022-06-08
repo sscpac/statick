@@ -136,7 +136,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues: List[Issue] = self.parse_output(total_output, files)
+        issues: List[Issue] = self.parse_tool_output(total_output, files)
         return issues
 
     def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
@@ -193,7 +193,7 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         return True
 
-    def parse_output(  # pylint: disable=too-many-locals
+    def parse_tool_output(  # pylint: disable=too-many-locals
         self, total_output: List[str], files: List[str]
     ) -> List[Issue]:
         """Parse tool output and report issues."""

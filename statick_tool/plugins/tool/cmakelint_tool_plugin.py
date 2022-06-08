@@ -17,14 +17,14 @@ class CMakelintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cmakelint"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
-        """Run tool and gather output."""
-        if "cmake" not in package or not package["cmake"]:
-            # Package is not cmake!
-            return []
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["cmake"]
 
+    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+        """Run tool and gather output."""
         flags: List[str] = []
-        flags += self.get_user_flags(level)
+        flags += user_flags
 
         output = ""
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
@@ -47,21 +47,15 @@ class CMakelintToolPlugin(ToolPlugin):
             return None
 
         logging.debug("%s", output)
+        return output.splitlines()
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(output)
-        return issues
-
-    def parse_output(self, output: str) -> List[Issue]:
+    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
         """Parse tool output and report issues."""
         cmakelint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]"
         parse: Pattern[str] = re.compile(cmakelint_re)
         issues: List[Issue] = []
 
-        for line in output.splitlines():
+        for line in total_output:
             match: Optional[Match[str]] = parse.match(line)
             if match:
                 issue_type = match.group(4)

@@ -2,7 +2,7 @@
 import argparse
 import logging
 import subprocess
-from typing import List
+from typing import List, Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -25,23 +25,18 @@ class PerlCriticToolPlugin(ToolPlugin):
             help="perlcritic binary path",
         )
 
-    def scan(self, package: Package, level: str) -> List[Issue]:
-        """Run tool and gather output."""
-        if "perl_src" not in package:
-            return []
-        if not package["perl_src"]:
-            return []
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["perl_src"]
 
+    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+        """Run tool and gather output."""
         perlcritic_bin = "perlcritic"
         if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:
             perlcritic_bin = self.plugin_context.args.perlcritic_bin
 
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
         flags += self.get_user_flags(level)
-
-        files: List[str] = []
-        if "perl_src" in package:
-            files += package["perl_src"]
 
         try:
             output = subprocess.check_output(
@@ -62,21 +57,14 @@ class PerlCriticToolPlugin(ToolPlugin):
             return []
 
         logging.debug("%s", output)
+        return output.splitlines()
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "wt", encoding="utf8") as fid:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(output.splitlines())
-
-        return issues
-
-    def parse_output(self, output: List[str]) -> List[Issue]:
+    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
-        for line in output:
+        for line in total_output:
             split_line = line.strip().split(":::")
             # Should split into five segments, anything less is invalid.
             if len(split_line) < 5:

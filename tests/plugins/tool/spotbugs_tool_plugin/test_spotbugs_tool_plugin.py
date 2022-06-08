@@ -172,7 +172,7 @@ def test_spotbugs_tool_plugin_parse_valid():
     output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='Low' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
         os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
     )
-    issues = sbtp.parse_output(output)
+    issues = sbtp.parse_file_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "src", "main", "java", "Test.java"
@@ -190,13 +190,13 @@ def test_spotbugs_tool_plugin_parse_valid():
         os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
     )
     assert len(issues) == 1
-    issues = sbtp.parse_output(output)
+    issues = sbtp.parse_file_output(output)
     assert issues[0].severity == "3"
 
     output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='High' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
         os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
     )
-    issues = sbtp.parse_output(output)
+    issues = sbtp.parse_file_output(output)
     assert len(issues) == 1
     assert issues[0].severity == "5"
 
@@ -207,7 +207,7 @@ def test_make_tool_plugin_parse_warnings_mapping():
     output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_ARRAY' priority='Low' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
         os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
     )
-    issues = sbtp.parse_output(output)
+    issues = sbtp.parse_file_output(output)
     assert len(issues) == 1
     assert issues[0].cert_reference == "OBJ10-J"
 
@@ -216,7 +216,7 @@ def test_spotbugs_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of spotbugs."""
     sbtp = setup_spotbugs_tool_plugin()
     output = "invalid text"
-    issues = sbtp.parse_output(output)
+    issues = sbtp.parse_file_output(output)
     assert not issues
 
 
@@ -224,7 +224,7 @@ def test_spotbugs_tool_plugin_parse_wrong_file_path():
     """Verify that the wrong file path results in no issues found."""
     sbtp = setup_spotbugs_tool_plugin()
     output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='Low' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project></Project></BugCollection>"
-    issues = sbtp.parse_output(output)
+    issues = sbtp.parse_file_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "Test.java"
 

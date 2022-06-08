@@ -17,13 +17,14 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "catkin_lint"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
-        """Run tool and gather output."""
-        if "catkin" not in package or not package["catkin"]:
-            return []
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["catkin"]
 
+    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+        """Run tool and gather output."""
         flags: List[str] = []
-        flags += self.get_user_flags(level)
+        flags += user_flags
 
         try:
             subproc_args = ["catkin_lint", package.path] + flags
@@ -42,13 +43,7 @@ class CatkinLintToolPlugin(ToolPlugin):
             return None
 
         logging.debug("%s", output)
-
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(package, output)
-        return issues
+        return output.splitlines()
 
     @classmethod
     def check_for_exceptions_has_file(cls, match: Match[str], package: Package) -> bool:
@@ -79,7 +74,7 @@ class CatkinLintToolPlugin(ToolPlugin):
             return "3"
         return "1"
 
-    def parse_output(self, package: Package, output: str) -> List[Issue]:
+    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):\s(.+)\((\d+)\):\s(.+):\s(.+)"
         lint2_re = r"(.+):\s(.+):\s(.+)"
@@ -87,13 +82,16 @@ class CatkinLintToolPlugin(ToolPlugin):
         parse2: Pattern[str] = re.compile(lint2_re)
 
         issues: List[Issue] = []
-        for line in output.splitlines():
+        for line in total_output:
             match: Optional[Match[str]] = parse.match(line)
             if match:
-                if self.check_for_exceptions_has_file(match, package):
+                if package is not None and self.check_for_exceptions_has_file(match, package):
                     continue
 
-                norm_path = os.path.normpath(package.path + "/" + match.group(2))
+                if package is not None:
+                    norm_path = os.path.normpath(package.path + "/" + match.group(2))
+                else:
+                    norm_path = os.path.normpath(match.group(2))
 
                 issues.append(
                     Issue(
@@ -110,7 +108,10 @@ class CatkinLintToolPlugin(ToolPlugin):
                 match2: Optional[Match[str]] = parse2.match(line)
 
                 if match2:
-                    norm_path = os.path.normpath(package.path + "/package.xml")
+                    if package is not None:
+                        norm_path = os.path.normpath(package.path + "/package.xml")
+                    else:
+                        norm_path = os.path.normpath("package.xml")
 
                     message = match2.group(3)
                     if message == "missing build_depend on 'rostest'":
