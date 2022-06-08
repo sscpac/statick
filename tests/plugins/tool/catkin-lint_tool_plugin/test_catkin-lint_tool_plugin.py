@@ -211,6 +211,36 @@ def test_catkin_lint_tool_plugin_parse_valid():
     )
 
 
+def test_catkin_lint_tool_plugin_parse_valid_no_package():
+    """Verify that we can parse the normal output of catkin_lint."""
+    cltp = setup_catkin_lint_tool_plugin()
+    output = ["custom_pkg: notice: use ${PROJECT_NAME} instead of 'custom_pkg'"]
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["catkin"] = "catkin"
+    issues = cltp.parse_output(output)
+    assert len(issues) == 1
+    assert issues[0].filename == "package.xml"
+    assert issues[0].line_number == "1"
+    assert issues[0].tool == "catkin_lint"
+    assert issues[0].issue_type == "notice"
+    assert issues[0].severity == "1"
+    assert (
+        issues[0].message == "use ${PROJECT_NAME} instead of 'custom_pkg' "
+        "(I can't really tell if this applies for "
+        "package.xml or CMakeLists.txt. Make sure to "
+        "check both for this issue)"
+    )
+
+    output = ["custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"]
+    issues = cltp.parse_output(output)
+    assert issues[0].filename == "CMakeLists.txt"
+    assert (
+        issues[0].message == "include_directories() needs missing directory '/include'"
+    )
+
+
 def test_catkin_lint_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of catkin_lint."""
     cltp = setup_catkin_lint_tool_plugin()
