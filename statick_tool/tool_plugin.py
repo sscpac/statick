@@ -41,7 +41,7 @@ class ToolPlugin(IPlugin):  # type: ignore
                 files += package[file_type]
 
         if files:
-            total_output = self.process_files(package, level, files, self.get_user_flags(level))
+            total_output = self.process_files(package, level, files, self.get_user_flags(level))  # pylint: disable=assignment-from-no-return
             if total_output is not None:
                 if self.plugin_context and self.plugin_context.args.output_directory:
                     with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
