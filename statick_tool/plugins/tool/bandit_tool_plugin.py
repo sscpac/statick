@@ -27,7 +27,9 @@ class BanditToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         bandit_bin: str = "bandit"
         if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
@@ -57,7 +59,9 @@ class BanditToolPlugin(ToolPlugin):
         logging.debug("%s", output)
         return output.splitlines()
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 

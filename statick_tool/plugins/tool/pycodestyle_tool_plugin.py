@@ -20,7 +20,9 @@ class PycodestyleToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         flags = ["--format=pylint"]
         flags += user_flags
@@ -53,7 +55,9 @@ class PycodestyleToolPlugin(ToolPlugin):
             total_output.append(output)
         return total_output
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)

@@ -29,7 +29,9 @@ class PerlCriticToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["perl_src"]
 
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         perlcritic_bin = "perlcritic"
         if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:
@@ -59,7 +61,9 @@ class PerlCriticToolPlugin(ToolPlugin):
         logging.debug("%s", output)
         return output.splitlines()
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
         # Load the plugin mapping if possible

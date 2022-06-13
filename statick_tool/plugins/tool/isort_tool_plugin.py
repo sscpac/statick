@@ -23,7 +23,9 @@ class IsortToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "isort"
         flags: List[str] = ["--check-only"]
@@ -55,7 +57,9 @@ class IsortToolPlugin(ToolPlugin):
 
         return total_output
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 

@@ -108,7 +108,9 @@ class UncrustifyToolPlugin(ToolPlugin):
         issues: List[Issue] = self.parse_output(total_output, package)
         return issues
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
         for output in total_output:

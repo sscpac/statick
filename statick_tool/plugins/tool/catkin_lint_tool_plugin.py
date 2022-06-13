@@ -21,7 +21,9 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["catkin"]
 
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         flags: List[str] = []
         flags += user_flags
@@ -74,7 +76,9 @@ class CatkinLintToolPlugin(ToolPlugin):
             return "3"
         return "1"
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):\s(.+)\((\d+)\):\s(.+):\s(.+)"
         lint2_re = r"(.+):\s(.+):\s(.+)"
@@ -85,7 +89,9 @@ class CatkinLintToolPlugin(ToolPlugin):
         for line in total_output:
             match: Optional[Match[str]] = parse.match(line)
             if match:
-                if package is not None and self.check_for_exceptions_has_file(match, package):
+                if package is not None and self.check_for_exceptions_has_file(
+                    match, package
+                ):
                     continue
 
                 if package is not None:

@@ -22,7 +22,9 @@ class DocformatterToolPlugin(ToolPlugin):
         return ["python_src"]
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         flags: List[str] = ["-c"]
         flags += user_flags
@@ -57,7 +59,9 @@ class DocformatterToolPlugin(ToolPlugin):
 
     # pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         # Gives relative path to file.
         tool_re = r"(.+)[\\/](.+)"

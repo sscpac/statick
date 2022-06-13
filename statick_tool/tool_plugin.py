@@ -41,7 +41,9 @@ class ToolPlugin(IPlugin):  # type: ignore
                 files += package[file_type]
 
         if files:
-            total_output = self.process_files(package, level, files, self.get_user_flags(level))  # pylint: disable=assignment-from-no-return
+            total_output = self.process_files(  # pylint: disable=assignment-from-no-return
+                package, level, files, self.get_user_flags(level)
+            )
             if total_output is not None:
                 if self.plugin_context and self.plugin_context.args.output_directory:
                     with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
@@ -54,10 +56,14 @@ class ToolPlugin(IPlugin):  # type: ignore
 
         return []
 
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:

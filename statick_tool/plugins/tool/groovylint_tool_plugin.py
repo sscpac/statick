@@ -22,7 +22,9 @@ class GroovyLintToolPlugin(ToolPlugin):
         return ["groovy_src"]
 
     # pylint: disable=too-many-locals
-    def process_files(self, package: Package, level: str, files: List[str], user_flags: List[str]) -> Optional[List[str]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "npm-groovy-lint"
 
@@ -77,7 +79,9 @@ class GroovyLintToolPlugin(ToolPlugin):
 
     # pylint: enable=too-many-locals
 
-    def parse_output(self, total_output: List[str], package: Optional[Package] = None) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 
