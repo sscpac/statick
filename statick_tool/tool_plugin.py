@@ -41,8 +41,10 @@ class ToolPlugin(IPlugin):  # type: ignore
                 files += package[file_type]
 
         if files:
-            total_output = self.process_files(  # pylint: disable=assignment-from-no-return
-                package, level, files, self.get_user_flags(level)
+            total_output = (
+                self.process_files(  # pylint: disable=assignment-from-no-return
+                    package, level, files, self.get_user_flags(level)
+                )
             )
             if total_output is not None:
                 if self.plugin_context and self.plugin_context.args.output_directory:
