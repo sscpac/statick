@@ -136,20 +136,20 @@ def test_catkin_lint_tool_plugin_parse_output():
     )
     package["catkin"] = "catkin"
 
-    output = (
+    output = [
         "empty_pkg: CMakeLists.txt(4): warning: variable CMAKE_CXX_FLAGS is modified"
-    )
-    issues = cltp.parse_output(package, output)
+    ]
+    issues = cltp.parse_output(output, package)
     assert not issues
 
-    output = (
+    output = [
         "empty_pkg: CMakeLists.txt(5): warning: variable CMAKE_CXX_FLAGS is modified"
-    )
-    issues = cltp.parse_output(package, output)
+    ]
+    issues = cltp.parse_output(output, package)
     assert not issues
 
-    output = "empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"
-    issues = cltp.parse_output(package, output)
+    output = ["empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"]
+    issues = cltp.parse_output(output, package)
     assert not issues
 
 
