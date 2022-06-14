@@ -17,23 +17,25 @@ class MypyToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "mypy"
 
-    # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
-        """Run tool and gather output."""
-        if "python_src" not in package:
-            return []
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["python_src"]
 
+    # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
+        """Run tool and gather output."""
         flags: List[str] = [
             "--show-absolute-path",
             "--show-error-codes",
             "--no-error-summary",
         ]
-        user_flags = self.get_user_flags(level)
         flags += user_flags
         tool_bin = "mypy"
         total_output: List[str] = []
 
-        for src in package["python_src"]:
+        for src in files:
             try:
                 subproc_args = [tool_bin, src] + flags
                 output = subprocess.check_output(
@@ -55,17 +57,13 @@ class MypyToolPlugin(ToolPlugin):
         for output in total_output:
             logging.debug("%s", output)
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-                for output in total_output:
-                    fid.write(output)
-
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
+        return total_output
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         # file:line: severity: msg type
         tool_re = r"(.+):(\d+):\s(.+):\s(.+)\s(.+)"

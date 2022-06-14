@@ -96,7 +96,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_output(output)
+        issues: List[Issue] = self.parse_tool_output(output)
         return issues
 
     @classmethod
@@ -109,7 +109,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             return True
         return False
 
-    def parse_output(self, output: str) -> List[Issue]:
+    def parse_tool_output(self, output: str) -> List[Issue]:
         """Parse tool output and report issues."""
         clang_tidy_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)\]"
         parse: Pattern[str] = re.compile(clang_tidy_re)

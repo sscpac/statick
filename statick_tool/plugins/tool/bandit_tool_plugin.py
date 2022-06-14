@@ -23,23 +23,20 @@ class BanditToolPlugin(ToolPlugin):
             "--bandit-bin", dest="bandit_bin", type=str, help="bandit binary path"
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
-        """Run tool and gather output."""
-        if "python_src" not in package:
-            return []
-        if not package["python_src"]:
-            return []
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["python_src"]
 
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
+        """Run tool and gather output."""
         bandit_bin: str = "bandit"
         if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
             bandit_bin = self.plugin_context.args.bandit_bin
 
         flags: List[str] = ["--format=csv"]
-        flags += self.get_user_flags(level)
-
-        files: List[str] = []
-        if "python_src" in package:
-            files += package["python_src"]
+        flags += user_flags
 
         try:
             output = subprocess.check_output(
@@ -60,24 +57,20 @@ class BanditToolPlugin(ToolPlugin):
             return None
 
         logging.debug("%s", output)
+        return output.splitlines()
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(output.splitlines())
-        return issues
-
-    def parse_output(self, output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 
         # Copy output for modification
-        output_minus_log = list(output)
+        output_minus_log = list(total_output)
 
         # Bandit prints a bunch of log messages out and you can't suppress
         # them, so iterate over the list until we find the CSV header
-        for line in output:  # Intentionally output, not output_minus_log
+        for line in total_output:  # Intentionally total_output, not output_minus_log
             if line.startswith("filename"):
                 # Found the CSV header, stop removing things
                 break

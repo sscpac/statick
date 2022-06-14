@@ -205,7 +205,7 @@ def test_clang_tidy_tool_plugin_parse_valid():
     output = "{}:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]".format(
         os.path.join("valid_package", "test.c")
     )
-    issues = cttp.parse_output(output)
+    issues = cttp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
     assert issues[0].line_number == "6"
@@ -221,7 +221,7 @@ def test_clang_tidy_tool_plugin_parse_warnings_mappings():
     output = "{}:6:5: warning: message [cert-dcl50-cpp]".format(
         os.path.join("valid_package", "test.c")
     )
-    issues = cttp.parse_output(output)
+    issues = cttp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
     assert issues[0].line_number == "6"
@@ -242,7 +242,7 @@ def test_clang_tidy_tool_plugin_parse_note():
     output = "{}:6:5: note: Value stored to 'si' is never read".format(
         os.path.join("valid_package", "test.c")
     )
-    issues = cttp.parse_output(output)
+    issues = cttp.parse_tool_output(output)
     assert not issues
 
 
@@ -256,7 +256,7 @@ def test_clang_tidy_tool_plugin_parse_star():
     output = " * {}:6:5: warning: Value stored to 'si' is never read [clang-analyzer-deadcode.DeadStores]".format(
         os.path.join("valid_package", "test.c")
     )
-    issues = cttp.parse_output(output)
+    issues = cttp.parse_tool_output(output)
     assert not issues
 
 
@@ -264,7 +264,7 @@ def test_clang_tidy_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of clang_tidy."""
     cttp = setup_clang_tidy_tool_plugin()
     output = "invalid text"
-    issues = cttp.parse_output(output)
+    issues = cttp.parse_tool_output(output)
     assert not issues
 
 

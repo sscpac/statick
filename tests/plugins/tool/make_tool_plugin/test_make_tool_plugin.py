@@ -92,7 +92,7 @@ def test_make_tool_plugin_parse_valid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     output = "valid_package/hello.c:7:3: error: expected ; before return"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/hello.c"
     assert issues[0].line_number == "7"
@@ -107,7 +107,7 @@ def test_make_tool_plugin_parse_invalid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     output = "invalid text"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert not issues
 
 
@@ -119,7 +119,7 @@ def test_make_tool_plugin_parse_overloaded_virtual():
         "/home/user/valid_package/hello.c:7:3: error: overloaded-virtual: \n"
         "/home/user/valid_package/hello.c:7:3: error: second line"
     )
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
     assert issues[0].line_number == "7"
@@ -132,7 +132,7 @@ def test_make_tool_plugin_parse_warning_levels():
     mtp = setup_make_tool_plugin()
     package = Package("valid_package", "/home/user/valid_package")
     output = "/home/user/valid_package/hello.c:7:3: fatal error: This is a fatal error"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
     assert issues[0].line_number == "7"
@@ -141,7 +141,7 @@ def test_make_tool_plugin_parse_warning_levels():
     assert issues[0].issue_type == "fatal-error"
 
     output = "/home/user/valid_package/hello.c:8:3: warning: This is a warning"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
     assert issues[0].line_number == "8"
@@ -150,7 +150,7 @@ def test_make_tool_plugin_parse_warning_levels():
     assert issues[0].issue_type == "unknown-error"
 
     output = "/home/user/valid_package/hello.c:8:3: notype: This is not a type"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
     assert issues[0].line_number == "8"
@@ -161,7 +161,7 @@ def test_make_tool_plugin_parse_warning_levels():
     # Any note type output is filtered from results. I'm not sure that's what we
     # really want, but changing it would break expected results.
     output = "/home/user/valid_package/hello.c:9:3: note: This is a note"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 0
 
 
@@ -170,7 +170,7 @@ def test_make_tool_plugin_parse_linker_error():
     mtp = setup_make_tool_plugin()
     package = Package("valid_package", "/home/user/valid_package")
     output = "collect2: ld returned 1 exit status"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "Linker"
     assert issues[0].line_number == "0"
@@ -184,7 +184,7 @@ def test_make_tool_plugin_parse_warnings_mapping():
     mtp = setup_make_tool_plugin()
     package = Package("valid_package", "/home/user/valid_package")
     output = "/home/user/valid_package/hello.cpp:8:3: warning: 'Class::i_' will be initialized after [-Wreorder]"
-    issues = mtp.parse_output(package, output)
+    issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.cpp"
     assert issues[0].line_number == "8"

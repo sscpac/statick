@@ -273,7 +273,7 @@ def test_clang_format_tool_plugin_parse_valid():
 <replacements xml:space='preserve' incomplete_format='false'>\n\
 <replacement offset='12' length='1'>&#10;  </replacement>\n\
 </replacements>"
-    issues = cftp.parse_output([output], [])
+    issues = cftp.parse_tool_output([output], [])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/indents.c"
     assert issues[0].line_number == "0"
@@ -294,7 +294,7 @@ def test_clang_format_tool_plugin_parse_valid_issue_per_line():
     files = []
     files.append(os.path.join(os.path.dirname(__file__), "valid_package", "indents.c"))
     files.append(os.path.join(os.path.dirname(__file__), "valid_package", "indents.h"))
-    issues = cftp.parse_output([output], files)
+    issues = cftp.parse_tool_output([output], files)
     msg = """Replace
 - #include "indents.h"
 with
@@ -315,7 +315,7 @@ def test_clang_format_tool_plugin_parse_valid_issue_per_line_no_replacements():
     cftp = setup_clang_format_tool_plugin(issue_per_line=True)
     output = ""
     files = []
-    issues = cftp.parse_output([output], files)
+    issues = cftp.parse_tool_output([output], files)
 
     assert not issues
 
@@ -324,7 +324,7 @@ def test_clang_format_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of clang_format."""
     cftp = setup_clang_format_tool_plugin()
     output = "invalid text"
-    issues = cftp.parse_output(output, [])
+    issues = cftp.parse_tool_output(output, [])
     assert not issues
 
 

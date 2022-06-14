@@ -167,7 +167,7 @@ def test_cppcheck_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of cppcheck."""
     cctp = setup_cppcheck_tool_plugin()
     output = "[test.c:4]: (error uninitvar) Uninitialized variable: si"
-    issues = cctp.parse_output(output)
+    issues = cctp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "test.c"
     assert issues[0].line_number == "4"
@@ -181,7 +181,7 @@ def test_cppcheck_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of cppcheck."""
     cctp = setup_cppcheck_tool_plugin()
     output = "invalid text"
-    issues = cctp.parse_output(output)
+    issues = cctp.parse_tool_output(output)
     assert not issues
 
 

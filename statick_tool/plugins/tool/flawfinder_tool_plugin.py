@@ -16,16 +16,19 @@ class FlawfinderToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "flawfinder"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
-        """Run tool and gather output."""
-        if "c_src" not in package:
-            return []
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["c_src"]
 
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
+        """Run tool and gather output."""
         flags: List[str] = ["--quiet", "-D", "--singleline"]
-        flags += self.get_user_flags(level)
+        flags += user_flags
         total_output: List[str] = []
 
-        for src in package["c_src"]:
+        for src in files:
             try:
                 subproc_args = ["flawfinder"] + flags + [src]
                 output = subprocess.check_output(
@@ -44,15 +47,11 @@ class FlawfinderToolPlugin(ToolPlugin):
 
             total_output.append(output)
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-                for output in total_output:
-                    fid.write(output)
+        return total_output
 
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
-
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         flawfinder_re = r"(.+):(\d+):\s+\[(\d+)\]\s+(.+):\s*(.+)"
         parse: Pattern[str] = re.compile(flawfinder_re)

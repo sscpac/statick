@@ -47,7 +47,7 @@ class MakeToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_output(package, output)
+        issues: List[Issue] = self.parse_package_output(package, output)
         return issues
 
     @classmethod
@@ -80,7 +80,7 @@ class MakeToolPlugin(ToolPlugin):
             i += 1
         return result
 
-    def parse_output(  # pylint: disable=too-many-locals, too-many-branches
+    def parse_package_output(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, output: str
     ) -> List[Issue]:
         """Parse tool output and report issues."""

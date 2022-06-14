@@ -16,14 +16,16 @@ class YamllintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "yamllint"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["yaml"]
+
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         flags: List[str] = ["-f", "parsable"]
-        flags += self.get_user_flags(level)
-
-        files: List[str] = []
-        if "yaml" in package:
-            files += package["yaml"]
+        flags += user_flags
 
         total_output: List[str] = []
 
@@ -50,15 +52,11 @@ class YamllintToolPlugin(ToolPlugin):
 
             total_output.append(output)
 
-        if self.plugin_context and self.plugin_context.args.output_directory:
-            with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-                for output in total_output:
-                    fid.write(output)
+        return total_output
 
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
-
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         yamllint_re = r"(.+):(\d+):(\d+):\s\[(.+)\]\s(.+)\s\((.+)\)"
         parse: Pattern[str] = re.compile(yamllint_re)

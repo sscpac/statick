@@ -124,7 +124,7 @@ def test_cpplint_tool_plugin_parse_valid():
         "{}:14: Redundant blank line at the end of a code block should be deleted. "
         "[whitespace/blank_line] [3]".format(os.path.join("valid_package", "test.c"))
     )
-    issues = ctp.parse_output(output)
+    issues = ctp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
     assert issues[0].line_number == "14"
@@ -141,7 +141,7 @@ def test_cpplint_tool_plugin_parse_invalid():
     """Verify that we can parse the normal output of cpplint."""
     ctp = setup_cpplint_tool_plugin()
     output = "invalid text"
-    issues = ctp.parse_output(output)
+    issues = ctp.parse_tool_output(output)
     assert not issues
 
 
