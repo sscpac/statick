@@ -1,6 +1,7 @@
 levels:
   sei_cert:
-    inherits_from: "threshold"
+    inherits_from:
+      - "threshold"
     discovery:
       - python
     reporting:

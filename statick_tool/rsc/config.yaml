@@ -46,11 +46,13 @@ levels:
         flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
 
   third_party_modified:
-    inherits_from: "threshold"
+    inherits_from:
+      - "threshold"
     tool: {}
 
   objective_minus_pylint:
-    inherits_from: "threshold"
+    inherits_from:
+      - "threshold"
     tool:
       clang-tidy:
         # These flags must remain on one line to not break the flag parsing
@@ -69,7 +71,8 @@ levels:
         flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
 
   objective:
-    inherits_from: "objective_minus_pylint"
+    inherits_from: 
+      - "objective_minus_pylint"
     tool:
       pylint:
         # Flags to maybe remove at a future date
@@ -81,13 +84,15 @@ levels:
                 --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
 
   objective_with_format:
-    inherits_from: "objective"
+    inherits_from: 
+      - "objective"
     tool:
       clang-format:
         flags: ""
 
   objective_with_format_minus_pylint:
-    inherits_from: "objective_minus_pylint"
+    inherits_from:
+      - "objective_minus_pylint"
     tool:
       clang-format:
         flags: ""
@@ -105,7 +110,8 @@ levels:
         flags: "-Wcast-align -Wstrict-prototypes -Wchar-subscripts -Wformat-security -Wformat"
 
   rosm_objective:
-    inherits_from: "objective"
+    inherits_from:
+      - "objective"
     tool:
       make:
         flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter -Wcast-align -Wstrict-prototypes -Wchar-subscripts -Wcast-align -Wstrict-prototypes -Wchar-subscripts -Wformat-security -Wformat"
@@ -220,7 +226,8 @@ levels:
         flags: ""
 
   tex_with_pylint:
-    inherits_from: "tex"
+    inherits_from:
+      - "tex"
     tool:
       pylint:
         flags: "--good-names=f,i,j,k,x,y,z,ex,_"
