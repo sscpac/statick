@@ -37,21 +37,19 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         if self.plugin_context is None:
             return
 
-        cmake_file = os.path.join(package.path, "CMakeLists.txt")
-        cmake_files: List[str] = []
+        package["cmake_src"] = []
 
         self.find_files(package)
 
         for file_dict in package.files.values():
             if file_dict["name"].endswith(".cmake"):
-                cmake_files.append(file_dict["path"])
+                package["cmake_src"].append(file_dict["path"])
 
-        package["cmake_src"] = cmake_files
         package["cmake"] = True
         package["make_targets"] = []
         package["headers"] = []
 
-        if not os.path.isfile(cmake_file):
+        if not os.path.isfile(os.path.join(package.path, "CMakeLists.txt")):
             logging.info("  Package is not cmake.")
             package["cmake"] = False
             return
