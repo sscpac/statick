@@ -38,7 +38,15 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             return
 
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
+        cmake_files: List[str] = []
 
+        self.find_files(package)
+
+        for file_dict in package.files.values():
+            if file_dict["name"].endswith(".cmake"):
+                cmake_files.append(file_dict["path"])
+
+        package["cmake_src"] = cmake_files
         package["cmake"] = True
         package["make_targets"] = []
         package["headers"] = []

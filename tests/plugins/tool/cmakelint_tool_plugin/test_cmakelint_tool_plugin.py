@@ -70,6 +70,28 @@ def test_cmakelint_tool_plugin_scan_valid():
     assert len(issues) == 1
 
 
+def test_cmakelint_tool_plugin_scan_cmake_extension():
+    """Make sure cmakelint can handle files with extension cmake."""
+    cmltp = setup_cmakelint_tool_plugin()
+    package = Package(
+        "cmake_ext_package", os.path.join(os.path.dirname(__file__), "cmake_ext_package")
+    )
+    issues = cmltp.scan(package, "level")
+    assert not issues
+
+    package["cmake"] = "CMakeLists.txt"
+    package["cmake_src"] = [
+        os.path.join(
+            os.path.dirname(__file__),
+            "cmake_ext_package",
+            "CMakeModules",
+            "FindCython.cmake",
+        )
+    ]
+    issues = cmltp.scan(package, "level")
+    assert len(issues) == 6
+
+
 def test_cmakelint_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of cmakelint."""
     cmltp = setup_cmakelint_tool_plugin()

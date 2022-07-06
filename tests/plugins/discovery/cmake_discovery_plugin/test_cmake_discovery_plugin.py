@@ -99,6 +99,24 @@ def test_cmake_discovery_plugin_empty_cmake_flags():
     assert "cmake" in package
 
 
+def test_cmake_discovery_plugin_cmake_file_extension():
+    """Test the CMake discovery plugin finds files with extension cmake."""
+    cmdp = setup_cmake_discovery_plugin()
+    package = Package(
+        "cmake_ext_package",
+        os.path.join(os.path.dirname(__file__), "cmake_ext_package"),
+    )
+    cmdp.scan(package, "level")
+    assert package["cmake_src"] == [
+        os.path.join(
+            os.path.dirname(__file__),
+            "cmake_ext_package",
+            "CMakeModules",
+            "FindCython.cmake",
+        )
+    ]
+
+
 def test_cmake_discovery_plugin_check_output_headers():
     """Test the CMake discovery plugin finds header files."""
     cmdp = setup_cmake_discovery_plugin()
@@ -201,9 +219,9 @@ def test_cmake_discovery_plugin_check_output_cpplint_with_roslint_installed(
 )
 def test_cmake_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
-    Test what happens when a CalledProcessError is raised (usually means yamllint hit an error).
+    Test what happens when a CalledProcessError is raised (usually means CMake hit an error).
 
-    Expected result: issues is None
+    Expected result: no make targets exist
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
         1, "", output="mocked error"
@@ -221,9 +239,9 @@ def test_cmake_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_ou
 )
 def test_cmake_discovery_plugin_scan_oserror(mock_subprocess_check_output):
     """
-    Test what happens when an OSError is raised (usually means yamllint doesn't exist).
+    Test what happens when an OSError is raised (usually means CMake is not available).
 
-    Expected result: issues is None
+    Expected result: no make targets exist
     """
     mock_subprocess_check_output.side_effect = OSError("mocked error")
     package = Package(

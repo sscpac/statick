@@ -29,10 +29,15 @@ class CMakelintToolPlugin(ToolPlugin):
         flags += user_flags
 
         output = ""
-        cmake_file = os.path.join(package.path, "CMakeLists.txt")
+        cmake_files = []
+        if "cmake" in package and package["cmake"]:
+            cmake_files.append(os.path.join(package.path, "CMakeLists.txt"))
+        if "cmake_src" in package:
+            for cmake_file in package["cmake_src"]:
+                cmake_files.append(cmake_file)
 
         try:
-            subproc_args = ["cmakelint"] + flags + [cmake_file]
+            subproc_args = ["cmakelint"] + flags + cmake_files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
