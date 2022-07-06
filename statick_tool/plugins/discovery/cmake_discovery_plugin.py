@@ -1,4 +1,11 @@
-"""Discovery plugin to find CMake-based projects."""
+"""Discovery plugin to find CMake-based projects.
+
+From the CMake manual, valid CMake files are named `CMakeLists.txt` and `*.cmake`.
+This module will find those files and make them available as part of the package data.
+
+The contents of `CMakeLists.txt` is used to discover make targets and header files
+for the current package. That information is made available as part of the package data.
+"""
 import argparse
 import logging
 import os
