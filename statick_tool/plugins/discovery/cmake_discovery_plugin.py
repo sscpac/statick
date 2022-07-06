@@ -45,14 +45,16 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
             if file_dict["name"].endswith(".cmake"):
                 package["cmake_src"].append(file_dict["path"])
 
-        package["cmake"] = True
+        package["is_cmake"] = True
         package["make_targets"] = []
         package["headers"] = []
 
         if not os.path.isfile(os.path.join(package.path, "CMakeLists.txt")):
             logging.info("  Package is not cmake.")
-            package["cmake"] = False
+            package["is_cmake"] = False
             return
+
+        package["cmake"] = [os.path.join(package.path, "CMakeLists.txt")]
 
         cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
@@ -125,6 +127,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         self.process_output(output, package)
 
         logging.info("  %d make targets found.", len(package["make_targets"]))
+        logging.info("  %d CMake files found.", len(package["cmake_src"]))
 
     @classmethod
     def process_output(  # pylint: disable=too-many-locals

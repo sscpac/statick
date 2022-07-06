@@ -30,7 +30,7 @@ class CMakelintToolPlugin(ToolPlugin):
 
         output = ""
         cmake_files = []
-        if "cmake" in package and package["cmake"]:
+        if "is_cmake" in package and package["is_cmake"]:
             cmake_files.append(os.path.join(package.path, "CMakeLists.txt"))
         if "cmake_src" in package:
             for cmake_file in package["cmake_src"]:

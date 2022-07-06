@@ -65,7 +65,8 @@ def test_cmakelint_tool_plugin_scan_valid():
     issues = cmltp.scan(package, "level")
     assert not issues
 
-    package["cmake"] = "CMakeLists.txt"
+    package["is_cmake"] = True
+    package["cmake"] = ["CMakeLists.txt"]
     issues = cmltp.scan(package, "level")
     assert len(issues) == 1
 
@@ -79,7 +80,8 @@ def test_cmakelint_tool_plugin_scan_cmake_extension():
     issues = cmltp.scan(package, "level")
     assert not issues
 
-    package["cmake"] = "CMakeLists.txt"
+    package["is_cmake"] = True
+    package["cmake"] = ["CMakeLists.txt"]
     package["cmake_src"] = [
         os.path.join(
             os.path.dirname(__file__),
@@ -124,7 +126,7 @@ def test_cmakelint_tool_plugin_nonexistent_file():
     package = Package(
         "invalid_package", os.path.join(os.path.dirname(__file__), "invalid_package")
     )
-    package["cmake"] = "invalid.txt"
+    package["cmake_src"] = ["invalid.txt"]
     issues = cmltp.scan(package, "level")
     assert not issues
 
