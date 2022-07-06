@@ -49,7 +49,11 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         self.find_files(package)
 
         for file_dict in package.files.values():
-            if file_dict["name"].endswith(".cmake"):
+            # Check for all lower-case file name since that is how they are stored.
+            if (
+                file_dict["name"].endswith(".cmake")
+                or file_dict["name"] == "cmakelists.txt"
+            ):
                 package["cmake_src"].append(file_dict["path"])
 
         package["is_cmake"] = True
