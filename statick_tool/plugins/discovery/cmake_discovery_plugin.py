@@ -3,6 +3,8 @@
 From the CMake manual, valid CMake files are named `CMakeLists.txt` and `*.cmake`.
 This module will find those files and make them available as part of the package data.
 
+https://cmake.org/cmake/help/latest/manual/cmake-language.7.html
+
 The contents of `CMakeLists.txt` is used to discover make targets and header files
 for the current package. That information is made available as part of the package data.
 """
