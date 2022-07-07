@@ -65,8 +65,10 @@ def test_cmakelint_tool_plugin_scan_valid():
     issues = cmltp.scan(package, "level")
     assert not issues
 
-    package["is_cmake"] = True
-    package["cmake"] = ["CMakeLists.txt"]
+    cmake_file = os.path.join(
+        os.path.dirname(__file__), "valid_package", "CMakeLists.txt"
+    )
+    package["cmake_src"] = [cmake_file]
     issues = cmltp.scan(package, "level")
     assert len(issues) == 1
 
@@ -75,21 +77,24 @@ def test_cmakelint_tool_plugin_scan_cmake_extension():
     """Make sure cmakelint can handle files with extension cmake."""
     cmltp = setup_cmakelint_tool_plugin()
     package = Package(
-        "cmake_ext_package", os.path.join(os.path.dirname(__file__), "cmake_ext_package")
+        "cmake_ext_package",
+        os.path.join(os.path.dirname(__file__), "cmake_ext_package"),
     )
     issues = cmltp.scan(package, "level")
     assert not issues
 
-    package["is_cmake"] = True
-    package["cmake"] = ["CMakeLists.txt"]
-    package["cmake_src"] = [
+    cmake_file = os.path.join(
+        os.path.dirname(__file__), "valid_package", "CMakeLists.txt"
+    )
+    package["cmake_src"] = [cmake_file]
+    package["cmake_src"].append(
         os.path.join(
             os.path.dirname(__file__),
             "cmake_ext_package",
             "CMakeModules",
             "FindCython.cmake",
         )
-    ]
+    )
     issues = cmltp.scan(package, "level")
     assert len(issues) == 6
 
@@ -97,7 +102,9 @@ def test_cmakelint_tool_plugin_scan_cmake_extension():
 def test_cmakelint_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of cmakelint."""
     cmltp = setup_cmakelint_tool_plugin()
-    output = ["valid_package/CMakeLists.txt:1: Extra spaces between 'INVALID_FUNCTION' and its () [whitespace/extra]"]
+    output = [
+        "valid_package/CMakeLists.txt:1: Extra spaces between 'INVALID_FUNCTION' and its () [whitespace/extra]"
+    ]
     issues = cmltp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/CMakeLists.txt"
@@ -145,7 +152,7 @@ def test_cmakelint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_out
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
-    package["cmake"] = [
+    package["cmake_src"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "CMakeLists.txt")
     ]
     issues = cmltp.scan(package, "level")
@@ -170,7 +177,7 @@ def test_cmakelint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
-    package["cmake"] = [
+    package["cmake_src"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "CMakeLists.txt")
     ]
     issues = cmltp.scan(package, "level")

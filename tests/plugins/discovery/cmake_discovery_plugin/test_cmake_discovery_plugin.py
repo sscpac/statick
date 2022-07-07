@@ -66,7 +66,7 @@ def test_cmake_discovery_plugin_scan_valid():
     )
     package["cmake_flags"] = "-DCMAKE_PREFIX_PATH=/opt/ros/foxy"
     cmdp.scan(package, "level")
-    assert package["is_cmake"]
+    assert package["cmake_src"]
 
 
 def test_cmake_discovery_plugin_scan_invalid():
@@ -76,7 +76,7 @@ def test_cmake_discovery_plugin_scan_invalid():
         "invalid_package", os.path.join(os.path.dirname(__file__), "invalid_package")
     )
     cmdp.scan(package, "level")
-    assert not package["is_cmake"]
+    assert not package["cmake_src"]
 
 
 def test_cmake_discovery_plugin_scan_no_plugin_context():
@@ -86,7 +86,7 @@ def test_cmake_discovery_plugin_scan_no_plugin_context():
         "invalid_package", os.path.join(os.path.dirname(__file__), "invalid_package")
     )
     cmdp.scan(package, "level")
-    assert "is_cmake" not in package
+    assert "cmake_src" not in package
 
 
 def test_cmake_discovery_plugin_empty_cmake_flags():
@@ -96,7 +96,7 @@ def test_cmake_discovery_plugin_empty_cmake_flags():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     cmdp.scan(package, "level")
-    assert "is_cmake" in package
+    assert "cmake_src" in package
 
 
 def test_cmake_discovery_plugin_cmake_file_extension():

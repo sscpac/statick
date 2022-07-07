@@ -1,6 +1,5 @@
 """Apply cmakelint tool and gather results."""
 import logging
-import os
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -19,7 +18,7 @@ class CMakelintToolPlugin(ToolPlugin):
 
     def get_file_types(self) -> List[str]:
         """Return a list of file types the plugin can scan."""
-        return ["cmake"]
+        return ["cmake_src"]
 
     def process_files(
         self, package: Package, level: str, files: List[str], user_flags: List[str]
@@ -30,8 +29,6 @@ class CMakelintToolPlugin(ToolPlugin):
 
         output = ""
         cmake_files = []
-        if "is_cmake" in package and package["is_cmake"]:
-            cmake_files.append(os.path.join(package.path, "CMakeLists.txt"))
         if "cmake_src" in package:
             for cmake_file in package["cmake_src"]:
                 cmake_files.append(cmake_file)
