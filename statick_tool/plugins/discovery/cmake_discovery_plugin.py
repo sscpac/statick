@@ -1,4 +1,13 @@
-"""Discovery plugin to find CMake-based projects."""
+"""Discovery plugin to find CMake-based projects.
+
+From the CMake manual, valid CMake files are named `CMakeLists.txt` and `*.cmake`.
+This module will find those files and make them available as part of the package data.
+
+https://cmake.org/cmake/help/latest/manual/cmake-language.7.html
+
+The contents of `CMakeLists.txt` is used to discover make targets and header files
+for the current package. That information is made available as part of the package data.
+"""
 import argparse
 import logging
 import os
@@ -37,16 +46,26 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         if self.plugin_context is None:
             return
 
-        cmake_file = os.path.join(package.path, "CMakeLists.txt")
+        package["cmake_src"] = []
 
-        package["cmake"] = True
+        self.find_files(package)
+
+        for file_dict in package.files.values():
+            # Check for all lower-case file name since that is how they are stored.
+            if (
+                file_dict["name"].endswith(".cmake")
+                or file_dict["name"] == "cmakelists.txt"
+            ):
+                package["cmake_src"].append(file_dict["path"])
+
         package["make_targets"] = []
         package["headers"] = []
 
-        if not os.path.isfile(cmake_file):
+        if not os.path.isfile(os.path.join(package.path, "CMakeLists.txt")):
             logging.info("  Package is not cmake.")
-            package["cmake"] = False
             return
+
+        package["cmake"] = [os.path.join(package.path, "CMakeLists.txt")]
 
         cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
@@ -119,6 +138,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         self.process_output(output, package)
 
         logging.info("  %d make targets found.", len(package["make_targets"]))
+        logging.info("  %d CMake files found.", len(package["cmake_src"]))
 
     @classmethod
     def process_output(  # pylint: disable=too-many-locals
