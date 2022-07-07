@@ -29,6 +29,7 @@ class Statick:
 
     def __init__(self, user_paths: List[str]) -> None:
         """Initialize Statick."""
+        self.default_level = "default"
         self.resources = Resources(user_paths)
 
         self.manager = PluginManager()
@@ -89,6 +90,7 @@ class Statick:
             self.config = Config(
                 self.resources.get_file(base_config_filename),
                 self.resources.get_file(user_config_filename),
+                self.default_level,
             )
         except OSError as ex:
             logging.error(
@@ -262,7 +264,7 @@ class Statick:
             logging.error("Level is not valid.")
             return None, False
 
-        if not self.config or not self.config.has_level(level):
+        if level != self.default_level and (not self.config or not self.config.has_level(level)):
             logging.error("Can't find specified level %s in config!", level)
             return None, False
 
@@ -348,6 +350,8 @@ class Statick:
 
         logging.info("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
+        if not enabled_plugins:
+            enabled_plugins = list(self.tool_plugins.keys())
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
         plugin_dependencies: List[str] = []
@@ -411,7 +415,9 @@ class Statick:
 
         logging.info("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
-        if not reporting_plugins:
+        if not reporting_plugins and "print_to_console" in self.reporting_plugins.keys():
+            reporting_plugins = ["print_to_console"]  # type: ignore
+        else:
             reporting_plugins = self.reporting_plugins.keys()  # type: ignore
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins:
