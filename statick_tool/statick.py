@@ -567,7 +567,9 @@ class Statick:
                     level
                 )
 
-        if not enabled_reporting_plugins:
+        if not enabled_reporting_plugins and "print_to_console" in available_reporting_plugins.keys():
+            enabled_reporting_plugins = ["print_to_console"]  # type: ignore
+        else:
             enabled_reporting_plugins = list(available_reporting_plugins)
 
         plugin_context = PluginContext(parsed_args, self.resources, self.config)  # type: ignore
