@@ -559,7 +559,9 @@ class Statick:
         dummy_all_package = Package("all_packages", parsed_args.path)
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
-            if not self.config or not self.config.has_level(level):
+            if level == self.default_level:
+                enabled_reporting_plugins = ["print_to_console"]  # type: ignore
+            elif not self.config or not self.config.has_level(level):
                 logging.error("Can't find specified level %s in config!", level)
                 enabled_reporting_plugins = list(available_reporting_plugins)
             else:
