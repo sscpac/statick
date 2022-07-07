@@ -415,10 +415,11 @@ class Statick:
 
         logging.info("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
-        if not reporting_plugins and "print_to_console" in self.reporting_plugins.keys():
-            reporting_plugins = ["print_to_console"]  # type: ignore
-        else:
-            reporting_plugins = self.reporting_plugins.keys()  # type: ignore
+        if not reporting_plugins:
+            if "print_to_console" in self.reporting_plugins.keys():
+                reporting_plugins = ["print_to_console"]  # type: ignore
+            else:
+                reporting_plugins = self.reporting_plugins.keys()  # type: ignore
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
@@ -569,10 +570,11 @@ class Statick:
                     level
                 )
 
-        if not enabled_reporting_plugins and "print_to_console" in available_reporting_plugins.keys():
-            enabled_reporting_plugins = ["print_to_console"]  # type: ignore
-        else:
-            enabled_reporting_plugins = list(available_reporting_plugins)
+        if not enabled_reporting_plugins:
+            if "print_to_console" in available_reporting_plugins.keys():
+                enabled_reporting_plugins = ["print_to_console"]  # type: ignore
+            else:
+                enabled_reporting_plugins = list(available_reporting_plugins)
 
         plugin_context = PluginContext(parsed_args, self.resources, self.config)  # type: ignore
         plugin_context.args.output_directory = parsed_args.output_directory
