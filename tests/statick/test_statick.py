@@ -607,6 +607,43 @@ def test_run_no_reporting_plugins(init_statick):
         print(f"Error: {ex}")
 
 
+def test_run_no_console_reporting_plugins(init_statick):
+    """
+    Test that no reporting plugins and no print_to_console plugin available returns successful.
+
+    Expected results: no issues and success is True
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument("--path", help="Path of package to scan")
+
+    statick = Statick(args.get_user_paths())
+    statick.gather_args(args.parser)
+    sys.argv = [
+        "--path",
+        os.path.dirname(__file__),
+        "--profile",
+        os.path.join(os.path.dirname(__file__), "rsc", "profile-custom.yaml"),
+        "--config",
+        os.path.join(
+            os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
+        ),
+    ]
+    args.output_directory = os.path.dirname(__file__)
+    parsed_args = args.get_args(sys.argv)
+    path = parsed_args.path
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+    del statick.reporting_plugins["print_to_console"]
+    issues, success = statick.run(path, parsed_args)
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+    try:
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-custom"))
+    except OSError as ex:
+        print(f"Error: {ex}")
+
+
 def test_run_invalid_reporting_plugins(init_statick):
     """
     Test that invalid reporting plugins returns unsuccessful.
@@ -1032,6 +1069,38 @@ def test_run_workspace_no_reporting_plugins(init_statick_ws):
     parsed_args = args.get_args(sys.argv)
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
+
+    issues, success = statick.run_workspace(parsed_args)
+
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+
+
+def test_run_workspace_no_console_reporting_plugins(init_statick_ws):
+    """
+    Test that no reporting plugins and no available print_to_console reporting plugin
+    returns unsuccessful.
+
+    Expected results: issues is empty and success is True
+    """
+    statick = init_statick_ws[0]
+    args = init_statick_ws[1]
+    sys.argv = init_statick_ws[2]
+    sys.argv.extend(
+        [
+            "--config",
+            os.path.join(
+                os.path.dirname(__file__), "rsc", "config-no-reporting-plugins.yaml"
+            ),
+        ]
+    )
+
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+
+    del statick.reporting_plugins["print_to_console"]
 
     issues, success = statick.run_workspace(parsed_args)
 

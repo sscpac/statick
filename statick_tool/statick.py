@@ -550,37 +550,29 @@ class Statick:
                             success = False
 
         enabled_reporting_plugins: List[str] = []
-        available_reporting_plugins = {}
-        for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
-            available_reporting_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
 
         # Make a fake 'all' package for reporting
         dummy_all_package = Package("all_packages", parsed_args.path)
         level = self.get_level(dummy_all_package.path, parsed_args)
         if level is not None and self.config is not None:
-            if level == self.default_level:
-                enabled_reporting_plugins = ["print_to_console"]  # type: ignore
-            elif not self.config or not self.config.has_level(level):
+            if not self.config or not self.config.has_level(level):
                 logging.error("Can't find specified level %s in config!", level)
-                enabled_reporting_plugins = list(available_reporting_plugins)
             else:
                 enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
                     level
                 )
 
         if not enabled_reporting_plugins:
-            if "print_to_console" in available_reporting_plugins.keys():
+            if "print_to_console" in self.reporting_plugins.keys():
                 enabled_reporting_plugins = ["print_to_console"]  # type: ignore
             else:
-                enabled_reporting_plugins = list(available_reporting_plugins)
+                enabled_reporting_plugins = self.reporting_plugins.keys()
 
         plugin_context = PluginContext(parsed_args, self.resources, self.config)  # type: ignore
         plugin_context.args.output_directory = parsed_args.output_directory
 
         for plugin_name in enabled_reporting_plugins:
-            if plugin_name not in available_reporting_plugins:
+            if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 continue
             plugin = self.reporting_plugins[plugin_name]
