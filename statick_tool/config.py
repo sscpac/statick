@@ -15,7 +15,12 @@ class Config:
     Sets what flags are used for each plugin at those levels.
     """
 
-    def __init__(self, base_file: Optional[str], user_file: Optional[str] = "", default_level: Optional[str] = "default") -> None:
+    def __init__(
+        self,
+        base_file: Optional[str],
+        user_file: Optional[str] = "",
+        default_level: Optional[str] = "default",
+    ) -> None:
         """Initialize configuration."""
         self.default_level = default_level
         if base_file is None or not os.path.exists(base_file):

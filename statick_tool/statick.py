@@ -24,7 +24,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class Statick:
+class Statick:  # pylint: disable=too-many-instance-attributes
     """Code analysis front-end."""
 
     def __init__(self, user_paths: List[str]) -> None:
@@ -264,7 +264,9 @@ class Statick:
             logging.error("Level is not valid.")
             return None, False
 
-        if not self.config or (level != self.default_level and not self.config.has_level(level)):
+        if not self.config or (
+            level != self.default_level and not self.config.has_level(level)
+        ):
             logging.error("Can't find specified level %s in config!", level)
             return None, False
 

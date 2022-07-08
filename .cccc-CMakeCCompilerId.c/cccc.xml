@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Report on software metrics-->
+<CCCC_Project>
+<timestamp>Thu Jul  7 15:48:55 2022
+</timestamp>
+<project_summary>
+<number_of_modules value="0" level="0" />
+<lines_of_code value="1" level="0" />
+<lines_of_code_per_module value="******" level="2" />
+<McCabes_cyclomatic_complexity value="0" level="0" />
+<McCabes_cyclomatic_complexity_per_module value="******" level="0" />
+<lines_of_comment value="35" level="0" />
+<lines_of_comment_per_module value="******" level="2" />
+<lines_of_code_per_line_of_comment value="------" level="0" />
+<McCabes_cyclomatic_complexity_per_line_of_comment value="------" level="0" />
+<IF4 value="0" level="0" />
+<IF4_per_module value="********" level="0" />
+<IF4_visible value="0" level="0" />
+<IF4_visible_per_module value="********" level="0" />
+<IF4_concrete value="0" level="0" />
+<IF4_concrete value="********" level="0" />
+<rejected_lines_of_code value="1" level="0" />
+</project_summary>
+<procedural_summary>
+</procedural_summary>
+<oo_design>
+</oo_design>
+<structural_summary>
+</structural_summary>
+<other_extents>
+<rejected_extent>
+<name>" ; char </name>
+<source_reference file="/home/axydes/code/github/statick_ws/xydesa-statick/CMakeFiles/3.16.3/CompilerIdC/CMakeCCompilerId.c" line="321" />
+<lines_of_code value="1" level="0" />
+<lines_of_comment value="35" level="0" />
+<McCabes_cyclomatic_complexity value="0" level="0" />
+</rejected_extent>
+</other_extents>
+</CCCC_Project>
