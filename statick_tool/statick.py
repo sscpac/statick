@@ -27,7 +27,7 @@ from statick_tool.tool_plugin import ToolPlugin
 class Statick:
     """Code analysis front-end."""
 
-    def __init__(self, user_paths: List[str]) -> None:
+    def __init__(self, user_paths: List[str]) -> None:  # pylint: disable=too-many-instance-attributes
         """Initialize Statick."""
         self.default_level = "default"
         self.resources = Resources(user_paths)
@@ -319,7 +319,7 @@ class Statick:
 
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
-            discovery_plugins = list(self.discovery_plugins.keys())
+            discovery_plugins = list(self.discovery_plugins)
         plugins_ran: List[Any] = []
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
@@ -351,7 +351,7 @@ class Statick:
         logging.info("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
         if not enabled_plugins:
-            enabled_plugins = list(self.tool_plugins.keys())
+            enabled_plugins = list(self.tool_plugins)
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
         plugin_dependencies: List[str] = []
@@ -416,10 +416,10 @@ class Statick:
         logging.info("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
         if not reporting_plugins:
-            if "print_to_console" in self.reporting_plugins.keys():
+            if "print_to_console" in self.reporting_plugins:
                 reporting_plugins = ["print_to_console"]  # type: ignore
             else:
-                reporting_plugins = self.reporting_plugins.keys()  # type: ignore
+                reporting_plugins = list(self.reporting_plugins)  # type: ignore
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
@@ -563,10 +563,10 @@ class Statick:
                 )
 
         if not enabled_reporting_plugins:
-            if "print_to_console" in self.reporting_plugins.keys():
+            if "print_to_console" in self.reporting_plugins:
                 enabled_reporting_plugins = ["print_to_console"]  # type: ignore
             else:
-                enabled_reporting_plugins = self.reporting_plugins.keys()
+                enabled_reporting_plugins = list(self.reporting_plugins)
 
         plugin_context = PluginContext(parsed_args, self.resources, self.config)  # type: ignore
         plugin_context.args.output_directory = parsed_args.output_directory

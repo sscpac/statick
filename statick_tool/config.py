@@ -68,21 +68,24 @@ class Config:
     def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
         """Get what plugins are enabled for a certain level."""
         plugins: List[str] = []
-        if level != self.default_level:
-            for level_type in self.config["levels"][level]:
-                if (
-                    plugin_type in level_type
-                    and self.config["levels"][level][plugin_type] is not None
-                ):
-                    plugins += list(self.config["levels"][level][plugin_type])
-                if "inherits_from" in self.config["levels"][level]:
-                    for inherited_level in self.config["levels"][level]["inherits_from"]:
-                        enabled_plugins = self.get_enabled_plugins(
-                            inherited_level, plugin_type
-                        )
-                        for plugin in enabled_plugins:
-                            if plugin not in plugins:
-                                plugins.append(plugin)
+
+        if level == self.default_level:
+            return plugins
+
+        for level_type in self.config["levels"][level]:
+            if (
+                plugin_type in level_type
+                and self.config["levels"][level][plugin_type] is not None
+            ):
+                plugins += list(self.config["levels"][level][plugin_type])
+            if "inherits_from" in self.config["levels"][level]:
+                for inherited_level in self.config["levels"][level]["inherits_from"]:
+                    enabled_plugins = self.get_enabled_plugins(
+                        inherited_level, plugin_type
+                    )
+                    for plugin in enabled_plugins:
+                        if plugin not in plugins:
+                            plugins.append(plugin)
         return plugins
 
     def get_enabled_tool_plugins(self, level: str) -> List[str]:
