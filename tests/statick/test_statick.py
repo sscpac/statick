@@ -795,18 +795,24 @@ def init_statick_ws():
     yield (statick, args, argv)
 
     # cleanup
-    for level in ["default", "custom", "missing_reporting_plugin", "missing_tool", "default_value"]:
+    for level in ["default", "custom", "missing_reporting_plugin", "missing_tool", "default_value", "sei_cert"]:
         try:
             shutil.rmtree(
                 os.path.join(
                     os.path.dirname(__file__), "test_workspace", "all_packages-" + level
                 )
             )
+        except OSError as ex:
+            print(f"Error: {ex}")
+        try:
             shutil.rmtree(
                 os.path.join(
                     os.path.dirname(__file__), "test_workspace", "test_package-" + level
                 )
             )
+        except OSError as ex:
+            print(f"Error: {ex}")
+        try:
             shutil.rmtree(
                 os.path.join(
                     os.path.dirname(__file__), "test_workspace", "test_package2-" + level
