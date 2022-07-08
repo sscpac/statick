@@ -419,9 +419,9 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
         if not reporting_plugins:
             if "print_to_console" in self.reporting_plugins:
-                reporting_plugins = ["print_to_console"]  # type: ignore
+                reporting_plugins = ["print_to_console"]
             else:
-                reporting_plugins = list(self.reporting_plugins)  # type: ignore
+                reporting_plugins = list(self.reporting_plugins)
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
@@ -566,7 +566,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         if not enabled_reporting_plugins:
             if "print_to_console" in self.reporting_plugins:
-                enabled_reporting_plugins = ["print_to_console"]  # type: ignore
+                enabled_reporting_plugins = ["print_to_console"]
             else:
                 enabled_reporting_plugins = list(self.reporting_plugins)
 
