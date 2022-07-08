@@ -1,0 +1,3 @@
+[Core]
+Name = Do Nothing Tool Plugin
+Module = do_nothing_tool_plugin
