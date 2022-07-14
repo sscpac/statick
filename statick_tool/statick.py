@@ -227,7 +227,7 @@ class Statick:
         path = os.path.abspath(path)
 
         if args.level is not None:
-            return args.level
+            return str(args.level)
 
         profile_filename = "profile.yaml"
         if args.profile is not None:
