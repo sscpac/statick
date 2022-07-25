@@ -264,7 +264,7 @@ With the built-in configuration files the default _profile_ uses `default` as th
 This _level_ runs all available _discovery_ plugins, sets all available _tools_ to use their default flags,
 and only runs the _print_to_console_ reporting plugin (which outputs results to the terminal).
 
-With the built-in configuration files the another useful _profile_ uses the `sei_cert` _level_.
+With the built-in configuration files another useful _profile_ uses the `sei_cert` _level_.
 This _level_ sets all available _tools_ to use flags that find issues listed in
 Carnegie Mellon University Software Engineering Institute
 "CERT C++ Coding Standard: Rules for Developing Safe, Reliable, and Secure Systems".
