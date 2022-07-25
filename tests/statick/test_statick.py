@@ -112,6 +112,29 @@ def test_get_level_non_default(init_statick):
     assert level == "package_specific"
 
 
+def test_get_level_sei_cert(init_statick):
+    """
+    Test searching for the sei_cert level.
+
+    Expected result: 'sei_cert' level is returned
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="sei_cert.yaml"
+    )
+    args.parser.add_argument("--level", dest="level", type=str)
+    level = init_statick.get_level("package", args.get_args([]))
+    assert level == "sei_cert"
+
+    args2 = Args("Statick tool")
+    args2.parser.add_argument(
+        "--profile", dest="profile", type=str
+    )
+    args2.parser.add_argument("--level", dest="level", type=str, default="sei_cert")
+    level = init_statick.get_level("package", args2.get_args([]))
+    assert level == "sei_cert"
+
+
 def test_get_level_cli(init_statick):
     """
     Test searching for a level when a level was specified on the command line.
