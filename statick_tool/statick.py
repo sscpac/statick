@@ -152,6 +152,13 @@ class Statick:
             "--config", dest="config", type=str, help="Name of config yaml file"
         )
         args.add_argument(
+            "--level",
+            dest="level",
+            type=str,
+            help="Scan level to use from config file. \
+                  Overrides any levels specified by the profile.",
+        )
+        args.add_argument(
             "--profile", dest="profile", type=str, help="Name of profile yaml file"
         )
         args.add_argument(
@@ -218,6 +225,9 @@ class Statick:
     def get_level(self, path: str, args: argparse.Namespace) -> Optional[str]:
         """Get level to scan package at."""
         path = os.path.abspath(path)
+
+        if args.level is not None:
+            return str(args.level)
 
         profile_filename = "profile.yaml"
         if args.profile is not None:
