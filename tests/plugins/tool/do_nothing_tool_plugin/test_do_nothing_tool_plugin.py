@@ -10,7 +10,7 @@ from statick_tool.tool_plugin import ToolPlugin
 
 
 def setup_do_nothing_tool_plugin():
-    """Create and return an instance of the PyCodeStyle plugin."""
+    """Create and return an instance of the do nothing plugin."""
     plugin = DoNothingToolPlugin()
     return plugin
 
