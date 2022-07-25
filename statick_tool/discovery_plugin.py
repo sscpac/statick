@@ -63,7 +63,7 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
         There are two recommended ways to check it:
         1. When searching for a single string just use the python "in" operator:
 
-            if "search string" in fild_dict["file_cmd_out"]:
+            if "search string" in file_dict["file_cmd_out"]:
 
         2. When searching for multiple different strings, use the `any()` function:
 
@@ -83,6 +83,9 @@ class DiscoveryPlugin(IPlugin):  # type: ignore
                 "Failed to run 'file' command. Returncode = %d", ex.returncode
             )
             logging.warning("Exception output: %s", ex.output)
+            return ""
+        except OSError:
+            logging.warning("OSError on file command for %s", full_path)
             return ""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
