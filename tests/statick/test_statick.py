@@ -92,6 +92,7 @@ def test_get_level(init_statick):
     args.parser.add_argument(
         "--profile", dest="profile", type=str, default="profile-test.yaml"
     )
+    args.parser.add_argument("--level", dest="level", type=str)
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level == "default_value"
 
@@ -106,8 +107,28 @@ def test_get_level_non_default(init_statick):
     args.parser.add_argument(
         "--profile", dest="profile", type=str, default="profile-test.yaml"
     )
+    args.parser.add_argument("--level", dest="level", type=str)
     level = init_statick.get_level("package", args.get_args([]))
     assert level == "package_specific"
+
+
+def test_get_level_cli(init_statick):
+    """
+    Test searching for a level when a level was specified on the command line.
+
+    Expected result: Some level is returned
+    """
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="profile-test.yaml"
+    )
+    args.parser.add_argument(
+        "--level", dest="level", type=str, default="custom"
+    )
+    level = init_statick.get_level("package", args.get_args([]))
+    assert level == "custom"
+    level = init_statick.get_level("package_specific", args.get_args([]))
+    assert level == "custom"
 
 
 def test_get_level_nonexistent_file(init_statick):
@@ -120,6 +141,7 @@ def test_get_level_nonexistent_file(init_statick):
     args.parser.add_argument(
         "--profile", dest="profile", type=str, default="nonexistent.yaml"
     )
+    args.parser.add_argument("--level", dest="level", type=str)
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level is None
 
@@ -136,6 +158,20 @@ def test_get_level_ioerror(mocked_profile_constructor, init_statick):
     args.parser.add_argument(
         "--profile", dest="profile", type=str, default="profile-test.yaml"
     )
+    args.parser.add_argument("--level", dest="level", type=str)
+    level = init_statick.get_level("some_package", args.get_args([]))
+    assert level is None
+
+
+@mock.patch("statick_tool.statick.Profile")
+def test_get_level_valueerror(mocked_profile_constructor, init_statick):
+    """Test the behavior when Profile throws a ValueError."""
+    mocked_profile_constructor.side_effect = ValueError("error")
+    args = Args("Statick tool")
+    args.parser.add_argument(
+        "--profile", dest="profile", type=str, default="profile-test.yaml"
+    )
+    args.parser.add_argument("--level", dest="level", type=str)
     level = init_statick.get_level("some_package", args.get_args([]))
     assert level is None
 
@@ -178,18 +214,6 @@ def test_custom_config_file(init_statick):
     init_statick.get_config(args.get_args([]))
     has_level = init_statick.config.has_level("default_value")
     assert has_level
-
-
-@mock.patch("statick_tool.statick.Profile")
-def test_get_level_valueerror(mocked_profile_constructor, init_statick):
-    """Test the behavior when Profile throws a ValueError."""
-    mocked_profile_constructor.side_effect = ValueError("error")
-    args = Args("Statick tool")
-    args.parser.add_argument(
-        "--profile", dest="profile", type=str, default="profile-test.yaml"
-    )
-    level = init_statick.get_level("some_package", args.get_args([]))
-    assert level is None
 
 
 @mock.patch("statick_tool.statick.Config")
