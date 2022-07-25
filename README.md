@@ -17,7 +17,7 @@ Best practices recommend running multiple tools to get the best results.
 Statick has plugins that interface with a large number of static analysis and linting tools,
 allowing you to run a single tool to get all the results at once.
 
-Many tools are known for generating a large number of fasle positives so Statick provides multiple ways to add
+Many tools are known for generating a large number of false positives so Statick provides multiple ways to add
 exceptions to suppress false positives.
 The types of warnings to generate is highly dependent on your specific project, and Statick makes it easy to run each
 tool with custom flags to tailor the tools for the issues you care about.
@@ -260,7 +260,11 @@ The `default` key lists the _level_ to run if no specific _level_ listed for a p
 
 The `packages` key lists _packages_ and override levels to run for those packages.
 
-With the built-in configuration files the default _profile_ uses `sei_cert` as the default _level_.
+With the built-in configuration files the default _profile_ uses `default` as the default _level_.
+This _level_ runs all available _discovery_ plugins, sets all available _tools_ to use their default flags,
+and only runs the _print_to_console_ reporting plugin (which outputs results to the terminal).
+
+With the built-in configuration files another useful _profile_ uses the `sei_cert` _level_.
 This _level_ sets all available _tools_ to use flags that find issues listed in
 Carnegie Mellon University Software Engineering Institute
 "CERT C++ Coding Standard: Rules for Developing Safe, Reliable, and Secure Systems".
@@ -354,7 +358,7 @@ File Type | Extensions
 :-------- | :---------
 catkin    | `CMakeLists.txt` and `package.xml`
 C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
-CMake     | `CMakeLists.txt`
+CMake     | `CMakeLists.txt`, `.cmake`
 groovy    | `.groovy`, `.gradle`, `Jenkinsfile*`
 java      | `.class`, `.java`
 Maven     | `pom.xml`

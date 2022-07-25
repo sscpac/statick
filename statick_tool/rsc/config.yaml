@@ -1,7 +1,7 @@
 levels:
   discovery_only:
-    reporting:
-      print_to_console:
+    tool:
+      do_nothing:
 
   sei_cert:
     reporting:
