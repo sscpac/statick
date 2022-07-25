@@ -50,7 +50,9 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
             and ros_version is not None
         ):
             logging.info("  Package is ROS%s.", ros_version)
-            if ros_version == "2":
+            if ros_version == "1":
+                package["is_ros1"] = True
+            elif ros_version == "2":
                 distro = os.getenv("ROS_DISTRO")
                 path = os.getenv("PATH")
                 if path is not None:
@@ -59,6 +61,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                             package[
                                 "cmake_flags"
                             ] = "-DCMAKE_PREFIX_PATH=" + item.rstrip("/bin")
+                package["is_ros2"] = True
         elif os.path.isfile(package_file) and ros_version is not None:
             with open(package_file, encoding="utf8") as fconfig:
                 try:
@@ -72,3 +75,4 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                     return
                 if self.deep_get(output, "package.export.build_type") == "ament_python":
                     logging.info("  Package is ROS%s.", ros_version)
+                    package["is_ros2"] = True

@@ -74,7 +74,7 @@ def test_ros_discovery_plugin_scan_valid():
     )
     os.environ["ROS_VERSION"] = "1"
     rdp.scan(package, "level")
-    assert package["ros"]
+    assert "is_ros1" in package
 
 
 def test_ros_discovery_plugin_scan_ros2_python_only():
@@ -86,7 +86,7 @@ def test_ros_discovery_plugin_scan_ros2_python_only():
     )
     os.environ["ROS_VERSION"] = "2"
     rdp.scan(package, "level")
-    assert package["ros"]
+    assert "is_ros2" in package
 
 
 def test_ros_discovery_plugin_scan_invalid_no_ros_distro():
@@ -98,7 +98,8 @@ def test_ros_discovery_plugin_scan_invalid_no_ros_distro():
     )
     del os.environ["ROS_VERSION"]
     rdp.scan(package, "level")
-    assert not package["ros"]
+    assert "is_ros1" not in package
+    assert "is_ros2" not in package
 
 
 def test_ros_discovery_plugin_scan_invalid_badpath():
@@ -109,7 +110,7 @@ def test_ros_discovery_plugin_scan_invalid_badpath():
     )
     os.environ["ROS_VERSION"] = "1"
     rdp.scan(package, "level")
-    assert not package["ros"]
+    assert "is_ros1" not in package
 
 
 def test_ros_discovery_plugin_scan_invalid_nocmake():
@@ -122,7 +123,8 @@ def test_ros_discovery_plugin_scan_invalid_nocmake():
     )
     os.environ["ROS_VERSION"] = "1"
     rdp.scan(package, "level")
-    assert not package["ros"]
+    assert "is_ros1" not in package
+    assert "is_ros2" not in package
 
 
 def test_ros_discovery_plugin_scan_invalid_packagexml():
@@ -135,7 +137,8 @@ def test_ros_discovery_plugin_scan_invalid_packagexml():
     )
     os.environ["ROS_VERSION"] = "1"
     rdp.scan(package, "level")
-    assert not package["ros"]
+    assert "is_ros1" not in package
+    assert "is_ros2" not in package
 
 
 def test_ros_discovery_plugin_ros2_scan_valid():
@@ -152,7 +155,7 @@ def test_ros_discovery_plugin_ros2_scan_valid():
         os.environ["ROS_VERSION"] = "2"
         os.environ["ROS_DISTRO"] = "foxy"
         rdp.scan(package, "level")
-        assert package["ros"]
+        assert "is_ros2" in package
 
 
 def test_ros_discovery_plugin_ros1_scan_valid():
@@ -164,5 +167,4 @@ def test_ros_discovery_plugin_ros1_scan_valid():
     )
     os.environ["ROS_VERSION"] = "1"
     rdp.scan(package, "level")
-    assert package["ros"]
-    assert package["catkin"]
+    assert "is_ros1" in package
