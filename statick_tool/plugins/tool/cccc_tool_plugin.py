@@ -193,7 +193,7 @@ class CCCCToolPlugin(ToolPlugin):
                     config[row[".ADA"]] = {
                         "warn": row["ada.95"],
                         "error": row[""],
-                        "name": row[None][3],  # type: ignore
+                        "name": row[None][3],
                         "key": row[".ADA"],
                     }
 
