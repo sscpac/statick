@@ -135,11 +135,12 @@ class Config:
                 )
             configs = ""
             for inherited_level in self.config["levels"][level]["inherits_from"]:
-                config = self.get_plugin_config(
-                    plugin_type, plugin, inherited_level, key, default
-                )
-                if config is not None:
-                    configs += config
+                if level is not inherited_level:
+                    config = self.get_plugin_config(
+                        plugin_type, plugin, inherited_level, key, default
+                    )
+                    if config is not None:
+                        configs += config
             if configs:
                 return configs
         return default
