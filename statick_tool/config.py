@@ -78,7 +78,9 @@ class Config:
         if level == self.default_level:
             return plugins
 
+        # pylint: disable=too-many-nested-blocks
         for level_type in self.config["levels"][level]:
+            # pylint: enable=too-many-nested-blocks
             if (
                 plugin_type in level_type
                 and self.config["levels"][level][plugin_type] is not None

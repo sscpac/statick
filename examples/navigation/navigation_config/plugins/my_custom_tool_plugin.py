@@ -46,13 +46,13 @@ class MyCustomToolPlugin(ToolPlugin):
         issues = self.parse_output(output)
         return issues
 
-    def parse_output(self, output):
+    def parse_output(self, total_output, package=None):
         """Parse tool output and report issues."""
         grep_re = r"(.+):(\d+):(.+)"
         parse = re.compile(grep_re)
         issues = []
 
-        for line in output.split("\n"):
+        for line in total_output.split("\n"):
             match = parse.match(line)
             if match:
                 issues.append(
