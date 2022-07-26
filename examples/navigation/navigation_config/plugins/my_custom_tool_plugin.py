@@ -46,7 +46,7 @@ class MyCustomToolPlugin(ToolPlugin):
         issues = self.parse_output(output)
         return issues
 
-    def parse_output(self, total_output, package=None):
+    def parse_output(self, total_output, _=None):
         """Parse tool output and report issues."""
         grep_re = r"(.+):(\d+):(.+)"
         parse = re.compile(grep_re)
