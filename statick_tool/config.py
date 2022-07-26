@@ -15,8 +15,14 @@ class Config:
     Sets what flags are used for each plugin at those levels.
     """
 
-    def __init__(self, base_file: Optional[str], user_file: Optional[str] = "") -> None:
+    def __init__(
+        self,
+        base_file: Optional[str],
+        user_file: Optional[str] = "",
+        default_level: Optional[str] = "default",
+    ) -> None:
         """Initialize configuration."""
+        self.default_level = default_level
         if base_file is None or not os.path.exists(base_file):
             self.config: Any = []
             return
@@ -67,6 +73,10 @@ class Config:
     def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
         """Get what plugins are enabled for a certain level."""
         plugins: List[str] = []
+
+        if level == self.default_level:
+            return plugins
+
         for level_type in self.config["levels"][level]:
             if (
                 plugin_type in level_type

@@ -24,11 +24,12 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class Statick:
+class Statick:  # pylint: disable=too-many-instance-attributes
     """Code analysis front-end."""
 
     def __init__(self, user_paths: List[str]) -> None:
         """Initialize Statick."""
+        self.default_level = "default"
         self.resources = Resources(user_paths)
 
         self.manager = PluginManager()
@@ -89,6 +90,7 @@ class Statick:
             self.config = Config(
                 self.resources.get_file(base_config_filename),
                 self.resources.get_file(user_config_filename),
+                self.default_level,
             )
         except OSError as ex:
             logging.error(
@@ -150,6 +152,13 @@ class Statick:
         )
         args.add_argument(
             "--config", dest="config", type=str, help="Name of config yaml file"
+        )
+        args.add_argument(
+            "--level",
+            dest="level",
+            type=str,
+            help="Scan level to use from config file. \
+                  Overrides any levels specified by the profile.",
         )
         args.add_argument(
             "--profile", dest="profile", type=str, help="Name of profile yaml file"
@@ -219,6 +228,9 @@ class Statick:
         """Get level to scan package at."""
         path = os.path.abspath(path)
 
+        if args.level is not None:
+            return str(args.level)
+
         profile_filename = "profile.yaml"
         if args.profile is not None:
             profile_filename = args.profile
@@ -262,7 +274,9 @@ class Statick:
             logging.error("Level is not valid.")
             return None, False
 
-        if not self.config or not self.config.has_level(level):
+        if not self.config or (
+            level != self.default_level and not self.config.has_level(level)
+        ):
             logging.error("Can't find specified level %s in config!", level)
             return None, False
 
@@ -317,7 +331,7 @@ class Statick:
 
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
-            discovery_plugins = list(self.discovery_plugins.keys())
+            discovery_plugins = list(self.discovery_plugins)
         plugins_ran: List[Any] = []
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
@@ -348,6 +362,8 @@ class Statick:
 
         logging.info("---Tools---")
         enabled_plugins = self.config.get_enabled_tool_plugins(level)
+        if not enabled_plugins:
+            enabled_plugins = list(self.tool_plugins)
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
         plugin_dependencies: List[str] = []
@@ -412,7 +428,10 @@ class Statick:
         logging.info("---Reporting---")
         reporting_plugins = self.config.get_enabled_reporting_plugins(level)
         if not reporting_plugins:
-            reporting_plugins = self.reporting_plugins.keys()  # type: ignore
+            if "print_to_console" in self.reporting_plugins:
+                reporting_plugins = ["print_to_console"]
+            else:
+                reporting_plugins = list(self.reporting_plugins)
         for plugin_name in reporting_plugins:
             if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
@@ -543,11 +562,6 @@ class Statick:
                             success = False
 
         enabled_reporting_plugins: List[str] = []
-        available_reporting_plugins = {}
-        for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
-            available_reporting_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
 
         # Make a fake 'all' package for reporting
         dummy_all_package = Package("all_packages", parsed_args.path)
@@ -555,20 +569,22 @@ class Statick:
         if level is not None and self.config is not None:
             if not self.config or not self.config.has_level(level):
                 logging.error("Can't find specified level %s in config!", level)
-                enabled_reporting_plugins = list(available_reporting_plugins)
             else:
                 enabled_reporting_plugins = self.config.get_enabled_reporting_plugins(
                     level
                 )
 
         if not enabled_reporting_plugins:
-            enabled_reporting_plugins = list(available_reporting_plugins)
+            if "print_to_console" in self.reporting_plugins:
+                enabled_reporting_plugins = ["print_to_console"]
+            else:
+                enabled_reporting_plugins = list(self.reporting_plugins)
 
         plugin_context = PluginContext(parsed_args, self.resources, self.config)  # type: ignore
         plugin_context.args.output_directory = parsed_args.output_directory
 
         for plugin_name in enabled_reporting_plugins:
-            if plugin_name not in available_reporting_plugins:
+            if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 continue
             plugin = self.reporting_plugins[plugin_name]

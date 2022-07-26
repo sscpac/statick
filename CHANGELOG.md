@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Added
 
+### Changed
+
+- Default behavior for Statick will now run all available discovery plugins, and run all tool plugins where
+  their desired source files are available, then output results only on the terminal. (#432, #435)
+  The old default behavior was to run the "sei_cert" profile, this is still doable via either of the
+  following arguments: `--profile sei_cert.yaml` or `--level sei_cert`
+
 ### Fixed
 
 ### Removed
