@@ -1,7 +1,6 @@
 PyYAML
 bandit
 black
-catkin-pkg
 cmakelint
 cpplint
 deprecated
@@ -15,7 +14,6 @@ pydocstyle
 pyflakes
 pylint
 pylint-django<2.0
-rospkg
 statick
 statick-md
 xmltodict
