@@ -206,6 +206,28 @@ def test_config_get_reporintg_config():
     assert not reporting_config
 
 
+def test_config_inherit_from_same_name():
+    """
+    Test for a correct config when a level inherits from a level of the same name.
+
+    Expected result: top-level level is used in config
+    """
+    config_file = os.path.join(os.path.dirname(__file__), "rsc", "user-level-same-name.yaml")
+    config = Config(config_file)
+
+    plugins = config.get_enabled_plugins("threshold", "discovery")
+    assert "python" in plugins
+
+    plugins = config.get_enabled_plugins("threshold", "reporting")
+    assert "print_to_console" in plugins
+
+    plugins = config.get_enabled_plugins("threshold", "tool")
+    assert "pylint" in plugins
+
+    flags = config.get_tool_config("pylint", "threshold", "flags")
+    assert flags == "--user-override"
+
+
 def test_add_user_config():
     """Test that the Config module adds user levels that inherit from base levels."""
     base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
