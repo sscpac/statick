@@ -50,9 +50,8 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
             and ros_version is not None
         ):
             logging.info("  Package is ROS%s.", ros_version)
-            package["ros"] = True
             if ros_version == "1":
-                package["catkin"] = True
+                package["is_ros1"] = True
             elif ros_version == "2":
                 distro = os.getenv("ROS_DISTRO")
                 path = os.getenv("PATH")
@@ -62,6 +61,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                             package[
                                 "cmake_flags"
                             ] = "-DCMAKE_PREFIX_PATH=" + item.rstrip("/bin")
+                package["is_ros2"] = True
         elif os.path.isfile(package_file) and ros_version is not None:
             with open(package_file, encoding="utf8") as fconfig:
                 try:
@@ -71,11 +71,8 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                     xmltodict.ParsingInterrupted,
                 ) as exc:
                     # No valid XML found, so we are not going to find the build type.
-                    package["ros"] = False
                     logging.warning("  Invalid XML in %s: %s", package_file, exc)
                     return
                 if self.deep_get(output, "package.export.build_type") == "ament_python":
                     logging.info("  Package is ROS%s.", ros_version)
-                    package["ros"] = True
-        else:
-            package["ros"] = False
+                    package["is_ros2"] = True
