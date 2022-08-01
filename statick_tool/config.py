@@ -6,7 +6,6 @@ import os
 from typing import Any, List, Optional, Union
 
 import yaml
-from deprecated import deprecated
 
 
 class Config:
@@ -44,10 +43,12 @@ class Config:
             if "levels" in user_config:
                 for level in user_config["levels"]:
                     level_config = user_config["levels"][level]
+                    if level == "threshold":
+                        print(f"level: {level}, level_config: {level_config}")
                     if (
                         level_config is not None
                         and "inherits_from" in level_config
-                        and level_config["inherits_from"] == level
+                        and level_config["inherits_from"] == [level]
                     ):
                         level_config["inherits_from"] = ""
                     self.config["levels"][level] = user_config["levels"][level]
@@ -77,7 +78,9 @@ class Config:
         if level == self.default_level:
             return plugins
 
+        # pylint: disable=too-many-nested-blocks
         for level_type in self.config["levels"][level]:
+            # pylint: enable=too-many-nested-blocks
             if (
                 plugin_type in level_type
                 and self.config["levels"][level][plugin_type] is not None
@@ -85,12 +88,13 @@ class Config:
                 plugins += list(self.config["levels"][level][plugin_type])
             if "inherits_from" in self.config["levels"][level]:
                 for inherited_level in self.config["levels"][level]["inherits_from"]:
-                    enabled_plugins = self.get_enabled_plugins(
-                        inherited_level, plugin_type
-                    )
-                    for plugin in enabled_plugins:
-                        if plugin not in plugins:
-                            plugins.append(plugin)
+                    if level is not inherited_level:
+                        enabled_plugins = self.get_enabled_plugins(
+                            inherited_level, plugin_type
+                        )
+                        for plugin in enabled_plugins:
+                            if plugin not in plugins:
+                                plugins.append(plugin)
         return plugins
 
     def get_enabled_tool_plugins(self, level: str) -> List[str]:
@@ -139,34 +143,17 @@ class Config:
                     return plugin_config[key]
         if "inherits_from" in level_config:
             inherited_level = level_config["inherits_from"]
-            if isinstance(inherited_level, str):
-                return self.get_plugin_config_string(
-                    plugin_type, plugin, inherited_level, key, default
-                )
             configs = ""
             for inherited_level in self.config["levels"][level]["inherits_from"]:
-                config = self.get_plugin_config(
-                    plugin_type, plugin, inherited_level, key, default
-                )
-                if config is not None:
-                    configs += config
+                if level is not inherited_level:
+                    config = self.get_plugin_config(
+                        plugin_type, plugin, inherited_level, key, default
+                    )
+                    if config is not None:
+                        configs += config
             if configs:
                 return configs
         return default
-
-    @deprecated(
-        "Found inherits_from flag as a string. This usage has been deprecated since v0.7.1. You should use a list of levels in the inherit_from flag now. Support for strings will be removed in v0.8."  # NOLINT
-    )  # NOLINT
-    def get_plugin_config_string(  # pylint: disable=too-many-arguments
-        self,
-        plugin_type: str,
-        plugin: str,
-        level: str,
-        key: str,
-        default: Optional[str] = None,
-    ) -> Optional[str]:
-        """Get flags at a specific level when level is specified as a string."""
-        return self.get_plugin_config(plugin_type, plugin, level, key, default)
 
     def get_tool_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
