@@ -71,7 +71,7 @@ levels:
         flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
 
   objective:
-    inherits_from: 
+    inherits_from:
       - "objective_minus_pylint"
     tool:
       pylint:
@@ -84,7 +84,7 @@ levels:
                 --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
 
   objective_with_format:
-    inherits_from: 
+    inherits_from:
       - "objective"
     tool:
       clang-format:
