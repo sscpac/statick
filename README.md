@@ -28,40 +28,42 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 
 ## Table of Contents
 
-* [Installation](#installation)
-* [Basic Usage](#basic-usage)
-* [Concepts](#contents)
-  * [Discovery](#discovery)
-  * [Tools](#tools)
-  * [Reporting](#reporting)
-* [Basic Configuration](#basic-configuration)
-  * [Levels](#levels)
-  * [Profiles](#profiles)
-  * [Exceptions](#exceptions)
-* [Advanced Installation](#advanced-installation)
-* [Existing Plugins](#existing-plugins)
-  * [Discovery Plugins](#discovery-plugins)
-  * [Tool Plugins](#tool-plugins)
-  * [Reporting Plugins](#reporting-plugins)
-  * [External Plugins](#external-plugins)
-* [Customization](#customization)
-  * [User Paths](#user-paths)
-  * [Custom Profile](#custom-profile)
-  * [Custom Configuration](#custom-configuration)
-  * [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
-  * [Custom CMake Flags](#custom-cmake-flags)
-  * [Custom Clang Format Configuration](#custom-clang-format-configuration)
-* [Custom Plugins](#custom-plugins)
-* [ROS Workspaces](#ros-workspaces)
-* [Examples](#examples)
-* [Troubleshooting](#troubleshooting)
-  * [Make Tool Plugin](#make-tool-plugin)
-  * [CMake Discovery Plugin](#cmake-discovery-plugin)
-* [Contributing](#contributing)
-  * [Tests](#tests)
-  * [Mypy](#mypy)
-  * [Formatting](#formatting)
-* [Original Author](#original-author)
+- [Statick](#statick)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Basic Usage](#basic-usage)
+  - [Concepts](#concepts)
+    - [Discovery](#discovery)
+    - [Tools](#tools)
+    - [Reporting](#reporting)
+  - [Basic Configuration](#basic-configuration)
+    - [Levels](#levels)
+    - [Profiles](#profiles)
+    - [Exceptions](#exceptions)
+  - [Advanced Installation](#advanced-installation)
+  - [Existing Plugins](#existing-plugins)
+    - [Discovery Plugins](#discovery-plugins)
+    - [Tool Plugins](#tool-plugins)
+    - [Reporting Plugins](#reporting-plugins)
+    - [External Plugins](#external-plugins)
+  - [Customization](#customization)
+    - [User Paths](#user-paths)
+    - [Custom Profile](#custom-profile)
+    - [Custom Configuration](#custom-configuration)
+    - [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
+    - [Custom CMake Flags](#custom-cmake-flags)
+    - [Custom Clang Format Configuration](#custom-clang-format-configuration)
+  - [Custom Plugins](#custom-plugins)
+  - [Examples](#examples)
+  - [ROS Workspaces](#ros-workspaces)
+  - [Troubleshooting](#troubleshooting)
+    - [Make Tool Plugin](#make-tool-plugin)
+    - [CMake Discovery Plugin](#cmake-discovery-plugin)
+  - [Contributing](#contributing)
+    - [Tests](#tests)
+    - [Mypy](#mypy)
+    - [Formatting](#formatting)
+  - [Original Author](#original-author)
 
 ## Installation
 
@@ -151,8 +153,13 @@ The output of the scan is parsed to generate the list of issues discovered by St
 ### Reporting
 
 _Reporting_ plugins output the issues found by the _tool_ plugins.
-The currently supported _reporting_ plugins are to print the output to a console and to write an _XML_ file that
-can be parsed by Jenkins.
+There are a number of existing _reporting_ plugins:
+- **Code Climate**: outputs a report that adheres to the [Code Climate Specification](https://github.com/codeclimate/platform/blob/master/spec/analyzers/SPEC.md#data-types)
+- **Jenkins**: writes an _XML_ file that can be parsed by [Jenkins](https://www.jenkins.io/)
+- **JSON**: writes a _JSON_ report to console or file
+- **Console**: prints the output to a console
+- **Do nothing**: a dummy plugin that outputs nothing. This can be useful when a reporting plugin is required but potential reporting side effects are undesirable
+
 
 When using the Jenkins _reporting_ plugin, the issues show up formatted and searchable via the
 [Jenkins Warnings NG](https://plugins.jenkins.io/warnings-ng/) plugin.
@@ -354,62 +361,62 @@ as a specific file type.
 This type of discovery must be supported by the discovery plugin and only works on operating systems where the `file`
 command exists.
 
-File Type | Extensions
-:-------- | :---------
-catkin    | `CMakeLists.txt` and `package.xml`
-C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
-CMake     | `CMakeLists.txt`, `.cmake`
-groovy    | `.groovy`, `.gradle`, `Jenkinsfile*`
-java      | `.class`, `.java`
-Maven     | `pom.xml`
-Perl      | `.pl`
-Python    | `.py`
-ROS       | `CMakeLists.txt` and `package.xml`
-Shell     | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`
-XML       | `.xml`, `.launch`
-Yaml      | `.yaml`
+| File Type | Extensions                                        |
+| :-------- | :------------------------------------------------ |
+| catkin    | `CMakeLists.txt` and `package.xml`                |
+| C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp` |
+| CMake     | `CMakeLists.txt`, `.cmake`                        |
+| groovy    | `.groovy`, `.gradle`, `Jenkinsfile*`              |
+| java      | `.class`, `.java`                                 |
+| Maven     | `pom.xml`                                         |
+| Perl      | `.pl`                                             |
+| Python    | `.py`                                             |
+| ROS       | `CMakeLists.txt` and `package.xml`                |
+| Shell     | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`   |
+| XML       | `.xml`, `.launch`                                 |
+| Yaml      | `.yaml`                                           |
 
 The `.launch` extension is mapped to XML files due to use with ROS launch files.
 
 ### Tool Plugins
 
-Tool | About
-:--- | :----
-[bandit][bandit]                   | Bandit is a tool designed to find common security issues in Python code.
-[black][black]                     | The uncompromising Python code formatter
-[catkin_lint][catkin_lint]         | Check catkin packages for common errors
-[cccc][cccc]                       | Source code counter and metrics tool for C++, C, and Java
-[clang-format][clang-format]       | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.
-[clang-tidy][clang-tidy]           | Provide an extensible framework for diagnosing and fixing typical programming errors.
-[cmakelint][cmakelint]             | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.
-[cppcheck][cppcheck]               | static analysis of C/C++ code
-[cpplint][cpplint]                 | Static code checker for C++
-[docformatter][docformatter]       | Formats docstrings to follow PEP 257
-[flawfinder][flawfinder]           | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.
-[npm-groovy-lint][npm-groovy-lint] | This package will track groovy errors and correct a part of them.
-[lizard][lizard]                   | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages.
-[make][make]                       | C++ compiler.
-[mypy][mypy]                       | Optional static typing for Python 3 and 2 (PEP 484)
-[perlcritic][perlcritic]           | Critique Perl source code for best-practices.
-[pycodestyle][pycodestyle]         | Python style guide checker
-[pydocstyle][pydocstyle]           | A static analysis tool for checking compliance with Python docstring conventions.
-[pyflakes][pyflakes]               | A simple program which checks Python source files for errors
-[pylint][pylint]                   | It's not just a linter that annoys you!
-[shellcheck][shellcheck]           | A static analysis tool for shell scripts
-[spotbugs][spotbugs]               | A tool for static analysis to look for bugs in Java code.
-[uncrustify][uncrustify]           | Code beautifier
-[xmllint][xmllint]                 | Lint XML files.
-[yamllint][yamllint]               | A linter for YAML files.
+| Tool                               | About                                                                                                                                  |
+| :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| [bandit][bandit]                   | Bandit is a tool designed to find common security issues in Python code.                                                               |
+| [black][black]                     | The uncompromising Python code formatter                                                                                               |
+| [catkin_lint][catkin_lint]         | Check catkin packages for common errors                                                                                                |
+| [cccc][cccc]                       | Source code counter and metrics tool for C++, C, and Java                                                                              |
+| [clang-format][clang-format]       | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.                                                                             |
+| [clang-tidy][clang-tidy]           | Provide an extensible framework for diagnosing and fixing typical programming errors.                                                  |
+| [cmakelint][cmakelint]             | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.                             |
+| [cppcheck][cppcheck]               | static analysis of C/C++ code                                                                                                          |
+| [cpplint][cpplint]                 | Static code checker for C++                                                                                                            |
+| [docformatter][docformatter]       | Formats docstrings to follow PEP 257                                                                                                   |
+| [flawfinder][flawfinder]           | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.                                    |
+| [npm-groovy-lint][npm-groovy-lint] | This package will track groovy errors and correct a part of them.                                                                      |
+| [lizard][lizard]                   | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages. |
+| [make][make]                       | C++ compiler.                                                                                                                          |
+| [mypy][mypy]                       | Optional static typing for Python 3 and 2 (PEP 484)                                                                                    |
+| [perlcritic][perlcritic]           | Critique Perl source code for best-practices.                                                                                          |
+| [pycodestyle][pycodestyle]         | Python style guide checker                                                                                                             |
+| [pydocstyle][pydocstyle]           | A static analysis tool for checking compliance with Python docstring conventions.                                                      |
+| [pyflakes][pyflakes]               | A simple program which checks Python source files for errors                                                                           |
+| [pylint][pylint]                   | It's not just a linter that annoys you!                                                                                                |
+| [shellcheck][shellcheck]           | A static analysis tool for shell scripts                                                                                               |
+| [spotbugs][spotbugs]               | A tool for static analysis to look for bugs in Java code.                                                                              |
+| [uncrustify][uncrustify]           | Code beautifier                                                                                                                        |
+| [xmllint][xmllint]                 | Lint XML files.                                                                                                                        |
+| [yamllint][yamllint]               | A linter for YAML files.                                                                                                               |
 
 ### Reporting Plugins
 
-Reporter | About
-:--- | :----
-[code_climate][code-climate] | Output issues in valid Code Climate JSON (or optionally strictly [Gitlab][gitlab-cc] compatible) to stdout or as a file.
-do_nothing | Does nothing.
-[json] | Output issues as a JSON list either to stdout or as a file.
-print_to_console | Print the issues to stdout.
-[write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output.
+| Reporter                                         | About                                                                                                                    |
+| :----------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------- |
+| [code_climate][code-climate]                     | Output issues in valid Code Climate JSON (or optionally strictly [Gitlab][gitlab-cc] compatible) to stdout or as a file. |
+| do_nothing                                       | Does nothing.                                                                                                            |
+| [json]                                           | Output issues as a JSON list either to stdout or as a file.                                                              |
+| print_to_console                                 | Print the issues to stdout.                                                                                              |
+| [write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output.                                          |
 
 ### External Plugins
 
