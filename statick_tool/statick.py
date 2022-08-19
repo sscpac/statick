@@ -268,7 +268,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         timing = Timing(name, plugin_type, duration)
         self.timings.append(timing)
 
-    def get_timings(self) -> Optional[List[Timing]]:
+    def get_timings(self) -> List[Timing]:
         """Return list of timings for each component."""
         return self.timings
 
