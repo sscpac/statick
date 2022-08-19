@@ -151,16 +151,8 @@ The output of the scan is parsed to generate the list of issues discovered by St
 ### Reporting
 
 _Reporting_ plugins output the issues found by the _tool_ plugins.
-The currently supported _reporting_ plugins are to print the output to a console and to write an _XML_ file that
-can be parsed by Jenkins.
-
-When using the Jenkins _reporting_ plugin, the issues show up formatted and searchable via the
-[Jenkins Warnings NG](https://plugins.jenkins.io/warnings-ng/) plugin.
-A plot can be added to Jenkins showing the number of Statick warnings over time or per build.
-The Statick `--check` flag can be used to cause steps in a Jenkins job to fail if issues are found.
-Alternatively, Jenkins can be configured with quality gates to fail if a threshold on the number of issues found is exceeded.
-
-An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick can be used with Jenkins pipelines.
+The output can be printed to console (`stdout`) or be used as input to a separate tool or service
+that performs additional parsing and processing.
 
 ## Basic Configuration
 
@@ -410,6 +402,15 @@ do_nothing | Does nothing.
 [json] | Output issues as a JSON list either to stdout or as a file.
 print_to_console | Print the issues to stdout.
 [write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output.
+
+When using the Jenkins _reporting_ plugin, the issues show up formatted and searchable via the
+[Jenkins Warnings NG](https://plugins.jenkins.io/warnings-ng/) plugin.
+A plot can be added to Jenkins showing the number of Statick warnings over time or per build.
+The Statick `--check` flag can be used to cause steps in a Jenkins job to fail if issues are found.
+Alternatively, Jenkins can be configured with quality gates to fail if a threshold on the number of issues found is exceeded.
+
+An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick can be used with Jenkins pipelines.
+
 
 ### External Plugins
 
