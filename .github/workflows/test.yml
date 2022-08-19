@@ -59,6 +59,7 @@ jobs:
           python -m pip install --upgrade tox-gh-actions
           python -m pip install --upgrade types-deprecated
           python -m pip install --upgrade types-PyYAML
+          python -m pip install --upgrade types-tabulate
           python -m pip install --upgrade wheel
 
       # Remove apt repos that are known to break from time to time.

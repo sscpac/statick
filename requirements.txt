@@ -16,6 +16,7 @@ pylint
 pylint-django<2.0
 statick
 statick-md
+tabulate
 xmltodict
 yamllint
 yapsy
