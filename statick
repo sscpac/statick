@@ -43,7 +43,7 @@ def main() -> None:
         success = run(statick, parsed_args, start_time)
 
     timings = statick.get_timings()
-    if timings is not None and timings and statick.enable_print_timings():
+    if parsed_args.timings:
         print(tabulate(timings, headers="keys", tablefmt="pretty"))
 
     if parsed_args.check and not success:

@@ -189,8 +189,14 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             type=str,
             help="Suffix to use when searching for CERT mapping files",
         )
+        args.add_argument(
+            "--timings",
+            dest="timings",
+            action="store_true",
+            help="Enable printing timing information to stdout",
+        )
 
-        # statick workspace arguments
+        # Statick workspace arguments.
         args.add_argument(
             "-ws",
             dest="workspace",
@@ -265,13 +271,6 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def get_timings(self) -> Optional[List[Timing]]:
         """Return list of timings for each component."""
         return self.timings
-
-    def enable_print_timings(self) -> bool:
-        """Return whether timings should be printed to stdout."""
-        if "print_to_console" in self.reporting_plugins:
-            return True
-
-        return False
 
     # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
     # pylint: disable=too-many-statements
@@ -426,7 +425,6 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                         plugins_to_run.remove(dependency_name)
                     plugins_to_run.insert(0, dependency_name)
                     dependencies_met = False
-
 
             if not dependencies_met:
                 continue
