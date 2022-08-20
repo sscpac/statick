@@ -558,7 +558,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             return None, True
 
         count = 0
-        total_issues = []  # type: ignore
+        total_issues: List[Any] = []
         num_packages = len(packages)
         mp_args = []
         if multiprocessing.get_start_method() == "fork":
