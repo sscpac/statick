@@ -75,7 +75,9 @@ jobs:
           sudo apt install cccc
           sudo apt install clang
           sudo apt install clang-format
+          sudo apt install clang-format-14.0
           sudo apt install clang-tidy
+          sudo apt install clang-tidy-14.0
           sudo apt install cppcheck
           sudo apt install libpcre3-dev
           sudo apt install libperl-critic-perl
