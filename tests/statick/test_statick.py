@@ -1329,7 +1329,7 @@ def test_scan_package(init_statick_ws):
     statick.get_exceptions(parsed_args)
     package = Package("statick", path)
 
-    issues = statick.scan_package(parsed_args, 1, package, 1)
+    issues, dummy = statick.scan_package(parsed_args, 1, package, 1)
 
     assert issues is None
 
@@ -1364,7 +1364,7 @@ def test_scan_package_with_issues(init_statick_ws):
     statick.get_exceptions(parsed_args)
     package = Package("test_package", path)
 
-    issues = statick.scan_package(parsed_args, 1, package, 1)
+    issues, dummy = statick.scan_package(parsed_args, 1, package, 1)
 
     assert len(issues["pylint"]) == 1
 

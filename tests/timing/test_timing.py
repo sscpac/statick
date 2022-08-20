@@ -27,7 +27,7 @@ def test_add_timing(init_statick):
     name = "test_name"
     test_type = "test_type"
     duration = "test_duration"
-    timing = Timing(name, test_type, duration)
+    timing = Timing(package, name, test_type, duration)
     init_statick.add_timing(package, name, test_type, duration)
     timings = init_statick.get_timings()
     assert timing in timings
