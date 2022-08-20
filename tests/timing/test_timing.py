@@ -23,10 +23,11 @@ def test_add_timing(init_statick):
 
     Expected result: Timing instance added is returned in getter method
     """
+    package = "test_package"
     name = "test_name"
     test_type = "test_type"
     duration = "test_duration"
     timing = Timing(name, test_type, duration)
-    init_statick.add_timing(name, test_type, duration)
+    init_statick.add_timing(package, name, test_type, duration)
     timings = init_statick.get_timings()
     assert timing in timings

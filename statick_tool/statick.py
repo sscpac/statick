@@ -263,9 +263,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         return level
 
-    def add_timing(self, name: str, plugin_type: str, duration: str) -> None:
+    def add_timing(
+        self, package: str, name: str, plugin_type: str, duration: str
+    ) -> None:
         """Add an entry to the timings list."""
-        timing = Timing(name, plugin_type, duration)
+        timing = Timing(package, name, plugin_type, duration)
         self.timings.append(timing)
 
     def get_timings(self) -> List[Timing]:
@@ -378,7 +380,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 logging.info("%s discovery plugin done.", plugin.get_name())
                 plugins_ran.append(plugin.get_name())
             duration = format(time.time() - plugin_start, ".4f")
-            timing = Timing(plugin.get_name(), "Discovery", duration)
+            timing = Timing(package.name, plugin.get_name(), "Discovery", duration)
             self.timings.append(timing)
         logging.info("---Discovery---")
 
@@ -443,7 +445,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugins_ran.append(plugin_name)
 
             duration = format(time.time() - plugin_start, ".4f")
-            timing = Timing(plugin.get_name(), "Tool", duration)
+            timing = Timing(package.name, plugin.get_name(), "Tool", duration)
             self.timings.append(timing)
         logging.info("---Tools---")
 
@@ -471,13 +473,13 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugin.report(package, issues, level)
             logging.info("%s reporting plugin done.", plugin.get_name())
             duration = format(time.time() - plugin_start, ".4f")
-            timing = Timing(plugin.get_name(), "Reporting", duration)
+            timing = Timing(package.name, plugin.get_name(), "Reporting", duration)
             self.timings.append(timing)
         logging.info("---Reporting---")
 
         if start_time is not None:
             duration = format(time.time() - start_time, ".4f")
-            timing = Timing("Overall", "", duration)
+            timing = Timing("Overall", "", "", duration)
             self.timings.append(timing)
         logging.info("Done!")
 
@@ -566,7 +568,12 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 mp_args.append((parsed_args, count, package, num_packages))
 
             with multiprocessing.Pool(parsed_args.max_procs) as pool:
-                total_issues = pool.starmap(self.scan_package, mp_args)
+                total_issues, all_timings = zip(
+                    *pool.starmap(self.scan_package, mp_args)
+                )
+                for timings in all_timings:
+                    for timing in timings:
+                        self.timings.append(timing)
         else:
             logging.warning(
                 "Statick's plugin manager does not currently support multiprocessing"
@@ -575,10 +582,12 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logging.info("-- Scanning %d packages --", num_packages)
             for package in packages:
                 count += 1
-                pkg_issues = self.scan_package(
+                pkg_issues, timings = self.scan_package(
                     parsed_args, count, package, num_packages
                 )
                 total_issues.append(pkg_issues)
+                for timing in timings:
+                    self.timings.append(timing)
 
         logging.info("-- All packages run --")
         logging.info("-- overall report --")
@@ -631,7 +640,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         if start_time is not None:
             duration = format(time.time() - start_time, ".4f")
-            timing = Timing("Overall", "", duration)
+            timing = Timing("Overall", "", "", duration)
             self.timings.append(timing)
 
         return issues, success
@@ -663,6 +672,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         sys.stderr = sio
 
         issues, dummy = self.run(package.path, parsed_args)
+        timings = self.get_timings()
 
         sys.stdout = old_stdout
         sys.stderr = old_stderr
@@ -683,7 +693,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logger.removeHandler(handler)
             logger.addHandler(old_handler)
 
-        return issues
+        return issues, timings
 
     @staticmethod
     def print_no_issues() -> None:
