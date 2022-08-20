@@ -122,7 +122,8 @@ jobs:
         with:
           docs-folder: 'docs/'
 
-      - name: Manage swap space
+      - name: Manage Windows swap space
+        if: matrix.os == 'windows-latest'
         uses: pierotofy/set-swap-space@master
         with:
           swap-size-gb: 10
