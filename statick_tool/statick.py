@@ -582,12 +582,13 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logging.info("-- Scanning %d packages --", num_packages)
             for package in packages:
                 count += 1
-                pkg_issues, timings = self.scan_package(
+                pkg_issues, pkg_timings = self.scan_package(
                     parsed_args, count, package, num_packages
                 )
                 total_issues.append(pkg_issues)
-                for timing in timings:
+                for timing in pkg_timings:
                     self.timings.append(timing)
+                    break
 
         logging.info("-- All packages run --")
         logging.info("-- overall report --")
