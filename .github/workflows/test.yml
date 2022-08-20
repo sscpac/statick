@@ -75,9 +75,7 @@ jobs:
           sudo apt install cccc
           sudo apt install clang
           sudo apt install clang-format
-          sudo apt install clang-format-14.0
           sudo apt install clang-tidy
-          sudo apt install clang-tidy-14.0
           sudo apt install cppcheck
           sudo apt install libpcre3-dev
           sudo apt install libperl-critic-perl
@@ -87,11 +85,11 @@ jobs:
           sudo apt install uncrustify
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt update
-          sudo apt install clang-format
-          sudo apt install clang-tidy
+          sudo apt install clang-format-14.0
+          sudo apt install clang-tidy-14.0
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
