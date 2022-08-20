@@ -558,7 +558,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             return None, True
 
         count = 0
-        total_issues = []
+        total_issues = []  # type: ignore
         num_packages = len(packages)
         mp_args = []
         if multiprocessing.get_start_method() == "fork":
@@ -568,7 +568,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 mp_args.append((parsed_args, count, package, num_packages))
 
             with multiprocessing.Pool(parsed_args.max_procs) as pool:
-                total_issues, all_timings = zip(
+                total_issues, all_timings = zip(  # type: ignore
                     *pool.starmap(self.scan_package, mp_args)
                 )
                 for timings in all_timings:
@@ -651,7 +651,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         count: int,
         package: Package,
         num_packages: int,
-    ) -> Optional[Dict[str, List[Issue]]]:
+    ) -> Tuple[Optional[Dict[str, List[Issue]]], List[Timing]]:
         """Scan each package in a separate process while buffering output."""
         logger = logging.getLogger()
         old_handler = None
