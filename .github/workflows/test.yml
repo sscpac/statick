@@ -88,8 +88,8 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt update
-          sudo apt install clang-format-14.0
-          sudo apt install clang-tidy-14.0
+          sudo apt install clang-format-14
+          sudo apt install clang-tidy-14
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
