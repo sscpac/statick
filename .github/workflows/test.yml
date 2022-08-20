@@ -124,9 +124,11 @@ jobs:
 
       - name: Manage Windows swap space
         if: matrix.os == 'windows-latest'
-        uses: pierotofy/set-swap-space@master
+        uses: al-cheb/configure-pagefile-action@v1.2
         with:
-          swap-size-gb: 10
+          minimum-size: 16GB
+          maximum-size: 16GB
+          disk-root: "C:"
 
       - name: Test with tox
         run: |
