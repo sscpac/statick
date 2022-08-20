@@ -155,8 +155,8 @@ def test_clang_tidy_tool_plugin_scan_custom_version():
         pytest.skip("Can't find CMake, unable to test clang_tidy plugin")
     elif not cttp.command_exists("clang-tidy"):
         pytest.skip("Can't find clang-tidy, unable to test clang_tidy plugin")
-    elif not cttp.command_exists("clang-tidy-14.0"):
-        pytest.skip("Can't find clang-tidy-14.0, unable to test clang_tidy plugin")
+    elif not cttp.command_exists("clang-tidy-14"):
+        pytest.skip("Can't find clang-tidy-14, unable to test clang_tidy plugin")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
