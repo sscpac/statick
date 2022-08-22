@@ -352,9 +352,16 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
             discovery_plugins = list(self.discovery_plugins)
+        # Get timing information for finding files for discovery plugins.
+        dummy_plugin = DiscoveryPlugin()
+        plugin_start = time.time()
+        dummy_plugin.find_files(package)
+        duration = format(time.time() - plugin_start, ".4f")
+        timing = Timing(package.name, "Find Files", "Discovery", duration)
+        self.timings.append(timing)
+
         plugins_ran: List[Any] = []
         for plugin_name in discovery_plugins:
-            plugin_start = time.time()
             if plugin_name not in self.discovery_plugins:
                 logging.error("Can't find specified discovery plugin %s!", plugin_name)
                 return None, False
@@ -369,19 +376,26 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 logging.info(
                     "Running %s discovery plugin...", dependency_plugin.get_name()
                 )
+                plugin_start = time.time()
                 dependency_plugin.scan(package, level, self.exceptions)
+                duration = format(time.time() - plugin_start, ".4f")
+                timing = Timing(
+                    package.name, dependency_plugin.get_name(), "Discovery", duration
+                )
+                self.timings.append(timing)
                 logging.info("%s discovery plugin done.", dependency_plugin.get_name())
                 plugins_ran.append(dependency_plugin.get_name())
 
             if plugin.get_name() not in plugins_ran:
                 plugin.set_plugin_context(plugin_context)
                 logging.info("Running %s discovery plugin...", plugin.get_name())
+                plugin_start = time.time()
                 plugin.scan(package, level, self.exceptions)
+                duration = format(time.time() - plugin_start, ".4f")
+                timing = Timing(package.name, plugin.get_name(), "Discovery", duration)
+                self.timings.append(timing)
                 logging.info("%s discovery plugin done.", plugin.get_name())
                 plugins_ran.append(plugin.get_name())
-            duration = format(time.time() - plugin_start, ".4f")
-            timing = Timing(package.name, plugin.get_name(), "Discovery", duration)
-            self.timings.append(timing)
         logging.info("---Discovery---")
 
         logging.info("---Tools---")
@@ -434,6 +448,9 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logging.info("Running %s tool plugin...", plugin.get_name())
             plugin_start = time.time()
             tool_issues = plugin.scan(package, level)
+            duration = format(time.time() - plugin_start, ".4f")
+            timing = Timing(package.name, plugin.get_name(), "Tool", duration)
+            self.timings.append(timing)
             if tool_issues is not None:
                 issues[plugin_name] = tool_issues
                 logging.info("%s tool plugin done.", plugin.get_name())
@@ -444,9 +461,6 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugins_to_run.remove(plugin_name)
             plugins_ran.append(plugin_name)
 
-            duration = format(time.time() - plugin_start, ".4f")
-            timing = Timing(package.name, plugin.get_name(), "Tool", duration)
-            self.timings.append(timing)
         logging.info("---Tools---")
 
         if self.exceptions is not None:
@@ -462,7 +476,6 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             else:
                 reporting_plugins = list(self.reporting_plugins)
         for plugin_name in reporting_plugins:
-            plugin_start = time.time()
             if plugin_name not in self.reporting_plugins:
                 logging.error("Can't find specified reporting plugin %s!", plugin_name)
                 return None, False
@@ -470,11 +483,12 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
             logging.info("Running %s reporting plugin...", plugin.get_name())
+            plugin_start = time.time()
             plugin.report(package, issues, level)
-            logging.info("%s reporting plugin done.", plugin.get_name())
             duration = format(time.time() - plugin_start, ".4f")
             timing = Timing(package.name, plugin.get_name(), "Reporting", duration)
             self.timings.append(timing)
+            logging.info("%s reporting plugin done.", plugin.get_name())
         logging.info("---Reporting---")
 
         if start_time is not None:
