@@ -357,7 +357,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         plugin_start = time.time()
         dummy_plugin.find_files(package)
         duration = format(time.time() - plugin_start, ".4f")
-        timing = Timing(package.name, "Find Files", "Discovery", duration)
+        timing = Timing(package.name, "find files", "Discovery", duration)
         self.timings.append(timing)
 
         plugins_ran: List[Any] = []
