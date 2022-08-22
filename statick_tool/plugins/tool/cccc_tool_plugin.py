@@ -1,5 +1,4 @@
-r"""
-Apply CCCC tool and gather results.
+r"""Apply CCCC tool and gather results.
 
 To run the CCCC tool locally (without Statick) one way to do so is:
 

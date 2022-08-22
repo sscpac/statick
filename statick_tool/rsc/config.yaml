@@ -235,6 +235,6 @@ levels:
   unit_tests:
     tool:
       clang-format:
-        version: "6.0"
+        version: "14"
       clang-tidy:
-        version: "6.0"
+        version: "14"

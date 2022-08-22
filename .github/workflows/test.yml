@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-18.04, ubuntu-20.04, windows-latest]
+        os: [macos-latest, ubuntu-18.04, ubuntu-20.04, ubuntu-22.04, windows-latest]
         python-version: ['3.7', '3.8', '3.9', '3.10']
 
     steps:
@@ -64,19 +64,18 @@ jobs:
       # Remove apt repos that are known to break from time to time.
       # See https://github.com/actions/virtual-environments/issues/323
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
       - name: Install tools (Linux)
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
           sudo apt update
           sudo apt install cccc
           sudo apt install clang
-          sudo apt install clang-6.0
-          sudo apt install clang-format-6.0
-          sudo apt install clang-tidy-6.0
+          sudo apt install clang-format
+          sudo apt install clang-tidy
           sudo apt install cppcheck
           sudo apt install libpcre3-dev
           sudo apt install libperl-critic-perl
@@ -86,15 +85,15 @@ jobs:
           sudo apt install uncrustify
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt update
-          sudo apt install clang-format
-          sudo apt install clang-tidy
+          sudo apt install clang-format-14
+          sudo apt install clang-tidy-14
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
           sudo apt install curl
           curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
@@ -111,12 +110,12 @@ jobs:
           mypy --ignore-missing-imports --strict statick statick_tool/
 
       - name: Statick markdown
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
           statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: 'docs/'
@@ -131,7 +130,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Self check
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
           mkdir statick-output
           ./statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
