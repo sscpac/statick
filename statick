@@ -3,15 +3,18 @@
 
 import argparse
 import sys
+import time
+
+from tabulate import tabulate
 
 from statick_tool.args import Args
 from statick_tool.statick import Statick
 
 
-def run(statick: Statick, parsed_args: argparse.Namespace) -> bool:
+def run(statick: Statick, parsed_args: argparse.Namespace, start_time: float) -> bool:
     """Run statick on a single package."""
     path = parsed_args.path
-    issues, success = statick.run(path, parsed_args)
+    issues, success = statick.run(path, parsed_args, start_time)
     if issues is None:
         statick.print_no_issues()
         return False
@@ -23,6 +26,7 @@ def run(statick: Statick, parsed_args: argparse.Namespace) -> bool:
 
 def main() -> None:
     """Run statick."""
+    start_time: float = time.time()
     args = Args("Statick tool")
     args.parser.add_argument("path", help="Path of package or workspace to scan")
 
@@ -34,9 +38,13 @@ def main() -> None:
     statick.get_exceptions(parsed_args)
 
     if parsed_args.workspace:
-        _, success = statick.run_workspace(parsed_args)
+        _, success = statick.run_workspace(parsed_args, start_time)
     else:
-        success = run(statick, parsed_args)
+        success = run(statick, parsed_args, start_time)
+
+    timings = statick.get_timings()
+    if parsed_args.timings:
+        print(tabulate(timings, headers="keys", tablefmt="pretty"))
 
     if parsed_args.check and not success:
         statick.print_exit_status(False)

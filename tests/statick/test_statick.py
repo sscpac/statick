@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 import mock
 import pytest
@@ -289,6 +290,7 @@ def test_get_exceptions_oserror(mocked_exceptions_constructor, init_statick):
 
 def test_run():
     """Test running Statick."""
+    start_time = time.time()
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -304,7 +306,7 @@ def test_run():
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
-    issues, success = statick.run(path, parsed_args)
+    issues, success = statick.run(path, parsed_args, start_time)
     for tool in issues:
         assert not issues[tool]
     try:
@@ -910,6 +912,7 @@ def init_statick_ws():
 
 def test_run_workspace(init_statick_ws):
     """Test running Statick on a workspace."""
+    start_time = time.time()
     statick = init_statick_ws[0]
     args = init_statick_ws[1]
     sys.argv = init_statick_ws[2]
@@ -918,7 +921,7 @@ def test_run_workspace(init_statick_ws):
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    issues, success = statick.run_workspace(parsed_args)
+    issues, success = statick.run_workspace(parsed_args, start_time)
 
     for tool in issues:
         assert not issues[tool]
@@ -1326,7 +1329,7 @@ def test_scan_package(init_statick_ws):
     statick.get_exceptions(parsed_args)
     package = Package("statick", path)
 
-    issues = statick.scan_package(parsed_args, 1, package, 1)
+    issues, dummy = statick.scan_package(parsed_args, 1, package, 1)
 
     assert issues is None
 
@@ -1361,7 +1364,7 @@ def test_scan_package_with_issues(init_statick_ws):
     statick.get_exceptions(parsed_args)
     package = Package("test_package", path)
 
-    issues = statick.scan_package(parsed_args, 1, package, 1)
+    issues, dummy = statick.scan_package(parsed_args, 1, package, 1)
 
     assert len(issues["pylint"]) == 1
 

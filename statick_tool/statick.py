@@ -6,6 +6,7 @@ import logging
 import multiprocessing
 import os
 import sys
+import time
 from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -21,6 +22,7 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
 from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
+from statick_tool.timing import Timing
 from statick_tool.tool_plugin import ToolPlugin
 
 
@@ -63,6 +65,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         self.config: Optional[Config] = None
         self.exceptions: Optional[Exceptions] = None
+        self.timings: List[Timing] = []
 
     @staticmethod
     def set_logging_level(args: argparse.Namespace) -> None:
@@ -186,8 +189,14 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             type=str,
             help="Suffix to use when searching for CERT mapping files",
         )
+        args.add_argument(
+            "--timings",
+            dest="timings",
+            action="store_true",
+            help="Enable printing timing information to stdout",
+        )
 
-        # statick workspace arguments
+        # Statick workspace arguments.
         args.add_argument(
             "-ws",
             dest="workspace",
@@ -254,10 +263,21 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         return level
 
+    def add_timing(
+        self, package: str, name: str, plugin_type: str, duration: str
+    ) -> None:
+        """Add an entry to the timings list."""
+        timing = Timing(package, name, plugin_type, duration)
+        self.timings.append(timing)
+
+    def get_timings(self) -> List[Timing]:
+        """Return list of timings for each component."""
+        return self.timings
+
     # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
     # pylint: disable=too-many-statements
     def run(
-        self, path: str, args: argparse.Namespace
+        self, path: str, args: argparse.Namespace, start_time: Optional[float] = None
     ) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:
         """Run scan tools against targets on path."""
         success = True
@@ -332,6 +352,14 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         discovery_plugins = self.config.get_enabled_discovery_plugins(level)
         if not discovery_plugins:
             discovery_plugins = list(self.discovery_plugins)
+        # Get timing information for finding files for discovery plugins.
+        dummy_plugin = DiscoveryPlugin()
+        plugin_start = time.time()
+        dummy_plugin.find_files(package)
+        duration = format(time.time() - plugin_start, ".4f")
+        timing = Timing(package.name, "find files", "Discovery", duration)
+        self.timings.append(timing)
+
         plugins_ran: List[Any] = []
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
@@ -348,14 +376,24 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 logging.info(
                     "Running %s discovery plugin...", dependency_plugin.get_name()
                 )
+                plugin_start = time.time()
                 dependency_plugin.scan(package, level, self.exceptions)
+                duration = format(time.time() - plugin_start, ".4f")
+                timing = Timing(
+                    package.name, dependency_plugin.get_name(), "Discovery", duration
+                )
+                self.timings.append(timing)
                 logging.info("%s discovery plugin done.", dependency_plugin.get_name())
                 plugins_ran.append(dependency_plugin.get_name())
 
             if plugin.get_name() not in plugins_ran:
                 plugin.set_plugin_context(plugin_context)
                 logging.info("Running %s discovery plugin...", plugin.get_name())
+                plugin_start = time.time()
                 plugin.scan(package, level, self.exceptions)
+                duration = format(time.time() - plugin_start, ".4f")
+                timing = Timing(package.name, plugin.get_name(), "Discovery", duration)
+                self.timings.append(timing)
                 logging.info("%s discovery plugin done.", plugin.get_name())
                 plugins_ran.append(plugin.get_name())
         logging.info("---Discovery---")
@@ -408,7 +446,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 continue
 
             logging.info("Running %s tool plugin...", plugin.get_name())
+            plugin_start = time.time()
             tool_issues = plugin.scan(package, level)
+            duration = format(time.time() - plugin_start, ".4f")
+            timing = Timing(package.name, plugin.get_name(), "Tool", duration)
+            self.timings.append(timing)
             if tool_issues is not None:
                 issues[plugin_name] = tool_issues
                 logging.info("%s tool plugin done.", plugin.get_name())
@@ -418,6 +460,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
             plugins_to_run.remove(plugin_name)
             plugins_ran.append(plugin_name)
+
         logging.info("---Tools---")
 
         if self.exceptions is not None:
@@ -440,15 +483,24 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugin = self.reporting_plugins[plugin_name]
             plugin.set_plugin_context(plugin_context)
             logging.info("Running %s reporting plugin...", plugin.get_name())
+            plugin_start = time.time()
             plugin.report(package, issues, level)
+            duration = format(time.time() - plugin_start, ".4f")
+            timing = Timing(package.name, plugin.get_name(), "Reporting", duration)
+            self.timings.append(timing)
             logging.info("%s reporting plugin done.", plugin.get_name())
         logging.info("---Reporting---")
+
+        if start_time is not None:
+            duration = format(time.time() - start_time, ".4f")
+            timing = Timing("Overall", "", "", duration)
+            self.timings.append(timing)
         logging.info("Done!")
 
         return issues, success
 
     def run_workspace(
-        self, parsed_args: argparse.Namespace
+        self, parsed_args: argparse.Namespace, start_time: Optional[float] = None
     ) -> Tuple[
         Optional[Dict[str, List[Issue]]], bool
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
@@ -520,7 +572,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             return None, True
 
         count = 0
-        total_issues = []
+        total_issues: List[Any] = []
         num_packages = len(packages)
         mp_args = []
         if multiprocessing.get_start_method() == "fork":
@@ -530,7 +582,12 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                 mp_args.append((parsed_args, count, package, num_packages))
 
             with multiprocessing.Pool(parsed_args.max_procs) as pool:
-                total_issues = pool.starmap(self.scan_package, mp_args)
+                total_issues, all_timings = zip(  # type: ignore
+                    *pool.starmap(self.scan_package, mp_args)
+                )
+                for timings in all_timings:
+                    for timing in timings:
+                        self.timings.append(timing)
         else:
             logging.warning(
                 "Statick's plugin manager does not currently support multiprocessing"
@@ -539,10 +596,13 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logging.info("-- Scanning %d packages --", num_packages)
             for package in packages:
                 count += 1
-                pkg_issues = self.scan_package(
+                pkg_issues, pkg_timings = self.scan_package(
                     parsed_args, count, package, num_packages
                 )
                 total_issues.append(pkg_issues)
+                for timing in pkg_timings:
+                    self.timings.append(timing)
+                    break
 
         logging.info("-- All packages run --")
         logging.info("-- overall report --")
@@ -593,6 +653,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugin.report(dummy_all_package, issues, level)
             logging.info("%s reporting plugin done.", plugin.get_name())
 
+        if start_time is not None:
+            duration = format(time.time() - start_time, ".4f")
+            timing = Timing("Overall", "", "", duration)
+            self.timings.append(timing)
+
         return issues, success
 
     def scan_package(
@@ -601,7 +666,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         count: int,
         package: Package,
         num_packages: int,
-    ) -> Optional[Dict[str, List[Issue]]]:
+    ) -> Tuple[Optional[Dict[str, List[Issue]]], List[Timing]]:
         """Scan each package in a separate process while buffering output."""
         logger = logging.getLogger()
         old_handler = None
@@ -622,6 +687,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         sys.stderr = sio
 
         issues, dummy = self.run(package.path, parsed_args)
+        timings = self.get_timings()
 
         sys.stdout = old_stdout
         sys.stderr = old_stderr
@@ -642,7 +708,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logger.removeHandler(handler)
             logger.addHandler(old_handler)
 
-        return issues
+        return issues, timings
 
     @staticmethod
     def print_no_issues() -> None:
