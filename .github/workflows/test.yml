@@ -72,34 +72,35 @@ jobs:
       - name: Install tools (Linux)
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
-          sudo apt update
-          sudo apt install cccc
-          sudo apt install clang
-          sudo apt install clang-format
-          sudo apt install clang-tidy
-          sudo apt install cppcheck
-          sudo apt install libpcre3-dev
-          sudo apt install libperl-critic-perl
-          sudo apt install libxml2
-          sudo apt install libxml2-utils
-          sudo apt install shellcheck
-          sudo apt install uncrustify
+          sudo apt-get update
+          sudo apt-get install cccc
+          sudo apt-get install clang
+          sudo apt-get install clang-format
+          sudo apt-get install clang-tidy
+          sudo apt-get install cppcheck
+          sudo apt-get install libpcre3-dev
+          sudo apt-get install libperl-critic-perl
+          sudo apt-get install libxml2
+          sudo apt-get install libxml2-utils
+          sudo apt-get install shellcheck
+          sudo apt-get install uncrustify
 
       - name: Install clang tools (for unit tests)
         if: matrix.os == 'ubuntu-22.04'
         run: |
-          sudo apt update
-          sudo apt install clang-format-14
-          sudo apt install clang-tidy-14
+          sudo apt-get update
+          sudo apt-get install clang-format-14
+          sudo apt-get install clang-tidy-14
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
-          sudo apt install curl
+          sudo apt-get update
+          sudo apt-get install curl
           curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
           sudo bash nodesource_setup.sh
-          sudo apt install nodejs
+          sudo apt-get install nodejs
           sudo npm install -g n
           sudo n stable
           sudo npm install -g markdownlint-cli@0.21.0
