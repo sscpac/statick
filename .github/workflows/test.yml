@@ -69,6 +69,8 @@ jobs:
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
+      # Use apt-get instead of apt as apt does not have a stable CLI interface. The apt tool prints out
+      # "WARNING: apt does not have a stable CLI interface. Use with caution in scripts."
       - name: Install tools (Linux)
         if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         run: |
