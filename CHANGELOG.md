@@ -10,12 +10,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+## v0.9.0 - 2022-09-12
+
+### Added
+
+- The new `--level` flag can be set on the command line and will override all other levels, even non-default levels
+  specified in a `--profile` flag when running Statick.
+  The expectation is that a user setting the `--level` flag will explicitly want that level for the entire Statick run
+  (single package or multiple packages in a workspace).
+  If separate levels are desired per package then the user should not use the `--level` flag. (#429, #436)
+- Ubuntu 22.04 is now included in the main test environment matrix when running GitHub Actions. (#444)
+- The `--timing` flag will print timing information to the console after a Statick run.
+  Timing information is available for file discovery, for each individual plugin, and for overall duration. (#443)
+
+### Changed
+
 - Default behavior for Statick will now run all available discovery plugins, and run all tool plugins where
-  their desired source files are available, then output results only on the terminal. (#432, #435)
+  their desired source files are available, then output results only on the terminal.
   The old default behavior was to run the "sei_cert" profile, this is still doable via either of the
-  following arguments: `--profile sei_cert.yaml` or `--level sei_cert`
+  following arguments: `--profile sei_cert.yaml` or `--level sei_cert`. (#432, #435)
+- When running unit tests with tox Statick uses pytest-flake8.
+  A recent bug upstream causes issues when using the latest version of pytest-flake8.
+  Statick is now pinning the version of pytest-flake8 to the previous major version.
+  Details of the upstream issue are at tholo/pytest-flake8#87. (#440)
+- Updated configuration files that come with Statick to use the recommended list format when specifying plugins on
+  the `inherits_from` setting. (#427)
 
 ### Fixed
+
+- CMake discovery plugin and cmakelint tool plugin handle files with .cmake extension. (#434)
+  - This follows the CMake manual at <https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#organization>.
+    > CMake input files are written in the "CMake Language" in source files named CMakeLists.txt or ending in a
+    > .cmake file name extension.
+- Support latest PyPI version of mypy.
+  Required removing a mypy ignore comment. (#437)
+- The ROS discovery plugin was setting the file type of the package to a boolean value rather than a string describing
+  the actual file type.
+  Mixing types between packages caused bugs in tool plugins.
+  The ROS discovery plugin now acts consistently with other discovery plugins. (#439)
 
 ### Removed
 
