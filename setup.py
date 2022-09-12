@@ -54,6 +54,7 @@ setup(
         "pyflakes",
         "pylint",
         "PyYAML",
+        "tabulate",
         "xmltodict",
         "yamllint",
         "yapsy",
