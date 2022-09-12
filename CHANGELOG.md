@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
   (single package or multiple packages in a workspace).
   If separate levels are desired per package then the user should not use the `--level` flag. (#429, #436)
 - Ubuntu 22.04 is now included in the main test environment matrix when running GitHub Actions. (#444)
-- The `--timing` flag will print timing information to the console after a Statick run.
+- The `--timings` flag will print timing information to the console after a Statick run.
   Timing information is available for file discovery, for each individual plugin, and for overall duration. (#443)
 
 ### Changed
