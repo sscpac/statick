@@ -123,9 +123,9 @@ The term _package_ is still used to designate a directory with source code.
 
 When Statick is invoked there are three major steps involved:
 
-* _Discover_ source code files in each _package_ and determine what programming language the files are written in.
-* Run all configured _tools_ against source files that the individual _tool_ can analyze to find issues.
-* _Report_ the results.
+- _Discover_ source code files in each _package_ and determine what programming language the files are written in.
+- Run all configured _tools_ against source files that the individual _tool_ can analyze to find issues.
+- _Report_ the results.
 
 The default behavior for Statick is to return an exit code of success unless Statick has an internal error.
 It can be useful to have Statick return an exit code indicating an error if any issues are found.
@@ -285,9 +285,9 @@ This is a very important part of Statick, as many _tools_ are notorious for gene
 and sometimes source code in a project is not allowed to be modified for various reasons.
 Statick allows _exceptions_ to be specified in three different ways:
 
-* Placing a comment with `NOLINT` on the line of source code generating the warning.
-* Using individual _tool_ methods for ignoring warnings (such as adding `# pylint: disable=<warning>`in Python source code).
-* Via an `excpetions.yaml` file.
+- Placing a comment with `NOLINT` on the line of source code generating the warning.
+- Using individual _tool_ methods for ignoring warnings (such as adding `# pylint: disable=<warning>`in Python source code).
+- Via an `excpetions.yaml` file.
 
 ```yaml
 global:
@@ -667,18 +667,18 @@ Statick looks for a `setup.py` or `pyproject.toml` file in a directory to identi
 
 For example, suppose you have the following directory layout for the workspace.
 
-* /home/user/ws
-  * src
-    * python_package1
-    * ros_package1
-    * ros_package2
-    * subdir
-      * python_package2
-      * ros_package3
-      * ros_package4
-      * ros_package5
-  * build
-  * devel
+- /home/user/ws
+  - src
+    - python_package1
+    - ros_package1
+    - ros_package2
+    - subdir
+      - python_package2
+      - ros_package3
+      - ros_package4
+      - ros_package5
+  - build
+  - devel
 
 Statick should be run against the workspace source directory.
 Note that you can provide relative paths to the source directory.
