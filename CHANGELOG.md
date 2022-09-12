@@ -56,7 +56,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Removed
 
 - Usage of `inherits_from` flag in configuration files as a string is no longer supported.
-  The levels specified in `inherits_from` must be in list format now.
+  The levels specified in `inherits_from` must now be in list format.
   The string usage has been deprecated since v0.7.1. (#427)
 
 ## v0.8.1 - 2022-06-06
