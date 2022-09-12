@@ -28,40 +28,43 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 
 ## Table of Contents
 
-* [Installation](#installation)
-* [Basic Usage](#basic-usage)
-* [Concepts](#contents)
-  * [Discovery](#discovery)
-  * [Tools](#tools)
-  * [Reporting](#reporting)
-* [Basic Configuration](#basic-configuration)
-  * [Levels](#levels)
-  * [Profiles](#profiles)
-  * [Exceptions](#exceptions)
-* [Advanced Installation](#advanced-installation)
-* [Existing Plugins](#existing-plugins)
-  * [Discovery Plugins](#discovery-plugins)
-  * [Tool Plugins](#tool-plugins)
-  * [Reporting Plugins](#reporting-plugins)
-  * [External Plugins](#external-plugins)
-* [Customization](#customization)
-  * [User Paths](#user-paths)
-  * [Custom Profile](#custom-profile)
-  * [Custom Configuration](#custom-configuration)
-  * [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
-  * [Custom CMake Flags](#custom-cmake-flags)
-  * [Custom Clang Format Configuration](#custom-clang-format-configuration)
-* [Custom Plugins](#custom-plugins)
-* [ROS Workspaces](#ros-workspaces)
-* [Examples](#examples)
-* [Troubleshooting](#troubleshooting)
-  * [Make Tool Plugin](#make-tool-plugin)
-  * [CMake Discovery Plugin](#cmake-discovery-plugin)
-* [Contributing](#contributing)
-  * [Tests](#tests)
-  * [Mypy](#mypy)
-  * [Formatting](#formatting)
-* [Original Author](#original-author)
+- [Statick](#statick)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Basic Usage](#basic-usage)
+  - [Concepts](#concepts)
+    - [Discovery](#discovery)
+    - [Tools](#tools)
+    - [Reporting](#reporting)
+  - [Basic Configuration](#basic-configuration)
+    - [Levels](#levels)
+    - [Profiles](#profiles)
+    - [Exceptions](#exceptions)
+    - [Timings](#timings)
+  - [Advanced Installation](#advanced-installation)
+  - [Existing Plugins](#existing-plugins)
+    - [Discovery Plugins](#discovery-plugins)
+    - [Tool Plugins](#tool-plugins)
+    - [Reporting Plugins](#reporting-plugins)
+    - [External Plugins](#external-plugins)
+  - [Customization](#customization)
+    - [User Paths](#user-paths)
+    - [Custom Profile](#custom-profile)
+    - [Custom Configuration](#custom-configuration)
+    - [Custom Cppcheck Configuration](#custom-cppcheck-configuration)
+    - [Custom CMake Flags](#custom-cmake-flags)
+    - [Custom Clang Format Configuration](#custom-clang-format-configuration)
+  - [Custom Plugins](#custom-plugins)
+  - [Examples](#examples)
+  - [ROS Workspaces](#ros-workspaces)
+  - [Troubleshooting](#troubleshooting)
+    - [Make Tool Plugin](#make-tool-plugin)
+    - [CMake Discovery Plugin](#cmake-discovery-plugin)
+  - [Contributing](#contributing)
+    - [Tests](#tests)
+    - [Mypy](#mypy)
+    - [Formatting](#formatting)
+  - [Original Author](#original-author)
 
 ## Installation
 
@@ -271,6 +274,10 @@ Carnegie Mellon University Software Engineering Institute
 The rules and flags can be found in the
 [SEI CERT C/C++ Analyzers](https://wiki.sei.cmu.edu/confluence/display/cplusplus/CC.+Analyzers) chapter.
 
+Using the `--level` flag when running Statick will result in that specific level running for all packages regardless
+of what the `--profile` is set to.
+The speicified _level_ from the `--level` flag must exist in the default configuration file or a custom configuration file.
+
 ### Exceptions
 
 _Exceptions_ are used to ignore false positive warnings or warnings that will not be corrected.
@@ -336,6 +343,62 @@ To make them package specific, place them in a key named after the package under
 level of the yaml.
 
 The `ignore_packages` key is a list of package names that should be skipped when running Statick.
+
+### Timings
+
+Use of the `--timings` flag will print timing information to the console.
+The information is provided for file discovery, for each individual plugin, and for overall duration.
+Example output is
+
+```shell
+$ statick . --output-directory /tmp/x --timings
+
++---------+------------------+-------------+----------+
+| package |       name       | plugin_type | duration |
++---------+------------------+-------------+----------+
+| statick |    find files    |  Discovery  |  6.7783  |
+| statick |       ros        |  Discovery  |  0.0001  |
+| statick |      cmake       |  Discovery  |  0.0006  |
+| statick |       yaml       |  Discovery  |  0.0034  |
+| statick |       java       |  Discovery  |  0.0007  |
+| statick |        C         |  Discovery  |  0.0023  |
+| statick |      shell       |  Discovery  |  0.0016  |
+| statick |      groovy      |  Discovery  |  0.0006  |
+| statick |       perl       |  Discovery  |  0.0004  |
+| statick |       xml        |  Discovery  |  0.0006  |
+| statick |      python      |  Discovery  |  0.0020  |
+| statick |      maven       |  Discovery  |  0.0092  |
+| statick |    perlcritic    |    Tool     |  0.0000  |
+| statick |     cpplint      |    Tool     |  0.0000  |
+| statick |       make       |    Tool     |  0.0000  |
+| statick |    clang-tidy    |    Tool     |  0.0000  |
+| statick |      bandit      |    Tool     |  0.7980  |
+| statick |    groovylint    |    Tool     |  3.0717  |
+| statick |     pyflakes     |    Tool     |  4.3773  |
+| statick |   clang-format   |    Tool     |  0.0063  |
+| statick |   pycodestyle    |    Tool     |  2.5456  |
+| statick |      black       |    Tool     |  5.0089  |
+| statick |      lizard      |    Tool     |  0.6869  |
+| statick |       cccc       |    Tool     |  0.0000  |
+| statick |     cppcheck     |    Tool     |  0.0163  |
+| statick |     xmllint      |    Tool     |  0.0050  |
+| statick |      pylint      |    Tool     | 55.3768  |
+| statick |   catkin_lint    |    Tool     |  0.0000  |
+| statick |    shellcheck    |    Tool     |  0.0736  |
+| statick |     yamllint     |    Tool     |  2.2244  |
+| statick |    do_nothing    |    Tool     |  0.0000  |
+| statick |     spotbugs     |    Tool     |  0.0002  |
+| statick |      isort       |    Tool     |  3.6416  |
+| statick |    flawfinder    |    Tool     |  0.0000  |
+| statick |       mypy       |    Tool     |  0.0022  |
+| statick |    uncrustify    |    Tool     |  0.0001  |
+| statick |    pydocstyle    |    Tool     |  4.8751  |
+| statick |    cmakelint     |    Tool     |  0.0249  |
+| statick |   docformatter   |    Tool     |  0.0020  |
+| statick | print_to_console |  Reporting  |  0.0318  |
+| Overall |                  |             | 89.6734  |
++---------+------------------+-------------+----------+
+```
 
 ## Advanced Installation
 
