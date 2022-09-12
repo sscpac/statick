@@ -33,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
   their desired source files are available, then output results only on the terminal.
   The old default behavior was to run the "sei_cert" profile, this is still doable via either of the
   following arguments: `--profile sei_cert.yaml` or `--level sei_cert`. (#432, #435)
-- When running unit tests with tox Statick uses pytest-flake8.
+- When running unit tests with tox, Statick uses pytest-flake8.
   A recent bug upstream causes issues when using the latest version of pytest-flake8.
   Statick is now pinning the version of pytest-flake8 to the previous major version.
   Details of the upstream issue are at tholo/pytest-flake8#87. (#440)
