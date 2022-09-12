@@ -276,7 +276,7 @@ The rules and flags can be found in the
 
 Using the `--level` flag when running Statick will result in that specific level running for all packages regardless
 of what the `--profile` is set to.
-The speicified _level_ from the `--level` flag must exist in the default configuration file or a custom configuration file.
+The specified _level_ from the `--level` flag must exist in the default configuration file or a custom configuration file.
 
 ### Exceptions
 
