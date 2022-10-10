@@ -17,8 +17,14 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
         """Get name of tool."""
         return "markdownlint"
 
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["md_src"]
+
     # pylint: disable=too-many-locals
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "markdownlint"
 
@@ -33,12 +39,7 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["-c", format_file_name]
-        user_flags = self.get_user_flags(level)
         flags += user_flags
-
-        files: List[str] = []
-        if "md_src" in package:
-            files += package["md_src"]
 
         total_output: List[str] = []
 
@@ -67,16 +68,13 @@ class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
         for output in total_output:
             logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-            for output in total_output:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
+        return total_output
 
     # pylint: enable=too-many-locals
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         markdownlint_re = r"(.+):(\d+)\s([^\s]+)\s(.+)"
         markdownlint_re_with_col = r"(.+):(\d+):(\d+)\s([^\s]+)\s(.+)"

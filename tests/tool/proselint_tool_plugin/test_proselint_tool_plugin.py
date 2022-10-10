@@ -117,7 +117,7 @@ def test_proselint_tool_plugin_parse_valid():
     output = {}
     errors = {"data": {"errors": [{"check": "lexical_illusions.misc", "column": 48, "end": 5231, "extent": 12, "line": 154, "message": "There's a lexical illusion here: a word is repeated.", "replacements": None, "severity": "warning", "start": 5219}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "test.md"
     assert issues[0].line_number == "154"
@@ -128,30 +128,30 @@ def test_proselint_tool_plugin_parse_valid():
 
     errors = {"data": {"errors": []}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert not issues
 
     errors = {"data": {"errors": [{"severity": "suggestion", "check": None, "line": None, "message": None}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].severity == "1"
 
     errors = {"data": {"errors": [{"severity": "warning", "check": None, "line": None, "message": None}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].severity == "3"
 
     errors = {"data": {"errors": [{"severity": "error", "check": None, "line": None, "message": None}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].severity == "5"
 
     errors = {"data": {"errors": [{"severity": "not_a_valid_severity", "check": None, "line": None, "message": None}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].severity == "3"
 
@@ -162,10 +162,10 @@ def test_proselint_tool_plugin_parse_invalid():
     output = {}
     errors = {}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert not issues
 
     errors = {"data": {"errors": [{}]}, "status": "success"}
     output["test.md"] = json.dumps(errors)
-    issues = plugin.parse_output(output)
+    issues = plugin.parse_tool_output(output)
     assert not issues

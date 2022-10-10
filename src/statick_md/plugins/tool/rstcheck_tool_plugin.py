@@ -17,18 +17,19 @@ class RstcheckToolPlugin(ToolPlugin):  # type: ignore
         """Get name of tool."""
         return "rstcheck"
 
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["rst_src"]
+
     # pylint: disable=too-many-locals
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "rstcheck"
 
         flags: List[str] = []
-        user_flags = self.get_user_flags(level)
         flags += user_flags
-
-        files: List[str] = []
-        if "rst_src" in package:
-            files += package["rst_src"]
 
         total_output: List[str] = []
 
@@ -57,16 +58,13 @@ class RstcheckToolPlugin(ToolPlugin):  # type: ignore
         for output in total_output:
             logging.debug("%s", str(output))
 
-        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-            for output in total_output:
-                fid.write(str(output))
-
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
+        return total_output
 
     # pylint: enable=too-many-locals
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         rstcheck_re = r"(.+):(\d+):\s\((.+)/(\d)\)\s(.+)"
         parse: Pattern[str] = re.compile(rstcheck_re)

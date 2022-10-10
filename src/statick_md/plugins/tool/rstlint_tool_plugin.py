@@ -42,12 +42,12 @@ class RstlintToolPlugin(ToolPlugin):  # type: ignore
             for output in total_output:
                 fid.write(str(output))
 
-        issues: List[Issue] = self.parse_output(total_output)
+        issues: List[Issue] = self.parse_tool_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals
 
-    def parse_output(self, total_output: List[SystemMessage]) -> List[Issue]:
+    def parse_tool_output(self, total_output: List[SystemMessage]) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 
