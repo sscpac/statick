@@ -17,8 +17,14 @@ class JSHintToolPlugin(ToolPlugin):  # type: ignore
         """Get name of tool."""
         return "jshint"
 
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["html_src", "javascript_src"]
+
     # pylint: disable=too-many-locals
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "jshint"
 
@@ -34,14 +40,7 @@ class JSHintToolPlugin(ToolPlugin):  # type: ignore
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += ["-e", ".js,.html", "--extract", "auto", "--reporter", "unix"]
-        user_flags = self.get_user_flags(level)
         flags += user_flags
-
-        files: List[str] = []
-        if "html_src" in package:
-            files += package["html_src"]
-        if "javascript_src" in package:
-            files += package["javascript_src"]
 
         total_output: List[str] = []
 
@@ -69,16 +68,13 @@ class JSHintToolPlugin(ToolPlugin):  # type: ignore
         for output in total_output:
             logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-            for output in total_output:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
+        return total_output
 
     # pylint: enable=too-many-locals
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         jshint_re = r"(.+):(\d+):(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(jshint_re)

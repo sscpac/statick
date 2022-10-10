@@ -34,6 +34,7 @@ def setup_jshint_tool_plugin():
     )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     plugin = JSHintToolPlugin()
     plugin.set_plugin_context(plugin_context)
     return plugin

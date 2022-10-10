@@ -19,6 +19,10 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         """Get name of tool."""
         return "eslint"
 
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["html_src", "javascript_src"]
+
     def get_format_file(self, level: str) -> Tuple[str, bool]:
         """Retrieve format file path."""
         tool_config = ".eslintrc"
@@ -50,7 +54,9 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         return (format_file_name, copied_file)
 
     # pylint: disable=too-many-locals
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "eslint"
 
@@ -60,14 +66,7 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += ["--ext", ".js,.html", "-f", "unix"]
-        user_flags = self.get_user_flags(level)
         flags += user_flags
-
-        files: List[str] = []
-        if "html_src" in package:
-            files += package["html_src"]
-        if "javascript_src" in package:
-            files += package["javascript_src"]
 
         total_output: List[str] = []
 
@@ -100,13 +99,7 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         if copied_file:
             self.remove_config_file(format_file_name)
 
-        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-            for output in total_output:
-                fid.write(output)
-                logging.debug("%s", output)
-
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
+        return total_output
 
     # pylint: enable=too-many-locals
 
@@ -117,7 +110,9 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         if format_file_path.exists():
             format_file_path.unlink()
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         eslint_re = r"(.+):(\d+):(\d+):\s(.+)\s\[(.+)\/(.+)\]"
         eslint_error_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)]"
