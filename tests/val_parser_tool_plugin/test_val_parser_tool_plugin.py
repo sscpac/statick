@@ -186,11 +186,11 @@ def test_val_parser_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of Parser."""
     vtp = setup_val_parser_tool_plugin()
     output = ""
-    issues = vtp.parse_output(output)
+    issues = vtp.parse_tool_output(output)
     assert not issues
 
     output = "Errors: 0, warnings: 0"
-    issues = vtp.parse_output(output)
+    issues = vtp.parse_tool_output(output)
     assert not issues
 
     output = ""
@@ -200,7 +200,7 @@ def test_val_parser_tool_plugin_parse_valid():
     output += line
     line = "/tmp/dummy_package/problem.pddl: line: 42: Warning: Undeclared symbol: x"
     output += line
-    issues = vtp.parse_output(output)
+    issues = vtp.parse_tool_output(output)
     assert len(issues) == 2
     assert issues[0].filename == "/tmp/dummy_package/domain.pddl"
     assert issues[0].line_number == "83"
@@ -220,7 +220,7 @@ def test_val_parser_tool_plugin_parse_invalid():
     """Verify that we can parse the invalid output of Parser."""
     vtp = setup_val_parser_tool_plugin()
     output = "invalid text"
-    issues = vtp.parse_output(output)
+    issues = vtp.parse_tool_output(output)
     assert not issues
 
 

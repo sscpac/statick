@@ -155,15 +155,15 @@ def test_val_validate_tool_plugin_parse_valid():
     output += line
     line = "...action passes type checking."
     output += line
-    issues = vtp.parse_output(output, "test.pddl")
+    issues = vtp.parse_tool_output(output, "test.pddl")
     assert not issues
 
     output = "Errors: 0, warnings: 0"
-    issues = vtp.parse_output(output, "test.pddl")
+    issues = vtp.parse_tool_output(output, "test.pddl")
     assert not issues
 
     output = "Error: Parser failed to read file!"
-    issues = vtp.parse_output(output, "/home/user/test.pddl")
+    issues = vtp.parse_tool_output(output, "/home/user/test.pddl")
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/test.pddl"
     assert issues[0].line_number == "0"
@@ -176,7 +176,7 @@ def test_val_validate_tool_plugin_parse_valid():
     )
 
     output = "Problem in domain definition!"
-    issues = vtp.parse_output(output, "/home/user/test.pddl")
+    issues = vtp.parse_tool_output(output, "/home/user/test.pddl")
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/test.pddl"
     assert issues[0].line_number == "0"
@@ -193,7 +193,7 @@ def test_val_validate_tool_plugin_parse_invalid():
     """Verify that we can parse the invalid output of Validate."""
     vtp = setup_val_validate_tool_plugin()
     output = "invalid text"
-    issues = vtp.parse_output(output, "test.pddl")
+    issues = vtp.parse_tool_output(output, "test.pddl")
     assert not issues
 
 
