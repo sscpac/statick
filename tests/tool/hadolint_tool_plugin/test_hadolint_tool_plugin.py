@@ -46,6 +46,7 @@ def setup_hadolint_tool_plugin(
     )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     plugin = HadolintToolPlugin()
     if binary:
         plugin_context.args.hadolint_bin = binary

@@ -33,8 +33,14 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
             help="Use hadolint docker image instead of binary",
         )
 
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["dockerfile_src"]
+
     # pylint: disable=too-many-locals
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         tool_bin = "hadolint"
 
@@ -51,7 +57,6 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
 
         config_file_path = self.plugin_context.resources.get_file(tool_config)
         flags: List[str] = ["-f", "json", "--no-fail"]
-        user_flags = self.get_user_flags(level)
         if "-f" in user_flags:
             idx = user_flags.index("-f")
             logging.warning(
@@ -62,10 +67,6 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
             user_flags.pop(idx)
             user_flags.pop(idx)
         flags += user_flags
-
-        files: List[str] = []
-        if "dockerfile_src" in package:
-            files += package["dockerfile_src"]
 
         total_output: List[str] = []
         if (
@@ -87,12 +88,7 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
         for output in total_output:
             logging.debug("%s", output)
 
-        with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
-            for output in total_output:
-                fid.write(output)
-
-        issues: List[Issue] = self.parse_output(total_output)
-        return issues
+        return total_output
 
     # pylint: enable=too-many-locals
 
@@ -172,7 +168,9 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
             logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
             return None
 
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
 
