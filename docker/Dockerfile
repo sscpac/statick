@@ -68,9 +68,9 @@ RUN python3 -m pip install --no-cache-dir --upgrade \
     pydocstyle \
     pyflakes \
     pylint \
-    python3-pylint-django \
-    python3-yaml \
-    python3-yapsy \
+    pylint-django \
+    pyyaml \
+    yapsy \
     setuptools \
     statick \
     statick-md \
