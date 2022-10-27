@@ -69,7 +69,7 @@ RUN python3 -m pip install --no-cache-dir --upgrade \
     pyflakes \
     pylint \
     pylint-django \
-    pyyaml \
+    --ignore-installed pyyaml \
     yapsy \
     setuptools \
     statick \
