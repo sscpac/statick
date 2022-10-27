@@ -37,11 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2 \
     libxml2-utils \
     maven \
-    pylint \
     python3-pip \
-    python3-pylint-django \
-    python3-yaml \
-    python3-yapsy \
     shellcheck \
     uncrustify \
     wget \
@@ -71,6 +67,10 @@ RUN python3 -m pip install --no-cache-dir --upgrade \
     pycodestyle \
     pydocstyle \
     pyflakes \
+    pylint \
+    python3-pylint-django \
+    python3-yaml \
+    python3-yapsy \
     setuptools \
     statick \
     statick-md \
