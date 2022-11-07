@@ -48,7 +48,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python3 -m pip install --no-cache-dir --upgrade pip
 
 RUN python3 -m venv /opt/venv
-# Install dependencies:
 COPY requirements.txt .
 RUN . /opt/venv/bin/activate && pip install -r requirements.txt
 
