@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-utils \
     maven \
     python3-pip \
+    python3-venv \
     shellcheck \
     uncrustify \
     wget \
@@ -45,46 +46,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Version pinning may be added in the future, but ignore for now.
 # hadolint ignore=DL3013
 RUN python3 -m pip install --no-cache-dir --upgrade pip
-# hadolint ignore=DL3013
-RUN python3 -m pip install --no-cache-dir --upgrade \
-    bandit \
-    black \
-    cmakelint \
-    cpplint \
-    docformatter \
-    flake8 \
-    flake8-blind-except \
-    flake8-builtins \
-    flake8-class-newline \
-    flake8-comprehensions \
-    flake8-docstrings \
-    flake8-import-order \
-    flake8-quotes \
-    flawfinder \
-    isort \
-    lizard \
-    mypy \
-    pycodestyle \
-    pydocstyle \
-    pyflakes \
-    pylint \
-    pylint-django \
-    --ignore-installed pyyaml \
-    yapsy \
-    setuptools \
-    statick \
-    statick-md \
-    statick-planning \
-    statick-tex \
-    statick-tooling \
-    statick-web \
-    tox \
-    tox-gh-actions \
-    types-PyYAML \
-    wheel \
-    xmltodict \
-    yamllint \
-    yapsy
+
+RUN python3 -m venv /opt/venv
+# Install dependencies:
+COPY requirements.txt .
+RUN . /opt/venv/bin/activate && pip install -r requirements.txt
 
 # Statick npm tools.
 # Newer version is installed from non-apt source due to SSL library compatibility issues.
