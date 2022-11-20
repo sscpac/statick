@@ -25,6 +25,7 @@ class ReportingPlugin(IPlugin):  # type: ignore
         self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
         """Run the report generator."""
+        return (None, False)
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Setter for plugin_context."""

@@ -21,6 +21,7 @@ class ToolPlugin(IPlugin):  # type: ignore
     def get_name(self) -> str:
         """Get name of tool."""
         pass  # pylint: disable=unnecessary-pass
+        return ""
 
     @classmethod
     def get_tool_dependencies(cls) -> List[str]:
@@ -32,6 +33,7 @@ class ToolPlugin(IPlugin):  # type: ignore
 
     def get_file_types(self) -> List[str]:
         """Return a list of file types the plugin can scan."""
+        return []
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
         """Run tool and gather output."""
@@ -65,6 +67,7 @@ class ToolPlugin(IPlugin):  # type: ignore
         self, total_output: List[str], package: Optional[Package] = None
     ) -> List[Issue]:
         """Parse tool output and report issues."""
+        return []
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
