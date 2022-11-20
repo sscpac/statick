@@ -134,7 +134,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Self check
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           mkdir statick-output
           ./statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
