@@ -22,7 +22,7 @@ class ReportingPlugin(IPlugin):  # type: ignore
         """Gather arguments."""
 
     def report(
-        self, package: Package, issues: Dict[str, List[Issue]], level: str
+        self, package: Package, issues: Dict[str, List[Issue]], level: str  # pylint: disable=unused-argument
     ) -> Tuple[Optional[None], bool]:
         """Run the report generator."""
         return (None, False)
