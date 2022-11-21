@@ -39,7 +39,7 @@ def setup_groovylint_tool_plugin():
     plugin.set_plugin_context(plugin_context)
     return plugin
 
-
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_found():
     """Test that the plugin manager can find the groovylint plugin."""
     manager = PluginManager()
@@ -65,7 +65,7 @@ def test_groovylint_tool_plugin_found():
         for plugin_info in manager.getPluginsOfCategory("Tool")
     )
 
-
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_scan_valid():
     """Integration test: Make sure the groovylint output hasn't changed."""
     plugin = setup_groovylint_tool_plugin()
@@ -82,7 +82,7 @@ def test_groovylint_tool_plugin_scan_valid():
     issues = plugin.scan(package, "level")
     assert not issues
 
-
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the groovylint output hasn't changed."""
     plugin = setup_groovylint_tool_plugin()
@@ -99,7 +99,7 @@ def test_groovylint_tool_plugin_scan_valid_with_issues():
     # string quote mark info statement.
     assert len(issues) == 3
 
-
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_parse_valid():
     """Verify that we can parse the expected output of groovylint."""
     plugin = setup_groovylint_tool_plugin()
@@ -116,7 +116,7 @@ def test_groovylint_tool_plugin_parse_valid():
         == "The String 'Hello World!' can be wrapped in single quotes instead of double quotes"
     )
 
-
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_parse_invalid():
     """Verify that invalid output of groovylint is ignored."""
     plugin = setup_groovylint_tool_plugin()
@@ -126,6 +126,7 @@ def test_groovylint_tool_plugin_parse_invalid():
 
 
 @mock.patch("statick_tool.plugins.tool.groovylint_tool_plugin.subprocess.check_output")
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised (usually means groovylint hit an error).
