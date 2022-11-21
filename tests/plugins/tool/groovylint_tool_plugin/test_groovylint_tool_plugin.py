@@ -40,7 +40,6 @@ def setup_groovylint_tool_plugin():
     return plugin
 
 
-@pytest.mark.skip()
 def test_groovylint_tool_plugin_found():
     """Test that the plugin manager can find the groovylint plugin."""
     manager = PluginManager()
