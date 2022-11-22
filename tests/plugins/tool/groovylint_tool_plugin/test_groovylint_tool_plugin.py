@@ -84,6 +84,7 @@ def test_groovylint_tool_plugin_scan_valid():
     assert not issues
 
 
+@pytest.mark.skip()
 def test_groovylint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the groovylint output hasn't changed."""
     plugin = setup_groovylint_tool_plugin()
