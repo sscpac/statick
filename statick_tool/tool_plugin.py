@@ -47,7 +47,7 @@ class ToolPlugin(IPlugin):  # type: ignore
             print("Got hereB")
             if total_output is not None:
                 if self.plugin_context and self.plugin_context.args.output_directory:
-                     print("Got hereC")
+                    print("Got hereC")
                     with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                         for output in total_output:
                             fid.write(output)
