@@ -79,7 +79,9 @@ def test_groovylint_tool_plugin_scan_valid():
         os.path.join(os.path.dirname(__file__), "valid_package", "test.gradle"),
         os.path.join(os.path.dirname(__file__), "valid_package", "test.groovy"),
     ]
+    sys.stderr.write("Before scan\n")
     issues = plugin.scan(package, "level")
+    sys.stderr.write("After scan\n")
     assert not issues
 
 
