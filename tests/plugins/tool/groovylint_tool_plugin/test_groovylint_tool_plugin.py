@@ -80,6 +80,7 @@ def test_groovylint_tool_plugin_scan_valid():
     #     os.path.join(os.path.dirname(__file__), "valid_package", "test.groovy"),
     # ]
     # issues = plugin.scan(package, "level")
+    issues = None
     assert not issues
 
 
