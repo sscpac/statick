@@ -69,8 +69,8 @@ def test_groovylint_tool_plugin_found():
 def test_groovylint_tool_plugin_scan_valid():
     """Integration test: Make sure the groovylint output hasn't changed."""
     plugin = setup_groovylint_tool_plugin()
-    # if not plugin.command_exists("npm-groovy-lint"):
-    #     pytest.skip("Missing groovylint executable.")
+    if not plugin.command_exists("npm-groovy-lint"):
+        pytest.skip("Missing groovylint executable.")
     # package = Package(
     #     "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     # )
