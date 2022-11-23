@@ -3,6 +3,7 @@ import argparse
 import logging
 import os
 import shlex
+import sys
 from typing import Any, Dict, List, Optional, Union
 
 from yapsy.IPlugin import IPlugin
@@ -39,19 +40,19 @@ class ToolPlugin(IPlugin):  # type: ignore
         for file_type in self.get_file_types():
             if file_type in package and package[file_type]:
                 files += package[file_type]
-        print("Got hereA")
+        sys.stderr.write("A\n")
         if files:
             total_output = (  # pylint: disable=assignment-from-no-return
                 self.process_files(package, level, files, self.get_user_flags(level))
             )
-            print("Got hereB")
+            sys.stderr.write("B\n")
             if total_output is not None:
                 if self.plugin_context and self.plugin_context.args.output_directory:
-                    print("Got hereC")
+                    sys.stderr.write("C\n")
                     with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                         for output in total_output:
                             fid.write(output)
-                print("Got hereD")
+                sys.stderr.write("D\n")
                 return self.parse_output(total_output, package)
 
             return None
