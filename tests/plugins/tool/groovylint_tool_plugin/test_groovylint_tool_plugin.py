@@ -71,14 +71,14 @@ def test_groovylint_tool_plugin_scan_valid():
     plugin = setup_groovylint_tool_plugin()
     if not plugin.command_exists("npm-groovy-lint"):
         pytest.skip("Missing groovylint executable.")
-    # package = Package(
-    #     "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
-    # )
-    # package["groovy_src"] = [
-    #     os.path.join(os.path.dirname(__file__), "valid_package", "Jenkinsfile"),
-    #     os.path.join(os.path.dirname(__file__), "valid_package", "test.gradle"),
-    #     os.path.join(os.path.dirname(__file__), "valid_package", "test.groovy"),
-    # ]
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["groovy_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "Jenkinsfile"),
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.gradle"),
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.groovy"),
+    ]
     # issues = plugin.scan(package, "level")
     issues = None
     assert not issues
