@@ -119,7 +119,7 @@ jobs:
           statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if:matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: 'docs/'
