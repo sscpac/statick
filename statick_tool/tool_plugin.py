@@ -18,7 +18,7 @@ class ToolPlugin(IPlugin):  # type: ignore
 
     plugin_context = None
 
-    def get_name(self) -> str: # type: ignore[empty-body]
+    def get_name(self) -> str:  # type: ignore[empty-body]
         """Get name of tool."""
         pass  # pylint: disable=unnecessary-pass
 
@@ -30,7 +30,7 @@ class ToolPlugin(IPlugin):  # type: ignore
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
 
-    def get_file_types(self) -> List[str]: # type: ignore[empty-body]
+    def get_file_types(self) -> List[str]:  # type: ignore[empty-body]
         """Return a list of file types the plugin can scan."""
 
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
@@ -61,7 +61,7 @@ class ToolPlugin(IPlugin):  # type: ignore
     ) -> Optional[List[str]]:
         """Run tool and gather output."""
 
-    def parse_output( # type: ignore[empty-body]
+    def parse_output(  # type: ignore[empty-body]
         self, total_output: List[str], package: Optional[Package] = None
     ) -> List[Issue]:
         """Parse tool output and report issues."""
