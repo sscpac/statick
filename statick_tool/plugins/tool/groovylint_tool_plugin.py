@@ -41,8 +41,9 @@ class GroovyLintToolPlugin(ToolPlugin):
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["--config", format_file_name]
-        flags += ["--output", "json"]
         flags += ["--noserver"]
+        flags += ["--output", "json"]
+
         flags += user_flags
 
         total_output: List[str] = []
@@ -57,7 +58,7 @@ class GroovyLintToolPlugin(ToolPlugin):
                     cwd=package.path,
                 )
                 total_output.append(output)
-
+                print("output: {output}")
             except subprocess.CalledProcessError as ex:
                 # npm-groovy-lint returns 1 on some errors but still has valid output
                 if ex.returncode == 1:
