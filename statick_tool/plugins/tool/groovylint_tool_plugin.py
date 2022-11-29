@@ -42,7 +42,8 @@ class GroovyLintToolPlugin(ToolPlugin):
         if format_file_name is not None:
             flags += ["--config", format_file_name]
         # flags += ["--noserver"]
-        flags += ["--serverport", "8080"]
+        flags += ["--serverhost", "http://127.0.0.1"]
+        flags += ["--serverport", "7484"]
         flags += ["--verbose"]
         flags += ["--output", "json"]
 
