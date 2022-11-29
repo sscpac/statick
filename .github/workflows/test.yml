@@ -18,14 +18,14 @@ jobs:
         python-version: ['3.7', '3.8', '3.9', '3.10']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'macOS')
         with:
           path: ~/Library/Caches/pip
@@ -41,7 +41,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'Windows')
         with:
           path: ~\AppData\Local\pip\Cache
@@ -129,7 +129,7 @@ jobs:
           python -m tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: false
 
