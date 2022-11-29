@@ -42,6 +42,7 @@ class GroovyLintToolPlugin(ToolPlugin):
         if format_file_name is not None:
             flags += ["--config", format_file_name]
         flags += ["--noserver"]
+        flags += ["--verbose"]
         flags += ["--output", "json"]
 
         flags += user_flags
