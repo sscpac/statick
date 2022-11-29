@@ -14,18 +14,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-18.04, ubuntu-20.04, ubuntu-22.04, windows-latest]
+        os: [macos-latest, ubuntu-20.04, ubuntu-22.04, windows-latest]
         python-version: ['3.7', '3.8', '3.9', '3.10']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'macOS')
         with:
           path: ~/Library/Caches/pip
@@ -41,7 +41,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'Windows')
         with:
           path: ~\AppData\Local\pip\Cache
@@ -65,14 +65,14 @@ jobs:
       # Remove apt repos that are known to break from time to time.
       # See https://github.com/actions/virtual-environments/issues/323
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
       # Use apt-get instead of apt as apt does not have a stable CLI interface. The apt tool prints out
       # "WARNING: apt does not have a stable CLI interface. Use with caution in scripts."
       - name: Install tools (Linux)
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install cccc
@@ -96,7 +96,7 @@ jobs:
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           sudo apt-get update
           sudo apt-get install curl
@@ -114,12 +114,12 @@ jobs:
           mypy --ignore-missing-imports --strict statick statick_tool/
 
       - name: Statick markdown
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: 'docs/'
@@ -129,12 +129,12 @@ jobs:
           python -m tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: false
 
       - name: Self check
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           mkdir statick-output
           ./statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
