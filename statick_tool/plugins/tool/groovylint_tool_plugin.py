@@ -44,7 +44,6 @@ class GroovyLintToolPlugin(ToolPlugin):
         flags += ["--serverhost", "http://127.0.0.1"]
         flags += ["--serverport", "7484"]
         flags += ["--output", "json"]
-
         flags += user_flags
 
         total_output: List[str] = []
