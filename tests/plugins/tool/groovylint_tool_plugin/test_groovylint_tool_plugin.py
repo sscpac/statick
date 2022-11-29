@@ -68,6 +68,7 @@ def test_groovylint_tool_plugin_found():
 
 def test_groovylint_tool_plugin_scan_valid():
     """Integration test: Make sure the groovylint output hasn't changed."""
+    print("VALID", flush=True)
     plugin = setup_groovylint_tool_plugin()
     if not plugin.command_exists("npm-groovy-lint"):
         pytest.skip("Missing groovylint executable.")
@@ -85,23 +86,32 @@ def test_groovylint_tool_plugin_scan_valid():
 
 def test_groovylint_tool_plugin_scan_valid_with_issues():
     """Integration test: Make sure the groovylint output hasn't changed."""
+    print("VALID WITH ISSUES", flush=True)
     plugin = setup_groovylint_tool_plugin()
+    print("VALID WITH ISSUES2", flush=True)
+
     if not plugin.command_exists("npm-groovy-lint"):
+        print("VALID WITH ISSUES3 DANG", flush=True)
         pytest.skip("Missing groovylint executable.")
+
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["groovy_src"] = [
         os.path.join(os.path.dirname(__file__), "valid_package", "test_errors.groovy")
     ]
+    print("VALID WITH ISSUES3", flush=True)
     issues = plugin.scan(package, "level")
+    print("VALID WITH ISSUES4", flush=True)
     # We expect to have unused variable error, a line too long warning, and a
     # string quote mark info statement.
+    print(f"ISSUES: {issues} {len(issues)}", flush=True)
     assert len(issues) == 3
 
 
 def test_groovylint_tool_plugin_parse_valid():
     """Verify that we can parse the expected output of groovylint."""
+    print("PARSE VALID", flush=True)
     plugin = setup_groovylint_tool_plugin()
     output = '{"summary":{"totalFilesWithErrorsNumber":1,"totalFilesLinted":1,"totalFoundErrorNumber":0,"totalFoundWarningNumber":0,"totalFoundInfoNumber":1,"totalFoundNumber":1,"totalFixedNumber":0,"totalRemainingNumber":1,"totalFixedErrorNumber":0,"totalFixedWarningNumber":0,"totalFixedInfoNumber":0,"totalRemainingErrorNumber":0,"totalRemainingWarningNumber":0,"totalRemainingInfoNumber":1,"detectedRules":{"UnnecessaryGString":1},"fixedRules":{}},"linesNumber":4,"files":{"test_errors.groovy":{"errors":[{"id":0,"line":3,"rule":"UnnecessaryGString","severity":"info","msg":"The String \'Hello World!\' can be wrapped in single quotes instead of double quotes","fixable":true,"fixLabel":"Replace double quotes by single quotes","range":{"start":{"line":3,"character":9},"end":{"line":3,"character":21}}}]}}}'
     issues = plugin.parse_output([output])

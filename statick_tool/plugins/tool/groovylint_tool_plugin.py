@@ -41,27 +41,31 @@ class GroovyLintToolPlugin(ToolPlugin):
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["--config", format_file_name]
-        flags += ["--noserver"]
+        # flags += ["--noserver"]
+        flags += ["--serverport", "8080"]
         flags += ["--verbose"]
         flags += ["--output", "json"]
 
         flags += user_flags
 
         total_output: List[str] = []
-
+        print("test", flush=True)
         for src in files:
+            print(f"file {src}", flush=True)
             try:
                 exe = [tool_bin] + flags + ["-f", src]
+                print(f"exe: {exe}", flush=True)
                 output = subprocess.check_output(
                     exe,
                     stderr=subprocess.STDOUT,
                     universal_newlines=True,
                     cwd=package.path,
                 )
+                print(f"output: {output}", flush=True)
                 total_output.append(output)
-                print(f"output: {output}")
             except subprocess.CalledProcessError as ex:
                 # npm-groovy-lint returns 1 on some errors but still has valid output
+                print(f"ex: {ex.output}", flush=True)
                 if ex.returncode == 1:
                     total_output.append(ex.output)
                 else:
@@ -77,7 +81,7 @@ class GroovyLintToolPlugin(ToolPlugin):
 
         for output in total_output:
             logging.debug("%s", output)
-
+        print(f"total_output: {total_output}", flush=True)
         return total_output
 
     # pylint: enable=too-many-locals
