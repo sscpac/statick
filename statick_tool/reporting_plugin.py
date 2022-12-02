@@ -21,7 +21,7 @@ class ReportingPlugin(IPlugin):  # type: ignore
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
 
-    def report(
+    def report(  # type: ignore[empty-body]
         self, package: Package, issues: Dict[str, List[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
         """Run the report generator."""
