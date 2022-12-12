@@ -43,8 +43,6 @@ class Config:
             if "levels" in user_config:
                 for level in user_config["levels"]:
                     level_config = user_config["levels"][level]
-                    if level == "threshold":
-                        print(f"level: {level}, level_config: {level_config}")
                     if (
                         level_config is not None
                         and "inherits_from" in level_config
