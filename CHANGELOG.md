@@ -14,6 +14,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Removed
 
+## v0.9.1 - 2022-12-12
+
+### Added
+
+- Continuous integration tests with Ubuntu 22.04. (#454)
+- Continuous integration tests with Python 3.11. (#455)
+- Docker image installs Python packages into a Python virtual environment. (#448)
+
+### Changed
+
+- Docker image installs Python tool packages from PyPI instead of apt.
+  Uses newer versions of Python tools. (#448)
+- Continuous integration uses latest versions of Actions. (#454)
+
+### Fixed
+
+- Groovylint tool plugin specifies flags for host and port to run on loopback device.
+  Fixes unit tests in continuous integration. (#454)
+
+### Removed
+
+- Continuous integration tests with Ubuntu 18.04. (#454)
+
 ## v0.9.0 - 2022-09-12
 
 ### Added
