@@ -16,15 +16,22 @@ class LacheckToolPlugin(ToolPlugin):  # type: ignore
         """Get name of tool."""
         return "lacheck"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def get_file_types(self) -> List[str]:
+        """Return a list of file types the plugin can scan."""
+        return ["tex"]
+
+    # pylint: disable=too-many-locals
+    def process_files(
+        self, package: Package, level: str, files: List[str], user_flags: List[str]
+    ) -> Optional[List[str]]:
         """Run tool and gather output."""
         flags: List[str] = []
-        user_flags: List[str] = self.get_user_flags(level)
         flags += user_flags
+
         total_output: List[str] = []
 
         tool_bin: str = "lacheck"
-        for src in package["tex"]:
+        for src in files:
             try:
                 subproc_args: List[str] = [tool_bin, src] + flags
                 output = subprocess.check_output(
@@ -47,14 +54,11 @@ class LacheckToolPlugin(ToolPlugin):  # type: ignore
 
             total_output.append(output)
 
-        with open(self.get_name() + ".log", "w", encoding="utf-8") as fid:
-            for output in total_output:
-                fid.write(output)
+        return total_output
 
-        issues: List[str] = self.parse_output(total_output)
-        return issues
-
-    def parse_output(self, total_output: List[str]) -> List[Issue]:
+    def parse_output(
+        self, total_output: List[str], package: Optional[Package] = None
+    ) -> List[Issue]:
         """Parse tool output and report issues."""
         tool_re: str = r"(.+)\s(.+)\s(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)

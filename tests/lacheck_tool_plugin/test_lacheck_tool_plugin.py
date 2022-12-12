@@ -31,6 +31,7 @@ def setup_lacheck_tool_plugin():
     )
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
+    plugin_context.args.output_directory = os.path.dirname(__file__)
     ltp = LacheckToolPlugin()
     ltp.set_plugin_context(plugin_context)
     return ltp
