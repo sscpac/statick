@@ -1,5 +1,6 @@
 """Apply pylint tool and gather results."""
 import logging
+import multiprocessing
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -29,31 +30,31 @@ class PylintToolPlugin(ToolPlugin):
             "--reports=no",
         ]
         flags += user_flags
+        max_cpus = multiprocessing.cpu_count()
+        flags += [f"-j {max_cpus}"]
 
         total_output: List[str] = []
 
-        for src in files:
-            try:
-                subproc_args = ["pylint", src] + flags
-                output = subprocess.check_output(
-                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
-                )
+        try:
+            subproc_args = ["pylint"] + flags + files
+            print(f"subproc_args: {subproc_args}")
+            total_output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
 
-            except subprocess.CalledProcessError as ex:
-                if ex.returncode != 32:
-                    output = ex.output
-                else:
-                    logging.warning("Problem %d", ex.returncode)
-                    logging.warning("%s exception: %s", self.get_name(), ex.output)
-                    return None
-
-            except OSError as ex:
-                logging.warning("Couldn't find pylint executable! (%s)", ex)
+        except subprocess.CalledProcessError as ex:
+            if ex.returncode != 32:
+                total_output = ex.output
+            else:
+                logging.warning("Problem %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
-            logging.debug("%s: %s", src, output)
+        except OSError as ex:
+            logging.warning("Couldn't find pylint executable! (%s)", ex)
+            return None
 
-            total_output.append(output)
+        logging.debug("%s", total_output)
 
         return total_output
 
