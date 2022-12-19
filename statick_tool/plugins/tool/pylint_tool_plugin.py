@@ -30,7 +30,7 @@ class PylintToolPlugin(ToolPlugin):
             "--reports=no",
         ]
         flags += user_flags
-        max_cpus = int(multiprocessing.cpu_count() / 2)
+        max_cpus = multiprocessing.cpu_count()
         flags += [f"-j {max_cpus}"]
 
         total_output: List[str] = []
