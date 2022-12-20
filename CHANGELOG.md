@@ -6,7 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## Unreleased
 
+The additions to the pylint tool resulted in significant improvements to processing times.
+
+When running the following command:
+
+```shell
+statick . --output-directory /tmp/x --profile self_check.yaml --log info --timings --force-tool-list pylint
+```
+
+we see these time improvements.
+The biggest improvement comes from running pylint once with all Python source files, followed by further improvements
+from running with multiple CPU cores.
+These results are from a Ryzen 5900x with 24 CPU cores available.
+
+Statick Version | Pylint Timing Info (s)
+---------------------- | ------------------------------
+main | 40.8708
+pylint-multiprocessing with 1 CPU core | 4.6742
+pylint-multiprocessing with maximum CPU cores | 2.5462
+
 ### Added
+
+- Process all Python source files at once with pylint tool plugin, instead of one pylint run per file. (#460)
+- Support [parallel execution](https://docs.pylint.org/run.html#parallel-execution) flag of pylint. (#460)
 
 ### Changed
 
