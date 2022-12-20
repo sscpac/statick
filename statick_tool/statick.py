@@ -84,7 +84,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         logging.info("Log level set to %s", args.log_level.upper())
 
     @classmethod
-    def set_cpu_count(cls, arg: str):
+    def set_cpu_count(cls, arg: str) -> int:
         """Set correct number of CPU cores to use."""
         max_cpus = multiprocessing.cpu_count()
         desired = int(arg)
