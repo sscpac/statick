@@ -28,7 +28,8 @@ pylint-multiprocessing with maximum CPU cores | 2.5462
 ### Added
 
 - Process all Python source files at once with pylint tool plugin, instead of one pylint run per file. (#460)
-- Support [parallel execution](https://docs.pylint.org/run.html#parallel-execution) flag of pylint. (#460)
+- Support [parallel execution](https://docs.pylint.org/run.html#parallel-execution) flag of pylint.
+  Set the number of cores used by pylint using the `--max-procs` flag for Statick. (#460)
 
 ### Changed
 
