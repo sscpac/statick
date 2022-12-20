@@ -1,6 +1,5 @@
 """Apply pylint tool and gather results."""
 import logging
-import multiprocessing
 import re
 import subprocess
 from typing import List, Match, Optional, Pattern
@@ -30,8 +29,8 @@ class PylintToolPlugin(ToolPlugin):
             "--reports=no",
         ]
         flags += user_flags
-        max_cpus = multiprocessing.cpu_count()
-        flags += [f"-j {max_cpus}"]
+        if self.plugin_context and self.plugin_context.args.max_procs is not None:
+            flags += [f"-j {self.plugin_context.args.max_procs}"]
 
         total_output: List[str] = []
 

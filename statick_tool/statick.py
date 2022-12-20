@@ -83,6 +83,18 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         logging.root.setLevel(log_level)
         logging.info("Log level set to %s", args.log_level.upper())
 
+    @classmethod
+    def set_cpu_count(cls, arg: str):
+        """Set correct number of CPU cores to use."""
+        max_cpus = multiprocessing.cpu_count()
+        desired = int(arg)
+        if desired > max_cpus or desired == -1:
+            return max_cpus
+        if desired > 1:
+            return desired
+
+        return 1
+
     def get_config(self, args: argparse.Namespace) -> None:
         """Get Statick configuration."""
         base_config_filename = "config.yaml"
@@ -206,10 +218,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         args.add_argument(
             "--max-procs",
             dest="max_procs",
-            type=int,
+            type=self.set_cpu_count,
             default=int(multiprocessing.cpu_count() / 2),
-            help="Maximum number of CPU cores to use, only used when running on a"
-            "workspace",
+            help="Maximum number of CPU cores to use. "
+            "Defaults to half the available CPU cores. Setting to -1 will "
+            "cause Statick to use all available CPU cores",
         )
         args.add_argument(
             "--packages-file",
@@ -504,19 +517,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     ) -> Tuple[
         Optional[Dict[str, List[Issue]]], bool
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-        """Run statick on a workspace.
-
-        --max-procs can be set to the desired number of CPUs to use for processing a
-        workspace.
-        This defaults to half the available CPUs.
-        Setting this to -1 will cause statick.run_workspace to use all available CPUs.
-        """
-        max_cpus = multiprocessing.cpu_count()
-        if parsed_args.max_procs > max_cpus or parsed_args.max_procs == -1:
-            parsed_args.max_procs = max_cpus
-        elif parsed_args.max_procs <= 0:
-            parsed_args.max_procs = 1
-
+        """Run statick on a workspace."""
         if parsed_args.output_directory:
             out_dir = parsed_args.output_directory
             if not os.path.isdir(out_dir):
