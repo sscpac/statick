@@ -2,6 +2,7 @@
 
 import contextlib
 import logging
+import multiprocessing
 import os
 import shutil
 import subprocess
@@ -128,9 +129,7 @@ def test_get_level_sei_cert(init_statick):
     assert level == "sei_cert"
 
     args2 = Args("Statick tool")
-    args2.parser.add_argument(
-        "--profile", dest="profile", type=str
-    )
+    args2.parser.add_argument("--profile", dest="profile", type=str)
     args2.parser.add_argument("--level", dest="level", type=str, default="sei_cert")
     level = init_statick.get_level("package", args2.get_args([]))
     assert level == "sei_cert"
@@ -146,9 +145,7 @@ def test_get_level_cli(init_statick):
     args.parser.add_argument(
         "--profile", dest="profile", type=str, default="profile-test.yaml"
     )
-    args.parser.add_argument(
-        "--level", dest="level", type=str, default="custom"
-    )
+    args.parser.add_argument("--level", dest="level", type=str, default="custom")
     level = init_statick.get_level("package", args.get_args([]))
     assert level == "custom"
     level = init_statick.get_level("package_specific", args.get_args([]))
@@ -881,7 +878,14 @@ def init_statick_ws():
     yield (statick, args, argv)
 
     # cleanup
-    for level in ["default", "custom", "missing_reporting_plugin", "missing_tool", "default_value", "sei_cert"]:
+    for level in [
+        "default",
+        "custom",
+        "missing_reporting_plugin",
+        "missing_tool",
+        "default_value",
+        "sei_cert",
+    ]:
         try:
             shutil.rmtree(
                 os.path.join(
@@ -903,7 +907,9 @@ def init_statick_ws():
         try:
             shutil.rmtree(
                 os.path.join(
-                    os.path.dirname(__file__), "test_workspace", "test_package2-" + level
+                    os.path.dirname(__file__),
+                    "test_workspace",
+                    "test_package2-" + level,
                 )
             )
         except OSError as ex:
@@ -937,6 +943,35 @@ def test_run_workspace_one_proc(init_statick_ws):
         [
             "--max-procs",
             "0",
+        ]
+    )
+
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+
+    issues, success = statick.run_workspace(parsed_args)
+
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+
+
+def test_run_workspace_two_procs(init_statick_ws):
+    """Test running Statick on a workspace."""
+    max_cpus = multiprocessing.cpu_count()
+    if max_cpus < 2:
+        pytest.skip(
+            "Not enough CPU cores available. "
+            "Skipping test that requires multiple CPU cores."
+        )
+    statick = init_statick_ws[0]
+    args = init_statick_ws[1]
+    sys.argv = init_statick_ws[2]
+    sys.argv.extend(
+        [
+            "--max-procs",
+            "2",
         ]
     )
 

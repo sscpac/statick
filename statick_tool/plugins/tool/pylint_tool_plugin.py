@@ -29,31 +29,32 @@ class PylintToolPlugin(ToolPlugin):
             "--reports=no",
         ]
         flags += user_flags
+        if self.plugin_context and self.plugin_context.args.max_procs is not None:
+            flags += [f"-j {self.plugin_context.args.max_procs}"]
 
         total_output: List[str] = []
 
-        for src in files:
-            try:
-                subproc_args = ["pylint", src] + flags
-                output = subprocess.check_output(
-                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
-                )
+        try:
+            subproc_args = ["pylint"] + flags + files
+            output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
 
-            except subprocess.CalledProcessError as ex:
-                if ex.returncode != 32:
-                    output = ex.output
-                else:
-                    logging.warning("Problem %d", ex.returncode)
-                    logging.warning("%s exception: %s", self.get_name(), ex.output)
-                    return None
-
-            except OSError as ex:
-                logging.warning("Couldn't find pylint executable! (%s)", ex)
+        except subprocess.CalledProcessError as ex:
+            if ex.returncode != 32:
+                output = ex.output
+            else:
+                logging.warning("Problem %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
-            logging.debug("%s: %s", src, output)
+        except OSError as ex:
+            logging.warning("Couldn't find pylint executable! (%s)", ex)
+            return None
 
-            total_output.append(output)
+        total_output.append(output)
+
+        logging.debug("%s", total_output)
 
         return total_output
 
