@@ -136,7 +136,7 @@ levels:
         flags: ""
       pyflakes:
         flags: ""
-      # Disabling duplicate code as it is giving unreliable false positives when running pylint against multiple files
+      # Disabling duplicate code as it is giving unreliable results when running pylint against multiple files
       # at once.
       # Disabling unsubscriptable-object as it has issues in Python 3.9 with type hints, among other false positives.
       # https://github.com/PyCQA/pylint/issues/3139
