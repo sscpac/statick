@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## Unreleased
+## v0.9.2 - 2022-12-21
 
 The additions to the pylint tool resulted in significant improvements to processing times.
 
@@ -31,11 +31,14 @@ pylint-multiprocessing with maximum CPU cores | 2.5462
 - Support [parallel execution](https://docs.pylint.org/run.html#parallel-execution) flag of pylint.
   Set the number of cores used by pylint using the `--max-procs` flag for Statick. (#460)
 
-### Changed
-
 ### Fixed
 
+- Update action versions to get rid of deprecation warnings. (#458)
+- Add blank line before URL in docstring for ROS discovery plugin. Fixes warning from new version of docformatter. (#459)
+
 ### Removed
+
+- Remove debug print statement when the threshold level is used. (#457)
 
 ## v0.9.1 - 2022-12-12
 
