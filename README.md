@@ -57,6 +57,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   - [Custom Plugins](#custom-plugins)
   - [Examples](#examples)
   - [ROS Workspaces](#ros-workspaces)
+  - [Releases](#releases)
   - [Troubleshooting](#troubleshooting)
     - [Make Tool Plugin](#make-tool-plugin)
     - [CMake Discovery Plugin](#cmake-discovery-plugin)
@@ -692,6 +693,30 @@ Statick can also run against a subset of the source directory in a workspace.
 ```shell
 statick /home/user/ws/src/subdir --output-directory <output directory> -ws
 ```
+
+## Releases
+
+When it is time to make a new release we like to do it through the GitHub web interface as the release notes end up
+looking nicer than creating and pushing a new tag from a local source.
+
+1. Update the `CHANGELOG.md` file to have the new version and release date, and update `statick_tool/__init__.py`
+   to have the new version.
+   Merge that into `main`.
+1. Go to <https://github.com/sscpac/statick/releases>.
+1. Select `Draft a new release`.
+1. Select `Choose a tag` and make a new one.
+   An example is `v0.9.2`.
+   Leave target as `main`.
+1. Set `Release title` to the same as the tag, e.g., `v0.9.2`.
+1. In the description of `Describe this release` copy in the contents of the `CHANGELOG.md` file.
+   Do not use the line from `CHANGELOG.md` with the version number and release date, only the lines after that like
+   Added, Fixed, Changed.
+   Change the heading emphasis from `###` to `##` for aesthetic purposes.
+1. Select `Publish release`.
+1. Manually trigger the `Create and publish a Docker image` workflow with the new release tag selected.
+
+After that everything is automated.
+A new tag is generated, documentation is updated, packages are published to PyPI (and test PyPI) and Docker images are generated.
 
 ## Troubleshooting
 
