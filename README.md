@@ -713,6 +713,7 @@ looking nicer than creating and pushing a new tag from a local source.
    Added, Fixed, Changed.
    Change the heading emphasis from `###` to `##` for aesthetic purposes.
 1. Select `Publish release`.
+1. Manually trigger the `Create and publish a Docker image` workflow with the new release tag selected.
 
 After that everything is automated.
 A new tag is generated, documentation is updated, packages are published to PyPI (and test PyPI) and Docker images are generated.
