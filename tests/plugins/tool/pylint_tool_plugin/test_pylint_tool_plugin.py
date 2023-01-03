@@ -1,5 +1,6 @@
 """Unit tests for the Pylint tool plugin."""
 import argparse
+import multiprocessing
 import os
 import subprocess
 
@@ -15,7 +16,7 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
-def setup_pylint_tool_plugin():
+def setup_pylint_tool_plugin(max_procs=1):
     """Construct and return an instance of the Pylint plugin."""
     arg_parser = argparse.ArgumentParser()
 
@@ -25,6 +26,7 @@ def setup_pylint_tool_plugin():
     config = Config(resources.get_file("config.yaml"))
     plugin_context = PluginContext(arg_parser.parse_args([]), resources, config)
     plugin_context.args.output_directory = os.path.dirname(__file__)
+    plugin_context.args.max_procs = max_procs
     pltp = PylintToolPlugin()
     pltp.set_plugin_context(plugin_context)
     return pltp
@@ -59,6 +61,21 @@ def test_pylint_tool_plugin_found():
 def test_pylint_tool_plugin_scan_valid():
     """Integration test: Make sure the pylint output hasn't changed."""
     pltp = setup_pylint_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["python_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "basic.py")
+    ]
+    issues = pltp.scan(package, "level")
+    # We expect to have missing docstring and unused import warnings.
+    assert len(issues) == 2
+
+
+def test_pylint_tool_plugin_scan_valid_max_cpu_cores():
+    """Integration test: Make sure the pylint output hasn't changed when using max CPU cores."""
+    max_procs = multiprocessing.cpu_count()
+    pltp = setup_pylint_tool_plugin(max_procs=max_procs)
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )

@@ -230,6 +230,12 @@ def test_clang_format_tool_plugin_scan_different_binary():
 def test_clang_format_tool_plugin_scan_custom_version():
     """Test that issues is empty when a custom version is specified."""
     cftp = setup_clang_format_tool_plugin()
+    if not cftp.command_exists("cmake"):
+        pytest.skip("Can't find CMake, unable to test clang_format plugin")
+    elif not cftp.command_exists("clang-format"):
+        pytest.skip("Can't find clang-format, unable to test clang_format plugin")
+    elif not cftp.command_exists("clang-format-14"):
+        pytest.skip("Can't find clang-format-14, unable to test clang_format plugin")
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )

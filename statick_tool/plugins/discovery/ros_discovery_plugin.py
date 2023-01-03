@@ -28,6 +28,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
         """Safe way to check for a value in a nested dict.
 
         Copied from:
+
         https://stackoverflow.com/questions/25833613/python-safe-method-to-get-value-of-nested-dictionary
         """
         return reduce(

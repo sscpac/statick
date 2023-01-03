@@ -40,6 +40,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
     - [Levels](#levels)
     - [Profiles](#profiles)
     - [Exceptions](#exceptions)
+    - [Timings](#timings)
   - [Advanced Installation](#advanced-installation)
   - [Existing Plugins](#existing-plugins)
     - [Discovery Plugins](#discovery-plugins)
@@ -56,6 +57,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
   - [Custom Plugins](#custom-plugins)
   - [Examples](#examples)
   - [ROS Workspaces](#ros-workspaces)
+  - [Releases](#releases)
   - [Troubleshooting](#troubleshooting)
     - [Make Tool Plugin](#make-tool-plugin)
     - [CMake Discovery Plugin](#cmake-discovery-plugin)
@@ -122,9 +124,9 @@ The term _package_ is still used to designate a directory with source code.
 
 When Statick is invoked there are three major steps involved:
 
-* _Discover_ source code files in each _package_ and determine what programming language the files are written in.
-* Run all configured _tools_ against source files that the individual _tool_ can analyze to find issues.
-* _Report_ the results.
+- _Discover_ source code files in each _package_ and determine what programming language the files are written in.
+- Run all configured _tools_ against source files that the individual _tool_ can analyze to find issues.
+- _Report_ the results.
 
 The default behavior for Statick is to return an exit code of success unless Statick has an internal error.
 It can be useful to have Statick return an exit code indicating an error if any issues are found.
@@ -265,6 +267,10 @@ Carnegie Mellon University Software Engineering Institute
 The rules and flags can be found in the
 [SEI CERT C/C++ Analyzers](https://wiki.sei.cmu.edu/confluence/display/cplusplus/CC.+Analyzers) chapter.
 
+Using the `--level` flag when running Statick will result in that specific level running for all packages regardless
+of what the `--profile` is set to.
+The specified _level_ from the `--level` flag must exist in the default configuration file or a custom configuration file.
+
 ### Exceptions
 
 _Exceptions_ are used to ignore false positive warnings or warnings that will not be corrected.
@@ -272,9 +278,9 @@ This is a very important part of Statick, as many _tools_ are notorious for gene
 and sometimes source code in a project is not allowed to be modified for various reasons.
 Statick allows _exceptions_ to be specified in three different ways:
 
-* Placing a comment with `NOLINT` on the line of source code generating the warning.
-* Using individual _tool_ methods for ignoring warnings (such as adding `# pylint: disable=<warning>`in Python source code).
-* Via an `excpetions.yaml` file.
+- Placing a comment with `NOLINT` on the line of source code generating the warning.
+- Using individual _tool_ methods for ignoring warnings (such as adding `# pylint: disable=<warning>`in Python source code).
+- Via an `excpetions.yaml` file.
 
 ```yaml
 global:
@@ -330,6 +336,62 @@ To make them package specific, place them in a key named after the package under
 level of the yaml.
 
 The `ignore_packages` key is a list of package names that should be skipped when running Statick.
+
+### Timings
+
+Use of the `--timings` flag will print timing information to the console.
+The information is provided for file discovery, for each individual plugin, and for overall duration.
+Example output is
+
+```shell
+$ statick . --output-directory /tmp/x --timings
+
++---------+------------------+-------------+----------+
+| package |       name       | plugin_type | duration |
++---------+------------------+-------------+----------+
+| statick |    find files    |  Discovery  |  6.7783  |
+| statick |       ros        |  Discovery  |  0.0001  |
+| statick |      cmake       |  Discovery  |  0.0006  |
+| statick |       yaml       |  Discovery  |  0.0034  |
+| statick |       java       |  Discovery  |  0.0007  |
+| statick |        C         |  Discovery  |  0.0023  |
+| statick |      shell       |  Discovery  |  0.0016  |
+| statick |      groovy      |  Discovery  |  0.0006  |
+| statick |       perl       |  Discovery  |  0.0004  |
+| statick |       xml        |  Discovery  |  0.0006  |
+| statick |      python      |  Discovery  |  0.0020  |
+| statick |      maven       |  Discovery  |  0.0092  |
+| statick |    perlcritic    |    Tool     |  0.0000  |
+| statick |     cpplint      |    Tool     |  0.0000  |
+| statick |       make       |    Tool     |  0.0000  |
+| statick |    clang-tidy    |    Tool     |  0.0000  |
+| statick |      bandit      |    Tool     |  0.7980  |
+| statick |    groovylint    |    Tool     |  3.0717  |
+| statick |     pyflakes     |    Tool     |  4.3773  |
+| statick |   clang-format   |    Tool     |  0.0063  |
+| statick |   pycodestyle    |    Tool     |  2.5456  |
+| statick |      black       |    Tool     |  5.0089  |
+| statick |      lizard      |    Tool     |  0.6869  |
+| statick |       cccc       |    Tool     |  0.0000  |
+| statick |     cppcheck     |    Tool     |  0.0163  |
+| statick |     xmllint      |    Tool     |  0.0050  |
+| statick |      pylint      |    Tool     | 55.3768  |
+| statick |   catkin_lint    |    Tool     |  0.0000  |
+| statick |    shellcheck    |    Tool     |  0.0736  |
+| statick |     yamllint     |    Tool     |  2.2244  |
+| statick |    do_nothing    |    Tool     |  0.0000  |
+| statick |     spotbugs     |    Tool     |  0.0002  |
+| statick |      isort       |    Tool     |  3.6416  |
+| statick |    flawfinder    |    Tool     |  0.0000  |
+| statick |       mypy       |    Tool     |  0.0022  |
+| statick |    uncrustify    |    Tool     |  0.0001  |
+| statick |    pydocstyle    |    Tool     |  4.8751  |
+| statick |    cmakelint     |    Tool     |  0.0249  |
+| statick |   docformatter   |    Tool     |  0.0020  |
+| statick | print_to_console |  Reporting  |  0.0318  |
+| Overall |                  |             | 89.6734  |
++---------+------------------+-------------+----------+
+```
 
 ## Advanced Installation
 
@@ -606,18 +668,18 @@ Statick looks for a `setup.py` or `pyproject.toml` file in a directory to identi
 
 For example, suppose you have the following directory layout for the workspace.
 
-* /home/user/ws
-  * src
-    * python_package1
-    * ros_package1
-    * ros_package2
-    * subdir
-      * python_package2
-      * ros_package3
-      * ros_package4
-      * ros_package5
-  * build
-  * devel
+- /home/user/ws
+  - src
+    - python_package1
+    - ros_package1
+    - ros_package2
+    - subdir
+      - python_package2
+      - ros_package3
+      - ros_package4
+      - ros_package5
+  - build
+  - devel
 
 Statick should be run against the workspace source directory.
 Note that you can provide relative paths to the source directory.
@@ -631,6 +693,30 @@ Statick can also run against a subset of the source directory in a workspace.
 ```shell
 statick /home/user/ws/src/subdir --output-directory <output directory> -ws
 ```
+
+## Releases
+
+When it is time to make a new release we like to do it through the GitHub web interface as the release notes end up
+looking nicer than creating and pushing a new tag from a local source.
+
+1. Update the `CHANGELOG.md` file to have the new version and release date, and update `statick_tool/__init__.py`
+   to have the new version.
+   Merge that into `main`.
+1. Go to <https://github.com/sscpac/statick/releases>.
+1. Select `Draft a new release`.
+1. Select `Choose a tag` and make a new one.
+   An example is `v0.9.2`.
+   Leave target as `main`.
+1. Set `Release title` to the same as the tag, e.g., `v0.9.2`.
+1. In the description of `Describe this release` copy in the contents of the `CHANGELOG.md` file.
+   Do not use the line from `CHANGELOG.md` with the version number and release date, only the lines after that like
+   Added, Fixed, Changed.
+   Change the heading emphasis from `###` to `##` for aesthetic purposes.
+1. Select `Publish release`.
+1. Manually trigger the `Create and publish a Docker image` workflow with the new release tag selected.
+
+After that everything is automated.
+A new tag is generated, documentation is updated, packages are published to PyPI (and test PyPI) and Docker images are generated.
 
 ## Troubleshooting
 

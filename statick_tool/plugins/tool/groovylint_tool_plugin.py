@@ -41,11 +41,12 @@ class GroovyLintToolPlugin(ToolPlugin):
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["--config", format_file_name]
+        flags += ["--serverhost", "http://127.0.0.1"]
+        flags += ["--serverport", "7484"]
         flags += ["--output", "json"]
         flags += user_flags
 
         total_output: List[str] = []
-
         for src in files:
             try:
                 exe = [tool_bin] + flags + ["-f", src]
@@ -56,7 +57,6 @@ class GroovyLintToolPlugin(ToolPlugin):
                     cwd=package.path,
                 )
                 total_output.append(output)
-
             except subprocess.CalledProcessError as ex:
                 # npm-groovy-lint returns 1 on some errors but still has valid output
                 if ex.returncode == 1:
@@ -74,7 +74,6 @@ class GroovyLintToolPlugin(ToolPlugin):
 
         for output in total_output:
             logging.debug("%s", output)
-
         return total_output
 
     # pylint: enable=too-many-locals

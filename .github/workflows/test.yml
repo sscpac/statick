@@ -14,18 +14,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-18.04, ubuntu-20.04, windows-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        os: [macos-latest, ubuntu-20.04, ubuntu-22.04, windows-latest]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'Linux')
         with:
           path: ~/.cache/pip
@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'macOS')
         with:
           path: ~/Library/Caches/pip
@@ -41,7 +41,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v3
         if: startsWith(runner.os, 'Windows')
         with:
           path: ~\AppData\Local\pip\Cache
@@ -59,47 +59,50 @@ jobs:
           python -m pip install --upgrade tox-gh-actions
           python -m pip install --upgrade types-deprecated
           python -m pip install --upgrade types-PyYAML
+          python -m pip install --upgrade types-tabulate
           python -m pip install --upgrade wheel
 
       # Remove apt repos that are known to break from time to time.
       # See https://github.com/actions/virtual-environments/issues/323
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
+      # Use apt-get instead of apt as apt does not have a stable CLI interface. The apt tool prints out
+      # "WARNING: apt does not have a stable CLI interface. Use with caution in scripts."
       - name: Install tools (Linux)
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
-          sudo apt update
-          sudo apt install cccc
-          sudo apt install clang
-          sudo apt install clang-6.0
-          sudo apt install clang-format-6.0
-          sudo apt install clang-tidy-6.0
-          sudo apt install cppcheck
-          sudo apt install libpcre3-dev
-          sudo apt install libperl-critic-perl
-          sudo apt install libxml2
-          sudo apt install libxml2-utils
-          sudo apt install shellcheck
-          sudo apt install uncrustify
+          sudo apt-get update
+          sudo apt-get install cccc
+          sudo apt-get install clang
+          sudo apt-get install clang-format
+          sudo apt-get install clang-tidy
+          sudo apt-get install cppcheck
+          sudo apt-get install libpcre3-dev
+          sudo apt-get install libperl-critic-perl
+          sudo apt-get install libxml2
+          sudo apt-get install libxml2-utils
+          sudo apt-get install shellcheck
+          sudo apt-get install uncrustify
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-22.04'
         run: |
-          sudo apt update
-          sudo apt install clang-format
-          sudo apt install clang-tidy
+          sudo apt-get update
+          sudo apt-get install clang-format-14
+          sudo apt-get install clang-tidy-14
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
-          sudo apt install curl
+          sudo apt-get update
+          sudo apt-get install curl
           curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
           sudo bash nodesource_setup.sh
-          sudo apt install nodejs
+          sudo apt-get install nodejs
           sudo npm install -g n
           sudo n stable
           sudo npm install -g markdownlint-cli@0.21.0
@@ -111,12 +114,12 @@ jobs:
           mypy --ignore-missing-imports --strict statick statick_tool/
 
       - name: Statick markdown
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: 'docs/'
@@ -126,12 +129,12 @@ jobs:
           python -m tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: false
 
       - name: Self check
-        if: matrix.os == 'ubuntu-18.04' || matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         run: |
           mkdir statick-output
           ./statick . --output-directory statick-output --check --profile self_check.yaml --log INFO

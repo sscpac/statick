@@ -4,20 +4,109 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-## Unreleased
+## v0.9.2 - 2022-12-21
+
+The additions to the pylint tool resulted in significant improvements to processing times.
+
+When running the following command:
+
+```shell
+statick . --output-directory /tmp/x --profile self_check.yaml --log info --timings --force-tool-list pylint
+```
+
+we see these time improvements.
+The biggest improvement comes from running pylint once with all Python source files, followed by further improvements
+from running with multiple CPU cores.
+These results are from a Ryzen 5900x with 24 CPU cores available.
+
+Statick Version | Pylint Timing Info (s)
+---------------------- | ------------------------------
+main | 40.8708
+pylint-multiprocessing with 1 CPU core | 4.6742
+pylint-multiprocessing with maximum CPU cores | 2.5462
 
 ### Added
+
+- Process all Python source files at once with pylint tool plugin, instead of one pylint run per file. (#460)
+- Support [parallel execution](https://docs.pylint.org/run.html#parallel-execution) flag of pylint.
+  Set the number of cores used by pylint using the `--max-procs` flag for Statick. (#460)
+
+### Fixed
+
+- Update action versions to get rid of deprecation warnings. (#458)
+- Add blank line before URL in docstring for ROS discovery plugin. Fixes warning from new version of docformatter. (#459)
+
+### Removed
+
+- Remove debug print statement when the threshold level is used. (#457)
+
+## v0.9.1 - 2022-12-12
+
+### Added
+
+- Continuous integration tests with Ubuntu 22.04. (#454)
+- Continuous integration tests with Python 3.11. (#455)
+- Docker image installs Python packages into a Python virtual environment. (#448)
+
+### Changed
+
+- Docker image installs Python tool packages from PyPI instead of apt.
+  Uses newer versions of Python tools. (#448)
+- Continuous integration uses latest versions of Actions. (#454)
+
+### Fixed
+
+- Groovylint tool plugin specifies flags for host and port to run on loopback device.
+  Fixes unit tests in continuous integration. (#454)
+
+### Removed
+
+- Continuous integration tests with Ubuntu 18.04. (#454)
+
+## v0.9.0 - 2022-09-12
+
+### Added
+
+- The new `--level` flag can be set on the command line and will override all other levels, even non-default levels
+  specified in a `--profile` flag when running Statick.
+  The expectation is that a user setting the `--level` flag will explicitly want that level for the entire Statick run
+  (single package or multiple packages in a workspace).
+  If separate levels are desired per package then the user should not use the `--level` flag. (#429, #436)
+- Ubuntu 22.04 is now included in the main test environment matrix when running GitHub Actions. (#444)
+- The `--timings` flag will print timing information to the console after a Statick run.
+  Timing information is available for file discovery, for each individual plugin, and for overall duration. (#443)
 
 ### Changed
 
 - Default behavior for Statick will now run all available discovery plugins, and run all tool plugins where
-  their desired source files are available, then output results only on the terminal. (#432, #435)
+  their desired source files are available, then output results only on the terminal.
   The old default behavior was to run the "sei_cert" profile, this is still doable via either of the
-  following arguments: `--profile sei_cert.yaml` or `--level sei_cert`
+  following arguments: `--profile sei_cert.yaml` or `--level sei_cert`. (#432, #435)
+- When running unit tests with tox, Statick uses pytest-flake8.
+  A recent upstream bug causes issues when using the latest version of pytest-flake8.
+  Statick is now pinning the version of pytest-flake8 to the previous major version.
+  Details of the upstream issue are at tholo/pytest-flake8#87. (#440)
+- Updated configuration files that come with Statick to use the recommended list format when specifying plugins on
+  the `inherits_from` setting. (#427)
 
 ### Fixed
 
+- CMake discovery plugin and cmakelint tool plugin handle files with .cmake extension. (#434)
+  - This follows the CMake manual at <https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#organization>.
+    > CMake input files are written in the "CMake Language" in source files named CMakeLists.txt or ending in a
+    > .cmake file name extension.
+- Support latest PyPI version of mypy.
+  Required removing a mypy ignore comment. (#437)
+- The ROS discovery plugin was setting the file type of the package to a boolean value rather than a string describing
+  the actual file type.
+  Mixing types between packages caused bugs in tool plugins.
+  The ROS discovery plugin now acts consistently with other discovery plugins. (#439)
+
 ### Removed
+
+- Usage of `inherits_from` flag in configuration files as a string is no longer supported.
+  The levels specified in `inherits_from` must now be in list format.
+  The string usage has been deprecated since v0.7.1. (#427)
 
 ## v0.8.1 - 2022-06-06
 

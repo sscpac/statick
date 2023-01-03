@@ -2,10 +2,12 @@
 
 import contextlib
 import logging
+import multiprocessing
 import os
 import shutil
 import subprocess
 import sys
+import time
 
 import mock
 import pytest
@@ -127,9 +129,7 @@ def test_get_level_sei_cert(init_statick):
     assert level == "sei_cert"
 
     args2 = Args("Statick tool")
-    args2.parser.add_argument(
-        "--profile", dest="profile", type=str
-    )
+    args2.parser.add_argument("--profile", dest="profile", type=str)
     args2.parser.add_argument("--level", dest="level", type=str, default="sei_cert")
     level = init_statick.get_level("package", args2.get_args([]))
     assert level == "sei_cert"
@@ -145,9 +145,7 @@ def test_get_level_cli(init_statick):
     args.parser.add_argument(
         "--profile", dest="profile", type=str, default="profile-test.yaml"
     )
-    args.parser.add_argument(
-        "--level", dest="level", type=str, default="custom"
-    )
+    args.parser.add_argument("--level", dest="level", type=str, default="custom")
     level = init_statick.get_level("package", args.get_args([]))
     assert level == "custom"
     level = init_statick.get_level("package_specific", args.get_args([]))
@@ -289,6 +287,7 @@ def test_get_exceptions_oserror(mocked_exceptions_constructor, init_statick):
 
 def test_run():
     """Test running Statick."""
+    start_time = time.time()
     args = Args("Statick tool")
     args.parser.add_argument("--path", help="Path of package to scan")
 
@@ -304,7 +303,7 @@ def test_run():
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
-    issues, success = statick.run(path, parsed_args)
+    issues, success = statick.run(path, parsed_args, start_time)
     for tool in issues:
         assert not issues[tool]
     try:
@@ -879,7 +878,14 @@ def init_statick_ws():
     yield (statick, args, argv)
 
     # cleanup
-    for level in ["default", "custom", "missing_reporting_plugin", "missing_tool", "default_value", "sei_cert"]:
+    for level in [
+        "default",
+        "custom",
+        "missing_reporting_plugin",
+        "missing_tool",
+        "default_value",
+        "sei_cert",
+    ]:
         try:
             shutil.rmtree(
                 os.path.join(
@@ -901,7 +907,9 @@ def init_statick_ws():
         try:
             shutil.rmtree(
                 os.path.join(
-                    os.path.dirname(__file__), "test_workspace", "test_package2-" + level
+                    os.path.dirname(__file__),
+                    "test_workspace",
+                    "test_package2-" + level,
                 )
             )
         except OSError as ex:
@@ -910,6 +918,7 @@ def init_statick_ws():
 
 def test_run_workspace(init_statick_ws):
     """Test running Statick on a workspace."""
+    start_time = time.time()
     statick = init_statick_ws[0]
     args = init_statick_ws[1]
     sys.argv = init_statick_ws[2]
@@ -918,7 +927,7 @@ def test_run_workspace(init_statick_ws):
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    issues, success = statick.run_workspace(parsed_args)
+    issues, success = statick.run_workspace(parsed_args, start_time)
 
     for tool in issues:
         assert not issues[tool]
@@ -934,6 +943,35 @@ def test_run_workspace_one_proc(init_statick_ws):
         [
             "--max-procs",
             "0",
+        ]
+    )
+
+    parsed_args = args.get_args(sys.argv)
+    statick.get_config(parsed_args)
+    statick.get_exceptions(parsed_args)
+
+    issues, success = statick.run_workspace(parsed_args)
+
+    for tool in issues:
+        assert not issues[tool]
+    assert success
+
+
+def test_run_workspace_two_procs(init_statick_ws):
+    """Test running Statick on a workspace."""
+    max_cpus = multiprocessing.cpu_count()
+    if max_cpus < 2:
+        pytest.skip(
+            "Not enough CPU cores available. "
+            "Skipping test that requires multiple CPU cores."
+        )
+    statick = init_statick_ws[0]
+    args = init_statick_ws[1]
+    sys.argv = init_statick_ws[2]
+    sys.argv.extend(
+        [
+            "--max-procs",
+            "2",
         ]
     )
 
@@ -1326,7 +1364,7 @@ def test_scan_package(init_statick_ws):
     statick.get_exceptions(parsed_args)
     package = Package("statick", path)
 
-    issues = statick.scan_package(parsed_args, 1, package, 1)
+    issues, dummy = statick.scan_package(parsed_args, 1, package, 1)
 
     assert issues is None
 
@@ -1361,7 +1399,7 @@ def test_scan_package_with_issues(init_statick_ws):
     statick.get_exceptions(parsed_args)
     package = Package("test_package", path)
 
-    issues = statick.scan_package(parsed_args, 1, package, 1)
+    issues, dummy = statick.scan_package(parsed_args, 1, package, 1)
 
     assert len(issues["pylint"]) == 1
 
