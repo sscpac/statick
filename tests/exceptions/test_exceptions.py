@@ -1,4 +1,5 @@
 """Unit tests for the Exceptions module."""
+import argparse
 import os
 
 import pytest
@@ -336,6 +337,30 @@ def test_filter_issues_nolint():
 
     issues = exceptions.filter_issues(package, issues)
     assert not issues["pylint"]
+
+
+def test_filter_issues_nolint_empty_log():
+    """
+    Test that NOLINT excpetions to issues do not fail with an empty issue log file.
+
+    Expected result: same number of original issues in filtered issues
+    """
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    filename = os.path.join(os.path.dirname(__file__), "config") + "/rsc" + "/empty.log"
+    line_number = "dummy_line_number"
+    tool = "dummy_tool"
+    issue_type = "dummy_issue_type"
+    severity = "dummy_severity"
+    message = "dummy_message"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["dummy_tool"] = [tool_issue]
+
+    filtered_issues = exceptions.filter_nolint(issues)
+    assert len(issues) == len(filtered_issues)
 
 
 def test_filter_issues_nolint_not_abs_path():
