@@ -349,10 +349,10 @@ def test_filter_issues_nolint_empty_log():
     )
 
     filename = os.path.join(os.path.dirname(__file__), "config") + "/rsc" + "/empty.log"
-    line_number = "dummy_line_number"
+    line_number = "0"
     tool = "dummy_tool"
     issue_type = "dummy_issue_type"
-    severity = "dummy_severity"
+    severity = "0"
     message = "dummy_message"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
