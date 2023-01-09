@@ -1,5 +1,4 @@
 """Unit tests for the Exceptions module."""
-import argparse
 import os
 
 import pytest
