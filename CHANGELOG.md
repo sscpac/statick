@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## Unreleased
+
+## Fixed
+
+- Add check for an empty issue file before trying to read the line for NOLINT.
+  Crashes happen if trying to read a line that does not exist. (#467)
+
 ## v0.9.2 - 2022-12-21
 
 The additions to the pylint tool resulted in significant improvements to processing times.
