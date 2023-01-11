@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 - Move flake8 configuration max-line-length option to correct location.
   When running pytest a warning was given about this. The max-line-length
   was being set in the pytest section of our configuration. Moving it to
-  the flake8 section fixes the warning and makes more sense logically. (#466)
+  the flake8 section fixes the warning and makes more sense logically. (#466, #469)
 
 ## v0.9.2 - 2022-12-21
 
