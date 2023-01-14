@@ -4,6 +4,56 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+## Unreleased
+
+Tools that accept a list of files have been sped up considerably.
+Timing information for tools in main branch.
+This is the timing information of running `self_check` level against the main Statick repository with an AMD 3700x.
+The command used was
+
+```shell
+./statick . --output-directory /tmp/x --level self_check --log info --timings
+```
+
+package | name | plugin_type | duration
+------- | ---- | ----------- | --------
+statick |    find files    |  Discovery  |  9.2810
+statick |      black       |    Tool     |  4.5896
+statick |   docformatter   |    Tool     |  3.7007
+statick |      isort       |    Tool     |  4.2516
+statick |       mypy       |    Tool     |  6.7002
+statick |    pydocstyle    |    Tool     |  5.2146
+statick |     pyflakes     |    Tool     |  4.2164
+statick |      pylint      |    Tool     |  2.2831
+statick |    shellcheck    |    Tool     |  0.0762
+statick |    uncrustify    |    Tool     |  0.0001
+statick |     xmllint      |    Tool     |  0.0039
+statick |     yamllint     |    Tool     |  1.0534
+Overall |                  |             | 41.4780
+
+With the updated branch the timing information is better.
+
+package | name | plugin_type | duration
+------- | ---- | ----------- | --------
+statick |    find files    |  Discovery  |  9.2005
+statick |      black       |    Tool     |  0.1370
+statick |   docformatter   |    Tool     |  0.7710
+statick |      isort       |    Tool     |  0.1085
+statick |       mypy       |    Tool     |  0.3250
+statick |    pydocstyle    |    Tool     |  0.8219
+statick |     pyflakes     |    Tool     |  0.1862
+statick |      pylint      |    Tool     |  2.1569
+statick |    shellcheck    |    Tool     |  0.0359
+statick |    uncrustify    |    Tool     |  0.0001
+statick |     xmllint      |    Tool     |  0.0026
+statick |     yamllint     |    Tool     |  0.1616
+Overall |                  |             | 14.0235
+
+### Added
+
+- Process all source files at once with tools that support passing in a list of files, instead of invoking each tool
+  per file.
+
 ## v0.9.2 - 2022-12-21
 
 The additions to the pylint tool resulted in significant improvements to processing times.
