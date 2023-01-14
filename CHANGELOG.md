@@ -70,11 +70,11 @@ max            |                | 223    | 127    | 64
 ### Added
 
 - Process all source files at once with tools that support passing in a list of files, instead of invoking each tool
-  per file.
+  per file. (#470)
 
 ### Fixed
 
-- Using example file in the black test space in unit tests for the black tool plugin.
+- Using example file in the black test space in unit tests for the black tool plugin. (#470)
 
 ## v0.9.2 - 2022-12-21
 
