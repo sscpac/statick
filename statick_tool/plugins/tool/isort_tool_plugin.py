@@ -62,6 +62,7 @@ class IsortToolPlugin(ToolPlugin):
         issues: List[Issue] = []
 
         for output in total_output:
+            # Skip output that contain only an empty string.
             if not output:
                 continue
             msg = "Imports are incorrectly sorted and/or formatted."
