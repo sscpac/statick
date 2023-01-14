@@ -55,6 +55,10 @@ Overall |                  |             | 15.8050
 - Process all source files at once with tools that support passing in a list of files, instead of invoking each tool
   per file.
 
+### Fixed
+
+- Using example file in the black test space in unit tests for the black tool plugin.
+
 ## v0.9.2 - 2022-12-21
 
 The additions to the pylint tool resulted in significant improvements to processing times.
