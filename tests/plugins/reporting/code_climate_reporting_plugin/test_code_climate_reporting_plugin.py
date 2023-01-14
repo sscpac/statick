@@ -209,6 +209,15 @@ def test_code_climate_reporting_plugin_report_no_output_directory():
         assert not plugin.write_output(package, "level", "line")
 
 
+def test_code_climate_reporting_plugin_report_output_directory_is_none():
+    """Test the output of the reporting plugin without an output directory."""
+    plugin = setup_code_climate_reporting_plugin(None)
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    assert not plugin.write_output(package, "level", "line")
+
+
 def test_code_climate_reporting_plugin_report_fileexists():
     """Test the output of the reporting plugin if there's a file where the output dir should go."""
     with TemporaryDirectory() as tmp_dir:

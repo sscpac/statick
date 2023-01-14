@@ -128,6 +128,9 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         if "output_directory" not in self.plugin_context.args:
             return False
 
+        if self.plugin_context.args.output_directory is None:
+            return False
+
         output_dir = os.path.join(
             self.plugin_context.args.output_directory, package.name + "-" + level
         )
