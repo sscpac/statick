@@ -35,7 +35,6 @@ class PycodestyleToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
-            total_output.append(output)
 
         except subprocess.CalledProcessError as ex:
             # Return code 1 just means "found problems"
@@ -44,11 +43,13 @@ class PycodestyleToolPlugin(ToolPlugin):
                 logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
-            total_output.append(ex.output)
+            output = ex.output
 
         except OSError as ex:
             logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
             return None
+
+        total_output.append(output)
 
         logging.debug("%s", total_output)
 

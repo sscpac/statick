@@ -38,8 +38,7 @@ class IsortToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
-            if output:
-                total_output.append(output)
+            total_output.append(output)
 
         except (IOError, OSError) as ex:
             logging.warning("isort binary failed: %s", tool_bin)
@@ -63,6 +62,8 @@ class IsortToolPlugin(ToolPlugin):
         issues: List[Issue] = []
 
         for output in total_output:
+            if not output:
+                continue
             msg = "Imports are incorrectly sorted and/or formatted."
             issues.append(
                 Issue(
