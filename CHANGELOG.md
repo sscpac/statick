@@ -47,8 +47,25 @@ statick |    shellcheck    |    Tool     |  0.0352
 statick |    uncrustify    |    Tool     |  0.0001
 statick |     xmllint      |    Tool     |  0.0037
 statick |     yamllint     |    Tool     |  0.1654
-statick | print_to_console |  Reporting  |  0.0001
 Overall |                  |             | 15.8050
+
+Looking at times for Github Actions to run the `self_check` level of Statick shows improvements.
+
+Ubuntu Version | Python Version | v0.9.1 | v0.9.2 | Unreleased
+-------------- | -------------- | ------ | ------ | ----------
+20.04          | 3.7            | 173    | 97     | 60
+20.04          | 3.8            | 187    | 90     | 50
+20.04          | 3.9            | 197    | 127    | 51
+20.04          | 3.10           | 196    | 84     | 55
+20.04          | 3.11           | 159    | 101    | 46
+22.04          | 3.7            | 223    | 101    | 52
+22.04          | 3.8            | 208    | 95     | 62
+22.04          | 3.9            | 186    | 94     | 64
+22.04          | 3.10           | 168    | 89     | 40
+22.04          | 3.11           | 167    | 79     | 38
+mean           |                | 186.4  | 95.7   | 51.8
+min            |                | 159    | 79     | 38
+max            |                | 223    | 127    | 64
 
 ### Added
 
