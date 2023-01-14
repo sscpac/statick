@@ -38,6 +38,8 @@ class IsortToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
+            if output:
+                total_output.append(output)
 
         except (IOError, OSError) as ex:
             logging.warning("isort binary failed: %s", tool_bin)
@@ -49,9 +51,6 @@ class IsortToolPlugin(ToolPlugin):
             logging.warning("Returncode: %d", ex.returncode)
             logging.warning("%s exception: %s", self.get_name(), ex.output)
             total_output.append(ex.output)
-
-        if output:
-            total_output.append(output)
 
         logging.debug("%s", total_output)
 

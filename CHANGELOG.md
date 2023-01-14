@@ -35,19 +35,20 @@ With the updated branch the timing information is better.
 
 package | name | plugin_type | duration
 ------- | ---- | ----------- | --------
-statick |    find files    |  Discovery  |  9.2005
-statick |      black       |    Tool     |  0.1370
-statick |   docformatter   |    Tool     |  0.7710
-statick |      isort       |    Tool     |  0.1085
-statick |       mypy       |    Tool     |  0.3250
-statick |    pydocstyle    |    Tool     |  0.8219
-statick |     pyflakes     |    Tool     |  0.1862
-statick |      pylint      |    Tool     |  2.1569
-statick |    shellcheck    |    Tool     |  0.0359
+statick |    find files    |  Discovery  |  9.3033
+statick |      black       |    Tool     |  0.1365
+statick |   docformatter   |    Tool     |  0.8105
+statick |      isort       |    Tool     |  0.1088
+statick |       mypy       |    Tool     |  1.8145
+statick |    pydocstyle    |    Tool     |  0.8606
+statick |     pyflakes     |    Tool     |  0.1893
+statick |      pylint      |    Tool     |  2.2545
+statick |    shellcheck    |    Tool     |  0.0352
 statick |    uncrustify    |    Tool     |  0.0001
-statick |     xmllint      |    Tool     |  0.0026
-statick |     yamllint     |    Tool     |  0.1616
-Overall |                  |             | 14.0235
+statick |     xmllint      |    Tool     |  0.0037
+statick |     yamllint     |    Tool     |  0.1654
+statick | print_to_console |  Reporting  |  0.0001
+Overall |                  |             | 15.8050
 
 ### Added
 

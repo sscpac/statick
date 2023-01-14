@@ -33,6 +33,7 @@ class FlawfinderToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
+            total_output.append(output)
         except subprocess.CalledProcessError as ex:
             logging.warning("Problem %d", ex.returncode)
             logging.warning("%s exception: %s", self.get_name(), ex.output)
@@ -42,9 +43,7 @@ class FlawfinderToolPlugin(ToolPlugin):
             logging.warning("Couldn't find flawfinder executable! (%s)", ex)
             return None
 
-        logging.debug("%s", output)
-
-        total_output.append(output)
+        logging.debug("%s", total_output)
 
         return total_output
 

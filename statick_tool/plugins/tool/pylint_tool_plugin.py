@@ -39,10 +39,11 @@ class PylintToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
+            total_output.append(output)
 
         except subprocess.CalledProcessError as ex:
             if ex.returncode != 32:
-                output = ex.output
+                total_output.append(ex.output)
             else:
                 logging.warning("Problem %d", ex.returncode)
                 logging.warning("%s exception: %s", self.get_name(), ex.output)
@@ -51,8 +52,6 @@ class PylintToolPlugin(ToolPlugin):
         except OSError as ex:
             logging.warning("Couldn't find pylint executable! (%s)", ex)
             return None
-
-        total_output.append(output)
 
         logging.debug("%s", total_output)
 
