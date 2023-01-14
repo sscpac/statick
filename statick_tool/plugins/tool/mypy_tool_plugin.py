@@ -35,27 +35,26 @@ class MypyToolPlugin(ToolPlugin):
         tool_bin = "mypy"
         total_output: List[str] = []
 
-        for src in files:
-            try:
-                subproc_args = [tool_bin, src] + flags
-                output = subprocess.check_output(
-                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
-                )
+        try:
+            subproc_args = [tool_bin] + flags + files
+            output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
 
-            except (IOError, OSError) as ex:
-                logging.warning("mypy binary failed: %s", tool_bin)
-                logging.warning("Error = %s", ex.strerror)
-                return []
+        except (IOError, OSError) as ex:
+            logging.warning("mypy binary failed: %s", tool_bin)
+            logging.warning("Error = %s", ex.strerror)
+            return []
 
-            except subprocess.CalledProcessError as ex:
-                logging.warning("mypy binary failed: %s.", tool_bin)
-                logging.warning("Returncode: %d", ex.returncode)
-                logging.warning("%s exception: %s", self.get_name(), ex.output)
-                total_output.append(ex.output)
-                continue
+        except subprocess.CalledProcessError as ex:
+            logging.warning("mypy binary failed: %s.", tool_bin)
+            logging.warning("Returncode: %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
+            total_output.append(ex.output)
 
-        for output in total_output:
-            logging.debug("%s", output)
+        total_output.append(output)
+
+        logging.debug("%s", total_output)
 
         return total_output
 
