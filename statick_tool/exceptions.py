@@ -197,6 +197,8 @@ class Exceptions:
                     continue
                 with open(issue.filename, encoding="utf-8") as fid:
                     lines = fid.readlines()
+                if len(lines) <= 0:
+                    continue
                 line_number = int(issue.line_number) - 1
                 if line_number < len(lines) and "NOLINT" in lines[line_number]:
                     to_remove.append(issue)
