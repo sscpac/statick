@@ -7,7 +7,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## Unreleased
 
 Tools that accept a list of files have been sped up considerably.
-Timing information for tools in main branch.
 This is the timing information of running `self_check` level against the main branch and the development branch of
 the Statick repository with an AMD 3700x, Ubuntu 20.04, and Python 3.8.
 The development branch shows a significant improvement in runtime performance.
@@ -59,11 +58,6 @@ max            |                | 223    | 127    | 64
 ### Fixed
 
 - Using example file in the black test space in unit tests for the black tool plugin. (#470)
-
-## Unreleased
-
-### Fixed
-
 - Add missing dependencies to install_requires.
   The docformatter and mypy tools are run by default (if Python files are
   discovered) but they were not included in the package `install_requires`
