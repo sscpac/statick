@@ -13,7 +13,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
   discovered) but they were not included in the package `install_requires`
   list of dependencies.
   Now installing statick in a fresh virtual environment will include and run all
-  the available tools.
+  the available tools. (#465)
+- Add check for an empty issue file before trying to read the line for NOLINT.
+  Crashes happen if trying to read a line that does not exist. (#467)
 
 ## v0.9.2 - 2022-12-21
 
