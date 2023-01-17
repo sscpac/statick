@@ -71,15 +71,6 @@ max            |                | 223    | 127    | 64
   was being set in the pytest section of our configuration. Moving it to
   the flake8 section fixes the warning and makes more sense logically. (#466, #469)
 
-## Unreleased
-
-### Fixed
-
-- Move flake8 configuration max-line-length option to correct location.
-  When running pytest a warning was given about this. The max-line-length
-  was being set in the pytest section of our configuration. Moving it to
-  the flake8 section fixes the warning and makes more sense logically. (#466, #469)
-
 ## v0.9.2 - 2022-12-21
 
 The additions to the pylint tool resulted in significant improvements to processing times.
