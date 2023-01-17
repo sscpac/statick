@@ -2,12 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+Tools that accept a list of files have been sped up considerably.
+This is the timing information of running `self_check` level against the main branch and the development branch of
+the Statick repository with an AMD 3700x, Ubuntu 20.04, and Python 3.8.
+The development branch shows a significant improvement in runtime performance.
+The command used was
+
+```shell
+./statick . --output-directory /tmp/x --level self_check --log info --timings
+```
+
+package | name         | plugin_type | duration (v0.9.2) | duration (Unreleased)
+------- | ------------ | ----------- | --------------- | --------------
+statick | find files   | Discovery   |  9.2810         | 9.3033
+statick | black        | Tool        |  4.5896         | 0.1365
+statick | docformatter | Tool        |  3.7007         | 0.8105
+statick | isort        | Tool        |  4.2516         | 0.1088
+statick | mypy         | Tool        |  6.7002         | 1.8145
+statick | pydocstyle   | Tool        |  5.2146         | 0.8606
+statick | pyflakes     | Tool        |  4.2164         | 0.1893
+statick | pylint       | Tool        |  2.2831         | 2.2545
+statick | shellcheck   | Tool        |  0.0762         | 0.0352
+statick | uncrustify   | Tool        |  0.0001         | 0.0001
+statick | xmllint      | Tool        |  0.0039         | 0.0037
+statick | yamllint     | Tool        |  1.0534         | 0.1654
+Overall |              |             | 41.4780         | 15.8050
+
+Looking at times for Github Actions to run the `self_check` level of Statick shows improvements.
+
+Ubuntu Version | Python Version | v0.9.1 | v0.9.2 | Unreleased
+-------------- | -------------- | ------ | ------ | ----------
+20.04          | 3.7            | 173    | 97     | 60
+20.04          | 3.8            | 187    | 90     | 50
+20.04          | 3.9            | 197    | 127    | 51
+20.04          | 3.10           | 196    | 84     | 55
+20.04          | 3.11           | 159    | 101    | 46
+22.04          | 3.7            | 223    | 101    | 52
+22.04          | 3.8            | 208    | 95     | 62
+22.04          | 3.9            | 186    | 94     | 64
+22.04          | 3.10           | 168    | 89     | 40
+22.04          | 3.11           | 167    | 79     | 38
+mean           |                | 186.4  | 95.7   | 51.8
+min            |                | 159    | 79     | 38
+max            |                | 223    | 127    | 64
+
+### Added
+
+- Process all source files at once with tools that support passing in a list of files, instead of invoking each tool
+  per file. (#470)
+
 ### Fixed
 
+- Using example file in the black test space in unit tests for the black tool plugin. (#470)
 - Add missing dependencies to install_requires.
   The docformatter and mypy tools are run by default (if Python files are
   discovered) but they were not included in the package `install_requires`
