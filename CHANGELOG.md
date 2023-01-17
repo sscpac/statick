@@ -16,7 +16,7 @@ The command used was
 ./statick . --output-directory /tmp/x --level self_check --log info --timings
 ```
 
-package | name         | plugin_type | duration (main) | duration (dev)
+package | name         | plugin_type | duration (v0.9.2) | duration (Unreleased)
 ------- | ------------ | ----------- | --------------- | --------------
 statick | find files   | Discovery   |  9.2810         | 9.3033
 statick | black        | Tool        |  4.5896         | 0.1365
