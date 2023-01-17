@@ -28,24 +28,22 @@ class FlawfinderToolPlugin(ToolPlugin):
         flags += user_flags
         total_output: List[str] = []
 
-        for src in files:
-            try:
-                subproc_args = ["flawfinder"] + flags + [src]
-                output = subprocess.check_output(
-                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
-                )
-            except subprocess.CalledProcessError as ex:
-                logging.warning("Problem %d", ex.returncode)
-                logging.warning("%s exception: %s", self.get_name(), ex.output)
-                return None
-
-            except OSError as ex:
-                logging.warning("Couldn't find flawfinder executable! (%s)", ex)
-                return None
-
-            logging.debug("%s", output)
-
+        try:
+            subproc_args = ["flawfinder"] + flags + files
+            output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
             total_output.append(output)
+        except subprocess.CalledProcessError as ex:
+            logging.warning("Problem %d", ex.returncode)
+            logging.warning("%s exception: %s", self.get_name(), ex.output)
+            return None
+
+        except OSError as ex:
+            logging.warning("Couldn't find flawfinder executable! (%s)", ex)
+            return None
+
+        logging.debug("%s", total_output)
 
         return total_output
 

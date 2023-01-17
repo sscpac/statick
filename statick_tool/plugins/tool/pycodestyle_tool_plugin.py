@@ -30,29 +30,29 @@ class PycodestyleToolPlugin(ToolPlugin):
         total_output: List[str] = []
 
         tool_bin = "pycodestyle"
-        for src in files:
-            try:
-                subproc_args = [tool_bin, src] + flags
-                output = subprocess.check_output(
-                    subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
-                )
+        try:
+            subproc_args = [tool_bin] + flags + files
+            output = subprocess.check_output(
+                subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
+            )
 
-            except subprocess.CalledProcessError as ex:
-                # Return code 1 just means "found problems"
-                if ex.returncode != 1:
-                    logging.warning("Problem %d", ex.returncode)
-                    logging.warning("%s exception: %s", self.get_name(), ex.output)
-                    return None
-
-                output = ex.output
-
-            except OSError as ex:
-                logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
+        except subprocess.CalledProcessError as ex:
+            # Return code 1 just means "found problems"
+            if ex.returncode != 1:
+                logging.warning("Problem %d", ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 
-            logging.debug("%s", output)
+            output = ex.output
 
-            total_output.append(output)
+        except OSError as ex:
+            logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
+            return None
+
+        total_output.append(output)
+
+        logging.debug("%s", total_output)
+
         return total_output
 
     def parse_output(
