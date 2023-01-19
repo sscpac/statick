@@ -127,7 +127,7 @@ def test_black_tool_plugin_scan_oserror(mock_subprocess_check_output):
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "e501.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "format_errors.py")
     ]
     issues = btp.scan(package, "level")
     assert issues is None
@@ -148,7 +148,7 @@ def test_black_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output)
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "e501.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "format_errors.py")
     ]
     issues = btp.scan(package, "level")
     assert issues is None
@@ -169,7 +169,7 @@ def test_black_tool_plugin_scan_internal_error(mock_subprocess_check_output):
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "e501.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "format_errors.py")
     ]
     issues = btp.scan(package, "level")
     assert len(issues) == 1

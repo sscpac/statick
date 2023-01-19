@@ -338,6 +338,30 @@ def test_filter_issues_nolint():
     assert not issues["pylint"]
 
 
+def test_filter_issues_nolint_empty_log():
+    """
+    Test that NOLINT excpetions to issues do not fail with an empty issue log file.
+
+    Expected result: same number of original issues in filtered issues
+    """
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    filename = os.path.join(os.path.dirname(__file__), "config") + "/rsc" + "/empty.log"
+    line_number = "0"
+    tool = "dummy_tool"
+    issue_type = "dummy_issue_type"
+    severity = "0"
+    message = "dummy_message"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["dummy_tool"] = [tool_issue]
+
+    filtered_issues = exceptions.filter_nolint(issues)
+    assert len(issues) == len(filtered_issues)
+
+
 def test_filter_issues_nolint_not_abs_path():
     """
     Test that issues are not filtered based on NOLINT comment when not absolute path.
