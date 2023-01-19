@@ -48,7 +48,7 @@ class RuffToolPlugin(ToolPlugin):
 
         return total_output
 
-    def parse_output(  # pylint: disable=too-many-locals
+    def parse_output(
         self, total_output: List[str], package: Optional[Package] = None
     ) -> List[Issue]:
         """Parse tool output and report issues."""
@@ -56,7 +56,7 @@ class RuffToolPlugin(ToolPlugin):
         ruff_re = r"(.+):(\d+):(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(ruff_re)
 
-        for output in total_output:  # pylint: disable=too-many-nested-blocks
+        for output in total_output:
             for line in output.splitlines():
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
