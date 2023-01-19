@@ -53,7 +53,6 @@ class RuffToolPlugin(ToolPlugin):
     ) -> List[Issue]:
         """Parse tool output and report issues."""
         issues: List[Issue] = []
-        # ruff_re = r"(.+):(\d+):(\d+):\s(.+)"
         ruff_re = r"(.+):(\d+):(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(ruff_re)
 
