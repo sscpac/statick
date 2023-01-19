@@ -462,10 +462,15 @@ Tool | About
 Reporter | About
 :--- | :----
 [code_climate][code-climate] | Output issues in valid Code Climate JSON (or optionally strictly [Gitlab][gitlab-cc] compatible) to stdout or as a file.
-do_nothing | Does nothing.
+do_nothing | Does nothing. Useful when piping output to a separate process and no output is desired.
 [json] | Output issues as a JSON list either to stdout or as a file.
-print_to_console | Print the issues to stdout.
+print_to_console | Print the issues to stdout. This is the default reporting plugin if no _profile_ or _level_ are provided.
 [write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output.
+
+The intent of all _reporting_ plugins that write files as output is that they will write their output files to the
+current directory if no `--output-directory` flag is set.
+This should only happen when a _level_ is used that explicitly lists a reporting plugin with file output, in which case
+Statick assumes that the user does want the output.
 
 When using the Jenkins _reporting_ plugin, the issues show up formatted and searchable via the
 [Jenkins Warnings NG](https://plugins.jenkins.io/warnings-ng/) plugin.
