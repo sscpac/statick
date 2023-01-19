@@ -122,21 +122,18 @@ class CodeClimateReportingPlugin(ReportingPlugin):
 
     def write_output(self, package: Package, level: str, line: str) -> bool:
         """Write JSON output to a file."""
-        use_current_dir = False
-        if (
-            not self.plugin_context
-            or "output_directory" not in self.plugin_context.args
-            or self.plugin_context.args.output_directory is None
-        ):
-            use_current_dir = True
-
         # By default write report to the current directory.
         output_dir = os.getcwd()
-        if not use_current_dir:
+        if (
+            self.plugin_context
+            and "output_directory" in self.plugin_context.args
+            and self.plugin_context.args.output_directory is not None
+        ):
             # If an output directory is specified use it for the report.
             output_dir = os.path.join(
                 self.plugin_context.args.output_directory, package.name + "-" + level
             )
+
         if not os.path.exists(output_dir):
             os.mkdir(output_dir)
         if not os.path.isdir(output_dir):
