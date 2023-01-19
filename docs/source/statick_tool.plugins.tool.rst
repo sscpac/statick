@@ -92,6 +92,14 @@ statick_tool.plugins.tool.docformatter_tool_plugin module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.do_nothing_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.do_nothing_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.flawfinder_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -104,6 +112,14 @@ statick_tool.plugins.tool.groovylint_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.groovylint_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.isort_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.isort_tool_plugin
     :members:
     :undoc-members:
     :show-inheritance:
@@ -168,6 +184,22 @@ statick_tool.plugins.tool.pylint_tool_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.pylint_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.ruff_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.ruff_tool_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.shellcheck_tool_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.shellcheck_tool_plugin
     :members:
     :undoc-members:
     :show-inheritance:

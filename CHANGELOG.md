@@ -54,6 +54,7 @@ max            |                | 223    | 127    | 64
 
 - Process all source files at once with tools that support passing in a list of files, instead of invoking each tool
   per file. (#470)
+- New tool plugin for the [ruff](https://github.com/charliermarsh/ruff) tool.
 
 ### Fixed
 
