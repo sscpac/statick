@@ -206,7 +206,7 @@ def test_code_climate_reporting_plugin_report_no_output_directory():
         package = Package(
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
-        assert not plugin.write_output(package, "level", "line")
+        assert plugin.write_output(package, "level", "line")
 
 
 def test_code_climate_reporting_plugin_report_output_directory_is_none():
@@ -215,7 +215,7 @@ def test_code_climate_reporting_plugin_report_output_directory_is_none():
     package = Package(
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
-    assert not plugin.write_output(package, "level", "line")
+    assert plugin.write_output(package, "level", "line")
 
 
 def test_code_climate_reporting_plugin_report_fileexists():
@@ -248,4 +248,9 @@ def test_code_climate_reporting_plugin_write_output_no_plugin_context():
         package = Package(
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
-        assert not plugin.write_output(package, "level", "line")
+        assert plugin.write_output(package, "level", "line")
+        output_file = os.path.join(
+            os.getcwd(), package.name + "-" + "level" + ".code-climate.json"
+        )
+        if os.path.exists(output_file):
+            os.remove(output_file)
