@@ -451,6 +451,7 @@ Tool | About
 [pydocstyle][pydocstyle]           | A static analysis tool for checking compliance with Python docstring conventions.
 [pyflakes][pyflakes]               | A simple program which checks Python source files for errors
 [pylint][pylint]                   | It's not just a linter that annoys you!
+[ruff][ruff]                       | An extremely fast Python linter, written in Rust.
 [shellcheck][shellcheck]           | A static analysis tool for shell scripts
 [spotbugs][spotbugs]               | A tool for static analysis to look for bugs in Java code.
 [uncrustify][uncrustify]           | Code beautifier
@@ -873,6 +874,7 @@ His commits were scrubbed from git history upon the initial public release.
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
+[ruff]: https://github.com/charliermarsh/ruff
 [ros]: https://www.ros.org/
 [shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
