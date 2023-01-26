@@ -25,11 +25,17 @@ except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
 
 
 def setup_code_climate_reporting_plugin(
-    file_path, use_plugin_context=True, config_filename="config.yaml"
+    file_path,
+    use_plugin_context=True,
+    config_filename="config.yaml",
+    use_output_directory=True,
 ):
     """Create an instance of the file writer plugin."""
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("output_directory")
+    if use_output_directory:
+        arg_parser.add_argument("output_directory")
+    else:
+        arg_parser.add_argument("dummy")
 
     resources = Resources([os.path.join(os.path.dirname(__file__), "config")])
     config = Config(resources.get_file(config_filename))
@@ -153,7 +159,15 @@ def test_code_climate_reporting_plugin_invalid_severity():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "invalid_severity", "This is a test", None)
+                Issue(
+                    "test.txt",
+                    1,
+                    "tool_a",
+                    "type",
+                    "invalid_severity",
+                    "This is a test",
+                    None,
+                )
             ]
         }
         _, success = plugin.report(package, issues, "level")
@@ -181,6 +195,27 @@ def test_code_climate_reporting_plugin_report_no_plugin_context():
         }
         _, success = plugin.report(package, issues, "level")
         assert not success
+
+
+def test_code_climate_reporting_plugin_report_no_output_directory():
+    """Test the output of the reporting plugin without an output directory."""
+    with TemporaryDirectory() as tmp_dir:
+        plugin = setup_code_climate_reporting_plugin(
+            tmp_dir, use_output_directory=False
+        )
+        package = Package(
+            "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+        )
+        assert plugin.write_output(package, "level", "line")
+
+
+def test_code_climate_reporting_plugin_report_output_directory_is_none():
+    """Test the output of the reporting plugin without an output directory."""
+    plugin = setup_code_climate_reporting_plugin(None)
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    assert plugin.write_output(package, "level", "line")
 
 
 def test_code_climate_reporting_plugin_report_fileexists():
@@ -213,4 +248,9 @@ def test_code_climate_reporting_plugin_write_output_no_plugin_context():
         package = Package(
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
-        assert not plugin.write_output(package, "level", "line")
+        assert plugin.write_output(package, "level", "line")
+        output_file = os.path.join(
+            os.getcwd(), package.name + "-" + "level" + ".code-climate.json"
+        )
+        if os.path.exists(output_file):
+            os.remove(output_file)
