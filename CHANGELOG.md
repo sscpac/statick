@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+## v0.9.3 - 2022-01-30
+
 Tools that accept a list of files have been sped up considerably.
 This is the timing information of running `self_check` level against the main branch and the development branch of
 the Statick repository with an AMD 3700x, Ubuntu 20.04, and Python 3.8.
@@ -16,21 +18,21 @@ The command used was
 ./statick . --output-directory /tmp/x --level self_check --log info --timings
 ```
 
-package | name         | plugin_type | duration (v0.9.2) | duration (Unreleased)
-------- | ------------ | ----------- | --------------- | --------------
-statick | find files   | Discovery   |  9.2810         | 9.3033
-statick | black        | Tool        |  4.5896         | 0.1365
-statick | docformatter | Tool        |  3.7007         | 0.8105
-statick | isort        | Tool        |  4.2516         | 0.1088
-statick | mypy         | Tool        |  6.7002         | 1.8145
-statick | pydocstyle   | Tool        |  5.2146         | 0.8606
-statick | pyflakes     | Tool        |  4.2164         | 0.1893
-statick | pylint       | Tool        |  2.2831         | 2.2545
-statick | shellcheck   | Tool        |  0.0762         | 0.0352
-statick | uncrustify   | Tool        |  0.0001         | 0.0001
-statick | xmllint      | Tool        |  0.0039         | 0.0037
-statick | yamllint     | Tool        |  1.0534         | 0.1654
-Overall |              |             | 41.4780         | 15.8050
+package | name         | plugin_type | duration (v0.9.2) | duration (unreleased)
+------- | ------------ | ----------- | ----------------- | ---------------------
+statick | find files   | Discovery   |  9.2810           | 9.3033
+statick | black        | Tool        |  4.5896           | 0.1365
+statick | docformatter | Tool        |  3.7007           | 0.8105
+statick | isort        | Tool        |  4.2516           | 0.1088
+statick | mypy         | Tool        |  6.7002           | 1.8145
+statick | pydocstyle   | Tool        |  5.2146           | 0.8606
+statick | pyflakes     | Tool        |  4.2164           | 0.1893
+statick | pylint       | Tool        |  2.2831           | 2.2545
+statick | shellcheck   | Tool        |  0.0762           | 0.0352
+statick | uncrustify   | Tool        |  0.0001           | 0.0001
+statick | xmllint      | Tool        |  0.0039           | 0.0037
+statick | yamllint     | Tool        |  1.0534           | 0.1654
+Overall |              |             | 41.4780           | 15.8050
 
 Looking at times for Github Actions to run the `self_check` level of Statick shows improvements.
 
