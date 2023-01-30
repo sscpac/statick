@@ -76,7 +76,7 @@ max            |                | 223    | 127    | 64
 
 ### Changed
 
-- In GitHub workflow use node action instead of custom node install from source.
+- In GitHub workflow use node action instead of custom node install from source. (#476)
 
 ## v0.9.2 - 2022-12-21
 
