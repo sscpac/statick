@@ -73,6 +73,7 @@ max            |                | 223    | 127    | 64
   the flake8 section fixes the warning and makes more sense logically. (#466, #469)
 - In the code climate and json reporting plugins write output files to current directory
   if no output directory is specified. (#471)
+- In tex level configuration only use the tex discovery plugin. (#477)
 
 ## v0.9.2 - 2022-12-21
 
