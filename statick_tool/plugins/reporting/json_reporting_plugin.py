@@ -90,14 +90,9 @@ class JsonReportingPlugin(ReportingPlugin):
         if not os.path.isdir(output_dir):
             logging.error("Unable to create output directory at %s!", output_dir)
             return False
-        output_file = os.path.join(output_dir, package.name + "-" + level + ".json")
-        next_output_file = os.path.join(
+
+        output_file = os.path.join(
             output_dir, package.name + "-" + level + ".statick.json"
-        )
-        logging.warning(
-            "Output filename will change in statick v0.9.0 from %s to %s",
-            output_file,
-            next_output_file,
         )
         logging.info("Writing output to %s", output_file)
         with open(output_file, "w", encoding="utf8") as out:
