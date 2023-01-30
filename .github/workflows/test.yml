@@ -20,6 +20,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -96,10 +100,6 @@ jobs:
 
       # Have to install newer version from non-apt source due to SSL library compatibility issues.
       - name: Install node
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
-        - uses: actions/setup-node@v3
-          with:
-            node-version: '16'
         run: |
           npm install -g markdownlint-cli@0.21.0
           npm install -g npm-groovy-lint
