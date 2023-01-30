@@ -98,7 +98,6 @@ jobs:
       - name: Install node
         if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
         - uses: actions/setup-node@v3
-        - uses: actions/setup-node@v3
           with:
             node-version: '16'
         run: |
