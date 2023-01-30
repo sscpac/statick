@@ -56,6 +56,10 @@ max            |                | 223    | 127    | 64
   per file. (#470)
 - New tool plugin for the [ruff](https://github.com/charliermarsh/ruff) tool.
 
+### Changed
+
+- Change json reporting plugin output file suffix from .json to .statick.json. (#472, #475)
+
 ### Fixed
 
 - Using example file in the black test space in unit tests for the black tool plugin. (#470)
