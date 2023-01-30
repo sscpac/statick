@@ -59,6 +59,7 @@ max            |                | 223    | 127    | 64
 ### Changed
 
 - Change json reporting plugin output file suffix from .json to .statick.json. (#472, #475)
+- In GitHub workflow use node action instead of custom node install from source. (#476)
 
 ### Fixed
 
@@ -78,10 +79,6 @@ max            |                | 223    | 127    | 64
 - In the code climate and json reporting plugins write output files to current directory
   if no output directory is specified. (#471)
 - In tex level configuration only use the tex discovery plugin. (#477)
-
-### Changed
-
-- In GitHub workflow use node action instead of custom node install from source. (#476)
 
 ## v0.9.2 - 2022-12-21
 
