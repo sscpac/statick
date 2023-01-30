@@ -74,6 +74,10 @@ max            |                | 223    | 127    | 64
 - In the code climate and json reporting plugins write output files to current directory
   if no output directory is specified. (#471)
 
+### Changed
+
+- In GitHub workflow use node action instead of custom node install from source.
+
 ## v0.9.2 - 2022-12-21
 
 The additions to the pylint tool resulted in significant improvements to processing times.
