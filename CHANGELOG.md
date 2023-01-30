@@ -59,6 +59,7 @@ max            |                | 223    | 127    | 64
 ### Changed
 
 - Change json reporting plugin output file suffix from .json to .statick.json. (#472, #475)
+- In GitHub workflow use node action instead of custom node install from source. (#476)
 
 ### Fixed
 
