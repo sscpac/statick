@@ -58,6 +58,11 @@ max            |                | 223    | 127    | 64
   per file. (#470)
 - New tool plugin for the [ruff](https://github.com/charliermarsh/ruff) tool.
 
+### Changed
+
+- Change json reporting plugin output file suffix from .json to .statick.json. (#472, #475)
+- In GitHub workflow use node action instead of custom node install from source. (#476)
+
 ### Fixed
 
 - Using example file in the black test space in unit tests for the black tool plugin. (#470)
@@ -73,6 +78,9 @@ max            |                | 223    | 127    | 64
   When running pytest a warning was given about this. The max-line-length
   was being set in the pytest section of our configuration. Moving it to
   the flake8 section fixes the warning and makes more sense logically. (#466, #469)
+- In the code climate and json reporting plugins write output files to current directory
+  if no output directory is specified. (#471)
+- In tex level configuration only use the tex discovery plugin. (#477)
 
 ## v0.9.2 - 2022-12-21
 
