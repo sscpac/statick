@@ -12,6 +12,14 @@ Module contents
 Submodules
 ----------
 
+statick_tool.plugins.reporting.code_climate_reporting_plugin module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.reporting.code_climate_reporting_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.reporting.do_nothing_reporting_plugin module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
