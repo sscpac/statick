@@ -196,7 +196,11 @@ class Exceptions:
                         warning_printed = True
                     continue
                 with open(issue.filename, encoding="utf-8") as fid:
-                    lines = fid.readlines()
+                    try:
+                        lines = fid.readlines()
+                    except UnicodeDecodeError as exc:
+                        logging.warning("Could not read %s: %s", issue.filename, exc)
+                        continue
                 if len(lines) <= 0:
                     continue
                 line_number = int(issue.line_number) - 1
