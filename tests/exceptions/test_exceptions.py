@@ -113,6 +113,40 @@ def test_filter_file_exceptions_early_dupes():
     assert not filtered_files
 
 
+def test_ignore_packages():
+    """
+    Test that ignored packages are read correctly.
+
+    Expected result: List of ignored packages matches configuration file.
+    """
+    # Look at file without "ignore_packages" key.
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "early_exceptions.yaml")
+    )
+    expected = []
+    ignored_packages = exceptions.get_ignore_packages()
+
+    assert expected == ignored_packages
+
+    # Look at file with "ignore_packages" key but no packages specified.
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "ignore_package_none_exceptions.yaml")
+    )
+    expected = []
+    ignored_packages = exceptions.get_ignore_packages()
+
+    assert expected == ignored_packages
+
+    # Look at file with "ignore_packages" key and packages specified.
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "ignore_package_exceptions.yaml")
+    )
+    expected = ["package_a", "package_b"]
+    ignored_packages = exceptions.get_ignore_packages()
+
+    assert expected == ignored_packages
+
+
 def test_global_exceptions():
     """
     Test that global exceptions are found.
