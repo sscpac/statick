@@ -400,6 +400,9 @@ def test_filter_issues_nolint_unicode_decode_error():
     """
     Test that excpetions do not fail with a file known to cause UnicodeDecodeError.
 
+    Example file that causes UnicodeDecodeError is from
+    https://github.com/PointCloudLibrary/blog.
+
     Expected result: same number of original issues in filtered issues
     """
     exceptions = Exceptions(
