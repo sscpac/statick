@@ -46,28 +46,25 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
 
         total_output: List[str] = []
 
-        for src in files:
-            try:
-                exe = [tool_bin] + flags + [src]
-                output = subprocess.check_output(
-                    exe, stderr=subprocess.STDOUT, universal_newlines=True
-                )
-                total_output.append(output)
+        try:
+            exe = [tool_bin] + flags + files
+            output = subprocess.check_output(
+                exe, stderr=subprocess.STDOUT, universal_newlines=True
+            )
+            total_output.append(output)
 
-            except subprocess.CalledProcessError as ex:
-                # dockerfilelint returns the number of linting errors as the return code
-                if ex.returncode > 0:
-                    total_output.append(ex.output)
-                else:
-                    logging.warning(
-                        "%s failed! Returncode = %d", tool_bin, ex.returncode
-                    )
-                    logging.warning("%s exception: %s", self.get_name(), ex.output)
-                    return None
-
-            except OSError as ex:
-                logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
+        except subprocess.CalledProcessError as ex:
+            # dockerfilelint returns the number of linting errors as the return code
+            if ex.returncode > 0:
+                total_output.append(ex.output)
+            else:
+                logging.warning("%s failed! Returncode = %d", tool_bin, ex.returncode)
+                logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
+
+        except OSError as ex:
+            logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
+            return None
 
         for output in total_output:
             logging.debug("%s", output)
