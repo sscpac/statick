@@ -247,8 +247,7 @@ def test_cccc_tool_plugin_parse_config_none():
 
 @mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.subprocess.check_output")
 def test_cccc_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
-    """
-    Test what happens an OSError is hit (such as if cccc doesn't exist)
+    """Test what happens an OSError is hit (such as if cccc doesn't exist)
 
     Expected result: issues is an empty list
     """
@@ -266,8 +265,8 @@ def test_cccc_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.subprocess.check_output")
 def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is hit (such as if cccc encounters an error).
+    """Test what happens when a CalledProcessError is hit (such as if cccc encounters an
+    error).
 
     Expected result: issues is an empty list
     """
@@ -295,8 +294,8 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
 
 @mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.xmltodict.parse")
 def test_cccc_tool_plugin_scan_filenotfound(mock_xmltodict_parse):
-    """
-    Test what happens when a FileNotFoundError is hit (such as if cccc has no output for a file).
+    """Test what happens when a FileNotFoundError is hit (such as if cccc has no output
+    for a file).
 
     Expected result: issues is an empty list
     """

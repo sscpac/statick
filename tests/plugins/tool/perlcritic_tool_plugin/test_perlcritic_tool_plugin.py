@@ -123,7 +123,8 @@ def test_perlcritic_tool_plugin_parse_valid():
 
 
 def test_perlcritic_tool_plugin_parse_warnings_mapping():
-    """Verify that we can use a mapping to find the SEI Cert reference from a warning."""
+    """Verify that we can use a mapping to find the SEI Cert reference from a
+    warning."""
     pctp = setup_perlcritic_tool_plugin()
     output = (
         "valid_package/test.pl:::2:::InputOutput::ProhibitTwoArgOpen:::any string:::5"
@@ -149,8 +150,8 @@ def test_perlcritic_tool_plugin_parse_invalid():
 
 @mock.patch("statick_tool.plugins.tool.perlcritic_tool_plugin.subprocess.check_output")
 def test_perlcritic_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means perlcritic doesn't exist).
+    """Test what happens when an OSError is raised (usually means perlcritic doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -168,8 +169,8 @@ def test_perlcritic_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.perlcritic_tool_plugin.subprocess.check_output")
 def test_perlcritic_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means perlcritic hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means perlcritic
+    hit an error).
 
     Expected result: issues is None
     """

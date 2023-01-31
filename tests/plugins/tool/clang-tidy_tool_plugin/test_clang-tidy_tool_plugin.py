@@ -235,8 +235,7 @@ def test_clang_tidy_tool_plugin_parse_warnings_mappings():
 
 
 def test_clang_tidy_tool_plugin_parse_note():
-    """
-    Verify that we ignore 'note' lines of clang-tidy.
+    """Verify that we ignore 'note' lines of clang-tidy.
 
     Expected output: Empty list
     """
@@ -249,8 +248,7 @@ def test_clang_tidy_tool_plugin_parse_note():
 
 
 def test_clang_tidy_tool_plugin_parse_star():
-    """
-    Verify that we ignore *-prefixed lines of clang-tidy.
+    """Verify that we ignore *-prefixed lines of clang-tidy.
 
     Expected output: Empty list
     """
@@ -271,8 +269,7 @@ def test_clang_tidy_tool_plugin_parse_invalid():
 
 
 def test_clang_tidy_tool_plugin_scan_missing_fields():
-    """
-    Test what happens when key fields are missing from the Package argument.
+    """Test what happens when key fields are missing from the Package argument.
 
     Expected result: issues is empty
     """
@@ -293,8 +290,8 @@ def test_clang_tidy_tool_plugin_scan_missing_fields():
 
 @mock.patch("statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output")
 def test_clang_tidy_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means clang-tidy doesn't exist).
+    """Test what happens when an OSError is raised (usually means clang-tidy doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -317,8 +314,8 @@ def test_clang_tidy_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output")
 def test_clang_tidy_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means clang-tidy hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means clang-tidy
+    hit an error).
 
     Expected result: issues is None
     """
@@ -343,8 +340,8 @@ def test_clang_tidy_tool_plugin_scan_calledprocesserror(mock_subprocess_check_ou
 
 @mock.patch("statick_tool.plugins.tool.clang_tidy_tool_plugin.subprocess.check_output")
 def test_clang_tidy_tool_plugin_scan_diagnosticerror(mock_subprocess_check_output):
-    """
-    Test that a CalledProcessError is raised when subprocess's output contains 'clang-diagnostic-error'.
+    """Test that a CalledProcessError is raised when subprocess's output contains
+    'clang-diagnostic-error'.
 
     Expected result: issues is None
     """

@@ -110,8 +110,8 @@ def test_docformatter_tool_plugin_parse_invalid():
     "statick_tool.plugins.tool.docformatter_tool_plugin.subprocess.check_output"
 )
 def test_docformatter_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means docformatter doesn't exist).
+    """Test what happens when an OSError is raised (usually means docformatter doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -131,8 +131,8 @@ def test_docformatter_tool_plugin_scan_oserror(mock_subprocess_check_output):
     "statick_tool.plugins.tool.docformatter_tool_plugin.subprocess.check_output"
 )
 def test_docformatter_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means docformatter hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means docformatter
+    hit an error).
 
     Expected result: issues is None
     """

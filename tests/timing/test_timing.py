@@ -18,8 +18,7 @@ def init_statick():
 
 
 def test_add_timing(init_statick):
-    """
-    Test adding a Timing instance.
+    """Test adding a Timing instance.
 
     Expected result: Timing instance added is returned in getter method
     """

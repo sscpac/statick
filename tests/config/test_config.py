@@ -9,8 +9,7 @@ from statick_tool.config import Config
 
 
 def test_config_init():
-    """
-    Test that the Config module initializes correctly.
+    """Test that the Config module initializes correctly.
 
     Expected result: parser and pre_parser are initialized
     """
@@ -26,8 +25,7 @@ def test_config_init():
 
 
 def test_config_file_invalid_yaml():
-    """
-    Test for when a Config is initialized with an invalid yaml file.
+    """Test for when a Config is initialized with an invalid yaml file.
 
     Expected result: ValueError is thrown
     """
@@ -36,8 +34,7 @@ def test_config_file_invalid_yaml():
 
 
 def test_config_enabled_plugins():
-    """
-    Test that the Config module identifies enabled plugins for a given level.
+    """Test that the Config module identifies enabled plugins for a given level.
 
     Expected result: plugins listed in example config file are returned
     """
@@ -55,8 +52,8 @@ def test_config_enabled_plugins():
 
 
 def test_config_enabled_plugins_inherits():
-    """
-    Test that the Config module identifies enabled plugins for a given level with inheritance.
+    """Test that the Config module identifies enabled plugins for a given level with
+    inheritance.
 
     Expected result: plugins listed in example config file are returned
     """
@@ -75,8 +72,8 @@ def test_config_enabled_plugins_inherits():
 
 
 def test_config_inherits_from_multiple_levels():
-    """
-    Test that the Config module supports a level that inherits from multiple child levels.
+    """Test that the Config module supports a level that inherits from multiple child
+    levels.
 
     Expected result: plugins listed in combined config file are returned
     """
@@ -105,8 +102,7 @@ def test_config_inherits_from_multiple_levels():
 
 
 def test_config_enabled_tool_plugins():
-    """
-    Test that the Config module identifies enabled tool plugins for a given level.
+    """Test that the Config module identifies enabled tool plugins for a given level.
 
     Expected result: plugins listed in example config file are returned
     """
@@ -124,8 +120,8 @@ def test_config_enabled_tool_plugins():
 
 
 def test_config_enabled_discovery_plugins():
-    """
-    Test that the Config module identifies enabled discovery plugins for a given level.
+    """Test that the Config module identifies enabled discovery plugins for a given
+    level.
 
     Expected result: plugins listed in example config file are returned
     """
@@ -137,8 +133,8 @@ def test_config_enabled_discovery_plugins():
 
 
 def test_config_enabled_reporting_plugins():
-    """
-    Test that the Config module identifies enabled reporting plugins for a given level.
+    """Test that the Config module identifies enabled reporting plugins for a given
+    level.
 
     Expected result: plugins listed in example config file are returned
     """
@@ -168,8 +164,7 @@ def test_config_str_to_bool():
 
 
 def test_config_get_tool_config():
-    """
-    Test that the Config module gives correct config for tools.
+    """Test that the Config module gives correct config for tools.
 
     Expected result: tool plugin configuration matches config file
     """
@@ -181,8 +176,7 @@ def test_config_get_tool_config():
 
 
 def test_config_get_discovery_config():
-    """
-    Test that the Config module gives correct config for discovery.
+    """Test that the Config module gives correct config for discovery.
 
     Expected result: discovery plugin configuration matches config file
     """
@@ -194,8 +188,7 @@ def test_config_get_discovery_config():
 
 
 def test_config_get_reporintg_config():
-    """
-    Test that the Config module gives correct config for reporting.
+    """Test that the Config module gives correct config for reporting.
 
     Expected result: reporting plugin configuration matches config file
     """
@@ -207,8 +200,7 @@ def test_config_get_reporintg_config():
 
 
 def test_config_inherit_from_same_name():
-    """
-    Test for a correct config when a level inherits from a level of the same name.
+    """Test for a correct config when a level inherits from a level of the same name.
 
     Expected result: top-level level is used in config
     """

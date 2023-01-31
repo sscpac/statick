@@ -131,8 +131,7 @@ def test_ros_discovery_plugin_scan_invalid_nocmake():
 
 
 def test_ros_discovery_plugin_scan_invalid_packagexml():
-    """Test the behavior when the ROS plugin scans a directory with no
-    package.xml."""
+    """Test the behavior when the ROS plugin scans a directory with no package.xml."""
     rdp = RosDiscoveryPlugin()
     package = Package(
         "invalid_package_nopackagexml",

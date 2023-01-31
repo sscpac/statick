@@ -93,8 +93,8 @@ def test_flawfinder_tool_plugin_scan_missing_c_src():
 
 @mock.patch("statick_tool.plugins.tool.flawfinder_tool_plugin.subprocess.check_output")
 def test_flawfinder_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means flawfinder doesn't exist).
+    """Test what happens when an OSError is raised (usually means flawfinder doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -110,8 +110,8 @@ def test_flawfinder_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.flawfinder_tool_plugin.subprocess.check_output")
 def test_flawfinder_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means flawfinder hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means flawfinder
+    hit an error).
 
     Expected result: issues is None
     """
