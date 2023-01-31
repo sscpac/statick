@@ -148,7 +148,9 @@ def test_catkin_lint_tool_plugin_parse_output():
     issues = cltp.parse_output(output, package)
     assert not issues
 
-    output = ["empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"]
+    output = [
+        "empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"
+    ]
     issues = cltp.parse_output(output, package)
     assert not issues
 
@@ -204,7 +206,9 @@ def test_catkin_lint_tool_plugin_parse_valid():
         "check both for this issue)"
     )
 
-    output = ["custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"]
+    output = [
+        "custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"
+    ]
     issues = cltp.parse_output(output, package)
     assert (
         issues[0].message == "include_directories() needs missing directory '/include'"
@@ -233,7 +237,9 @@ def test_catkin_lint_tool_plugin_parse_valid_no_package():
         "check both for this issue)"
     )
 
-    output = ["custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"]
+    output = [
+        "custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"
+    ]
     issues = cltp.parse_output(output)
     assert issues[0].filename == "CMakeLists.txt"
     assert (

@@ -212,7 +212,9 @@ def test_config_inherit_from_same_name():
 
     Expected result: top-level level is used in config
     """
-    config_file = os.path.join(os.path.dirname(__file__), "rsc", "user-level-same-name.yaml")
+    config_file = os.path.join(
+        os.path.dirname(__file__), "rsc", "user-level-same-name.yaml"
+    )
     config = Config(config_file)
 
     plugins = config.get_enabled_plugins("threshold", "discovery")
