@@ -201,6 +201,9 @@ class Exceptions:
                     except UnicodeDecodeError as exc:
                         logging.warning("Could not read %s: %s", issue.filename, exc)
                         continue
+                    except FileNotFoundError as exc:
+                        logging.warning("Could not read %s: %s", issue.filename, exc)
+                        continue
                 if len(lines) <= 0:
                     continue
                 line_number = int(issue.line_number) - 1
