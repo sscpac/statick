@@ -1,11 +1,19 @@
 """Unit tests for the Exceptions module."""
 import os
+import tempfile
 
 import pytest
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.issue import Issue
 from statick_tool.package import Package
+
+try:
+    from tempfile import TemporaryDirectory
+except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
+    from backports.tempfile import (  # pylint: disable=wrong-import-order
+        TemporaryDirectory,
+    )
 
 
 def test_exceptions_init_valid():
@@ -392,7 +400,10 @@ def test_filter_issues_nolint_unicode_decode_error():
         os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
     )
 
-    filename = os.path.join(os.path.dirname(__file__), "unicode_decode_error_package") + "/status.rst"
+    filename = (
+        os.path.join(os.path.dirname(__file__), "unicode_decode_error_package")
+        + "/status.rst"
+    )
     line_number = "0"
     tool = "dummy_tool"
     issue_type = "dummy_issue_type"
@@ -401,6 +412,35 @@ def test_filter_issues_nolint_unicode_decode_error():
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
     issues["dummy_tool"] = [tool_issue]
+
+    filtered_issues = exceptions.filter_nolint(issues)
+    assert len(issues) == len(filtered_issues)
+
+
+def test_filter_issues_nolint_file_not_found_error():
+    """
+    Test that excpetions do not fail with a file that does not exist.
+
+    Expected result: same number of original issues in filtered issues
+    """
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    with TemporaryDirectory() as tmp_dir:
+        # Make a temporary executable
+        with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
+            filename = tmp_file.name
+            line_number = "0"
+            tool = "dummy_tool"
+            issue_type = "dummy_issue_type"
+            severity = "0"
+            message = "dummy_message"
+            tool_issue = Issue(
+                filename, line_number, tool, issue_type, severity, message, None
+            )
+            issues = {}
+            issues["dummy_tool"] = [tool_issue]
 
     filtered_issues = exceptions.filter_nolint(issues)
     assert len(issues) == len(filtered_issues)
