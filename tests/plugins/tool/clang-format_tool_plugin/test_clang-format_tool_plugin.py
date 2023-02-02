@@ -290,7 +290,8 @@ def test_clang_format_tool_plugin_parse_valid():
 
 
 def test_clang_format_tool_plugin_parse_valid_issue_per_line():
-    """Verify that multiple issues are found per file when we ask for an issue per line."""
+    """Verify that multiple issues are found per file when we ask for an issue per
+    line."""
     cftp = setup_clang_format_tool_plugin(issue_per_line=True)
     output = "<?xml version='1.0'?>\n\
 <replacements xml:space='preserve' incomplete_format='false'>\n\
@@ -350,8 +351,8 @@ def test_clang_format_tool_plugin_custom_config_diff():
     "statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output"
 )
 def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means clang-format hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means clang-format
+    hit an error).
 
     Expected result: issues is empty (no raise) or None (raise)
     """
@@ -385,8 +386,8 @@ def test_clang_format_tool_plugin_scan_calledprocesserror(mock_subprocess_check_
 
 @mock.patch("statick_tool.plugins.tool.clang_format_tool_plugin.open")
 def test_clang_format_tool_plugin_scan_oserror_open(mock_open):
-    """
-    Test what happens when OSError is raised (usually means clang-format configuration is missing).
+    """Test what happens when OSError is raised (usually means clang-format
+    configuration is missing).
 
     Expected result: issues is empty (no raise) or None (raise)
     """
@@ -413,8 +414,8 @@ def test_clang_format_tool_plugin_scan_oserror_open(mock_open):
     "statick_tool.plugins.tool.clang_format_tool_plugin.subprocess.check_output"
 )
 def test_clang_format_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means clang-format doesn't exist).
+    """Test what happens when an OSError is raised (usually means clang-format doesn't
+    exist).
 
     Expected result: issues is empty (no raise) or None (raise)
     """
@@ -448,8 +449,8 @@ def test_clang_format_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.clang_format_tool_plugin.open")
 def test_clang_format_tool_plugin_check_configuration_oserror(mock_open):
-    """
-    Test what happens when an OSError is raised (usually means diff files don't exist).
+    """Test what happens when an OSError is raised (usually means diff files don't
+    exist).
 
     Expected result: configuration check is False (no raise) or None (raise)
     """
@@ -504,8 +505,8 @@ def test_clang_format_parser_line_number():
 
 @mock.patch("statick_tool.plugins.tool.clang_format_parser.ElementTree.fromstring")
 def test_clang_format_tool_plugin_scan_element_tree_parse_error(mock_fromstring):
-    """
-    Test what happens when an ElementTree.ParseError is raised (usually means clang-format hit an error).
+    """Test what happens when an ElementTree.ParseError is raised (usually means clang-
+    format hit an error).
 
     Expected result: issues is empty
     """

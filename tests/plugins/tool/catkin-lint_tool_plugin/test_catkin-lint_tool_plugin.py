@@ -71,8 +71,7 @@ def test_catkin_lint_tool_plugin_scan_valid():
 
 
 def test_catkin_lint_tool_plugin_scan_missing_name():
-    """
-    Test with missing tool name.
+    """Test with missing tool name.
 
     Expected result: issues is empty
     """
@@ -85,7 +84,7 @@ def test_catkin_lint_tool_plugin_scan_missing_name():
 
 
 def test_catkin_lint_tool_plugin_scan_c0x():
-    """Scan a package that sets compiler flags for c++0x"""
+    """Scan a package that sets compiler flags for c++0x."""
     cltp = setup_catkin_lint_tool_plugin()
     if not cltp.command_exists("catkin_lint"):
         pytest.skip("Missing catkin_lint executable.")
@@ -98,7 +97,7 @@ def test_catkin_lint_tool_plugin_scan_c0x():
 
 
 def test_catkin_lint_tool_plugin_scan_c11():
-    """Scan a package that sets compiler flags for c++11"""
+    """Scan a package that sets compiler flags for c++11."""
     cltp = setup_catkin_lint_tool_plugin()
     if not cltp.command_exists("catkin_lint"):
         pytest.skip("Missing catkin_lint executable.")
@@ -124,8 +123,7 @@ def test_catkin_lint_tool_plugin_scan_gnu99():
 
 
 def test_catkin_lint_tool_plugin_parse_output():
-    """
-    Check that manual exceptions are applied.
+    """Check that manual exceptions are applied.
 
     These tests make sure the functionality works in the absence of the tool. If the
     tool is installed the lines dealing with manual exceptions are already covered.
@@ -148,7 +146,9 @@ def test_catkin_lint_tool_plugin_parse_output():
     issues = cltp.parse_output(output, package)
     assert not issues
 
-    output = ["empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"]
+    output = [
+        "empty_pkg: CMakeLists.txt(6): warning: variable CMAKE_C_FLAGS is modified"
+    ]
     issues = cltp.parse_output(output, package)
     assert not issues
 
@@ -204,7 +204,9 @@ def test_catkin_lint_tool_plugin_parse_valid():
         "check both for this issue)"
     )
 
-    output = ["custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"]
+    output = [
+        "custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"
+    ]
     issues = cltp.parse_output(output, package)
     assert (
         issues[0].message == "include_directories() needs missing directory '/include'"
@@ -233,7 +235,9 @@ def test_catkin_lint_tool_plugin_parse_valid_no_package():
         "check both for this issue)"
     )
 
-    output = ["custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"]
+    output = [
+        "custom_pkg: CMakeLists.txt(5): error: include_directories() needs missing directory '/include'"
+    ]
     issues = cltp.parse_output(output)
     assert issues[0].filename == "CMakeLists.txt"
     assert (
@@ -255,8 +259,8 @@ def test_catkin_lint_tool_plugin_parse_invalid():
 
 @mock.patch("statick_tool.plugins.tool.catkin_lint_tool_plugin.subprocess.check_output")
 def test_catkin_lint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means catkin_lint hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means catkin_lint
+    hit an error).
 
     Expected result: issues is None
     """
@@ -280,8 +284,8 @@ def test_catkin_lint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_o
 
 @mock.patch("statick_tool.plugins.tool.catkin_lint_tool_plugin.subprocess.check_output")
 def test_catkin_lint_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means catkin_lint doesn't exist).
+    """Test what happens when an OSError is raised (usually means catkin_lint doesn't
+    exist).
 
     Expected result: issues is None
     """

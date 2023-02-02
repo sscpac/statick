@@ -146,8 +146,7 @@ def test_cpplint_tool_plugin_parse_invalid():
 
 
 def test_cpplint_tool_plugin_scan_missing_fields():
-    """
-    Test what happens when key fields are missing from the Package argument.
+    """Test what happens when key fields are missing from the Package argument.
 
     Expected result: issues is None then empty
     """
@@ -184,8 +183,8 @@ def test_cpplint_tool_plugin_scan_missing_fields():
 
 @mock.patch("statick_tool.plugins.tool.cpplint_tool_plugin.subprocess.check_output")
 def test_cpplint_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means cpplint doesn't exist).
+    """Test what happens when an OSError is raised (usually means cpplint doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -207,8 +206,8 @@ def test_cpplint_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.cpplint_tool_plugin.subprocess.check_output")
 def test_cpplint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means cpplint hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means cpplint hit
+    an error).
 
     Expected result: issues is None
     """

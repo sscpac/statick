@@ -24,8 +24,7 @@ LOGGER = logging.getLogger(__name__)
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment
 @contextlib.contextmanager
 def modified_environ(*remove, **update):
-    """
-    Temporarily updates the ``os.environ`` dictionary in-place.
+    """Temporarily updates the ``os.environ`` dictionary in-place.
 
     The ``os.environ`` dictionary is updated in-place so that the modification
     is sure to work in all situations.
@@ -61,8 +60,7 @@ def init_statick():
 
 
 def test_gather_args(init_statick):
-    """
-    Test setting and getting arguments.
+    """Test setting and getting arguments.
 
     Expected result: Arguments are set properly
     """
@@ -85,8 +83,7 @@ def test_gather_args(init_statick):
 # The Profile module has more in-depth test cases, this test module is just
 # concerned with the possible returns from the constructor.
 def test_get_level(init_statick):
-    """
-    Test searching for a level which has a corresponding file.
+    """Test searching for a level which has a corresponding file.
 
     Expected result: Some level is returned
     """
@@ -100,8 +97,7 @@ def test_get_level(init_statick):
 
 
 def test_get_level_non_default(init_statick):
-    """
-    Test searching for a level when a package has a custom level.
+    """Test searching for a level when a package has a custom level.
 
     Expected result: Some level is returned
     """
@@ -115,8 +111,7 @@ def test_get_level_non_default(init_statick):
 
 
 def test_get_level_sei_cert(init_statick):
-    """
-    Test searching for the sei_cert level.
+    """Test searching for the sei_cert level.
 
     Expected result: 'sei_cert' level is returned
     """
@@ -136,8 +131,7 @@ def test_get_level_sei_cert(init_statick):
 
 
 def test_get_level_cli(init_statick):
-    """
-    Test searching for a level when a level was specified on the command line.
+    """Test searching for a level when a level was specified on the command line.
 
     Expected result: Some level is returned
     """
@@ -153,8 +147,7 @@ def test_get_level_cli(init_statick):
 
 
 def test_get_level_nonexistent_file(init_statick):
-    """
-    Test searching for a level which doesn't have a corresponding file.
+    """Test searching for a level which doesn't have a corresponding file.
 
     Expected result: None is returned
     """
@@ -169,8 +162,7 @@ def test_get_level_nonexistent_file(init_statick):
 
 @mock.patch("statick_tool.statick.Profile")
 def test_get_level_ioerror(mocked_profile_constructor, init_statick):
-    """
-    Test the behavior when Profile throws an OSError.
+    """Test the behavior when Profile throws an OSError.
 
     Expected result: None is returned
     """
@@ -198,8 +190,7 @@ def test_get_level_valueerror(mocked_profile_constructor, init_statick):
 
 
 def test_custom_exceptions_file(init_statick):
-    """
-    Test finding ignored packages specified in custom file.
+    """Test finding ignored packages specified in custom file.
 
     Expected result: Some ignored package is returned
     """
@@ -213,8 +204,7 @@ def test_custom_exceptions_file(init_statick):
 
 
 def test_exceptions_no_file(init_statick):
-    """
-    Test finding ignored packages without specifying an exceptions file.
+    """Test finding ignored packages without specifying an exceptions file.
 
     Expected result: ignored packages list is empty
     """
@@ -223,8 +213,7 @@ def test_exceptions_no_file(init_statick):
 
 
 def test_custom_config_file(init_statick):
-    """
-    Test using custom config file.
+    """Test using custom config file.
 
     Expected result: Some ignored package is returned
     """
@@ -409,8 +398,7 @@ def test_run_force_tool_list(init_statick):
 
 
 def test_run_package_is_ignored(init_statick):
-    """
-    Test that ignored package is ignored.
+    """Test that ignored package is ignored.
 
     Expected results: issues is empty and success is True
     """
@@ -439,8 +427,7 @@ def test_run_package_is_ignored(init_statick):
 
 
 def test_run_invalid_discovery_plugin(init_statick):
-    """
-    Test that a non-existent discovery plugin results in failure.
+    """Test that a non-existent discovery plugin results in failure.
 
     Expected results: issues is None and success is False
     """
@@ -471,8 +458,7 @@ def test_run_invalid_discovery_plugin(init_statick):
 
 
 def test_run_invalid_tool_plugin(init_statick):
-    """
-    Test that a non-existent tool plugin results in failure.
+    """Test that a non-existent tool plugin results in failure.
 
     Expected results: issues is None and success is False
     """
@@ -503,8 +489,8 @@ def test_run_invalid_tool_plugin(init_statick):
 
 
 def test_run_missing_tool_dependency(init_statick):
-    """
-    Test that a tool plugin results in failure when its dependency is not configured to run.
+    """Test that a tool plugin results in failure when its dependency is not configured
+    to run.
 
     Expected results: issues is None and success is False
     """
@@ -543,8 +529,7 @@ def test_run_missing_tool_dependency(init_statick):
 
 
 def test_run_tool_dependency(init_statick):
-    """
-    Test that a tool plugin can run its dependencies.
+    """Test that a tool plugin can run its dependencies.
 
     Expected results: issues is None and success is False
     """
@@ -584,8 +569,7 @@ def test_run_tool_dependency(init_statick):
 
 
 def test_run_discovery_dependency(init_statick):
-    """
-    Test that a discovery plugin can run its dependencies.
+    """Test that a discovery plugin can run its dependencies.
 
     Expected results: issues is None and success is False
     """
@@ -618,8 +602,7 @@ def test_run_discovery_dependency(init_statick):
 
 
 def test_run_no_reporting_plugins(init_statick):
-    """
-    Test that no reporting plugins returns successful.
+    """Test that no reporting plugins returns successful.
 
     Expected results: no issues and success is True
     """
@@ -654,8 +637,8 @@ def test_run_no_reporting_plugins(init_statick):
 
 
 def test_run_no_console_reporting_plugins(init_statick):
-    """
-    Test that no reporting plugins and no print_to_console plugin available returns successful.
+    """Test that no reporting plugins and no print_to_console plugin available returns
+    successful.
 
     Expected results: no issues and success is True
     """
@@ -691,8 +674,7 @@ def test_run_no_console_reporting_plugins(init_statick):
 
 
 def test_run_invalid_reporting_plugins(init_statick):
-    """
-    Test that invalid reporting plugins returns unsuccessful.
+    """Test that invalid reporting plugins returns unsuccessful.
 
     Expected results: issues is None and success is False
     """
@@ -728,8 +710,7 @@ def test_run_invalid_reporting_plugins(init_statick):
 
 
 def test_run_invalid_level(init_statick):
-    """
-    Test that invalid profile results in invalid level.
+    """Test that invalid profile results in invalid level.
 
     Expected results: issues is None and success is False
     """
@@ -760,8 +741,7 @@ def test_run_invalid_level(init_statick):
 
 @mock.patch("os.mkdir")
 def test_run_mkdir_oserror(mocked_mkdir, init_statick):
-    """
-    Test the behavior when mkdir in run throws an OSError.
+    """Test the behavior when mkdir in run throws an OSError.
 
     Expected results: issues is None and success is False
     """
@@ -791,8 +771,7 @@ def test_run_mkdir_oserror(mocked_mkdir, init_statick):
 
 
 def test_run_file_cmd_does_not_exist(init_statick):
-    """
-    Test when file command does not exist.
+    """Test when file command does not exist.
 
     Expected results: no issues found even though Python file without extension does
     have issues
@@ -827,8 +806,7 @@ def test_run_file_cmd_does_not_exist(init_statick):
 
 @mock.patch("subprocess.check_output")
 def test_run_called_process_error(mock_subprocess_check_output):
-    """
-    Test running Statick when each plugin has a CalledProcessError.
+    """Test running Statick when each plugin has a CalledProcessError.
 
     Expected result: issues is None
     """
@@ -1033,8 +1011,7 @@ def test_run_workspace_output_is_not_a_directory(mocked_mkdir, init_statick_ws):
 
 
 def test_run_workspace_package_is_ignored(init_statick_ws):
-    """
-    Test that ignored package is ignored.
+    """Test that ignored package is ignored.
 
     Expected results: issues is empty and success is True
     """
@@ -1083,8 +1060,7 @@ def test_run_workspace_list_packages(init_statick_ws):
 
 
 def test_run_workspace_packages_file(init_statick_ws):
-    """
-    Test running only on packages in the packages file.
+    """Test running only on packages in the packages file.
 
     Expected results: issues is empty and success is True
     """
@@ -1110,8 +1086,7 @@ def test_run_workspace_packages_file(init_statick_ws):
 
 
 def test_run_workspace_no_packages_file(init_statick_ws):
-    """
-    Test running on workspace without packages file.
+    """Test running on workspace without packages file.
 
     Expected results: issues is empty and success is True
     """
@@ -1136,8 +1111,7 @@ def test_run_workspace_no_packages_file(init_statick_ws):
 
 
 def test_run_workspace_no_reporting_plugins(init_statick_ws):
-    """
-    Test that no reporting plugins returns unsuccessful.
+    """Test that no reporting plugins returns unsuccessful.
 
     Expected results: issues is empty and success is True
     """
@@ -1165,8 +1139,7 @@ def test_run_workspace_no_reporting_plugins(init_statick_ws):
 
 
 def test_run_workspace_no_console_reporting_plugins(init_statick_ws):
-    """
-    Test that no reporting plugins and no available print_to_console reporting plugin
+    """Test that no reporting plugins and no available print_to_console reporting plugin
     returns unsuccessful.
 
     Expected results: issues is empty and success is True
@@ -1197,8 +1170,7 @@ def test_run_workspace_no_console_reporting_plugins(init_statick_ws):
 
 
 def test_run_workspace_invalid_reporting_plugins(init_statick_ws):
-    """
-    Test that invalid reporting plugins returns unsuccessful.
+    """Test that invalid reporting plugins returns unsuccessful.
 
     Expected results: issues is empty and success is True
     """
@@ -1234,8 +1206,7 @@ def test_run_workspace_invalid_reporting_plugins(init_statick_ws):
 
 
 def test_run_workspace_with_issues(init_statick_ws):
-    """
-    Test that existing issues are found in a workspace.
+    """Test that existing issues are found in a workspace.
 
     Expected results: issues is empty and success is True
     """
@@ -1268,8 +1239,7 @@ def test_run_workspace_with_issues(init_statick_ws):
 
 
 def test_run_workspace_invalid_level(init_statick_ws):
-    """
-    Test that invalid profile results in invalid level.
+    """Test that invalid profile results in invalid level.
 
     Expected results: issues is None and success is False
     """
@@ -1322,8 +1292,7 @@ def test_run_workspace_invalid_level(init_statick_ws):
 
 
 def test_run_workspace_no_config(init_statick_ws):
-    """
-    Test that no config is handled gracefully.
+    """Test that no config is handled gracefully.
 
     Expected results: issues is None and success is False
     """

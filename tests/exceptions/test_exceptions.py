@@ -9,8 +9,7 @@ from statick_tool.package import Package
 
 
 def test_exceptions_init_valid():
-    """
-    Test that the Exceptions module initializes correctly.
+    """Test that the Exceptions module initializes correctly.
 
     Expected result: exceptions.exceptions is initialized.
     """
@@ -21,8 +20,7 @@ def test_exceptions_init_valid():
 
 
 def test_exceptions_init_nonexistent():
-    """
-    Test that the Exceptions module throws an OSError if a bad path is given.
+    """Test that the Exceptions module throws an OSError if a bad path is given.
 
     Expected result: OSError thrown.
     """
@@ -33,8 +31,7 @@ def test_exceptions_init_nonexistent():
 
 
 def test_exceptions_file_empty_string():
-    """
-    Test for when a Exceptions is initialized with an empty string.
+    """Test for when a Exceptions is initialized with an empty string.
 
     Expected result: ValueError is thrown
     """
@@ -43,8 +40,7 @@ def test_exceptions_file_empty_string():
 
 
 def test_exceptions_file_invalid_yaml():
-    """
-    Test for when a Exceptions is initialized with an invalid yaml file.
+    """Test for when a Exceptions is initialized with an invalid yaml file.
 
     Expected result: ValueError is thrown
     """
@@ -53,8 +49,7 @@ def test_exceptions_file_invalid_yaml():
 
 
 def test_filter_file_exceptions_early():
-    """
-    Test that filter_file_exceptions_early excludes files.
+    """Test that filter_file_exceptions_early excludes files.
 
     Expected result: Empty files list.
     """
@@ -74,8 +69,7 @@ def test_filter_file_exceptions_early():
 
 
 def test_filter_file_exceptions_early_onlyall():
-    """
-    Test that filter_file_exceptions_early only uses exceptions with tools=all.
+    """Test that filter_file_exceptions_early only uses exceptions with tools=all.
 
     Expected result: No change to the files list
     """
@@ -92,8 +86,7 @@ def test_filter_file_exceptions_early_onlyall():
 
 
 def test_filter_file_exceptions_early_dupes():
-    """
-    Test that filter_file_exceptions_early excludes duplicated files.
+    """Test that filter_file_exceptions_early excludes duplicated files.
 
     I have no idea why one might have duplicate files, but might as well test it!
     Expected result: Empty file list.
@@ -148,8 +141,7 @@ def test_ignore_packages():
 
 
 def test_global_exceptions():
-    """
-    Test that global exceptions are found.
+    """Test that global exceptions are found.
 
     Expected result: one global exception each for file and message_regex.
     """
@@ -166,8 +158,7 @@ def test_global_exceptions():
 
 
 def test_package_exceptions():
-    """
-    Test that package exceptions are found.
+    """Test that package exceptions are found.
 
     Expected result: exceptions are found for both file and message_regex types
     """
@@ -184,8 +175,7 @@ def test_package_exceptions():
 
 
 def test_filter_issues():
-    """
-    Test that issues are filtered based on regex exceptions.
+    """Test that issues are filtered based on regex exceptions.
 
     Expected result: all issues are filtered and none are found
     """
@@ -211,8 +201,7 @@ def test_filter_issues():
 
 
 def test_filter_issues_empty_exceptions():
-    """
-    Test that issues are filtered when the exceptions file is empty.
+    """Test that issues are filtered when the exceptions file is empty.
 
     Expected result: one issue is found.
     """
@@ -238,8 +227,7 @@ def test_filter_issues_empty_exceptions():
 
 
 def test_filter_issues_globs():
-    """
-    Test that issues are filtered based on regex exceptions if it matches a glob.
+    """Test that issues are filtered based on regex exceptions if it matches a glob.
 
     Expected result: all issues are filtered out.
     """
@@ -265,8 +253,7 @@ def test_filter_issues_globs():
 
 
 def test_filter_issues_globs_wrong_file_pattern():
-    """
-    Test that issues are filtered based on regex exceptions if it matches a glob.
+    """Test that issues are filtered based on regex exceptions if it matches a glob.
 
     Expected result: no issues are filtered and one issue is found.
     """
@@ -292,8 +279,7 @@ def test_filter_issues_globs_wrong_file_pattern():
 
 
 def test_filter_issues_travis_build():
-    """
-    Test that issues on Travis CI are not filtered based on the filename prefix.
+    """Test that issues on Travis CI are not filtered based on the filename prefix.
 
     Expected result: all but one non-excepted issue is filtered
     """
@@ -319,8 +305,7 @@ def test_filter_issues_travis_build():
 
 
 def test_filter_issues_filename_abs_path():
-    """
-    Test that issues are filtered based on regex exceptions with absolute path.
+    """Test that issues are filtered based on regex exceptions with absolute path.
 
     Expected result: no issues found
     """
@@ -346,8 +331,7 @@ def test_filter_issues_filename_abs_path():
 
 
 def test_filter_issues_nolint():
-    """
-    Test that issues are filtered based on NOLINT comment.
+    """Test that issues are filtered based on NOLINT comment.
 
     Expected result: no issues found
     """
@@ -373,8 +357,7 @@ def test_filter_issues_nolint():
 
 
 def test_filter_issues_nolint_empty_log():
-    """
-    Test that NOLINT excpetions to issues do not fail with an empty issue log file.
+    """Test that NOLINT excpetions to issues do not fail with an empty issue log file.
 
     Expected result: same number of original issues in filtered issues
     """
@@ -424,8 +407,7 @@ def test_filter_issues_nolint_unicode_decode_error():
 
 
 def test_filter_issues_nolint_not_abs_path():
-    """
-    Test that issues are not filtered based on NOLINT comment when not absolute path.
+    """Test that issues are not filtered based on NOLINT comment when not absolute path.
 
     Expected result: one issue found
     """
@@ -451,8 +433,8 @@ def test_filter_issues_nolint_not_abs_path():
 
 
 def test_filter_issues_wildcard_exceptions():
-    """
-    Test that issues are found even when exceptions with wildcards for regex are used.
+    """Test that issues are found even when exceptions with wildcards for regex are
+    used.
 
     Expected result: one issue found
     """

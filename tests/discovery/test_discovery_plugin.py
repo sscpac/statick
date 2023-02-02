@@ -13,8 +13,7 @@ from statick_tool.package import Package
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment
 @contextlib.contextmanager
 def modified_environ(*remove, **update):
-    """
-    Temporarily updates the ``os.environ`` dictionary in-place.
+    """Temporarily updates the ``os.environ`` dictionary in-place.
 
     The ``os.environ`` dictionary is updated in-place so that the modification
     is sure to work in all situations.
@@ -113,8 +112,7 @@ def test_discovery_plugin_get_file_cmd_output_no_file_cmd():
 def test_discovery_plugin_get_file_cmd_output_calledprocess_error(
     mock_subprocess_check_output,
 ):
-    """
-    Test what happens when a CalledProcessError is raised.
+    """Test what happens when a CalledProcessError is raised.
 
     Expected result: returned empty string.
     """
