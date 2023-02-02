@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Added
+
+- Unit tests were added to the `exceptions` module with troublesome file to check for `UnicodeDecodeError`.
+- Unit tests were added to the `exceptions` module to check that packages to ignore are parsed correctly from
+  exceptions configuration file.
+
+### Fixed
+
+- Some files cause a `UnicodeDecodeError` exception to be thrown in the `exceptions` module.
+  Fixed that bug and now a warning is printed if a file like that is encountered.
+
 ### Changed
 
 - Ran `black` and `docformatter` against all the Python test files.

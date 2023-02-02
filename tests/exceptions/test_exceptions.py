@@ -1,11 +1,19 @@
 """Unit tests for the Exceptions module."""
 import os
+import tempfile
 
 import pytest
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.issue import Issue
 from statick_tool.package import Package
+
+try:
+    from tempfile import TemporaryDirectory
+except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
+    from backports.tempfile import (  # pylint: disable=wrong-import-order
+        TemporaryDirectory,
+    )
 
 
 def test_exceptions_init_valid():
@@ -104,6 +112,40 @@ def test_filter_file_exceptions_early_dupes():
     filtered_files = exceptions.filter_file_exceptions_early(package, files)
 
     assert not filtered_files
+
+
+def test_ignore_packages():
+    """
+    Test that ignored packages are read correctly.
+
+    Expected result: List of ignored packages matches configuration file.
+    """
+    # Look at file without "ignore_packages" key.
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "early_exceptions.yaml")
+    )
+    expected = []
+    ignored_packages = exceptions.get_ignore_packages()
+
+    assert expected == ignored_packages
+
+    # Look at file with "ignore_packages" key but no packages specified.
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "ignore_package_none_exceptions.yaml")
+    )
+    expected = []
+    ignored_packages = exceptions.get_ignore_packages()
+
+    assert expected == ignored_packages
+
+    # Look at file with "ignore_packages" key and packages specified.
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "ignore_package_exceptions.yaml")
+    )
+    expected = ["package_a", "package_b"]
+    ignored_packages = exceptions.get_ignore_packages()
+
+    assert expected == ignored_packages
 
 
 def test_global_exceptions():
@@ -340,6 +382,65 @@ def test_filter_issues_nolint_empty_log():
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
     issues["dummy_tool"] = [tool_issue]
+
+    filtered_issues = exceptions.filter_nolint(issues)
+    assert len(issues) == len(filtered_issues)
+
+
+def test_filter_issues_nolint_unicode_decode_error():
+    """
+    Test that excpetions do not fail with a file known to cause UnicodeDecodeError.
+
+    Example file that causes UnicodeDecodeError is from
+    https://github.com/PointCloudLibrary/blog.
+
+    Expected result: same number of original issues in filtered issues
+    """
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    filename = (
+        os.path.join(os.path.dirname(__file__), "unicode_decode_error_package")
+        + "/status.rst"
+    )
+    line_number = "0"
+    tool = "dummy_tool"
+    issue_type = "dummy_issue_type"
+    severity = "0"
+    message = "dummy_message"
+    tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
+    issues = {}
+    issues["dummy_tool"] = [tool_issue]
+
+    filtered_issues = exceptions.filter_nolint(issues)
+    assert len(issues) == len(filtered_issues)
+
+
+def test_filter_issues_nolint_file_not_found_error():
+    """
+    Test that excpetions do not fail with a file that does not exist.
+
+    Expected result: same number of original issues in filtered issues
+    """
+    exceptions = Exceptions(
+        os.path.join(os.path.dirname(__file__), "valid_exceptions.yaml")
+    )
+
+    with TemporaryDirectory() as tmp_dir:
+        # Make a temporary executable
+        with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
+            filename = tmp_file.name
+            line_number = "0"
+            tool = "dummy_tool"
+            issue_type = "dummy_issue_type"
+            severity = "0"
+            message = "dummy_message"
+            tool_issue = Issue(
+                filename, line_number, tool, issue_type, severity, message, None
+            )
+            issues = {}
+            issues["dummy_tool"] = [tool_issue]
 
     filtered_issues = exceptions.filter_nolint(issues)
     assert len(issues) == len(filtered_issues)
