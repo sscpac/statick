@@ -83,7 +83,8 @@ def test_tool_plugin_load_mapping_suffixed():
 
 
 def test_tool_plugin_load_mapping_suffixed_fallback():
-    """Test that we fall back to the non-suffixed file if we can't find a mapping file with an appropriate suffix."""
+    """Test that we fall back to the non-suffixed file if we can't find a mapping file
+    with an appropriate suffix."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
         "--mapping-file-suffix",
@@ -167,8 +168,7 @@ def test_tool_plugin_is_valid_executable_valid():
 
 
 def test_tool_plugin_is_valid_executable_no_exe_flag():
-    """
-    Test that is_valid_executable returns False for a non-executable file.
+    """Test that is_valid_executable returns False for a non-executable file.
 
     NOTE: any platform which doesn't have executable bits should skip
     this test, since the os.stat call will always say that the file is
@@ -201,8 +201,7 @@ def test_tool_dependencies():
 
 
 def test_tool_plugin_is_valid_executable_extension_nopathext(monkeypatch):
-    """
-    Test that is_valid_executable works correctly with .exe appended, no PATHEXT
+    """Test that is_valid_executable works correctly with .exe appended, no PATHEXT.
 
     is_valid_executable should find the file as created.
     """
@@ -218,8 +217,7 @@ def test_tool_plugin_is_valid_executable_extension_nopathext(monkeypatch):
 
 
 def test_tool_plugin_is_valid_executable_noextension_nopathext(monkeypatch):
-    """
-    Test that is_valid_executable works correctly with no extension and no PATHEXT
+    """Test that is_valid_executable works correctly with no extension and no PATHEXT.
 
     is_valid_executable should find the file as created.
     """
@@ -235,8 +233,8 @@ def test_tool_plugin_is_valid_executable_noextension_nopathext(monkeypatch):
 
 
 def test_tool_plugin_is_valid_executable_extension_pathext(monkeypatch):
-    """
-    Test that is_valid_executable works correctly with an extension and a set PATHEXT
+    """Test that is_valid_executable works correctly with an extension and a set
+    PATHEXT.
 
     is_valid_executable should find the file as created.
     """
@@ -252,8 +250,8 @@ def test_tool_plugin_is_valid_executable_extension_pathext(monkeypatch):
 
 
 def test_tool_plugin_is_valid_executable_noextension_pathext(monkeypatch):
-    """
-    Test that is_valid_executable works correctly with no extension and a set PATHEXT
+    """Test that is_valid_executable works correctly with no extension and a set
+    PATHEXT.
 
     is_valid_executable should find the file as created.
     """
@@ -269,8 +267,8 @@ def test_tool_plugin_is_valid_executable_noextension_pathext(monkeypatch):
 
 
 def test_tool_plugin_is_valid_executable_wrongextension_pathext(monkeypatch):
-    """
-    Test that is_valid_executable works correctly with a set PATHEXT and a non-PATHEXT extension.
+    """Test that is_valid_executable works correctly with a set PATHEXT and a non-
+    PATHEXT extension.
 
     is_valid_executable should NOT find the file.
     """
@@ -303,7 +301,8 @@ def test_tool_plugin_command_exists_fullpath(monkeypatch):
 
 
 def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
-    """Test that command_exists works correctly (only filename given, command is on PATH)."""
+    """Test that command_exists works correctly (only filename given, command is on
+    PATH)."""
 
     # Monkeypatch the environment to clear PATHEXT
     monkeypatch.delenv("PATHEXT", raising=False)
@@ -320,7 +319,8 @@ def test_tool_plugin_command_exists_shortpath_valid(monkeypatch):
 
 
 def test_tool_plugin_command_exists_shortpath_invalid(monkeypatch):
-    """Test that command_exists works correctly (only filename given, command is not on PATH)."""
+    """Test that command_exists works correctly (only filename given, command is not on
+    PATH)."""
 
     # Monkeypatch the environment to clear PATHEXT
     monkeypatch.delenv("PATHEXT", raising=False)

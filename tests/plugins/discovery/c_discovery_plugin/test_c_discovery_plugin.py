@@ -14,8 +14,7 @@ from statick_tool.plugins.discovery.c_discovery_plugin import CDiscoveryPlugin
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment
 @contextlib.contextmanager
 def modified_environ(*remove, **update):
-    """
-    Temporarily updates the ``os.environ`` dictionary in-place.
+    """Temporarily updates the ``os.environ`` dictionary in-place.
 
     The ``os.environ`` dictionary is updated in-place so that the modification
     is sure to work in all situations.
@@ -129,11 +128,10 @@ def test_c_discovery_plugin_scan_exceptions():
 
 
 def test_c_discovery_plugin_no_file_cmd():
-    """
-    Test when file command does not exist.
+    """Test when file command does not exist.
 
-    Test that files are not discovered with file command output if file
-    command does not exist.
+    Test that files are not discovered with file command output if file command does not
+    exist.
     """
     with modified_environ(PATH=""):
         cdp = CDiscoveryPlugin()

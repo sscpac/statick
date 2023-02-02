@@ -96,7 +96,8 @@ def test_json_reporting_plugin_report_no_plugin_context():
 
 
 def test_json_reporting_plugin_report_fileexists():
-    """Test the output of the reporting plugin if there's a file where the output dir should go."""
+    """Test the output of the reporting plugin if there's a file where the output dir
+    should go."""
     with TemporaryDirectory() as tmp_dir:
         jrp = setup_json_reporting_plugin(tmp_dir)
         package = Package(
@@ -126,8 +127,6 @@ def test_json_reporting_plugin_write_output_no_plugin_context():
             "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
         )
         assert jrp.write_output(package, "level", "line")
-        output_file = os.path.join(
-            os.getcwd(), package.name + "-" + "level" + ".json"
-        )
+        output_file = os.path.join(os.getcwd(), package.name + "-" + "level" + ".json")
         if os.path.exists(output_file):
             os.remove(output_file)

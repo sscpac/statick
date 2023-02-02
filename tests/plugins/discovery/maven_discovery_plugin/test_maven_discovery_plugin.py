@@ -54,7 +54,8 @@ def test_maven_discovery_plugin_scan_single():
 
 
 def test_maven_discovery_plugin_scan_same_depth():
-    """Test that the Maven discovery plugin finds two pom.xml files at the same depth."""
+    """Test that the Maven discovery plugin finds two pom.xml files at the same
+    depth."""
     mdp = MavenDiscoveryPlugin()
     package = Package(
         "two_package", os.path.join(os.path.dirname(__file__), "two_package")
@@ -88,7 +89,8 @@ def test_maven_discovery_plugin_scan_multilevel():
 
 
 def test_maven_discovery_plugin_scan_with_exceptions():
-    """Test that the Maven discovery plugin finds pom.xml files when exceptions are specified."""
+    """Test that the Maven discovery plugin finds pom.xml files when exceptions are
+    specified."""
     mdp = MavenDiscoveryPlugin()
     package = Package(
         "single_package", os.path.join(os.path.dirname(__file__), "single_package")

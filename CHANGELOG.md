@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Changed
+
+- Ran `black` and `docformatter` against all the Python test files.
+
+  ```shell
+  cd tests
+  find . -name test_\*.py -exec black {} \;
+  find . -name test_\*.py -exec docformatter -i --wrap-summaries 88 --wrap-descriptions 88 {} \;
+  ```
+
 ## v0.9.3 - 2022-01-30
 
 Tools that accept a list of files have been sped up considerably.

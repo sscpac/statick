@@ -8,8 +8,7 @@ from statick_tool.profile import Profile
 
 
 def test_profile_init():
-    """
-    Test that the Profile module initializes correctly.
+    """Test that the Profile module initializes correctly.
 
     Expected result: profile is initialized
     """
@@ -18,8 +17,7 @@ def test_profile_init():
 
 
 def test_profile_nonexistent():
-    """
-    Test for when a Profile is initialized with a nonexistent YAML.
+    """Test for when a Profile is initialized with a nonexistent YAML.
 
     Expected result: OSError is thrown
     """
@@ -28,8 +26,7 @@ def test_profile_nonexistent():
 
 
 def test_profile_file_empty_string():
-    """
-    Test for when a Profile is initialized with an empty string.
+    """Test for when a Profile is initialized with an empty string.
 
     Expected result: ValueError is thrown
     """
@@ -38,8 +35,7 @@ def test_profile_file_empty_string():
 
 
 def test_profile_empty():
-    """
-    Test for when a Profile is initialized with an empty YAML.
+    """Test for when a Profile is initialized with an empty YAML.
 
     Expected result: ValueError is thrown
     """
@@ -48,8 +44,8 @@ def test_profile_empty():
 
 
 def test_profile_nodefault():
-    """
-    Test for when a Profile is initialized with a YAML that doesn't have a 'default' key.
+    """Test for when a Profile is initialized with a YAML that doesn't have a 'default'
+    key.
 
     Expected result: ValueError is thrown
     """
@@ -58,8 +54,8 @@ def test_profile_nodefault():
 
 
 def test_profile_bad_yaml():
-    """
-    Test for when a Profile is initialized with something that isn't a valid YAML file.
+    """Test for when a Profile is initialized with something that isn't a valid YAML
+    file.
 
     Expected result: ValueError is thrown
     """
@@ -68,8 +64,7 @@ def test_profile_bad_yaml():
 
 
 def test_profile_get_package_level_nopackage():
-    """
-    Test for when get_package_level is called with no packages defined.
+    """Test for when get_package_level is called with no packages defined.
 
     Expected result: default is returned
     """
@@ -79,8 +74,8 @@ def test_profile_get_package_level_nopackage():
 
 
 def test_profile_get_package_level_invalidpackage():
-    """
-    Test for when get_package_level is called with a package not in the packages list.
+    """Test for when get_package_level is called with a package not in the packages
+    list.
 
     Expected result: default is returned
     """
@@ -90,8 +85,8 @@ def test_profile_get_package_level_invalidpackage():
 
 
 def test_profile_get_package_level_validpackage():
-    """
-    Test for when get_package_level is called with a package not in the packages list.
+    """Test for when get_package_level is called with a package not in the packages
+    list.
 
     Expected result: the package-specific value is returned
     """

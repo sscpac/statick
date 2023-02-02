@@ -111,8 +111,7 @@ def test_lizard_tool_plugin_parse_invalid():
 
 
 def test_lizard_tool_plugin_scan_missing_fields():
-    """
-    Test what happens when key fields are missing from the Package argument.
+    """Test what happens when key fields are missing from the Package argument.
 
     Expected result: issues is empty
     """
@@ -124,8 +123,7 @@ def test_lizard_tool_plugin_scan_missing_fields():
 
 
 def test_lizard_tool_plugin_valid_flag_filter():
-    """
-    Test that valid flag filter removes unwanted flags.
+    """Test that valid flag filter removes unwanted flags.
 
     Expected result: flag list is empty
     """
