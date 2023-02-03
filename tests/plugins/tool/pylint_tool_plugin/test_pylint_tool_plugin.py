@@ -73,7 +73,8 @@ def test_pylint_tool_plugin_scan_valid():
 
 
 def test_pylint_tool_plugin_scan_valid_max_cpu_cores():
-    """Integration test: Make sure the pylint output hasn't changed when using max CPU cores."""
+    """Integration test: Make sure the pylint output hasn't changed when using max CPU
+    cores."""
     max_procs = multiprocessing.cpu_count()
     pltp = setup_pylint_tool_plugin(max_procs=max_procs)
     package = Package(
@@ -119,8 +120,8 @@ def test_pylint_tool_plugin_parse_invalid():
 
 @mock.patch("statick_tool.plugins.tool.pylint_tool_plugin.subprocess.check_output")
 def test_pylint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means pylint hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means pylint hit
+    an error).
 
     Expected result: issues is None
     """
@@ -146,8 +147,7 @@ def test_pylint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output
 
 @mock.patch("statick_tool.plugins.tool.pylint_tool_plugin.subprocess.check_output")
 def test_pylint_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means pylint doesn't exist).
+    """Test what happens when an OSError is raised (usually means pylint doesn't exist).
 
     Expected result: issues is None
     """

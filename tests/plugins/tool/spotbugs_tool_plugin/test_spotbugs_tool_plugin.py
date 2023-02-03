@@ -231,8 +231,7 @@ def test_spotbugs_tool_plugin_parse_wrong_file_path():
 
 @mock.patch("statick_tool.plugins.tool.spotbugs_tool_plugin.ToolPlugin.command_exists")
 def test_spotbugs_tool_plugin_scan_commandnotfound(mock_command_exists):
-    """
-    Test what happens when self.command_exists returns False.
+    """Test what happens when self.command_exists returns False.
 
     Expected result: issues is an empty list
     """
@@ -265,8 +264,8 @@ def test_spotbugs_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.spotbugs_tool_plugin.subprocess.check_output")
 def test_spotbugs_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means maven hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means maven hit an
+    error).
 
     Expected result: issues is None
     """

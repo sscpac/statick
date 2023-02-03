@@ -151,7 +151,8 @@ def test_code_climate_reporting_plugin_report_cert_reference():
 
 
 def test_code_climate_reporting_plugin_invalid_severity():
-    """Test the output of the reporting plugin where the issue has an invalid severity type."""
+    """Test the output of the reporting plugin where the issue has an invalid severity
+    type."""
     with TemporaryDirectory() as tmp_dir:
         plugin = setup_code_climate_reporting_plugin(tmp_dir)
         package = Package(
@@ -219,7 +220,8 @@ def test_code_climate_reporting_plugin_report_output_directory_is_none():
 
 
 def test_code_climate_reporting_plugin_report_fileexists():
-    """Test the output of the reporting plugin if there's a file where the output dir should go."""
+    """Test the output of the reporting plugin if there's a file where the output dir
+    should go."""
     with TemporaryDirectory() as tmp_dir:
         plugin = setup_code_climate_reporting_plugin(tmp_dir)
         package = Package(

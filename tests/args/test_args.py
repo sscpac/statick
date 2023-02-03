@@ -5,8 +5,7 @@ from statick_tool.args import Args
 
 
 def test_args_init():
-    """
-    Test that the Args module initializes correctly.
+    """Test that the Args module initializes correctly.
 
     Expected result: parser and pre_parser are initialized
     """
@@ -16,8 +15,7 @@ def test_args_init():
 
 
 def test_args_user_paths_missing():
-    """
-    Test the args module without any user paths specified.
+    """Test the args module without any user paths specified.
 
     Expected result: No paths
     """
@@ -27,8 +25,7 @@ def test_args_user_paths_missing():
 
 
 def test_args_user_paths_undefined():
-    """
-    Test the args module with user paths undefined.
+    """Test the args module with user paths undefined.
 
     Expected result: No paths
     """
@@ -38,8 +35,7 @@ def test_args_user_paths_undefined():
 
 
 def test_args_user_paths_multiple_definitions():
-    """
-    Test the args module with user paths defined multiple times.
+    """Test the args module with user paths defined multiple times.
 
     Expected result: The second entry wins
     """
@@ -57,8 +53,7 @@ def test_args_user_paths_multiple_definitions():
 
 
 def test_args_user_paths_multiple_paths():
-    """
-    Test the args module with multiple user paths separated by commas.
+    """Test the args module with multiple user paths separated by commas.
 
     Expected result: Both paths are loaded
     """
@@ -79,8 +74,7 @@ def test_args_user_paths_multiple_paths():
 
 
 def test_args_user_paths_missing_dir():
-    """
-    Test the args module with a path to a nonexistent directory.
+    """Test the args module with a path to a nonexistent directory.
 
     Expected result: no paths
     """
@@ -90,8 +84,7 @@ def test_args_user_paths_missing_dir():
 
 
 def test_args_user_paths_present():
-    """
-    Test the args module with a valid path.
+    """Test the args module with a valid path.
 
     Expected result: The path we specified
     """

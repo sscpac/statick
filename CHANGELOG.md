@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Added
+
+- Unit tests were added to the `exceptions` module with troublesome file to check for `UnicodeDecodeError`.
+- Unit tests were added to the `exceptions` module to check that packages to ignore are parsed correctly from
+  exceptions configuration file.
+
+### Fixed
+
+- Some files cause a `UnicodeDecodeError` exception to be thrown in the `exceptions` module.
+  Fixed that bug and now a warning is printed if a file like that is encountered.
+
+### Changed
+
+- Ran `black` and `docformatter` against all the Python test files.
+
+  ```shell
+  cd tests
+  find . -name test_\*.py -exec black {} \;
+  find . -name test_\*.py -exec docformatter -i --wrap-summaries 88 --wrap-descriptions 88 {} \;
+  ```
+
 ## v0.9.3 - 2022-01-30
 
 Tools that accept a list of files have been sped up considerably.

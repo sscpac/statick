@@ -185,7 +185,8 @@ def test_cmake_discovery_plugin_check_output_roslint(mock_isfile):
 def test_cmake_discovery_plugin_check_output_cpplint_without_roslint_installed(
     mock_isfile,
 ):
-    """Test the CMake discovery plugin finds cpplint executable when roslint is not installed."""
+    """Test the CMake discovery plugin finds cpplint executable when roslint is not
+    installed."""
     mock_isfile.return_value = False
     cmdp = setup_cmake_discovery_plugin()
     package = Package(
@@ -201,7 +202,8 @@ def test_cmake_discovery_plugin_check_output_cpplint_without_roslint_installed(
 def test_cmake_discovery_plugin_check_output_cpplint_with_roslint_installed(
     mock_isfile,
 ):
-    """Test the CMake discovery plugin finds cpplint executable when roslint is installed."""
+    """Test the CMake discovery plugin finds cpplint executable when roslint is
+    installed."""
     mock_isfile.return_value = False
     cmdp = setup_cmake_discovery_plugin()
     package = Package(
@@ -218,8 +220,8 @@ def test_cmake_discovery_plugin_check_output_cpplint_with_roslint_installed(
     "statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output"
 )
 def test_cmake_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means CMake hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means CMake hit an
+    error).
 
     Expected result: no make targets exist
     """
@@ -238,8 +240,8 @@ def test_cmake_discovery_plugin_scan_calledprocesserror(mock_subprocess_check_ou
     "statick_tool.plugins.discovery.cmake_discovery_plugin.subprocess.check_output"
 )
 def test_cmake_discovery_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means CMake is not available).
+    """Test what happens when an OSError is raised (usually means CMake is not
+    available).
 
     Expected result: no make targets exist
     """

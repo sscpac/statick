@@ -18,11 +18,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 def test_resources_init():
-    """
-    Test initialization of the resources module.
+    """Test initialization of the resources module.
 
-    Expected results: resources.paths should have the argument directory and the directory
-    which resources.py lives in
+    Expected results: resources.paths should have the argument directory and the
+    directory which resources.py lives in
     """
     with TemporaryDirectory() as tmp_dir:
         resources = Resources([tmp_dir])
@@ -32,10 +31,10 @@ def test_resources_init():
 
 
 def test_resources_init_empty():
-    """
-    Test initialization of the resources module with an empty paths list.
+    """Test initialization of the resources module with an empty paths list.
 
-    Expected results: resources.paths should have the directory which resources.py lives in
+    Expected results: resources.paths should have the directory which resources.py lives
+    in
     """
     resources = Resources([])
     assert resources.paths
@@ -43,11 +42,10 @@ def test_resources_init_empty():
 
 
 def test_resources_init_invalid(caplog):
-    """
-    Test initialization of the resources module with an invalid dir.
+    """Test initialization of the resources module with an invalid dir.
 
-    Expected results: resources.paths should have the directory which resources.py lives in
-    and should print an error for the invalid directory
+    Expected results: resources.paths should have the directory which resources.py lives
+    in and should print an error for the invalid directory
     """
     LOGGER.info("Testing now.")
     resources = Resources(["invalid_directory"])
@@ -57,11 +55,10 @@ def test_resources_init_invalid(caplog):
 
 
 def test_resources_init_file(caplog):
-    """
-    Test initialization of the resources module with an file as an arg.
+    """Test initialization of the resources module with an file as an arg.
 
-    Expected results: resources.paths should have the directory which resources.py lives in
-    and should print an error for the file
+    Expected results: resources.paths should have the directory which resources.py lives
+    in and should print an error for the file
     """
     LOGGER.info("Testing now.")
     with tempfile.NamedTemporaryFile() as tmpfile:
@@ -75,8 +72,7 @@ def test_resources_init_file(caplog):
 
 
 def test_resources_get_plugin_paths_dirs_exist():
-    """
-    Test get_plugin_paths where all dirs exist as expected
+    """Test get_plugin_paths where all dirs exist as expected.
 
     Expected results: get_plugin_paths should contain all of resources.paths with
     '/plugins' appended
@@ -92,8 +88,7 @@ def test_resources_get_plugin_paths_dirs_exist():
 
 
 def test_resources_get_plugin_paths_dirs_dont_exist():
-    """
-    Test get_plugin_paths where some dirs don't exist as expected
+    """Test get_plugin_paths where some dirs don't exist as expected.
 
     Expected results: get_plugin_paths should contain only the default dir with
     '/plugins' appended
@@ -107,8 +102,7 @@ def test_resources_get_plugin_paths_dirs_dont_exist():
 
 
 def test_resources_get_file_exists():
-    """
-    Test get_file where the file exists.
+    """Test get_file where the file exists.
 
     Expected results: The file path is returned
     """
@@ -122,8 +116,7 @@ def test_resources_get_file_exists():
 
 
 def test_resources_get_file_doesnt_exist():
-    """
-    Test get_file where the file doesn't exist
+    """Test get_file where the file doesn't exist.
 
     Expected results: None is returned
     """

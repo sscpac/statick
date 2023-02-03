@@ -180,7 +180,8 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_severities():
 
 
 def test_write_jenkins_warnings_ng_reporting_plugin_report_fileexists():
-    """Test the output of the reporting plugin if there's a file where the output dir should go."""
+    """Test the output of the reporting plugin if there's a file where the output dir
+    should go."""
     with TemporaryDirectory() as tmp_dir:
         wfrp = setup_write_jenkins_warnings_ng_reporting_plugin(tmp_dir)
         package = Package(

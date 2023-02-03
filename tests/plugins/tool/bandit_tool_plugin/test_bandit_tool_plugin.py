@@ -76,8 +76,7 @@ def test_bandit_tool_plugin_scan_valid():
 
 
 def test_bandit_tool_plugin_scan_no_src():
-    """
-    Test what happens when we don't have python_src in package.
+    """Test what happens when we don't have python_src in package.
 
     Expected result: issues is an empty list
     """
@@ -90,8 +89,7 @@ def test_bandit_tool_plugin_scan_no_src():
 
 
 def test_bandit_tool_plugin_scan_empty_src():
-    """
-    Test what happens when python_src is an empty list.
+    """Test what happens when python_src is an empty list.
 
     Expected result: issues is an empty list
     """
@@ -105,8 +103,7 @@ def test_bandit_tool_plugin_scan_empty_src():
 
 
 def test_bandit_tool_plugin_scan_wrong_binary():
-    """
-    Test what happens when the specified tool binary does not exist.
+    """Test what happens when the specified tool binary does not exist.
 
     Expected result: issues is None
     """
@@ -123,8 +120,7 @@ def test_bandit_tool_plugin_scan_wrong_binary():
 
 @mock.patch("statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output")
 def test_bandit_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
-    """
-    Test what happens an OSError is hit (such as if bandit doesn't exist).
+    """Test what happens an OSError is hit (such as if bandit doesn't exist).
 
     Expected result: issues is None
     """
@@ -142,8 +138,8 @@ def test_bandit_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.bandit_tool_plugin.subprocess.check_output")
 def test_bandit_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is hit (such as if bandit encounters an error).
+    """Test what happens when a CalledProcessError is hit (such as if bandit encounters
+    an error).
 
     Expected result: issues is None
     """

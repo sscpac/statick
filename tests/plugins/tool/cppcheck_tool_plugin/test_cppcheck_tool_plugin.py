@@ -186,8 +186,7 @@ def test_cppcheck_tool_plugin_parse_invalid():
 
 
 def test_cppcheck_tool_plugin_scan_missing_fields():
-    """
-    Test what happens when key fields are missing from the Package argument.
+    """Test what happens when key fields are missing from the Package argument.
 
     Expected result: issues is empty
     """
@@ -202,8 +201,8 @@ def test_cppcheck_tool_plugin_scan_missing_fields():
 
 @mock.patch("statick_tool.plugins.tool.cppcheck_tool_plugin.subprocess.check_output")
 def test_cppcheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means cppcheck doesn't exist).
+    """Test what happens when an OSError is raised (usually means cppcheck doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -223,8 +222,7 @@ def test_cppcheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 
 def calledprocesserror_helper(*popenargs, **kwargs):
-    """
-    Helper for the calledprocesserror test.
+    """Helper for the calledprocesserror test.
 
     Lambdas can't raise exceptions, so this logic gets its own function.
     """
@@ -237,8 +235,8 @@ def calledprocesserror_helper(*popenargs, **kwargs):
 
 @mock.patch("statick_tool.plugins.tool.cppcheck_tool_plugin.subprocess.check_output")
 def test_cppcheck_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means cppcheck hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means cppcheck hit
+    an error).
 
     Expected result: issues is None
     """
@@ -277,7 +275,8 @@ def test_checkforexceptions_false():
 
 @mock.patch("statick_tool.plugins.tool.cppcheck_tool_plugin.subprocess.check_output")
 def test_cppcheck_tool_plugin_version_match(mock_subprocess_check_output):
-    """Test the result of passing a requested version to the plugin when that version isn't available."""
+    """Test the result of passing a requested version to the plugin when that version
+    isn't available."""
     mock_subprocess_check_output.return_value = "Cppcheck 1.2"
     cctp = setup_cppcheck_tool_plugin()
     # Mock the return value of self.plugin_context.config.get_tool_config

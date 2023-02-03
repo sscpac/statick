@@ -107,8 +107,8 @@ def test_pycodestyle_tool_plugin_parse_invalid():
 
 @mock.patch("statick_tool.plugins.tool.pycodestyle_tool_plugin.subprocess.check_output")
 def test_pycodestyle_tool_plugin_scan_oserror(mock_subprocess_check_output):
-    """
-    Test what happens when an OSError is raised (usually means pycodestyle doesn't exist).
+    """Test what happens when an OSError is raised (usually means pycodestyle doesn't
+    exist).
 
     Expected result: issues is None
     """
@@ -126,8 +126,8 @@ def test_pycodestyle_tool_plugin_scan_oserror(mock_subprocess_check_output):
 
 @mock.patch("statick_tool.plugins.tool.pycodestyle_tool_plugin.subprocess.check_output")
 def test_pycodestyle_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
-    """
-    Test what happens when a CalledProcessError is raised (usually means pycodestyle hit an error).
+    """Test what happens when a CalledProcessError is raised (usually means pycodestyle
+    hit an error).
 
     Expected result: issues is None
     """

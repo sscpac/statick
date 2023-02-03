@@ -70,7 +70,8 @@ def test_reporting_plugin_load_mapping_suffixed():
 
 
 def test_reporting_plugin_load_mapping_suffixed_fallback():
-    """Test that we fall back to the non-suffixed file if we can't find a mapping file with an appropriate suffix."""
+    """Test that we fall back to the non-suffixed file if we can't find a mapping file
+    with an appropriate suffix."""
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument(
         "--mapping-file-suffix",
