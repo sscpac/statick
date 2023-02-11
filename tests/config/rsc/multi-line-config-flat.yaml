@@ -1,0 +1,11 @@
+levels:
+  example:
+    reporting:
+      do_nothing:
+    tool:
+      catkin_lint:
+        flags: "-W2 --ignore DESCRIPTION_BOILERPLATE, DESCRIPTION_MEANINGLESS, GLOBAL_VAR_COLLISION, LINK_DIRECTORY, LITERAL_PROJECT_NAME, TARGET_NAME_COLLISION"
+      cpplint:
+        flags: "--filter=-build/header_guard, -build/include, -build/include_order, -readability/function, -readability/streams, -whitespace, -legal"
+      clang-tidy:
+        flags: "-checks=' cert*, clang-analyzer-alpha.cplusplus.virtualCall, clang-analyzer-alpha.security.ArrayBoundV2, clang-analyzer-core.UndefinedBinaryOperatorResult, '"
