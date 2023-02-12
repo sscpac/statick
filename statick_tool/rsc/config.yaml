@@ -9,7 +9,34 @@ levels:
       write_jenkins_warnings_ng:
     tool:
       make:
-        flags: "-Wcast-align -Wchar-subscripts -Wformat-security -Wformat -Wimplicit-int -Wincompatible-pointer-types -Wint-conversion -Wint-to-pointer-cast -Wparentheses -Winvalid-offsetof -Wsequence-point -Wdelete-incomplete -Wdelete-non-virtual-dtor -Winvalid-offsetof -Wreorder -Wreturn-type -Wuninitialized -Wunused-parameter -Wunreachable-code -Wunused-value -Wvarargs -Wtrigraphs -Wvarargs -Wformat -Wcast-qual"
+        flags: >
+          "
+           -Wcast-align
+           -Wchar-subscripts
+           -Wformat-security
+           -Wformat
+           -Wimplicit-int
+           -Wincompatible-pointer-types
+           -Wint-conversion
+           -Wint-to-pointer-cast
+           -Wparentheses
+           -Winvalid-offsetof
+           -Wsequence-point
+           -Wdelete-incomplete
+           -Wdelete-non-virtual-dtor
+           -Winvalid-offsetof
+           -Wreorder
+           -Wreturn-type
+           -Wuninitialized
+           -Wunused-parameter
+           -Wunreachable-code
+           -Wunused-value
+           -Wvarargs
+           -Wtrigraphs
+           -Wvarargs
+           -Wformat
+           -Wcast-qual
+          "
       clang-tidy:
         flags: >
           "-checks='
@@ -80,7 +107,18 @@ levels:
                 --good-names=f,x,y,z,t,dx,dy,dz,dt,i,j,k,ex,Run,_
                 --dummy-variables-rgx='(_+[a-zA-Z0-9]*?$$)|dummy*'"
       make:
-        flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
+        flags: >
+          "
+           -Wall
+           -Wextra
+           -Wuninitialized
+           -Woverloaded-virtual
+           -Wnon-virtual-dtor
+           -Wold-style-cast
+           -Wno-unused-variable
+           -Wno-unused-but-set-variable
+           -Wno-unused-parameter
+          "
       catkin_lint:
         flags: >
           "-W2
@@ -241,14 +279,40 @@ levels:
           Cert-env33-c
           '"
       make:
-        flags: "-Wcast-align -Wstrict-prototypes -Wchar-subscripts -Wformat-security -Wformat"
+        flags: >
+          "
+           -Wcast-align
+           -Wstrict-prototypes
+           -Wchar-subscripts
+           -Wformat-security
+           -Wformat
+          "
 
   rosm_objective:
     inherits_from:
       - "objective"
     tool:
       make:
-        flags: "-Wall -Wextra -Wuninitialized -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter -Wcast-align -Wstrict-prototypes -Wchar-subscripts -Wcast-align -Wstrict-prototypes -Wchar-subscripts -Wformat-security -Wformat"
+        flags: >
+          "
+           -Wall
+           -Wextra
+           -Wuninitialized
+           -Woverloaded-virtual
+           -Wnon-virtual-dtor
+           -Wold-style-cast
+           -Wno-unused-variable
+           -Wno-unused-but-set-variable
+           -Wno-unused-parameter
+           -Wcast-align
+           -Wstrict-prototypes
+           -Wchar-subscripts
+           -Wcast-align
+           -Wstrict-prototypes
+           -Wchar-subscripts
+           -Wformat-security
+           -Wformat
+          "
       clang-tidy:
         # cert-err58-cpp gives unwanted error for pluginlib code
         flags: >
@@ -470,7 +534,39 @@ levels:
       lizard:
         flags: ""
       make:
-        flags: "-Wcast-align -Wchar-subscripts -Wformat-security -Wformat -Wimplicit-int -Wincompatible-pointer-types -Wint-conversion -Wint-to-pointer-cast -Wparentheses -Winvalid-offsetof -Wsequence-point -Wdelete-incomplete -Wdelete-non-virtual-dtor -Wreorder -Wreturn-type -Wuninitialized -Wunused-parameter -Wunreachable-code -Wunused-value -Wvarargs -Wtrigraphs -Wcast-qual -Wall -Wextra -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter"
+        flags: >
+          "
+           -Wcast-align
+           -Wchar-subscripts
+           -Wformat-security
+           -Wformat
+           -Wimplicit-int
+           -Wincompatible-pointer-types
+           -Wint-conversion
+           -Wint-to-pointer-cast
+           -Wparentheses
+           -Winvalid-offsetof
+           -Wsequence-point
+           -Wdelete-incomplete
+           -Wdelete-non-virtual-dtor
+           -Wreorder
+           -Wreturn-type
+           -Wuninitialized
+           -Wunused-parameter
+           -Wunreachable-code
+           -Wunused-value
+           -Wvarargs
+           -Wtrigraphs
+           -Wcast-qual
+           -Wall
+           -Wextra
+           -Woverloaded-virtual
+           -Wnon-virtual-dtor
+           -Wold-style-cast
+           -Wno-unused-variable
+           -Wno-unused-but-set-variable
+           -Wno-unused-parameter
+          "
       pycodestyle:
         flags: ""
       pydocstyle:
