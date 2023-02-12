@@ -331,7 +331,7 @@ def test_config_multi_line_yaml_flags():
     # Need to take out the leading and trailing quote marks from the multi-line string.
     multi_line_tool_config = multi_line_config.get_tool_config(
         "catkin_lint", "example", "flags"
-    )[1:-2]
+    )
 
     assert base_tool_config == multi_line_tool_config
 
@@ -339,7 +339,7 @@ def test_config_multi_line_yaml_flags():
     # Need to take out the leading and trailing quote marks from the multi-line string.
     multi_line_tool_config = multi_line_config.get_tool_config(
         "cpplint", "example", "flags"
-    )[1:-2]
+    )
 
     assert base_tool_config == multi_line_tool_config
 
@@ -347,7 +347,15 @@ def test_config_multi_line_yaml_flags():
     # Need to take out the leading and trailing quote marks from the multi-line string.
     multi_line_tool_config = multi_line_config.get_tool_config(
         "clang-tidy", "example", "flags"
-    )[1:-2]
+    )
+
+    assert base_tool_config == multi_line_tool_config
+
+    base_tool_config = base_config.get_tool_config("make", "example", "flags")
+    # Need to take out the leading and trailing quote marks from the multi-line string.
+    multi_line_tool_config = multi_line_config.get_tool_config(
+        "make", "example", "flags"
+    )
 
     assert base_tool_config == multi_line_tool_config
 

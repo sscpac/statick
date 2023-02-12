@@ -157,7 +157,13 @@ class Config:
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
         """Get tool flags to use for a plugin at a certain level."""
-        return self.get_plugin_config("tool", plugin, level, key, default)
+        tool_flags = self.get_plugin_config("tool", plugin, level, key, default)
+        # Make sure the flags are on a single line string and remove double-quotes and
+        # whitespace that might have been added from yaml multi-line syntax.
+        if tool_flags is not None:
+            tool_flags = " ".join(tool_flags.split()).strip('"').strip()
+
+        return tool_flags
 
     def get_discovery_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None

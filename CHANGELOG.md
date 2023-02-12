@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Unit tests were added to the `exceptions` module with troublesome file to check for `UnicodeDecodeError`.
 - Unit tests were added to the `exceptions` module to check that packages to ignore are parsed correctly from
   exceptions configuration file.
+- Unit tests were added to the `config` module to check that multi-line yaml syntax configurations are successfully
+  parsed.
 
 ### Fixed
 
