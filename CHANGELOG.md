@@ -8,20 +8,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
-- Unit tests were added to the `exceptions` module with troublesome file to check for `UnicodeDecodeError`.
+- Unit tests were added to the `exceptions` module with troublesome file to check for `UnicodeDecodeError`. (#478)
 - Unit tests were added to the `exceptions` module to check that packages to ignore are parsed correctly from
-  exceptions configuration file.
+  exceptions configuration file. (#478)
 - Unit tests were added to the `config` module to check that multi-line yaml syntax configurations are successfully
-  parsed.
+  parsed. (#481)
+- Use multi-line yaml for tool flags in default configuration file. (#481)
 
 ### Fixed
 
 - Some files cause a `UnicodeDecodeError` exception to be thrown in the `exceptions` module.
-  Fixed that bug and now a warning is printed if a file like that is encountered.
+  Fixed that bug and now a warning is printed if a file like that is encountered. (#478)
 
 ### Changed
 
-- Ran `black` and `docformatter` against all the Python test files.
+- Ran `black` and `docformatter` against all the Python test files. (#479)
 
   ```shell
   cd tests
