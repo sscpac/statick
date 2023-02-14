@@ -234,7 +234,7 @@ levels:
         flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
 ```
 
-Statick supports the use of multi-line yaml syntax.
+Statick supports the use of some multi-line yaml syntax, namely the `>` syntax.
 See [Stack Overflow](https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines)
 and the unit tests for the `config` module for examples.
 
