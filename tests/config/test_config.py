@@ -310,6 +310,56 @@ def test_config_extend_combine_base_level():
     assert "spotbugs" in plugins
 
 
+def test_config_multi_line_yaml_flags():
+    """Test that flags split across multiple lines are correctly parsed.
+
+    Note that YAML syntax is notoriously/surprisingly complex. See
+
+    https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-in-yaml-over-multiple-lines
+    """
+    base_config_file = os.path.join(
+        os.path.dirname(__file__), "rsc", "multi-line-config-flat.yaml"
+    )
+    multi_line_config_file = os.path.join(
+        os.path.dirname(__file__), "rsc", "multi-line-config.yaml"
+    )
+
+    base_config = Config(base_config_file)
+    multi_line_config = Config(multi_line_config_file)
+
+    base_tool_config = base_config.get_tool_config("catkin_lint", "example", "flags")
+    # Need to take out the leading and trailing quote marks from the multi-line string.
+    multi_line_tool_config = multi_line_config.get_tool_config(
+        "catkin_lint", "example", "flags"
+    )
+
+    assert base_tool_config == multi_line_tool_config
+
+    base_tool_config = base_config.get_tool_config("cpplint", "example", "flags")
+    # Need to take out the leading and trailing quote marks from the multi-line string.
+    multi_line_tool_config = multi_line_config.get_tool_config(
+        "cpplint", "example", "flags"
+    )
+
+    assert base_tool_config == multi_line_tool_config
+
+    base_tool_config = base_config.get_tool_config("clang-tidy", "example", "flags")
+    # Need to take out the leading and trailing quote marks from the multi-line string.
+    multi_line_tool_config = multi_line_config.get_tool_config(
+        "clang-tidy", "example", "flags"
+    )
+
+    assert base_tool_config == multi_line_tool_config
+
+    base_tool_config = base_config.get_tool_config("make", "example", "flags")
+    # Need to take out the leading and trailing quote marks from the multi-line string.
+    multi_line_tool_config = multi_line_config.get_tool_config(
+        "make", "example", "flags"
+    )
+
+    assert base_tool_config == multi_line_tool_config
+
+
 def test_get_config_from_missing_file():
     """Test that None is returned when the configuration file does not exist."""
     base_config_file = os.path.join(os.path.dirname(__file__), "rsc", "config.yaml")
