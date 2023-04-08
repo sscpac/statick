@@ -2,10 +2,10 @@ r"""Apply CCCC tool and gather results.
 
 To run the CCCC tool locally (without Statick) one way to do so is:
 
-    find . -name \*.h -print -o -name \*.cpp -print | xargs cccc
+find . -name \*.h -print -o -name \*.cpp -print | xargs cccc
 
-That will generate several reports, including HTML. The results can be viewd
-in a web browser.
+That will generate several reports, including HTML. The results can be viewd in a web
+browser.
 """
 import argparse
 import csv
@@ -174,8 +174,8 @@ class CCCCToolPlugin(ToolPlugin):
     def parse_config(cls, config_file: str) -> Dict[str, str]:
         """Parse CCCC configuration file.
 
-        Gets warning and error thresholds for all the metrics.
-        An explanation to dump default values to a configuration file is at:
+        Gets warning and error thresholds for all the metrics. An explanation to dump
+        default values to a configuration file is at:
         http://sarnold.github.io/cccc/CCCC_User_Guide.html#config
 
         `cccc --opt_outfile=cccc.opt`

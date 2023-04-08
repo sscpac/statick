@@ -1,7 +1,8 @@
 """Discovery plugin to find CMake-based projects.
 
-From the CMake manual, valid CMake files are named `CMakeLists.txt` and `*.cmake`.
-This module will find those files and make them available as part of the package data.
+From the CMake manual, valid CMake files are named `CMakeLists.txt` and `*.cmake`. This
+module will find those files and make them available as part of the package data.
+
 
 https://cmake.org/cmake/help/latest/manual/cmake-language.7.html
 

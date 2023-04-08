@@ -4,7 +4,7 @@ black
 cmakelint
 cpplint
 deprecated
-docformatter
+docformatter==1.5.1  # Pin due to formatting conflict with black.
 flawfinder
 isort
 lizard
