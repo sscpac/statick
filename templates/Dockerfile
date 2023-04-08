@@ -1,5 +1,5 @@
 FROM ubuntu:xenial
-MAINTAINER SPAWAR
+LABEL maintainer="SPAWAR" 
 
 LABEL org.label-schema.name = "Statick Runner"
 LABEL org.label-schema.vcs-url = "https://github.com/sscpac/statick"
