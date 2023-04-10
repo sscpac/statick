@@ -1,14 +1,12 @@
 """Exceptions interface.
 
-Exceptions allow for ignoring detected issues. This is commonly done to
-suppress false positives or to ignore issues that a group has no intention
-of addressing.
+Exceptions allow for ignoring detected issues. This is commonly done to suppress false
+positives or to ignore issues that a group has no intention of addressing.
 
-The two types of exceptions are a list of filenames or regular expressions.
-If using filename matching for the exception it is required that the
-reported issue contain the absolute path to the file containing the issue
-to be ignored. The path for the issue is set in the tool plugin that
-generates the issues.
+The two types of exceptions are a list of filenames or regular expressions. If using
+filename matching for the exception it is required that the reported issue contain the
+absolute path to the file containing the issue to be ignored. The path for the issue is
+set in the tool plugin that generates the issues.
 """
 import fnmatch
 import logging
