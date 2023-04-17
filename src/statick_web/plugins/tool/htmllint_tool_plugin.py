@@ -52,6 +52,19 @@ class HTMLLintToolPlugin(ToolPlugin):  # type: ignore
                 total_output.append(output)
 
             except subprocess.CalledProcessError as ex:
+                if (
+                    "Error: Cannot find module" in ex.output
+                    or "Require stack:" in ex.output
+                ):
+                    # nodejs cannot find a module and threw an error
+                    # this results in the same returncode `1` that markdownlint
+                    # uses to indicate the presence of linting issues.
+                    logging.warning(
+                        "%s failed! Returncode = %d", tool_bin, ex.returncode
+                    )
+                    logging.warning("%s exception: %s", self.get_name(), ex.output)
+                    return None
+
                 # tool returns 1 upon warnings and 2 upon errors
                 if ex.returncode not in [1, 2]:
                     logging.warning(

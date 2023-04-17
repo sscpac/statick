@@ -146,6 +146,40 @@ def test_htmllint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outp
     assert not issues
 
 
+@mock.patch(
+    "statick_tool.plugins.tool.htmllint_tool_plugin.subprocess.check_output"
+)
+def test_htmllint_tool_plugin_scan_nodejs_error(mock_subprocess_check_output):
+    """
+    Test what happens when a CalledProcessError is raised when nodejs throws an error.
+
+    Expected result: issues is None
+    """
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="internal/modules/cjs/loader.js:883 \
+  throw err; \
+  ^ \
+\
+Error: Cannot find module 'node:fs' \
+Require stack:"
+    )
+    plugin = setup_htmllint_tool_plugin()
+    package = Package(
+        "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
+    )
+    package["html_src"] = [
+        os.path.join(os.path.dirname(__file__), "valid_package", "test.html")
+    ]
+    issues = plugin.scan(package, "level")
+    assert issues is None
+
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="Require stack:"
+    )
+    issues = plugin.scan(package, "level")
+    assert issues is None
+
+
 @mock.patch("statick_tool.plugins.tool.htmllint_tool_plugin.subprocess.check_output")
 def test_htmllint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
