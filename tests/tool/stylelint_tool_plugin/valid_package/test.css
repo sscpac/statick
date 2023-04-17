@@ -1,4 +1,8 @@
+/* Add an empty block to intentionally trigger a stylelint warning. */
 body
 {
-  width: 100%;
 }
+
+/* Add an empty comment to intentionally trigger a stylelint warning. */
+
+/* */

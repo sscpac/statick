@@ -96,7 +96,7 @@ def test_stylelint_tool_plugin_scan_valid_with_issues():
         os.path.join(os.path.dirname(__file__), "valid_package", "test.css")
     ]
     issues = plugin.scan(package, "level")
-    # We expect to have declaration-colon-after-space and block-opening-brace-space-before errors.
+    # We expect to have block-no-empty and comment-no-empty errors.
     assert len(issues) == 3
 
 
