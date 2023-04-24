@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+## v0.9.4 - 2022-04-25
+
 ### Added
 
 - Unit tests were added to the `exceptions` module with troublesome file to check for `UnicodeDecodeError`. (#478)
@@ -19,9 +21,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Some files cause a `UnicodeDecodeError` exception to be thrown in the `exceptions` module.
   Fixed that bug and now a warning is printed if a file like that is encountered. (#478)
+- Fix for Dockerfile smell DL4000. (#482)
 
 ### Changed
 
+- Pin version of `docformatter` dependency to be compatible with `black`.
+  Update docstrings to match what new version of docformatter expects. (#483)
 - Ran `black` and `docformatter` against all the Python test files. (#479)
 
   ```shell
@@ -29,6 +34,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   find . -name test_\*.py -exec black {} \;
   find . -name test_\*.py -exec docformatter -i --wrap-summaries 88 --wrap-descriptions 88 {} \;
   ```
+
+### Removed
+
+- Remove `codecov` package from tox configuration. (#485)
 
 ## v0.9.3 - 2022-01-30
 
