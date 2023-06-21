@@ -37,6 +37,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Removed
 
+- Drop support for Python 3.7 due to end-of-life on 27 June 2023.
+  - See <https://endoflife.date/python>.
 - Remove `codecov` package from tox configuration. (#485)
 
 ## v0.9.3 - 2022-01-30
