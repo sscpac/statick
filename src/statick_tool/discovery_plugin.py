@@ -5,14 +5,12 @@ import subprocess
 import sys
 from typing import Any, List, Optional, Union
 
-from yapsy.IPlugin import IPlugin
-
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
-class DiscoveryPlugin(IPlugin):  # type: ignore
+class DiscoveryPlugin:
     """Default implementation of discovery plugin."""
 
     plugin_context = None

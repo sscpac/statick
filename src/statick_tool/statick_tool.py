@@ -11,7 +11,6 @@ from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
 import pkg_resources
-from yapsy.PluginManager import PluginManager
 
 from statick_tool.config import Config
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -20,10 +19,13 @@ from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
-from statick_tool.reporting_plugin import ReportingPlugin
 from statick_tool.resources import Resources
 from statick_tool.timing import Timing
-from statick_tool.tool_plugin import ToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 class Statick:  # pylint: disable=too-many-instance-attributes
@@ -34,34 +36,23 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         self.default_level = "default"
         self.resources = Resources(user_paths)
 
-        self.manager = PluginManager()
-        self.manager.setPluginPlaces(self.resources.get_plugin_paths())
-        self.manager.setCategoriesFilter(
-            {
-                "Discovery": DiscoveryPlugin,
-                "Tool": ToolPlugin,
-                "Reporting": ReportingPlugin,
-            }
-        )
-        self.manager.collectPlugins()
-
         self.discovery_plugins: Dict[str, Any] = {}
-        for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
-            self.discovery_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
-
-        self.tool_plugins: Dict[str, Any] = {}
-        for plugin_info in self.manager.getPluginsOfCategory("Tool"):
-            self.tool_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
+        plugins = entry_points(group="statick_tool.plugins.discovery")
+        for plugin_type in plugins:
+            plugin = plugin_type.load()
+            self.discovery_plugins[plugin_type.name] = plugin()
 
         self.reporting_plugins: Dict[str, Any] = {}
-        for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
-            self.reporting_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
+        plugins = entry_points(group="statick_tool.plugins.reporting")
+        for plugin_type in plugins:
+            plugin = plugin_type.load()
+            self.reporting_plugins[plugin_type.name] = plugin()
+
+        self.tool_plugins: Dict[str, Any] = {}
+        plugins = entry_points(group="statick_tool.plugins.tool")
+        for plugin_type in plugins:
+            plugin = plugin_type.load()
+            self.tool_plugins[plugin_type.name] = plugin()
 
         self.config: Optional[Config] = None
         self.exceptions: Optional[Exceptions] = None
@@ -240,10 +231,10 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         for _, plugin in list(self.discovery_plugins.items()):
             plugin.gather_args(args)
 
-        for _, plugin in list(self.tool_plugins.items()):
+        for _, plugin in list(self.reporting_plugins.items()):
             plugin.gather_args(args)
 
-        for _, plugin in list(self.reporting_plugins.items()):
+        for _, plugin in list(self.tool_plugins.items()):
             plugin.gather_args(args)
 
     def get_level(self, path: str, args: argparse.Namespace) -> Optional[str]:

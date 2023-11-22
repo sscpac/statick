@@ -633,34 +633,43 @@ The resource file (in your _user path_) must be named `_clang-format`.
 
 If you have the need to support any type of _discovery_, _tool_, or _reporting_ plugin that does not come built-in
 with Statick then you can write a custom plugin.
+Declare the plugin module as a [module entry point] in `pyproject.toml` and provide the path  according to plugin type
+(_discovery_, _tool_, _reporting_).
 
-Plugins consist of both a Python file and a `yapsy` file.
-For a description of how yapsy works, check out the [yapsy documentation](http://yapsy.sourceforge.net/).
-
-A _user path_ with some custom plugins may look like
+A _user path_ with custom plugins and configuration files may look like
 
 ```shell
-my_custom_config
-  setup.py
-  |- plugins
-     |- my_discovery_plugin
-        |- my_discovery_plugin.py
-        |- my_discovery_plugin.yapsy
-     |- my_tool_plugins
-        |- my_tool_plugin.py
-        |- my_tool_plugin.yapsy
-        |- my_other_tool_plugin.py
-        |- my_other_tool_plugin.yapsy
-  |- rsc
-     |- config.yaml
-     |- exceptions.yaml
+my-custom-project
+  pyproject.toml
+  |- src
+     |- statick_tool
+        |- plugins
+           |- discovery
+              |- my_discovery_plugin.py
+           |- tool
+              |- my_tool_plugin.py
+              |- my_other_tool_plugin.py
+        |- rsc
+           |- config.yaml
+           |- exceptions.yaml
+```
+
+In `pyproject.toml` declare the plugins as entry points.
+
+```toml
+[project.entry-points."statick_tool.plugins.discovery"]
+my_discovery_name = "statick_tool.plugins.discovery.my_discovery_plugin:MyDiscoveryPlugin"
+
+[project.entry-points."statick_tool.plugins.tool"]
+my_tool_name = "statick_tool.plugins.tool.my_tool_plugin:MyToolPlugin"
+my_other_tool_name = "statick_tool.plugins.tool.my_other_tool_plugin:MyOtherToolPlugin"
 ```
 
 For the actual implementation of a plugin, it is recommended to copy a suitable default plugin provided by Statick and
 modify as needed.
 
-For the contents of `setup.py`, it is recommended to copy a working external plugin.
-Some examples are [statick-fortify](https://github.com/soartech/statick-fortify) and [statick-tex](https://github.com/tdenewiler/statick-tex).
+For the contents of `pyproject.toml`, it is recommended to copy a working external plugin.
+Some examples are [statick-md] and [statick-tex].
 Those plugins are set up in such a way that they work with Statick when released on PyPI.
 
 ## Examples
@@ -878,6 +887,7 @@ His commits were scrubbed from git history upon the initial public release.
 [lizard]: https://github.com/terryyin/lizard
 [logging]: https://docs.python.org/3/howto/logging.html
 [make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
+[module entry point]: https://setuptools.pypa.io/en/latest/userguide/entry_point.html#entry-points-syntax
 [mypy]: https://github.com/python/mypy
 [npm-groovy-lint]: https://nvuillam.github.io/npm-groovy-lint/
 [perlcritic]: http://perlcritic.com/
@@ -887,10 +897,12 @@ His commits were scrubbed from git history upon the initial public release.
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
-[ruff]: https://github.com/charliermarsh/ruff
 [ros]: https://www.ros.org/
+[ruff]: https://github.com/charliermarsh/ruff
 [shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
+[statick-md]: https://github.com/sscpac/statick-md
+[statick-tex]: https://github.com/tdenewiler/statick-tex
 [uncrustify]: https://github.com/uncrustify/uncrustify
 [xmllint]: http://xmlsoft.org/
 [yamllint]: https://yamllint.readthedocs.io/en/stable/

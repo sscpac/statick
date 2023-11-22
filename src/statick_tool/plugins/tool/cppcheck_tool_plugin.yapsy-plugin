@@ -1,3 +1,0 @@
-[Core]
-Name = Cppcheck Tool Plugin
-Module = cppcheck_tool_plugin

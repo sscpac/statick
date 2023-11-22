@@ -3,14 +3,12 @@ import argparse
 import logging
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from yapsy.IPlugin import IPlugin
-
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
-class ReportingPlugin(IPlugin):  # type: ignore
+class ReportingPlugin:
     """Default implementation of reporting plugin."""
 
     plugin_context = None

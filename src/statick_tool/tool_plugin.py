@@ -5,15 +5,13 @@ import os
 import shlex
 from typing import Any, Dict, List, Optional, Union
 
-from yapsy.IPlugin import IPlugin
-
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
 # No stubs available for IPlugin so ignoring type.
-class ToolPlugin(IPlugin):  # type: ignore
+class ToolPlugin:
     """Default implementation of tool plugin."""
 
     plugin_context = None
