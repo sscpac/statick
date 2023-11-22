@@ -7,12 +7,7 @@ import tempfile
 import statick_tool
 from statick_tool.resources import Resources
 
-try:
-    from tempfile import TemporaryDirectory
-except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (  # pylint: disable=wrong-import-order
-        TemporaryDirectory,
-    )
+from tempfile import TemporaryDirectory
 
 LOGGER = logging.getLogger(__name__)
 

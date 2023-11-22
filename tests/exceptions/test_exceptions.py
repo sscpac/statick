@@ -8,12 +8,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 
-try:
-    from tempfile import TemporaryDirectory
-except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (  # pylint: disable=wrong-import-order
-        TemporaryDirectory,
-    )
+from tempfile import TemporaryDirectory
 
 
 def test_exceptions_init_valid():

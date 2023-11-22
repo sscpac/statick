@@ -12,12 +12,7 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
-try:
-    from tempfile import TemporaryDirectory
-except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (  # pylint: disable=wrong-import-order
-        TemporaryDirectory,
-    )
+from tempfile import TemporaryDirectory
 
 
 def test_tool_plugin_load_mapping_valid():

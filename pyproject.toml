@@ -111,7 +111,6 @@ yamllint = "statick_tool.plugins.tool.yamllint:YamllintToolPlugin"
 
 [project.optional-dependencies]
 test = [
-    "backports.tempfile",
     "flake8-pep3101",
     "flake8<5",  # Pin until https://github.com/tholo/pytest-flake8/issues/87 is fixed.
     "lark",

@@ -16,12 +16,7 @@ if sys.version_info < (3, 10):
 else:
     from importlib.metadata import entry_points
 
-try:
-    from tempfile import TemporaryDirectory
-except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (  # pylint: disable=wrong-import-order
-        TemporaryDirectory,
-    )
+from tempfile import TemporaryDirectory
 
 
 def setup_code_climate_reporting_plugin(
