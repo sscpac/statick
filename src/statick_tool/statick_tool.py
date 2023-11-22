@@ -10,9 +10,9 @@ import time
 from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
+import pkg_resources
 from yapsy.PluginManager import PluginManager
 
-from statick_tool import __version__
 from statick_tool.config import Config
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -193,7 +193,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         args.add_argument(
             "--version",
             action="version",
-            version=f"%(prog)s {__version__}",
+            version=f"%(prog)s {pkg_resources.get_distribution('statick').version}",
         )
         args.add_argument(
             "--mapping-file-suffix",

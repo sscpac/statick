@@ -1,4 +1,4 @@
-"""Unit tests of statick.py."""
+"""Unit tests of statick_tool.py."""
 
 import contextlib
 import logging
@@ -16,7 +16,7 @@ from statick_tool.args import Args
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
 from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
-from statick_tool.statick import Statick
+from statick_tool.statick_tool import Statick
 
 LOGGER = logging.getLogger(__name__)
 
@@ -160,7 +160,7 @@ def test_get_level_nonexistent_file(init_statick):
     assert level is None
 
 
-@mock.patch("statick_tool.statick.Profile")
+@mock.patch("statick_tool.statick_tool.Profile")
 def test_get_level_ioerror(mocked_profile_constructor, init_statick):
     """Test the behavior when Profile throws an OSError.
 
@@ -176,7 +176,7 @@ def test_get_level_ioerror(mocked_profile_constructor, init_statick):
     assert level is None
 
 
-@mock.patch("statick_tool.statick.Profile")
+@mock.patch("statick_tool.statick_tool.Profile")
 def test_get_level_valueerror(mocked_profile_constructor, init_statick):
     """Test the behavior when Profile throws a ValueError."""
     mocked_profile_constructor.side_effect = ValueError("error")
@@ -226,7 +226,7 @@ def test_custom_config_file(init_statick):
     assert has_level
 
 
-@mock.patch("statick_tool.statick.Config")
+@mock.patch("statick_tool.statick_tool.Config")
 def test_get_config_valueerror(mocked_config_constructor, init_statick):
     """Test the behavior when Config throws a ValueError."""
     mocked_config_constructor.side_effect = ValueError("error")
@@ -238,7 +238,7 @@ def test_get_config_valueerror(mocked_config_constructor, init_statick):
     assert init_statick.config is None
 
 
-@mock.patch("statick_tool.statick.Config")
+@mock.patch("statick_tool.statick_tool.Config")
 def test_get_config_oserror(mocked_config_constructor, init_statick):
     """Test the behavior when Config throws a OSError."""
     mocked_config_constructor.side_effect = OSError("error")
@@ -250,7 +250,7 @@ def test_get_config_oserror(mocked_config_constructor, init_statick):
     assert init_statick.config is None
 
 
-@mock.patch("statick_tool.statick.Exceptions")
+@mock.patch("statick_tool.statick_tool.Exceptions")
 def test_get_exceptions_valueerror(mocked_exceptions_constructor, init_statick):
     """Test the behavior when Exceptions throws a ValueError."""
     mocked_exceptions_constructor.side_effect = ValueError("error")
@@ -262,7 +262,7 @@ def test_get_exceptions_valueerror(mocked_exceptions_constructor, init_statick):
     assert init_statick.exceptions is None
 
 
-@mock.patch("statick_tool.statick.Exceptions")
+@mock.patch("statick_tool.statick_tool.Exceptions")
 def test_get_exceptions_oserror(mocked_exceptions_constructor, init_statick):
     """Test the behavior when Exceptions throws a OSError."""
     mocked_exceptions_constructor.side_effect = OSError("error")
@@ -296,7 +296,7 @@ def test_run():
     for tool in issues:
         assert not issues[tool]
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -315,7 +315,7 @@ def test_run_missing_path(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -341,7 +341,7 @@ def test_run_missing_config(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default_value"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -369,7 +369,7 @@ def test_run_output_is_not_directory(mocked_mkdir, init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -392,7 +392,7 @@ def test_run_force_tool_list(init_statick):
         assert not issues[tool]
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -421,7 +421,7 @@ def test_run_package_is_ignored(init_statick):
     assert not issues
     assert success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -734,7 +734,7 @@ def test_run_invalid_level(init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -765,7 +765,7 @@ def test_run_mkdir_oserror(mocked_mkdir, init_statick):
     assert issues is None
     assert not success
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -832,7 +832,7 @@ def test_run_called_process_error(mock_subprocess_check_output):
     for tool in issues:
         assert not issues[tool]
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 
@@ -1338,7 +1338,7 @@ def test_scan_package(init_statick_ws):
     assert issues is None
 
     try:
-        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick-default"))
+        shutil.rmtree(os.path.join(os.path.dirname(__file__), "statick_tool-default"))
     except OSError as ex:
         print(f"Error: {ex}")
 

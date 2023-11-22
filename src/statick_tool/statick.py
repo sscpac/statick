@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable script for running statick against a single package."""
+"""Executable script for running Statick against one or more packages."""
 
 import argparse
 import sys
@@ -8,11 +8,13 @@ import time
 from tabulate import tabulate
 
 from statick_tool.args import Args
-from statick_tool.statick import Statick
+from statick_tool.statick_tool import Statick
 
 
-def run(statick: Statick, parsed_args: argparse.Namespace, start_time: float) -> bool:
-    """Run statick on a single package."""
+def run(
+    statick: Statick, parsed_args: argparse.Namespace, start_time: float
+) -> bool:  # pragma: no cover
+    """Run Statick on a single package."""
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args, start_time)
     if issues is None:
@@ -24,8 +26,8 @@ def run(statick: Statick, parsed_args: argparse.Namespace, start_time: float) ->
     return success
 
 
-def main() -> None:
-    """Run statick."""
+def main() -> None:  # pragma: no cover
+    """Run Statick."""
     start_time: float = time.time()
     args = Args("Statick tool")
     args.parser.add_argument("path", help="Path of package or workspace to scan")
@@ -54,5 +56,5 @@ def main() -> None:
         sys.exit(0)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

@@ -399,10 +399,14 @@ $ statick . --output-directory /tmp/x --timings
 
 ## Advanced Installation
 
-To install Statick from source on your system and make it part of your `$PATH`:
+To install from source best practices is to use a virtual environment.
+These instructions are for Linux, activating a virtual environment on Mac/Windows is similar.
+To install Statick from source on your system:
 
 ```shell
-sudo python3 setup.py install
+python3 -m venv venv
+. venv/bin/activate
+pip install .
 ```
 
 ## Existing Plugins
