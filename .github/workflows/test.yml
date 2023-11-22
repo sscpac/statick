@@ -101,6 +101,7 @@ jobs:
 
       - name: Test with mypy
         run: |
+          pip list | grep importlib
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       # Re-enable this step when statick-md switches from yapsy to entry points plugin approach.
