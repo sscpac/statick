@@ -1,10 +1,15 @@
 """Unit tests for the Java discovery plugin."""
 import os
-from importlib.metadata import entry_points
+import sys
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.java import JavaDiscoveryPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def test_java_discovery_plugin_found():

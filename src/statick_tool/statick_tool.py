@@ -7,7 +7,6 @@ import multiprocessing
 import os
 import sys
 import time
-from importlib.metadata import entry_points
 from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -22,6 +21,11 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
 from statick_tool.resources import Resources
 from statick_tool.timing import Timing
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 class Statick:  # pylint: disable=too-many-instance-attributes

@@ -7,8 +7,8 @@ import os
 import pytest
 import shutil
 import subprocess
+import sys
 import xmltodict
-from importlib.metadata import entry_points
 
 import statick_tool
 from statick_tool.config import Config
@@ -16,6 +16,11 @@ from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.plugins.tool.cccc import CCCCToolPlugin
 from statick_tool.resources import Resources
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_cccc_tool_plugin(use_plugin_context=True, binary=None, cccc_config=None):

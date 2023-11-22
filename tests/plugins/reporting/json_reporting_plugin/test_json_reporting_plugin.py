@@ -1,8 +1,7 @@
 """Unit tests for the JSON reporting plugin."""
 import argparse
 import os
-from importlib.metadata import entry_points
-from tempfile import TemporaryDirectory
+import sys
 
 from statick_tool.config import Config
 from statick_tool.issue import Issue
@@ -10,6 +9,13 @@ from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.plugins.reporting.json import JsonReportingPlugin
 from statick_tool.resources import Resources
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
+
+from tempfile import TemporaryDirectory
 
 
 def setup_json_reporting_plugin(file_path, use_plugin_context=True):

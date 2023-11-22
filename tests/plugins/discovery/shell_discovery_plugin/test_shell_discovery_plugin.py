@@ -2,11 +2,16 @@
 import contextlib
 import os
 import pytest
-from importlib.metadata import entry_points
+import sys
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.shell import ShellDiscoveryPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 # From https://stackoverflow.com/questions/2059482/shell-temporarily-modify-the-current-processs-environment

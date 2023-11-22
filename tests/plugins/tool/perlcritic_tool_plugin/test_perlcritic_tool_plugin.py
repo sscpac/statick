@@ -4,7 +4,7 @@ import mock
 import os
 import pytest
 import subprocess
-from importlib.metadata import entry_points
+import sys
 
 import statick_tool
 from statick_tool.config import Config
@@ -12,6 +12,11 @@ from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.plugins.tool.perlcritic import PerlCriticToolPlugin
 from statick_tool.resources import Resources
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_perlcritic_tool_plugin(binary=None):

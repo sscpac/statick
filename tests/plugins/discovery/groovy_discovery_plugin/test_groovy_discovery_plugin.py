@@ -1,10 +1,15 @@
 """Unit tests for the Groovy discovery plugin."""
 import os
-from importlib.metadata import entry_points
+import sys
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.groovy import GroovyDiscoveryPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def test_groovy_plugin_found():

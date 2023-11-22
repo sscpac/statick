@@ -1,12 +1,17 @@
 """Unit tests for the console reporting plugin."""
 import os
-from importlib.metadata import entry_points
+import sys
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugins.reporting.print_to_console import (
     PrintToConsoleReportingPlugin,
 )
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def test_console_reporting_plugin_found():
