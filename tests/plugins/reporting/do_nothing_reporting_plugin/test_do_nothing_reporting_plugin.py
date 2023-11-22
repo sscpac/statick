@@ -1,15 +1,10 @@
 """Unit tests for the do nothing reporting plugin."""
 import os
-import sys
+from importlib.metadata import entry_points
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugins.reporting.do_nothing import DoNothingReportingPlugin
-
-if sys.version_info < (3, 10):
-    from importlib_metadata import entry_points
-else:
-    from importlib.metadata import entry_points
 
 
 def test_do_nothing_reporting_plugin_found():

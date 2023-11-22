@@ -3,7 +3,8 @@ import argparse
 import json
 import os
 import re
-import sys
+from importlib.metadata import entry_points
+from tempfile import TemporaryDirectory
 
 import statick_tool
 from statick_tool.config import Config
@@ -14,13 +15,6 @@ from statick_tool.plugins.reporting.write_jenkins_warnings_ng import (
     WriteJenkinsWarningsNGReportingPlugin,
 )
 from statick_tool.resources import Resources
-
-if sys.version_info < (3, 10):
-    from importlib_metadata import entry_points
-else:
-    from importlib.metadata import entry_points
-
-from tempfile import TemporaryDirectory
 
 output_regex = r"^{\"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": (\d+), \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\", \"(.*)\": \"(.*)\"}"
 

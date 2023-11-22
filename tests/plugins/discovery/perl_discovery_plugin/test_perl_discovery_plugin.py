@@ -2,16 +2,11 @@
 import contextlib
 import os
 import pytest
-import sys
+from importlib.metadata import entry_points
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 from statick_tool.plugins.discovery.perl import PerlDiscoveryPlugin
-
-if sys.version_info < (3, 10):
-    from importlib_metadata import entry_points
-else:
-    from importlib.metadata import entry_points
 
 
 # From https://stackoverflow.com/questions/2059482/python-temporarily-modify-the-current-processs-environment

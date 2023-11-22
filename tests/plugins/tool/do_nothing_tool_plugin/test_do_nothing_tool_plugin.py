@@ -1,15 +1,9 @@
 """Unit tests for the do nothing tool plugin."""
 import os
-import sys
+from importlib.metadata import entry_points
 
-import statick_tool
 from statick_tool.package import Package
 from statick_tool.plugins.tool.do_nothing import DoNothingToolPlugin
-
-if sys.version_info < (3, 10):
-    from importlib_metadata import entry_points
-else:
-    from importlib.metadata import entry_points
 
 
 def setup_do_nothing_tool_plugin():

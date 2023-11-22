@@ -3,7 +3,7 @@ import argparse
 import mock
 import os
 import subprocess
-import sys
+from importlib.metadata import entry_points
 
 import statick_tool
 from statick_tool.config import Config
@@ -11,11 +11,6 @@ from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 from statick_tool.plugins.tool.bandit import BanditToolPlugin
 from statick_tool.resources import Resources
-
-if sys.version_info < (3, 10):
-    from importlib_metadata import entry_points
-else:
-    from importlib.metadata import entry_points
 
 
 def setup_bandit_tool_plugin(binary=None):
