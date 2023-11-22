@@ -99,9 +99,13 @@ jobs:
           npm install -g markdownlint-cli@0.21.0
           npm install -g npm-groovy-lint
 
+      # Have to uninstall twice, then install.
+      # https://github.com/pypa/twine/issues/760
       - name: Test with mypy
         run: |
-          pip list | grep importlib
+          pip uninstall importlib_metadata
+          pip uninstall importlib_metadata
+          pip install importlib_metadata
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       # Re-enable this step when statick-md switches from yapsy to entry points plugin approach.
