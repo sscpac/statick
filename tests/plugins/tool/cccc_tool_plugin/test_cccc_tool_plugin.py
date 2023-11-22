@@ -1,24 +1,26 @@
 """Unit tests for the CCCC tool module."""
-
 from __future__ import print_function
 
 import argparse
+import mock
 import os
+import pytest
 import shutil
 import subprocess
-
-import mock
-import pytest
+import sys
 import xmltodict
-from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.cccc_tool_plugin import CCCCToolPlugin
+from statick_tool.plugins.tool.cccc import CCCCToolPlugin
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_cccc_tool_plugin(use_plugin_context=True, binary=None, cccc_config=None):
@@ -45,27 +47,13 @@ def setup_cccc_tool_plugin(use_plugin_context=True, binary=None, cccc_config=Non
 
 def test_cccc_tool_plugin_found():
     """Test that the CCCC tool plugin is detected by the plugin system."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "cccc"
+    plugins = {}
+    tool_plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in tool_plugins:
+        plugin = plugin_type.load()
+        plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "cccc"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named CCCC Tool Plugin
-    assert any(
-        plugin_info.name == "CCCC Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "cccc" for _, plugin in list(plugins.items())
     )
 
 
@@ -245,7 +233,7 @@ def test_cccc_tool_plugin_parse_config_none():
     assert not config
 
 
-@mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.cccc.subprocess.check_output")
 def test_cccc_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
     """Test what happens an OSError is hit (such as if cccc doesn't exist)
 
@@ -263,7 +251,7 @@ def test_cccc_tool_plugin_scan_empty_oserror(mock_subprocess_check_output):
     assert issues is None
 
 
-@mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.cccc.subprocess.check_output")
 def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_output):
     """Test what happens when a CalledProcessError is hit (such as if cccc encounters an
     error).
@@ -292,7 +280,7 @@ def test_cccc_tool_plugin_scan_empty_calledprocesserror(mock_subprocess_check_ou
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.cccc_tool_plugin.xmltodict.parse")
+@mock.patch("statick_tool.plugins.tool.cccc.xmltodict.parse")
 def test_cccc_tool_plugin_scan_filenotfound(mock_xmltodict_parse):
     """Test what happens when a FileNotFoundError is hit (such as if cccc has no output
     for a file).

@@ -1,19 +1,22 @@
 """Unit tests for the black plugin."""
 import argparse
-import os
-import subprocess
-
 import mock
+import os
 import pytest
-from yapsy.PluginManager import PluginManager
+import subprocess
+import sys
 
 import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.black_tool_plugin import BlackToolPlugin
+from statick_tool.plugins.tool.black import BlackToolPlugin
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_black_tool_plugin():
@@ -33,27 +36,13 @@ def setup_black_tool_plugin():
 
 def test_black_tool_plugin_found():
     """Test that the plugin manager can find the PyCodeStyle plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "black"
+    plugins = {}
+    tool_plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in tool_plugins:
+        plugin = plugin_type.load()
+        plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "black"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named Pycodestyle Tool Plugin
-    assert any(
-        plugin_info.name == "Pycodestyle Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "black" for _, plugin in list(plugins.items())
     )
 
 
@@ -114,7 +103,7 @@ def test_black_tool_plugin_parse_invalid():
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.black_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.black.subprocess.check_output")
 def test_black_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """Test what happens when an OSError is raised (usually means black doesn't exist).
 
@@ -132,7 +121,7 @@ def test_black_tool_plugin_scan_oserror(mock_subprocess_check_output):
     assert issues is None
 
 
-@mock.patch("statick_tool.plugins.tool.black_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.black.subprocess.check_output")
 def test_black_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """Test what happens when a CalledProcessError is raised (usually means black hit an
     error).
@@ -153,7 +142,7 @@ def test_black_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output)
     assert issues is None
 
 
-@mock.patch("statick_tool.plugins.tool.black_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.black.subprocess.check_output")
 def test_black_tool_plugin_scan_internal_error(mock_subprocess_check_output):
     """Test what happens when a CalledProcessError is raised due to an internal error.
 

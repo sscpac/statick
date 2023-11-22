@@ -1,18 +1,21 @@
 """Unit tests for the PyCodeStyle plugin."""
 import argparse
+import mock
 import os
 import subprocess
-
-import mock
-from yapsy.PluginManager import PluginManager
+import sys
 
 import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.pydocstyle_tool_plugin import PydocstyleToolPlugin
+from statick_tool.plugins.tool.pydocstyle import PydocstyleToolPlugin
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_pydocstyle_tool_plugin():
@@ -32,27 +35,13 @@ def setup_pydocstyle_tool_plugin():
 
 def test_pydocstyle_tool_plugin_found():
     """Test that the plugin manager can find the PyDocStyle plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "pydocstyle"
+    plugins = {}
+    tool_plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in tool_plugins:
+        plugin = plugin_type.load()
+        plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "pydocstyle"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named Pydocstyle Tool Plugin
-    assert any(
-        plugin_info.name == "Pydocstyle Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "pydocstyle" for _, plugin in list(plugins.items())
     )
 
 
@@ -92,7 +81,7 @@ def test_pydocstyle_tool_plugin_parse_invalid():
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.pydocstyle_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.pydocstyle.subprocess.check_output")
 def test_pydocstyle_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """Test what happens when a CalledProcessError is raised (usually means tool hit an
     error).
@@ -119,7 +108,7 @@ def test_pydocstyle_tool_plugin_scan_calledprocesserror(mock_subprocess_check_ou
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.pydocstyle_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.pydocstyle.subprocess.check_output")
 def test_pydocstyle_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """Test what happens when an OSError is raised (usually means tool doesn't exist).
 

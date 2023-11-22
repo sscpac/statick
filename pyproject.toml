@@ -80,8 +80,8 @@ bandit = "statick_tool.plugins.tool.bandit:BanditToolPlugin"
 black = "statick_tool.plugins.tool.black:BlackToolPlugin"
 catkin_lint = "statick_tool.plugins.tool.catkin_lint:CatkinLintToolPlugin"
 cccc = "statick_tool.plugins.tool.cccc:CCCCToolPlugin"
-clang_format = "statick_tool.plugins.tool.clang_format:ClangFormatToolPlugin"
-clang_tidy = "statick_tool.plugins.tool.clang_tidy:ClangTidyToolPlugin"
+clang-format = "statick_tool.plugins.tool.clang_format:ClangFormatToolPlugin"
+clang-tidy = "statick_tool.plugins.tool.clang_tidy:ClangTidyToolPlugin"
 cmakelint = "statick_tool.plugins.tool.cmakelint:CMakelintToolPlugin"
 cppcheck = "statick_tool.plugins.tool.cppcheck:CppcheckToolPlugin"
 cpplint = "statick_tool.plugins.tool.cpplint:CpplintToolPlugin"
@@ -114,6 +114,7 @@ test = [
     "backports.tempfile",
     "flake8-pep3101",
     "flake8<5",  # Pin until https://github.com/tholo/pytest-flake8/issues/87 is fixed.
+    "lark",
     "mock",
     "pycodestyle",
     "pydocstyle",

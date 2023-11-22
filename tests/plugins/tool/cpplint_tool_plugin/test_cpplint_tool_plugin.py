@@ -1,27 +1,24 @@
 """Unit tests for the cpplint plugin."""
 import argparse
+import mock
 import os
+import pytest
 import subprocess
 import sys
-
-import mock
-import pytest
-from yapsy.PluginManager import PluginManager
 
 import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.cpplint_tool_plugin import CpplintToolPlugin
+from statick_tool.plugins.tool.cpplint import CpplintToolPlugin
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
 
-try:
-    from tempfile import TemporaryDirectory
-except:  # pylint: disable=bare-except # noqa: E722 # NOLINT
-    from backports.tempfile import (  # pylint: disable=wrong-import-order
-        TemporaryDirectory,
-    )
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
+
+from tempfile import TemporaryDirectory
 
 
 def setup_cpplint_tool_plugin():
@@ -41,27 +38,13 @@ def setup_cpplint_tool_plugin():
 
 def test_cpplint_tool_plugin_found():
     """Test that the plugin manager can find the cpplint plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "cpplint"
+    plugins = {}
+    tool_plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in tool_plugins:
+        plugin = plugin_type.load()
+        plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "cpplint"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named Cpplint Tool Plugin
-    assert any(
-        plugin_info.name == "Cpplint Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "cpplint" for _, plugin in list(plugins.items())
     )
 
 
@@ -181,7 +164,7 @@ def test_cpplint_tool_plugin_scan_missing_fields():
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.cpplint_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.cpplint.subprocess.check_output")
 def test_cpplint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """Test what happens when an OSError is raised (usually means cpplint doesn't
     exist).
@@ -204,7 +187,7 @@ def test_cpplint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     assert issues is None
 
 
-@mock.patch("statick_tool.plugins.tool.cpplint_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.cpplint.subprocess.check_output")
 def test_cpplint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """Test what happens when a CalledProcessError is raised (usually means cpplint hit
     an error).

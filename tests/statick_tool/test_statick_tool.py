@@ -1,5 +1,4 @@
 """Unit tests of statick_tool.py."""
-
 import contextlib
 import logging
 import multiprocessing
@@ -15,7 +14,7 @@ import pytest
 from statick_tool.args import Args
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.package import Package
-from statick_tool.plugins.tool.clang_tidy_tool_plugin import ClangTidyToolPlugin
+from statick_tool.plugins.tool.clang_tidy import ClangTidyToolPlugin
 from statick_tool.statick_tool import Statick
 
 LOGGER = logging.getLogger(__name__)
@@ -558,6 +557,7 @@ def test_run_tool_dependency(init_statick):
     path = parsed_args.path
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
+    print(f"tool plugins: {statick.tool_plugins}")
     issues, success = statick.run(path, parsed_args)
     for tool in issues:
         assert not issues[tool]

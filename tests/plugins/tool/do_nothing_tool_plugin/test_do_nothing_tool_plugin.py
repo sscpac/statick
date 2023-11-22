@@ -1,12 +1,15 @@
 """Unit tests for the do nothing tool plugin."""
 import os
-
-from yapsy.PluginManager import PluginManager
+import sys
 
 import statick_tool
 from statick_tool.package import Package
-from statick_tool.plugins.tool.do_nothing_tool_plugin import DoNothingToolPlugin
-from statick_tool.tool_plugin import ToolPlugin
+from statick_tool.plugins.tool.do_nothing import DoNothingToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_do_nothing_tool_plugin():
@@ -17,25 +20,13 @@ def setup_do_nothing_tool_plugin():
 
 def test_do_nothing_tool_plugin_found():
     """Test that the plugin manager finds the do nothing tool plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
+    plugins = {}
+    tool_plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in tool_plugins:
+        plugin = plugin_type.load()
+        plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "do_nothing"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    assert any(
-        plugin_info.name == "Do Nothing Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "do_nothing" for _, plugin in list(plugins.items())
     )
 
 
