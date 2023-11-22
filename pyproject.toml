@@ -28,6 +28,7 @@ dependencies = [
     "deprecated",
     "docformatter",
     "flawfinder",
+    "importlib_metadata",
     "isort",
     "lizard",
     "mypy",
