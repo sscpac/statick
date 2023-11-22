@@ -98,6 +98,11 @@ jobs:
           npm install -g markdownlint-cli@0.21.0
           npm install -g npm-groovy-lint
 
+      - name: Install importlib_metadata
+        if matrix.python-version == '3.8' || matrix.python-version == '3.9'
+        run: |
+          pip install importlib_metadata
+
       - name: Test with mypy
         run: |
           mypy --ignore-missing-imports --strict src/statick_tool/
