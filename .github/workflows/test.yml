@@ -100,7 +100,7 @@ jobs:
           npm install -g npm-groovy-lint
 
       - name: Test with mypy
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.python-version == '3.11'
         run: |
           mypy --ignore-missing-imports --strict src/statick_tool/
 
