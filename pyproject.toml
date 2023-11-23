@@ -131,6 +131,10 @@ docs = [
     "yaml-1.3",
     "yapsy",
 ]
+dist = [
+    "setuptools",
+    "wheel",
+]
 
 [tool.isort]
 profile = "black"
