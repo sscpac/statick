@@ -21,4 +21,3 @@ statick-web
 tabulate
 xmltodict
 yamllint
-yapsy
