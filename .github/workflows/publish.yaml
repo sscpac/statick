@@ -27,7 +27,6 @@ jobs:
 
       - name: Install tools
         run: |
-          pip install .
           pip install .[docs]
           pip install .[dist]
 
