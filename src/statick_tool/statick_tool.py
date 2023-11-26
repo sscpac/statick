@@ -7,6 +7,7 @@ import multiprocessing
 import os
 import sys
 import time
+from importlib.metadata import version
 from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -20,7 +21,6 @@ from statick_tool.profile import Profile
 from statick_tool.resources import Resources
 from statick_tool.timing import Timing
 
-from importlib.metadata import version
 if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
 else:
