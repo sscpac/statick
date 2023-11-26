@@ -10,8 +10,6 @@ import time
 from logging.handlers import MemoryHandler
 from typing import Any, Dict, List, Optional, Tuple
 
-import pkg_resources
-
 from statick_tool.config import Config
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -22,6 +20,7 @@ from statick_tool.profile import Profile
 from statick_tool.resources import Resources
 from statick_tool.timing import Timing
 
+from importlib.metadata import version
 if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
 else:
@@ -184,7 +183,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         args.add_argument(
             "--version",
             action="version",
-            version=f"%(prog)s {pkg_resources.get_distribution('statick').version}",
+            version=f"%(prog)s {version('statick')}",
         )
         args.add_argument(
             "--mapping-file-suffix",
