@@ -28,7 +28,6 @@ jobs:
       - name: Install tools
         run: |
           pip install .[docs]
-          pip install .[dist]
 
       - name: Build a binary wheel and a source tarball
         run: |
