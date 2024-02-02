@@ -207,6 +207,9 @@ levels:
       cpplint:
         # These flags must remain on one line to not break the flag parsing
         flags: "--filter=-build/header_guard,-build/include,-build/include_order,-build/c++11,-readability/function,-readability/streams,-readability/todo,-readability/namespace,-readability/multiline_comment,-readability/fn_size,-readability/alt_tokens,-readability/braces,-readability/inheritance,-runtime/indentation_namespace,-runtime/int,-runtime/threadsafe_fn,-runtime/references,-runtime/array,-whitespace,-legal"
+    reporting:
+      json:
+        files: "true"
 
   objective:
     inherits_from:
@@ -232,6 +235,9 @@ levels:
                        line-length: disable}}'"
       cmakelint:
         flags: "--spaces=2 --filter=-linelength,-whitespace/indent"
+    reporting:
+      json:
+        files: "true"
 ```
 
 Statick supports the use of some multi-line yaml syntax, namely the `>` syntax.
@@ -466,11 +472,11 @@ Tool | About
 
 Reporter | About
 :--- | :----
-[code_climate][code-climate] | Output issues in valid Code Climate JSON (or optionally strictly [Gitlab][gitlab-cc] compatible) to stdout or as a file.
-do_nothing | Does nothing. Useful when piping output to a separate process and no output is desired.
-[json] | Output issues as a JSON list either to stdout or as a file.
-print_to_console | Print the issues to stdout. This is the default reporting plugin if no _profile_ or _level_ are provided.
-[write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output.
+[code_climate][code-climate] | Output issues in valid Code Climate JSON (or optionally strictly [Gitlab][gitlab-cc] compatible) to stdout or as a file.<br>Options:<ul><li>files (string): Output issues to a file.</li><li>terminal (string): Output issues to stdout.</li><li>gitlab (string): Output issues in Gitlab Code Climate format.</li></ul>
+do_nothing | Does nothing. Useful when piping output to a separate process and no output is desired. No options.
+[json] | Output issues as a JSON list either to stdout or as a file.<br>Options:<ul><li>files (string): Output issues to a file.</li><li>terminal (string): Output issues to stdout.</li></ul>
+print_to_console | Print the issues to stdout. This is the default reporting plugin if no _profile_ or _level_ are provided. No options.
+[write_jenkins_warnings_ng][jenkins-warnings-ng] | Write Statick results to Jenkins Warnings-NG plugin json-log compatible output. No options. Needs to be used with the `--output-directory` flag.
 
 The intent of all _reporting_ plugins that write files as output is that they will write their output files to the
 current directory if no `--output-directory` flag is set.
