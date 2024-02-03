@@ -1,4 +1,5 @@
 """Result reporting plugin."""
+
 import argparse
 import logging
 from typing import Any, Dict, List, Optional, Tuple, Union

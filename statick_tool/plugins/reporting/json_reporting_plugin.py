@@ -1,4 +1,5 @@
 """Prints the Statick reports out to the terminal or file in JSON format."""
+
 import json
 import logging
 import os

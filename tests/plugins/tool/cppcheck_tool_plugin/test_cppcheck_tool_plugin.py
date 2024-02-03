@@ -1,4 +1,5 @@
 """Unit tests for the cppcheck plugin."""
+
 import argparse
 import os
 import subprocess
@@ -258,8 +259,8 @@ def test_cppcheck_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outp
 def test_checkforexceptions_true():
     """Test check_for_exceptions behavior where it should return True."""
     mm = mock.MagicMock()
-    mm.group.side_effect = (
-        lambda i: "test.c" if i == 1 else "variableScope" if i == 4 else False
+    mm.group.side_effect = lambda i: (
+        "test.c" if i == 1 else "variableScope" if i == 4 else False
     )
     assert CppcheckToolPlugin.check_for_exceptions(mm)
 
@@ -267,8 +268,8 @@ def test_checkforexceptions_true():
 def test_checkforexceptions_false():
     """Test check_for_exceptions behavior where it should return False."""
     mm = mock.MagicMock()
-    mm.group.side_effect = (
-        lambda i: "test.c" if i == 1 else "some-other-error" if i == 6 else False
+    mm.group.side_effect = lambda i: (
+        "test.c" if i == 1 else "some-other-error" if i == 6 else False
     )
     assert not CppcheckToolPlugin.check_for_exceptions(mm)
 

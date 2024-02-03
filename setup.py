@@ -1,6 +1,5 @@
 """Setup."""
 
-
 from setuptools import setup  # NOLINT
 
 import statick_tool

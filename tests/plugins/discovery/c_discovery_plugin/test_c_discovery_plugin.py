@@ -1,4 +1,5 @@
 """Unit tests for the C discovery plugin."""
+
 import contextlib
 import os
 

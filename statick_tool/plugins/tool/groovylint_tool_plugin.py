@@ -60,9 +60,7 @@ class GroovyLintToolPlugin(ToolPlugin):
             if ex.returncode == 1:
                 total_output.append(ex.output)
             else:
-                logging.warning(
-                    "%s failed! Returncode = %d", tool_bin, ex.returncode
-                )
+                logging.warning("%s failed! Returncode = %d", tool_bin, ex.returncode)
                 logging.warning("%s exception: %s", self.get_name(), ex.output)
                 return None
 

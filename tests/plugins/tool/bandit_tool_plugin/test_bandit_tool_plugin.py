@@ -1,4 +1,5 @@
 """Unit tests for the bandit tool module."""
+
 import argparse
 import os
 import subprocess

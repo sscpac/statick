@@ -2,6 +2,7 @@
 
 Handles chaining user directories and the default statick resource directory.
 """
+
 import logging
 import os
 from typing import List, Optional
