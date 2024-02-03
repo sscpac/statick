@@ -84,12 +84,7 @@ class GroovyLintToolPlugin(ToolPlugin):
         for line in total_output[0].split("\n"):
             try:
                 err_dict = json.loads(line)
-                try:
-                    summary = err_dict
-                except (AttributeError, TypeError):
-                    continue
-                else:
-                    continue
+                summary = err_dict
             except ValueError as ex:
                 logging.warning("ValueError: %s", ex)
 

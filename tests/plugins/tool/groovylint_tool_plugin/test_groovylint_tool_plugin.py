@@ -125,6 +125,17 @@ def test_groovylint_tool_plugin_parse_invalid():
     assert not issues
 
 
+def test_groovylint_tool_plugin_parse_no_summary():
+    """Test what happens when input has no summary.
+
+    Expected result: no issues found
+    """
+    plugin = setup_groovylint_tool_plugin()
+    output = '{"nothing_we_parse":{"totalFilesWithErrorsNumber":1}}'
+    issues = plugin.parse_output([output])
+    assert not issues
+
+
 @mock.patch("statick_tool.plugins.tool.groovylint_tool_plugin.subprocess.check_output")
 def test_groovylint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """Test what happens when a CalledProcessError is raised (usually means groovylint
