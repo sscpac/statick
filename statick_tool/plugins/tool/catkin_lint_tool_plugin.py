@@ -1,4 +1,5 @@
 """Apply catkin_lint tool and gather results."""
+
 import logging
 import os
 import re

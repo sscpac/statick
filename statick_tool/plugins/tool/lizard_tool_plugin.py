@@ -1,4 +1,5 @@
 """Apply lizard tool and gather results."""
+
 import io
 import logging
 import re

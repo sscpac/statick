@@ -1,4 +1,5 @@
 """Unit tests for the do nothing tool plugin."""
+
 import os
 
 from yapsy.PluginManager import PluginManager

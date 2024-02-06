@@ -1,4 +1,5 @@
 """Unit tests for the clang-format plugin."""
+
 import argparse
 import os
 import shutil

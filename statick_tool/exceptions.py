@@ -8,6 +8,7 @@ filename matching for the exception it is required that the reported issue conta
 absolute path to the file containing the issue to be ignored. The path for the issue is
 set in the tool plugin that generates the issues.
 """
+
 import fnmatch
 import logging
 import os

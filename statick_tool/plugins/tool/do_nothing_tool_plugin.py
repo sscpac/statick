@@ -1,4 +1,5 @@
 """Do nothing, this is primarily useful for testing purposes."""
+
 from typing import List, Optional
 
 from statick_tool.issue import Issue

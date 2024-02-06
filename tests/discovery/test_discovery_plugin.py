@@ -1,4 +1,5 @@
 """Tests for statick_tool.discovery_plugin."""
+
 import contextlib
 import os
 import subprocess

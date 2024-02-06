@@ -1,4 +1,5 @@
 """Apply Perl::Critic tool and gather results."""
+
 import argparse
 import logging
 import subprocess

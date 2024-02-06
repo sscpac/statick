@@ -1,4 +1,5 @@
 """Apply pyflakes tool and gather results."""
+
 import logging
 import re
 import subprocess

@@ -1,4 +1,5 @@
 """Apply uncrustify tool and gather results."""
+
 import argparse
 import difflib
 import logging

@@ -1,4 +1,5 @@
 """Do nothing to have a default reporting plugin with no side effects."""
+
 from typing import Dict, List, Optional, Tuple
 
 from statick_tool.issue import Issue

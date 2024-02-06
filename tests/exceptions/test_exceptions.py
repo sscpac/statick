@@ -1,4 +1,5 @@
 """Unit tests for the Exceptions module."""
+
 import os
 import tempfile
 
