@@ -1,4 +1,5 @@
 """xmllint unit tests."""
+
 import argparse
 import mock
 import os

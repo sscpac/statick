@@ -1,4 +1,5 @@
 """Unit tests for the isort plugin."""
+
 import argparse
 import mock
 import os

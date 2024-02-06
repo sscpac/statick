@@ -9,6 +9,7 @@ https://cmake.org/cmake/help/latest/manual/cmake-language.7.html
 The contents of `CMakeLists.txt` is used to discover make targets and header files
 for the current package. That information is made available as part of the package data.
 """
+
 import argparse
 import logging
 import os
@@ -172,9 +173,11 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
                     if not qt_p.match(src)
                 ]
                 src = [
-                    src
-                    if os.path.isabs(src)  # noqa F812
-                    else os.path.join(src_dir, src)
+                    (
+                        src
+                        if os.path.isabs(src)  # noqa F812
+                        else os.path.join(src_dir, src)
+                    )
                     for src in src
                 ]  # NOLINT  # noqa F812
 

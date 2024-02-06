@@ -1,4 +1,5 @@
 """Unit tests for the console reporting plugin."""
+
 import os
 import sys
 

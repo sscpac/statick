@@ -1,4 +1,5 @@
 """Apply spotbugs tool and gather results."""
+
 import logging
 import os
 import subprocess

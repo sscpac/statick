@@ -1,4 +1,5 @@
 """Unit tests for the catkin_lint tool plugin."""
+
 import argparse
 import mock
 import os

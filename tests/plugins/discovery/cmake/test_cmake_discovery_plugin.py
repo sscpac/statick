@@ -1,4 +1,5 @@
 """Unit tests for the CMake discovery plugin."""
+
 import argparse
 import os
 import subprocess

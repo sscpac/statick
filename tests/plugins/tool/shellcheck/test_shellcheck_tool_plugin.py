@@ -1,4 +1,5 @@
 """Unit tests for the Shellcheck tool plugin."""
+
 import argparse
 import mock
 import os

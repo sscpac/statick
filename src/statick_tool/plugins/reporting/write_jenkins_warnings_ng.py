@@ -1,4 +1,5 @@
 """Write Statick results to Jenkins Warnings-NG plugin json-log compatible output."""
+
 import json
 import logging
 import os

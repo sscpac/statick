@@ -1,4 +1,5 @@
 """Unit tests for the Python discovery plugin."""
+
 import contextlib
 import os
 import pytest

@@ -1,4 +1,5 @@
 """Unit tests for the lizard plugin."""
+
 import argparse
 import pytest
 import os

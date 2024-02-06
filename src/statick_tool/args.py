@@ -2,6 +2,7 @@
 
 Enable usage of user-paths argument before parsing other arguments.
 """
+
 import argparse
 import logging
 import os

@@ -1,4 +1,5 @@
 """Discovery plugin."""
+
 import logging
 import os
 import subprocess

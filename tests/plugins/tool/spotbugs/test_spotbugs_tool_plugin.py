@@ -1,4 +1,5 @@
 """Unit tests for the spotbugs plugin."""
+
 import argparse
 import mock
 import os

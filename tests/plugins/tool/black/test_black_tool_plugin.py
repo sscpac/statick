@@ -1,4 +1,5 @@
 """Unit tests for the black plugin."""
+
 import argparse
 import mock
 import os

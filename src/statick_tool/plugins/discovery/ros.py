@@ -1,4 +1,5 @@
 """Discovery plugin to find ROS packages."""
+
 import logging
 import os
 from functools import reduce

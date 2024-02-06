@@ -1,4 +1,5 @@
 """Apply clang-tidy tool and gather results."""
+
 import argparse
 import logging
 import re

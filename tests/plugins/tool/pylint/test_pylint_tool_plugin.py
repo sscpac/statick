@@ -1,4 +1,5 @@
 """Unit tests for the Pylint tool plugin."""
+
 import argparse
 import multiprocessing
 import mock

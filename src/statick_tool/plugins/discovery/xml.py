@@ -1,4 +1,5 @@
 """Discover XML files to analyze."""
+
 import logging
 from collections import OrderedDict
 from typing import List, Optional, Tuple

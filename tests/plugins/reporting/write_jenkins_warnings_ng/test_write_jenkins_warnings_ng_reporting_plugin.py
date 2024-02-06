@@ -1,4 +1,5 @@
 """Unit tests for the file writing reporting plugin."""
+
 import argparse
 import json
 import os

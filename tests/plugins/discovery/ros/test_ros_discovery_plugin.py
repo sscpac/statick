@@ -1,4 +1,5 @@
 """Unit tests for the ROS discovery plugin."""
+
 import contextlib
 import os
 import sys

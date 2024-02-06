@@ -1,4 +1,5 @@
 """Unit tests for the JSON reporting plugin."""
+
 import argparse
 import json
 import os

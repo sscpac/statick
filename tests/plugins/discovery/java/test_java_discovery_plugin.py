@@ -1,4 +1,5 @@
 """Unit tests for the Java discovery plugin."""
+
 import os
 import sys
 
