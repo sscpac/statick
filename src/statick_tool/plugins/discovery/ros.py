@@ -61,9 +61,9 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
                 if path is not None:
                     for item in path.split(":"):
                         if distro is not None and distro in item:
-                            package[
-                                "cmake_flags"
-                            ] = "-DCMAKE_PREFIX_PATH=" + item.rstrip("/bin")
+                            package["cmake_flags"] = (
+                                "-DCMAKE_PREFIX_PATH=" + item.rstrip("/bin")
+                            )
                 package["is_ros2"] = True
         elif os.path.isfile(package_file) and ros_version is not None:
             with open(package_file, encoding="utf8") as fconfig:

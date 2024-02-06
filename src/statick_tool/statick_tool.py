@@ -1,4 +1,5 @@
 """Code analysis front-end."""
+
 import argparse
 import copy
 import io
