@@ -1,4 +1,5 @@
 """Unit tests for the Maven discovery plugin."""
+
 import os
 
 from yapsy.PluginManager import PluginManager

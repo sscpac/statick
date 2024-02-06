@@ -1,4 +1,5 @@
 """Unit tests for the YAMLLint tool plugin."""
+
 import argparse
 import os
 import subprocess

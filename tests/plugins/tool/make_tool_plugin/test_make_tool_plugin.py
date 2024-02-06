@@ -1,4 +1,5 @@
 """Unit tests for the make tool plugin."""
+
 import argparse
 import os
 import subprocess

@@ -1,4 +1,5 @@
 """Apply Cpplint tool and gather results."""
+
 import logging
 import os
 import re

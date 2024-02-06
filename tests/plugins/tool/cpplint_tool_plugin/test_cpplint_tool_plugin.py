@@ -1,4 +1,5 @@
 """Unit tests for the cpplint plugin."""
+
 import argparse
 import os
 import subprocess
@@ -232,30 +233,22 @@ def test_cpplint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outpu
 def test_checkforexceptions_true():
     """Test check_for_exceptions behavior where it should return True."""
     mm = mock.MagicMock()
-    mm.group.side_effect = (
-        lambda i: "test.cpp" if i == 1 else "build/namespaces" if i == 4 else False
+    mm.group.side_effect = lambda i: (
+        "test.cpp" if i == 1 else "build/namespaces" if i == 4 else False
     )
     assert CpplintToolPlugin.check_for_exceptions(mm)
-    mm.group.side_effect = (
-        lambda i: "test.cc" if i == 1 else "build/namespaces" if i == 4 else False
+    mm.group.side_effect = lambda i: (
+        "test.cc" if i == 1 else "build/namespaces" if i == 4 else False
     )
     assert CpplintToolPlugin.check_for_exceptions(mm)
-    mm.group.side_effect = (
-        lambda i: "not-a-file"
+    mm.group.side_effect = lambda i: (
+        "not-a-file"
         if i == 1
-        else "unnamed"
-        if i == 3
-        else "build/namespaces"
-        if i == 4
-        else False
+        else "unnamed" if i == 3 else "build/namespaces" if i == 4 else False
     )
     assert CpplintToolPlugin.check_for_exceptions(mm)
-    mm.group.side_effect = (
-        lambda i: "cfg/cpp/Config.h"
-        if i == 1
-        else "build/storage_class"
-        if i == 4
-        else False
+    mm.group.side_effect = lambda i: (
+        "cfg/cpp/Config.h" if i == 1 else "build/storage_class" if i == 4 else False
     )
     assert CpplintToolPlugin.check_for_exceptions(mm)
 
@@ -263,15 +256,11 @@ def test_checkforexceptions_true():
 def test_checkforexceptions_false():
     """Test check_for_exceptions behavior where it should return False."""
     mm = mock.MagicMock()
-    mm.group.side_effect = (
-        lambda i: "test.h"
-        if i == 1
-        else "google-build-using-namespace"
-        if i == 6
-        else False
+    mm.group.side_effect = lambda i: (
+        "test.h" if i == 1 else "google-build-using-namespace" if i == 6 else False
     )
     assert not CpplintToolPlugin.check_for_exceptions(mm)
-    mm.group.side_effect = (
-        lambda i: "test.cpp" if i == 1 else "some-other-error" if i == 6 else False
+    mm.group.side_effect = lambda i: (
+        "test.cpp" if i == 1 else "some-other-error" if i == 6 else False
     )
     assert not CpplintToolPlugin.check_for_exceptions(mm)

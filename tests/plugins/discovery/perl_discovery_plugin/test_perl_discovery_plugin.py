@@ -1,4 +1,5 @@
 """Unit tests for the Perl discovery plugin."""
+
 import contextlib
 import os
 

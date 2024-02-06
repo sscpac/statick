@@ -1,4 +1,5 @@
 """Code analysis front-end."""
+
 import argparse
 import copy
 import io
@@ -47,21 +48,21 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         self.discovery_plugins: Dict[str, Any] = {}
         for plugin_info in self.manager.getPluginsOfCategory("Discovery"):
-            self.discovery_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
+            self.discovery_plugins[plugin_info.plugin_object.get_name()] = (
+                plugin_info.plugin_object
+            )
 
         self.tool_plugins: Dict[str, Any] = {}
         for plugin_info in self.manager.getPluginsOfCategory("Tool"):
-            self.tool_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
+            self.tool_plugins[plugin_info.plugin_object.get_name()] = (
+                plugin_info.plugin_object
+            )
 
         self.reporting_plugins: Dict[str, Any] = {}
         for plugin_info in self.manager.getPluginsOfCategory("Reporting"):
-            self.reporting_plugins[
-                plugin_info.plugin_object.get_name()
-            ] = plugin_info.plugin_object
+            self.reporting_plugins[plugin_info.plugin_object.get_name()] = (
+                plugin_info.plugin_object
+            )
 
         self.config: Optional[Config] = None
         self.exceptions: Optional[Exceptions] = None

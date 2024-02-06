@@ -1,4 +1,5 @@
 """Unit tests for the clang-tidy plugin."""
+
 import argparse
 import os
 import subprocess
@@ -365,20 +366,12 @@ def test_clang_tidy_tool_plugin_scan_diagnosticerror(mock_subprocess_check_outpu
 def test_checkforexceptions_true():
     """Test check_for_exceptions behavior where it should return True."""
     mm = mock.MagicMock()
-    mm.group.side_effect = (
-        lambda i: "test.cpp"
-        if i == 1
-        else "google-build-using-namespace"
-        if i == 6
-        else False
+    mm.group.side_effect = lambda i: (
+        "test.cpp" if i == 1 else "google-build-using-namespace" if i == 6 else False
     )
     assert ClangTidyToolPlugin.check_for_exceptions(mm)
-    mm.group.side_effect = (
-        lambda i: "test.cc"
-        if i == 1
-        else "google-build-using-namespace"
-        if i == 6
-        else False
+    mm.group.side_effect = lambda i: (
+        "test.cc" if i == 1 else "google-build-using-namespace" if i == 6 else False
     )
     assert ClangTidyToolPlugin.check_for_exceptions(mm)
 
@@ -386,15 +379,11 @@ def test_checkforexceptions_true():
 def test_checkforexceptions_false():
     """Test check_for_exceptions behavior where it should return False."""
     mm = mock.MagicMock()
-    mm.group.side_effect = (
-        lambda i: "test.h"
-        if i == 1
-        else "google-build-using-namespace"
-        if i == 6
-        else False
+    mm.group.side_effect = lambda i: (
+        "test.h" if i == 1 else "google-build-using-namespace" if i == 6 else False
     )
     assert not ClangTidyToolPlugin.check_for_exceptions(mm)
-    mm.group.side_effect = (
-        lambda i: "test.cpp" if i == 1 else "some-other-error" if i == 6 else False
+    mm.group.side_effect = lambda i: (
+        "test.cpp" if i == 1 else "some-other-error" if i == 6 else False
     )
     assert not ClangTidyToolPlugin.check_for_exceptions(mm)

@@ -7,6 +7,7 @@ find . -name \*.h -print -o -name \*.cpp -print | xargs cccc
 That will generate several reports, including HTML. The results can be viewd in a web
 browser.
 """
+
 import argparse
 import csv
 import logging

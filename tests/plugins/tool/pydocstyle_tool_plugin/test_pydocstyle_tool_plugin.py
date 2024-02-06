@@ -1,4 +1,5 @@
 """Unit tests for the PyCodeStyle plugin."""
+
 import argparse
 import os
 import subprocess

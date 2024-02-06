@@ -1,4 +1,5 @@
 """Write issue reports to the console."""
+
 from collections import OrderedDict
 from typing import Dict, List, Optional, Tuple
 

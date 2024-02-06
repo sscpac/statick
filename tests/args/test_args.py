@@ -1,4 +1,5 @@
 """Unit tests for the Args module."""
+
 import os
 
 from statick_tool.args import Args
