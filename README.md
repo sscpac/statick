@@ -69,12 +69,25 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 
 ## Installation
 
-Statick requires Python 3.6+ to run, but can be used to analyze Python2 projects, among many other languages.
+Statick requires Python 3 to run, but can be used to analyze Python 2 projects, among many other languages.
 
-The recommended install method is
+The recommended install method is to create a Python virtual environment and install there.
+Getting the Python `venv` tool is operating system-specific.
+On Ubuntu Linux use `sudo apt-get install python3-venv`.
+Activating a Python virtual environment is also operating system-specific.
+The example command below is for Linux systems, but it will be similar for other operating systems.
 
 ```shell
-python3 -m pip install statick
+python3 -m venv venv
+. venv/bin/activate
+pip install statick
+```
+
+For local development you can clone this repository, activate the virtual environment, then do a local install.
+
+```shell
+cd statick-clone-directory
+pip install -e .
 ```
 
 You will also need to install any tools you want to use.
@@ -83,19 +96,19 @@ Other tools can be installed using a method supported by your operating system.
 For example, on Ubuntu Linux if you want to use the `clang-tidy` _tool_ plugin you can install the tool with apt.
 
 ```shell
-apt install clang-tidy
+sudo apt-get install clang-tidy
 ```
 
-If you want to install a custom version you can install from a git repository.
+If you want to install a custom version of Statick you can install from a git repository.
 Options are detailed from [PyPA][pip-git-install] documentation.
 Stack Overflow has a discussion about [installing a git branch][pip-install-git-repo-branch].
 The general idea is to install from a git repository with an optional branch or commit hash.
-Use one of the following commands.
+Use one of the following commands from the activated Python virtual environment.
 
 ```shell
-python3 -m pip install git+https://github.com/user/statick.git
-python3 -m pip install git+https://github.com/user/statick.git@branch-name
-python3 -m pip install git+https://github.com/user/statick.git@hash
+pip install git+https://github.com/user/statick.git
+pip install git+https://github.com/user/statick.git@branch-name
+pip install git+https://github.com/user/statick.git@hash
 ```
 
 ## Basic Usage
@@ -790,10 +803,10 @@ CMake Error at /opt/ros/foxy/share/ament_cmake_core/cmake/ament_cmake_package_te
 Statick supports testing through the [tox](https://tox.readthedocs.io/en/latest) framework.
 Tox is used to run tests against multiple versions of python and supports running other tools, such as flake8, as part
 of the testing process.
-To run tox, use the following commands from a git checkout of `statick`:
+To run tox, use the following commands from a git checkout of `statick` (again, with the Python virtual environment activated):
 
 ```shell
-python3 -m pip install tox
+pip install tox
 tox
 ```
 
@@ -839,7 +852,7 @@ To determine if proper types are being used in Statick the following command wil
 types of reports that can be viewed with a text editor or web browser.
 
 ```shell
-python3 -m pip install mypy
+pip install mypy
 mkdir report
 mypy --ignore-missing-imports --strict --html-report report/ --txt-report report statick statick_tool/
 ```
@@ -852,7 +865,7 @@ Statick code is formatted using [black][black] and [docformatter][docformatter].
 To fix locally use
 
 ```shell
-python3 -m pip install black docformatter
+pip install black docformatter
 black statick statick_tool tests
 docformatter -i --wrap-summaries 88 --wrap-descriptions 88 <file>
 ```
