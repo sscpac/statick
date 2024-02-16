@@ -71,7 +71,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 
 Statick requires Python 3 to run, but can be used to analyze Python 2 projects, among many other languages.
 
-The recommended install method is to create a Python virtual environment and install from there.
+The recommended install method is to create a Python virtual environment and install there.
 Getting the Python `venv` tool is operating system-specific.
 On Ubuntu Linux use `sudo apt-get install python3-venv`.
 Activating a Python virtual environment is also operating system-specific.
