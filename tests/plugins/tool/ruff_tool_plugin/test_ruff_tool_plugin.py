@@ -1,4 +1,5 @@
 """Unit tests for the ruff plugin."""
+
 import argparse
 import os
 import subprocess

@@ -1,4 +1,5 @@
 """Prints the Statick reports out to the terminal or file in Code Climate JSON."""
+
 import hashlib
 import json
 import logging

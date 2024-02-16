@@ -1,4 +1,5 @@
 """Tool plugin."""
+
 import argparse
 import logging
 import os

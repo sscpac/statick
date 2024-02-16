@@ -1,4 +1,5 @@
 """Apply bandit tool and gather results."""
+
 import argparse
 import csv
 import logging

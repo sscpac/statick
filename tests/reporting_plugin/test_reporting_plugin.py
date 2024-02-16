@@ -1,4 +1,5 @@
 """Tests for statick_tool.reporting_plugin."""
+
 import argparse
 import os
 

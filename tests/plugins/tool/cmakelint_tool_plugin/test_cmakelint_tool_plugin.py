@@ -1,4 +1,5 @@
 """Unit tests for cmakelint plugin."""
+
 import argparse
 import os
 import subprocess

@@ -1,4 +1,5 @@
 """Apply cppcheck tool and gather results."""
+
 import argparse
 import logging
 import os

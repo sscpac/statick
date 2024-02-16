@@ -1,6 +1,5 @@
 """Setup."""
 
-
 from setuptools import setup  # NOLINT
 
 import statick_tool
@@ -10,6 +9,7 @@ with open("README.md", encoding="utf8") as f:
 
 TEST_DEPS = [
     "backports.tempfile",
+    "lark",
     "pylint-django",
     "pytest",
     "mock",

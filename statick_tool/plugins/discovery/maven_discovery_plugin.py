@@ -1,4 +1,5 @@
 """Discover Maven POM files to analyze."""
+
 import fnmatch
 import logging
 import os

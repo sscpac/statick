@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Added
+
+- Add usage examples for reporting plugins to README. (#491, @m0g3ns)
+- Install lark as test dependency.
+- Process all files at once for groovylint tool plugin. (#493)
+  - Similar addition as in v0.9.3.
+
+### Fixed
+
+- Updates for new tool versions. (#493)
+  - Latest versions: black (24.1.1), npm-groovy-lint (14.2.0).
+  - Fixed unit tests for groovylint tool plugin.
+  - Handle parsing issues when CodeNarcServer errors are present.
+  - Update source file formatting with latest version of black.
+
 ## v0.9.4 - 2022-04-25
 
 ### Added
