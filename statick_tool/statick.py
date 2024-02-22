@@ -192,7 +192,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             help="Force only the given list of tools to run",
         )
         args.add_argument(
-            "--version", "-v",
+            "--version",
             action="version",
             version=f"%(prog)s {__version__}",
         )

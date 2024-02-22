@@ -24,10 +24,10 @@ class Args:
             "help": "Comma separated list of paths containing "
             "configuration or plugins",
         }
-        self.pre_parser.add_argument("--user-paths", **user_path_args)  # type: ignore
+        self.pre_parser.add_argument("--user-paths", "-u", **user_path_args)  # type: ignore
 
         self.parser = argparse.ArgumentParser(description=name)
-        self.parser.add_argument("--user-paths", **user_path_args)  # type: ignore
+        self.parser.add_argument("--user-paths", "-u", **user_path_args)  # type: ignore
 
     def get_user_paths(self, args: Any = None) -> List[str]:
         """Get a list of user paths containing config or plugins."""
