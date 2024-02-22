@@ -146,7 +146,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def gather_args(self, args: argparse.ArgumentParser) -> None:
         """Gather arguments."""
         args.add_argument(
-            "--output-directory",
+            "--output-directory", "-o",
             dest="output_directory",
             type=str,
             help="Directory to write output files to",
@@ -192,7 +192,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             help="Force only the given list of tools to run",
         )
         args.add_argument(
-            "--version",
+            "--version", "-v",
             action="version",
             version=f"%(prog)s {__version__}",
         )
