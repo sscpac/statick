@@ -1,1 +1,1 @@
-x =  "some string",
+x = ("some string",)

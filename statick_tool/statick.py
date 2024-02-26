@@ -146,7 +146,8 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def gather_args(self, args: argparse.ArgumentParser) -> None:
         """Gather arguments."""
         args.add_argument(
-            "--output-directory", "-o",
+            "--output-directory",
+            "-o",
             dest="output_directory",
             type=str,
             help="Directory to write output files to",
