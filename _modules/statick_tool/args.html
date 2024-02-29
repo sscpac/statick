@@ -35,6 +35,7 @@
 
 <span class="sd">Enable usage of user-paths argument before parsing other arguments.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -56,10 +57,10 @@
             <span class="s2">&quot;help&quot;</span><span class="p">:</span> <span class="s2">&quot;Comma separated list of paths containing &quot;</span>
             <span class="s2">&quot;configuration or plugins&quot;</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pre_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user-paths&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">user_path_args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user-paths&quot;</span><span class="p">,</span> <span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">user_path_args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user-paths&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">user_path_args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--user-paths&quot;</span><span class="p">,</span> <span class="s2">&quot;-u&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">user_path_args</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
 <div class="viewcode-block" id="Args.get_user_paths"><a class="viewcode-back" href="../../statick_tool.html#statick_tool.args.Args.get_user_paths">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get a list of user paths containing config or plugins.&quot;&quot;&quot;</span>
