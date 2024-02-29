@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- Allow short flag names. (#489, @qdang922)
+  - `--output-directory` supports `-o`
+  - `--user-paths` supports `-u`
 - Add usage examples for reporting plugins to README. (#491, @m0g3ns)
 - Install lark as test dependency.
 - Process all files at once for groovylint tool plugin. (#493)
