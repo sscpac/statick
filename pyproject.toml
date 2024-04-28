@@ -55,6 +55,14 @@ statick_tool = [
     "rsc/plugin_mapping/*",
 ]
 
+[tool.pytest.ini_options]
+# addopts = [
+#     "--import-mode=importlib",
+# ]
+pythonpath = [
+  "src",
+]
+
 [project.entry-points."statick_tool.plugins.discovery"]
 c = "statick_tool.plugins.discovery.c:CDiscoveryPlugin"
 cmake = "statick_tool.plugins.discovery.cmake:CMakeDiscoveryPlugin"
