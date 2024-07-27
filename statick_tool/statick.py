@@ -677,7 +677,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             old_handler = logger.handlers[0]
             handler = MemoryHandler(10000, flushLevel=logging.ERROR, target=old_handler)
             logger.removeHandler(old_handler)
-        logger.addHandler(handler)
+            logger.addHandler(handler)
 
         logging.info(
             "-- Scanning package %s (%d of %d) --", package.name, count, num_packages
