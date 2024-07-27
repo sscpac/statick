@@ -28,6 +28,9 @@ class GroovyLintToolPlugin(ToolPlugin):
         tool_bin = "npm-groovy-lint"
 
         tool_config = ".groovylintrc.json"
+        user_config = None
+        format_file_name = None
+
         if self.plugin_context:
             user_config = self.plugin_context.config.get_tool_config(
                 self.get_name(), level, "config"
