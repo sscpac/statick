@@ -55,7 +55,7 @@ def test_pylint_tool_plugin_scan_valid():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "basic.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "pylint_basic.py")
     ]
     issues = pltp.scan(package, "level")
     # We expect to have missing docstring and unused import warnings.
@@ -71,7 +71,7 @@ def test_pylint_tool_plugin_scan_valid_max_cpu_cores():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "basic.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "pylint_basic.py")
     ]
     issues = pltp.scan(package, "level")
     # We expect to have missing docstring and unused import warnings.
@@ -81,21 +81,21 @@ def test_pylint_tool_plugin_scan_valid_max_cpu_cores():
 def test_pylint_tool_plugin_parse_valid():
     """Verify that we can parse the normal output of pylint."""
     pltp = setup_pylint_tool_plugin()
-    output = "basic.py:1: [W0611(unused-import), ] Unused import subprocess"
+    output = "pylint_basic.py:1: [W0611(unused-import), ] Unused import subprocess"
     issues = pltp.parse_output([output])
     assert len(issues) == 1
-    assert issues[0].filename == "basic.py"
+    assert issues[0].filename == "pylint_basic.py"
     assert issues[0].line_number == "1"
     assert issues[0].tool == "pylint"
     assert issues[0].issue_type == "W0611(unused-import)"
     assert issues[0].severity == "5"
     assert issues[0].message == "Unused import subprocess"
 
-    output = "basic.py:1: [W0611(unused-import)] Unused import subprocess"
+    output = "pylint_basic.py:1: [W0611(unused-import)] Unused import subprocess"
     issues = pltp.parse_output([output])
     assert issues[0].message == "Unused import subprocess"
 
-    output = "basic.py:1: [W0611(unused-import), not-empty] Unused import subprocess"
+    output = "pylint_basic.py:1: [W0611(unused-import), not-empty] Unused import subprocess"
     issues = pltp.parse_output([output])
     assert issues[0].message == "not-empty: Unused import subprocess"
 

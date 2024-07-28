@@ -44,7 +44,7 @@ def test_do_nothing_tool_plugin_process_files():
         "valid_package", os.path.join(os.path.dirname(__file__), "valid_package")
     )
     package["python_src"] = [
-        os.path.join(os.path.dirname(__file__), "valid_package", "basic.py")
+        os.path.join(os.path.dirname(__file__), "valid_package", "do_nothing_basic.py")
     ]
     output = plugin.process_files(package, "level", package["python_src"], [])
     assert not output
@@ -53,6 +53,6 @@ def test_do_nothing_tool_plugin_process_files():
 def test_do_nothing_tool_plugin_parse_output():
     """Verify that we can parse the normal output of do_nothing."""
     plugin = setup_do_nothing_tool_plugin()
-    output = "would reformat /home/user/valid_package/basic.py"
+    output = "would reformat /home/user/valid_package/do_nothing_basic.py"
     issues = plugin.parse_output([output])
     assert not issues
