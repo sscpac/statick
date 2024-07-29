@@ -36,7 +36,7 @@ dependencies = [
     "pydocstyle",
     "pyflakes",
     "pylint",
-    "ruff",
+    "ruff>=0.0.237",
     "tabulate",
     "types-PyYAML",
     "types-setuptools",
