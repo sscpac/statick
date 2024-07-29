@@ -25,26 +25,9 @@ class RuffToolPlugin(ToolPlugin):
         self, package: Package, level: str, files: List[str], user_flags: List[str]
     ) -> Optional[List[str]]:
         """Run tool and gather output."""
-        flags: List[str] = []
-
-        # Ruff removed usage of plain ``ruff'' command in version 0.5.0. We need to make
-        # sure to use ``ruff check''.
-        try:
-            test_file: List[str] = []
-            if files:
-                test_file.append(files[0])
-            output = subprocess.check_output(
-                ["ruff"] + test_file, stderr=subprocess.STDOUT, universal_newlines=True
-            )
-        except subprocess.CalledProcessError as ex:
-            logging.debug("Exception in first check of ruff, need to add check verb")
-            logging.debug(ex)
-            flags.append("check")
-        except OSError as ex:
-            logging.warning("Couldn't find ruff executable! (%s)", ex)
-            return None
-
+        flags: List[str] = ["check"]
         flags += user_flags
+
         total_output: List[str] = []
 
         try:
@@ -54,6 +37,9 @@ class RuffToolPlugin(ToolPlugin):
             )
         except subprocess.CalledProcessError as ex:
             output = ex.output
+        except OSError as ex:
+            logging.warning("Couldn't find ruff executable! (%s)", ex)
+            return None
 
         total_output.append(output)
 
