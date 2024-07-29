@@ -23,6 +23,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Fixed unit tests for groovylint tool plugin.
   - Handle parsing issues when CodeNarcServer errors are present.
   - Update source file formatting with latest version of black.
+- Fix command used to run ruff tool.
+  - Ruff v0.5.0 requires use of `ruff check` instead of `ruff`.
+- Update list of files in clean script to fix shellscript warnings about globs for files with hyphens.
 
 ## v0.9.4 - 2022-04-25
 
