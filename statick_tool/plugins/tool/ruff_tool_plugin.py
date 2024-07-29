@@ -25,7 +25,7 @@ class RuffToolPlugin(ToolPlugin):
         self, package: Package, level: str, files: List[str], user_flags: List[str]
     ) -> Optional[List[str]]:
         """Run tool and gather output."""
-        flags: List[str] = []
+        flags: List[str] = ["check"]
         flags += user_flags
 
         total_output: List[str] = []
@@ -35,10 +35,8 @@ class RuffToolPlugin(ToolPlugin):
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
-
         except subprocess.CalledProcessError as ex:
             output = ex.output
-
         except OSError as ex:
             logging.warning("Couldn't find ruff executable! (%s)", ex)
             return None

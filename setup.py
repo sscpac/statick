@@ -56,7 +56,7 @@ setup(
         "pyflakes",
         "pylint",
         "PyYAML",
-        "ruff",
+        "ruff>=0.0.237",
         "tabulate",
         "xmltodict",
         "yamllint",
