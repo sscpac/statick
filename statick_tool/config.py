@@ -122,7 +122,7 @@ class Config:
             return False
         return False
 
-    def get_plugin_config(  # pylint: disable=too-many-arguments
+    def get_plugin_config(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         plugin_type: str,
         plugin: str,
