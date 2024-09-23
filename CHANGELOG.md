@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+Removed support for Python 3.8.
+
 ### Added
 
 - Allow short flag names. (#489, @qdang922)
