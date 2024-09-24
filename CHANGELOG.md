@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+Removed support for Python 3.8.
+
 ### Added
 
 - Allow short flag names. (#489, @qdang922)
@@ -26,6 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fix command used to run ruff tool.
   - Ruff v0.5.0 requires use of `ruff check` instead of `ruff`.
 - Update list of files in clean script to fix shellscript warnings about globs for files with hyphens.
+- Ignore new pylint finding for too many positional arguments.
+  Finding showed up with pylint 3.3.0.
 
 ## v0.9.4 - 2022-04-25
 
