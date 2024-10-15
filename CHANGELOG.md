@@ -33,6 +33,7 @@ Removed support for Python 3.8.
 - Update list of files in clean script to fix shellscript warnings about globs for files with hyphens.
 - Ignore new pylint finding for too many positional arguments.
   Finding showed up with pylint 3.3.0.
+- Change default value of deep get method to match valid type for reduce function.
 
 ## v0.9.4 - 2022-04-25
 
