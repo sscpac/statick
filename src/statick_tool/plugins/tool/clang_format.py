@@ -157,11 +157,14 @@ class ClangFormatToolPlugin(ToolPlugin):
             if not os.path.isfile(os.path.expanduser("~/" + default_file_name)):
                 default_file_name = ".clang-format"
 
-            with open(
-                os.path.expanduser("~/" + default_file_name), "r", encoding="utf8"
-            ) as home_format_file, open(
-                format_file_name, "r", encoding="utf8"  # type: ignore
-            ) as format_file:
+            with (
+                open(
+                    os.path.expanduser("~/" + default_file_name), "r", encoding="utf8"
+                ) as home_format_file,
+                open(
+                    format_file_name, "r", encoding="utf8"  # type: ignore
+                ) as format_file,
+            ):
                 actual_format = home_format_file.read()
                 target_format = format_file.read()
             diff = difflib.context_diff(
