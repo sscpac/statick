@@ -25,11 +25,15 @@ Removed support for Python 3.8.
   - Fixed unit tests for groovylint tool plugin.
   - Handle parsing issues when CodeNarcServer errors are present.
   - Update source file formatting with latest version of black.
+  - Cpplint unit test updated to match new default warnings from the cpplint 2.0 release.
+    - Cpplint 2.0 released on 2024-10-06.
+    - <https://github.com/cpplint/cpplint/blob/2.0.0/CHANGELOG.rst#20-2024-10-06>
 - Fix command used to run ruff tool.
   - Ruff v0.5.0 requires use of `ruff check` instead of `ruff`.
 - Update list of files in clean script to fix shellscript warnings about globs for files with hyphens.
 - Ignore new pylint finding for too many positional arguments.
   Finding showed up with pylint 3.3.0.
+- Change default value of deep get method to match valid type for reduce function.
 
 ## v0.9.4 - 2022-04-25
 
