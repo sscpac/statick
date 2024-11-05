@@ -24,7 +24,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
         cls,
         dictionary: Union[str, Dict[Any, str]],
         keys: str,
-        default: Optional[str] = None,
+        default: str = "",
     ) -> Any:
         """Safe way to check for a value in a nested dict.
 

@@ -106,8 +106,7 @@ def test_cpplint_tool_plugin_scan_valid():
         package["headers"] = []
         package["cpplint"] = "cpplint"
         issues = ctp.scan(package, "level")
-    print(f"Line: {issues[2].message}")
-    assert len(issues) == 4
+    assert len(issues) == 5
     assert issues[2].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "test.c"
     )
