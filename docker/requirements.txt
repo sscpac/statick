@@ -18,6 +18,7 @@ statick
 statick-md
 statick-tooling
 statick-web
+statick-tex
 tabulate
 xmltodict
 yamllint
