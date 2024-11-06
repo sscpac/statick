@@ -71,7 +71,8 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh && \
     npm install -g markdownlint-cli && \
     npm install -g npm-groovy-lint && \
     npm install -g stylelint && \
-    npm install -g stylelint-config-standard
+    npm install -g stylelint-config-standard && \
+    npm install -g json-merger
 
 # Install Hadolint binary
 RUN mkdir hadolint-bin && \
