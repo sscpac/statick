@@ -121,7 +121,7 @@ test = [
     "lark",
     "mock",
     "pylint-django",
-    "pytest==8.0.0",
+    "pytest",
     "pytest-cov",
     "tox",
     "tox-gh-actions",
