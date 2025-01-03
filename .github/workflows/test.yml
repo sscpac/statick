@@ -40,7 +40,7 @@ jobs:
       # Remove apt repos that are known to break from time to time.
       # See https://github.com/actions/virtual-environments/issues/323
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04 || matrix.os == 'ubuntu-24.04'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
@@ -79,13 +79,13 @@ jobs:
 
       # Re-enable this step when statick-md switches from yapsy to entry points plugin approach.
       # - name: Statick markdown
-      #   if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+      #   if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04 || matrix.os == 'ubuntu-24.04'
       #   run: |
       #     pip install statick-md
       #     statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04 || matrix.os == 'ubuntu-24.04'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: 'docs/'
@@ -101,7 +101,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Self check
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04 || matrix.os == 'ubuntu-24.04'
         run: |
           mkdir statick-output
           statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
