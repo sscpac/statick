@@ -160,7 +160,6 @@ Each _tool_ plugin provides the types of files it can analyze, then the output o
 determine the specific files that should be analyzed by each tool.
 
 The _tool_ plugin can also specify any other tools that are required to run before the current tool can act.
-For example, `cppcheck` depends on the output of the `make` tool.
 
 The _tool_ plugin then scans each package by invoking the binary associated with the tool.
 The output of the scan is parsed to generate the list of issues discovered by Statick.
