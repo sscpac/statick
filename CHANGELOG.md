@@ -4,9 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## Unreleased
+## v0.10.0 - 2025-01-03
 
-Removed support for Python 3.8.
+### Added
+
+- Statick-tex and json-merger included in Statick Docker image. (#506)
+
+### Removed
+
+- Removed support for Python 3.8.
+
+### Fixed
+
+- Updates for new tool versions. (#493)
+  - Cpplint unit test updated to match new default warnings from the cpplint 2.0 release.
+    - Cpplint 2.0 released on 2024-10-06.
+    - <https://github.com/cpplint/cpplint/blob/2.0.0/CHANGELOG.rst#20-2024-10-06>
+- Fix command used to run ruff tool.
+  - Ruff v0.5.0 requires use of `ruff check` instead of `ruff`.
+- Update list of files in clean script to fix shellscript warnings about globs for files with hyphens.
+- Ignore new pylint finding for too many positional arguments.
+  Finding showed up with pylint 3.3.0.
+- Change default value of deep get method to match valid type for reduce function.
+
+## v0.9.5 - 2024-02-29
 
 ### Added
 
@@ -25,17 +46,8 @@ Removed support for Python 3.8.
   - Fixed unit tests for groovylint tool plugin.
   - Handle parsing issues when CodeNarcServer errors are present.
   - Update source file formatting with latest version of black.
-  - Cpplint unit test updated to match new default warnings from the cpplint 2.0 release.
-    - Cpplint 2.0 released on 2024-10-06.
-    - <https://github.com/cpplint/cpplint/blob/2.0.0/CHANGELOG.rst#20-2024-10-06>
-- Fix command used to run ruff tool.
-  - Ruff v0.5.0 requires use of `ruff check` instead of `ruff`.
-- Update list of files in clean script to fix shellscript warnings about globs for files with hyphens.
-- Ignore new pylint finding for too many positional arguments.
-  Finding showed up with pylint 3.3.0.
-- Change default value of deep get method to match valid type for reduce function.
 
-## v0.9.4 - 2022-04-25
+## v0.9.4 - 2023-04-24
 
 ### Added
 
@@ -70,7 +82,7 @@ Removed support for Python 3.8.
   - See <https://endoflife.date/python>.
 - Remove `codecov` package from tox configuration. (#485)
 
-## v0.9.3 - 2022-01-30
+## v0.9.3 - 2023-01-30
 
 Tools that accept a list of files have been sped up considerably.
 This is the timing information of running `self_check` level against the main branch and the development branch of
