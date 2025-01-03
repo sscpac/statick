@@ -32,6 +32,7 @@ dependencies = [
     "isort",
     "lizard",
     "mypy",
+    "packaging",
     "pycodestyle",
     "pydocstyle",
     "pyflakes",

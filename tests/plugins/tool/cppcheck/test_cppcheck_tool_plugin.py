@@ -1,11 +1,13 @@
 """Unit tests for the cppcheck plugin."""
 
 import argparse
-import mock
 import os
-import pytest
 import subprocess
 import sys
+
+import mock
+import pytest
+from packaging.version import Version
 
 import statick_tool
 from statick_tool.config import Config
@@ -80,7 +82,11 @@ def test_cppcheck_tool_plugin_scan_valid():
     )
     assert issues[0].line_number == "4"
     assert issues[0].tool == "cppcheck"
-    assert issues[0].issue_type == "error/uninitvar"
+    version = cctp.get_version("cppcheck")
+    if Version(version) >= Version("2.8"):
+        assert issues[0].issue_type == "error/legacyUninitvar"
+    else:
+        assert issues[0].issue_type == "error/uninitvar"
     assert issues[0].severity == "5"
     assert issues[0].message == "Uninitialized variable: si"
 

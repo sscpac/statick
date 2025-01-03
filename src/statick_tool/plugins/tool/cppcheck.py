@@ -7,6 +7,8 @@ import re
 import subprocess
 from typing import List, Match, Optional, Pattern
 
+from packaging.version import Version
+
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
@@ -31,6 +33,26 @@ class CppcheckToolPlugin(ToolPlugin):
         args.add_argument(
             "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
         )
+
+    @classmethod
+    def get_version(cls, cppcheck_bin: str) -> str:
+        """Get version of tool.
+
+        If no version is found the function returns "0.0".
+        """
+        version = "0.0"
+        output = subprocess.check_output(
+            [cppcheck_bin, "--version"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+        ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
+        parse: Pattern[str] = re.compile(ver_re)
+        match: Optional[Match[str]] = parse.match(output)
+        if match:
+            version = match.group(2)
+
+        return version
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
@@ -57,26 +79,17 @@ class CppcheckToolPlugin(ToolPlugin):
             cppcheck_bin = self.plugin_context.args.cppcheck_bin
 
         try:
-            output = subprocess.check_output(
-                [cppcheck_bin, "--version"],
-                stderr=subprocess.STDOUT,
-                universal_newlines=True,
-            )
-            ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
-            parse: Pattern[str] = re.compile(ver_re)
-            match: Optional[Match[str]] = parse.match(output)
-            if match:
-                ver = float(match.group(2))
-                # If specific version is not specified just use the installed version.
-                if user_version is not None and ver != float(user_version):
-                    logging.warning(
-                        "You need version %s of cppcheck, but you have %s. "
-                        "See README.md for instuctions on how to install the "
-                        "proper version",
-                        user_version,
-                        match.group(2),
-                    )
-                    return None
+            version = self.get_version(cppcheck_bin)
+            # If specific version is not specified just use the installed version.
+            if user_version is not None and Version(version) != Version(user_version):
+                logging.warning(
+                    "You need version %s of cppcheck, but you have %s. "
+                    "See README.md for instructions on how to install the "
+                    "proper version",
+                    user_version,
+                    version,
+                )
+                return None
 
         except OSError as ex:
             logging.warning("Cppcheck not found! (%s)", ex)
