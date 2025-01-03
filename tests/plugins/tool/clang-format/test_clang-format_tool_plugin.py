@@ -1,20 +1,21 @@
 """Unit tests for the clang-format plugin."""
 
 import argparse
-import mock
 import os
-import pytest
 import shutil
 import subprocess
 import sys
 from xml.etree import ElementTree
 
+import mock
+import pytest
+
 import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.clang_format_parser import ClangFormatXMLParser
 from statick_tool.plugins.tool.clang_format import ClangFormatToolPlugin
+from statick_tool.plugins.tool.clang_format_parser import ClangFormatXMLParser
 from statick_tool.resources import Resources
 
 if sys.version_info < (3, 10):

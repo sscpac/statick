@@ -1,9 +1,10 @@
 """Unit tests for the lizard plugin."""
 
 import argparse
-import pytest
 import os
 import sys
+
+import pytest
 
 import statick_tool
 from statick_tool.config import Config

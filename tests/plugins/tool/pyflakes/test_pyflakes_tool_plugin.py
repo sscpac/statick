@@ -1,10 +1,11 @@
 """Unit tests for the Pyflakes plugin."""
 
 import argparse
-import mock
 import os
 import subprocess
 import sys
+
+import mock
 
 import statick_tool
 from statick_tool.config import Config

@@ -5,6 +5,7 @@ import os
 import stat
 import sys
 import tempfile
+from tempfile import TemporaryDirectory
 
 import pytest
 
@@ -12,8 +13,6 @@ from statick_tool.config import Config
 from statick_tool.plugin_context import PluginContext
 from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
-
-from tempfile import TemporaryDirectory
 
 
 def test_tool_plugin_load_mapping_valid():

@@ -1,11 +1,12 @@
 """Unit tests for the uncrustify plugin."""
 
 import argparse
-import mock
 import os
-import pytest
 import subprocess
 import sys
+
+import mock
+import pytest
 
 import statick_tool
 from statick_tool.config import Config

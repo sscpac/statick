@@ -2,8 +2,9 @@
 
 import contextlib
 import os
-import pytest
 import sys
+
+import pytest
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package

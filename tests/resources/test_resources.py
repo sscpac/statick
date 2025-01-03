@@ -3,11 +3,10 @@
 import logging
 import os
 import tempfile
+from tempfile import TemporaryDirectory
 
 import statick_tool
 from statick_tool.resources import Resources
-
-from tempfile import TemporaryDirectory
 
 LOGGER = logging.getLogger(__name__)
 

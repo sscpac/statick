@@ -2,12 +2,13 @@
 from __future__ import print_function
 
 import argparse
-import mock
 import os
-import pytest
 import shutil
 import subprocess
 import sys
+
+import mock
+import pytest
 import xmltodict
 
 import statick_tool

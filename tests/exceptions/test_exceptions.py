@@ -2,14 +2,13 @@
 
 import os
 import tempfile
+from tempfile import TemporaryDirectory
 
 import pytest
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.issue import Issue
 from statick_tool.package import Package
-
-from tempfile import TemporaryDirectory
 
 
 def test_exceptions_init_valid():
