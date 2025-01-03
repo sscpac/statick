@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
-Removed support for Python 3.8.
+- Removed support for Python 3.8.
+- Added support for Python 3.12 and 3.13.
+- Switched from yapsy to setuptools for plugin mechanism. (#508)
 
 ### Added
 
+- Use of `pyproject.toml` instead of `setup.py` and `requirements.txt`.
 - Allow short flag names. (#489, @qdang922)
   - `--output-directory` supports `-o`
   - `--user-paths` supports `-u`
@@ -34,6 +37,8 @@ Removed support for Python 3.8.
 - Ignore new pylint finding for too many positional arguments.
   Finding showed up with pylint 3.3.0.
 - Change default value of deep get method to match valid type for reduce function.
+- Run `isort` on unit test files.
+- Handle updated warning type from `cppcheck` introduced in version 2.8.
 
 ## v0.9.4 - 2022-04-25
 
