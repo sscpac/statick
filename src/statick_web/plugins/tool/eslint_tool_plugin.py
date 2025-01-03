@@ -1,11 +1,11 @@
 """Apply eslint tool and gather results."""
 
+import json
 import logging
 import pathlib
-import re
 import shutil
 import subprocess
-from typing import List, Match, Optional, Pattern, Tuple
+from typing import List, Optional, Tuple
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -25,7 +25,7 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
 
     def get_format_file(self, level: str) -> Tuple[str, bool]:
         """Retrieve format file path."""
-        tool_config = ".eslintrc"
+        tool_config = "eslint.config.mjs"
         user_config = self.plugin_context.config.get_tool_config(
             self.get_name(), level, "config"
         )
@@ -44,6 +44,11 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
                     self.plugin_context.resources.get_file(tool_config)
                 )
                 install_dir_path = pathlib.Path(install_dir).expanduser()
+                logging.info(
+                    "Copying eslint format file %s to: %s",
+                    config_file_path,
+                    install_dir_path,
+                )
                 shutil.copy(str(config_file_path), str(install_dir_path))
                 copied_file = True
 
@@ -62,10 +67,10 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
 
         (format_file_name, copied_file) = self.get_format_file(level)
 
-        flags: List[str] = []
+        flags: List[str] = ["-f", "json"]
         if format_file_name is not None:
             flags += ["-c", format_file_name]
-        flags += ["--ext", ".js,.html", "-f", "unix"]
+        flags += []
         flags += user_flags
 
         total_output: List[str] = []
@@ -84,7 +89,7 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
                     or "Require stack:" in ex.output
                 ):
                     # nodejs cannot find a module and threw an error
-                    # this results in the same returncode `1` that markdownlint
+                    # this results in the same returncode `1` that eslint
                     # uses to indicate the presence of linting issues.
                     logging.warning(
                         "%s failed! Returncode = %d", tool_bin, ex.returncode
@@ -121,57 +126,44 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         """Remove config file automatically copied into directory."""
         format_file_path = pathlib.Path(format_file_name).expanduser()
         if format_file_path.exists():
+            logging.info("Removing copied config file: %s", format_file_path)
             format_file_path.unlink()
 
     def parse_output(
         self, total_output: List[str], package: Optional[Package] = None
     ) -> List[Issue]:
         """Parse tool output and report issues."""
-        eslint_re = r"(.+):(\d+):(\d+):\s(.+)\s\[(.+)\/(.+)\]"
-        eslint_error_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)]"
-        parse: Pattern[str] = re.compile(eslint_re)
-        err_parse: Pattern[str] = re.compile(eslint_error_re)
         issues: List[Issue] = []
-
         for output in total_output:
-            lines = output.split("\n")
-            for line in lines:
-                match: Optional[Match[str]] = parse.match(line)
-                err_match: Optional[Match[str]] = err_parse.match(line)
-                if match:
-                    severity_str = match.group(5).lower()
-                    severity = 3
-                    if severity_str == "warning":
+            try:
+                data = json.loads(output)
+                for line in data:
+                    file_path = line["filePath"]
+                    for issue in line["messages"]:
+                        severity_str = issue["severity"]
                         severity = 3
-                    elif severity_str == "error":
-                        severity = 5
-
-                    issues.append(
-                        Issue(
-                            match.group(1),
-                            match.group(2),
-                            self.get_name(),
-                            match.group(6),
-                            severity,
-                            match.group(4),
-                            None,
+                        if severity_str == 1:  # warning
+                            severity = 3
+                        elif severity_str == 2:  # error
+                            severity = 5
+                        line_num = None
+                        if "line" in issue:
+                            line_num = issue["line"]
+                        issues.append(
+                            Issue(
+                                file_path,
+                                line_num,
+                                self.get_name(),
+                                issue["ruleId"],
+                                severity,
+                                issue["message"],
+                                None,
+                            )
                         )
-                    )
-                elif err_match:
-                    severity_str = err_match.group(6).lower()
-                    severity = 3
-                    if severity_str == "error":
-                        severity = 5
 
-                    issues.append(
-                        Issue(
-                            err_match.group(1),
-                            err_match.group(2),
-                            self.get_name(),
-                            err_match.group(4),
-                            severity,
-                            err_match.group(5),
-                            None,
-                        )
-                    )
+            except json.JSONDecodeError as ex:
+                logging.warning("JSONDecodeError: %s", ex)
+            except ValueError as ex:
+                logging.warning("ValueError: %s", ex)
+
         return issues

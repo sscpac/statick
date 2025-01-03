@@ -1,4 +1,5 @@
 """Unit tests for the eslint plugin."""
+
 import argparse
 import os
 import subprocess
@@ -96,18 +97,19 @@ def test_eslint_tool_plugin_scan_valid_with_issues():
         os.path.join(os.path.dirname(__file__), "valid_package", "test.js")
     ]
     issues = plugin.scan(package, "level")
-    # We expect to have camelcase warnings and no-unused-var errors.
-    assert len(issues) == 4
+    # We expect to have camelcase, no-unused-var, and no-undef errors.
+    assert len(issues) == 2
 
 
 def test_eslint_tool_plugin_parse_valid():
     """Verify that we can parse the expected output of eslint."""
     plugin = setup_eslint_tool_plugin()
-    output = "test.js:1:13: Strings must use singlequote. [Error/quotes]"
+    # output = "test.js:1:13: Strings must use singlequote. [Error/quotes]"
+    output = '[{"filePath":"test.js","messages":[{"ruleId":"quotes","severity":2,"message":"Strings must use singlequote.","line":1,"column":13,"nodeType":"Identifier","messageId":"notSingleQuote","endLine":1,"endColumn":18,"source":"      "}]}]'
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "test.js"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "eslint"
     assert issues[0].issue_type == "quotes"
     assert issues[0].severity == 5
@@ -117,15 +119,17 @@ def test_eslint_tool_plugin_parse_valid():
 def test_eslint_tool_plugin_parse_valid_error():
     """Verify that we can parse the error output of eslint."""
     plugin = setup_eslint_tool_plugin()
-    output = "test.js:1:1: Parsing error: Unexpected token < [Error]"
-    issues = plugin.parse_output([output])
+    output = []
+    output_str = """[{"filePath":"test.html","messages":[{"ruleId":null,"nodeType":null,"fatal":true,"severity":2,"message":"Parsing error: Unexpected token <","line":1,"column":1}],"suppressedMessages":[],"errorCount":1,"fatalErrorCount":1,"warningCount":0,"fixableErrorCount":0,"fixableWarningCount":0,"source":"<!DOCTYPE html>\\n<!-- Minimal working example based on: https://www.sitepoint.com/a-minimal-html-document-html5-edition/ -->\\n<html lang=\\"en\\">\\n  <head>\\n    <meta charset=\\"utf-8\\">\\n    <title>Hello World!</title>\\n    <script>\\n      var log_out;\\n      console.log('Hello World!');\\n    </script>\\n  </head>\\n  <body>\\n    <!-- page content -->\\n  </body>\\n</html>\\n","usedDeprecatedRules":[]}]"""
+    output.append(output_str)
+    issues = plugin.parse_output(output)
     assert len(issues) == 1
-    assert issues[0].filename == "test.js"
-    assert issues[0].line_number == "1"
+    assert issues[0].filename == "test.html"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "eslint"
-    assert issues[0].issue_type == "Parsing error"
+    assert issues[0].issue_type == None
     assert issues[0].severity == 5
-    assert issues[0].message == "Unexpected token <"
+    assert issues[0].message == "Parsing error: Unexpected token <"
 
 
 def test_eslint_tool_plugin_parse_invalid():
@@ -166,9 +170,7 @@ def test_eslint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output
     assert not issues
 
 
-@mock.patch(
-    "statick_tool.plugins.tool.eslint_tool_plugin.subprocess.check_output"
-)
+@mock.patch("statick_tool.plugins.tool.eslint_tool_plugin.subprocess.check_output")
 def test_eslint_tool_plugin_scan_nodejs_error(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised when nodejs throws an error.
@@ -176,12 +178,14 @@ def test_eslint_tool_plugin_scan_nodejs_error(mock_subprocess_check_output):
     Expected result: issues is None
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
-        1, "", output="internal/modules/cjs/loader.js:883 \
+        1,
+        "",
+        output="internal/modules/cjs/loader.js:883 \
   throw err; \
   ^ \
 \
 Error: Cannot find module 'node:fs' \
-Require stack:"
+Require stack:",
     )
     plugin = setup_eslint_tool_plugin()
     package = Package(

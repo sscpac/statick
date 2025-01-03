@@ -1,4 +1,5 @@
 """Unit tests for the htmllint plugin."""
+
 import argparse
 import os
 import subprocess
@@ -146,9 +147,7 @@ def test_htmllint_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outp
     assert not issues
 
 
-@mock.patch(
-    "statick_tool.plugins.tool.htmllint_tool_plugin.subprocess.check_output"
-)
+@mock.patch("statick_tool.plugins.tool.htmllint_tool_plugin.subprocess.check_output")
 def test_htmllint_tool_plugin_scan_nodejs_error(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised when nodejs throws an error.
@@ -156,12 +155,14 @@ def test_htmllint_tool_plugin_scan_nodejs_error(mock_subprocess_check_output):
     Expected result: issues is None
     """
     mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
-        1, "", output="internal/modules/cjs/loader.js:883 \
+        1,
+        "",
+        output="internal/modules/cjs/loader.js:883 \
   throw err; \
   ^ \
 \
 Error: Cannot find module 'node:fs' \
-Require stack:"
+Require stack:",
     )
     plugin = setup_htmllint_tool_plugin()
     package = Package(

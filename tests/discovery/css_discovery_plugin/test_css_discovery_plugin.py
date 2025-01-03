@@ -1,4 +1,5 @@
 """Unit tests for the CSS discovery plugin."""
+
 import os
 
 from yapsy.PluginManager import PluginManager

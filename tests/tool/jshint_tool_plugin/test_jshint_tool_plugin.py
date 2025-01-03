@@ -1,4 +1,5 @@
 """Unit tests for the jshint plugin."""
+
 import argparse
 import os
 import subprocess

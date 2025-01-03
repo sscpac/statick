@@ -3,4 +3,4 @@ levels:
     tool:
       eslint:
         flags: ""
-        config: ".eslintrc"
+        config: "eslint.config.mjs"
