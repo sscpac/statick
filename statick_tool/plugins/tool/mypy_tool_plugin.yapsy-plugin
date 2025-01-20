@@ -1,3 +1,0 @@
-[Core]
-Name = Mypy Tool Plugin
-Module = mypy_tool_plugin

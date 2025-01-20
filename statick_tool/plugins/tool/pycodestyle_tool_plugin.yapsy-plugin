@@ -1,3 +1,0 @@
-[Core]
-Name = Pycodestyle Tool Plugin
-Module = pycodestyle_tool_plugin

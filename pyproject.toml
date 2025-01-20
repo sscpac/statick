@@ -1,0 +1,135 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "statick"
+authors = [{name = "NIWC Pacific"}]
+description="Making code quality easier."
+version = "0.10.0"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "CC0-1.0"}
+classifiers = [
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "PyYAML",
+    "bandit",
+    "black",
+    "cmakelint",
+    "cpplint",
+    "docformatter",
+    "flawfinder",
+    "importlib_metadata",
+    "isort",
+    "lizard",
+    "mypy",
+    "packaging",
+    "pycodestyle",
+    "pydocstyle",
+    "pyflakes",
+    "pylint",
+    "ruff>=0.0.237",
+    "tabulate",
+    "types-PyYAML",
+    "types-setuptools",
+    "types-tabulate",
+    "xmltodict",
+    "yamllint",
+]
+
+[project.scripts]
+statick = "statick_tool.statick:main"
+
+[tool.setuptools.package-data]
+statick_tool = [
+    "rsc/*",
+    "rsc/.*",
+    "rsc/plugin_mapping/*",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "src",
+]
+
+[project.entry-points."statick_tool.plugins.discovery"]
+c = "statick_tool.plugins.discovery.c:CDiscoveryPlugin"
+cmake = "statick_tool.plugins.discovery.cmake:CMakeDiscoveryPlugin"
+groovy = "statick_tool.plugins.discovery.groovy:GroovyDiscoveryPlugin"
+java = "statick_tool.plugins.discovery.java:JavaDiscoveryPlugin"
+maven = "statick_tool.plugins.discovery.maven:MavenDiscoveryPlugin"
+perl = "statick_tool.plugins.discovery.perl:PerlDiscoveryPlugin"
+python = "statick_tool.plugins.discovery.python:PythonDiscoveryPlugin"
+ros = "statick_tool.plugins.discovery.ros:RosDiscoveryPlugin"
+shell = "statick_tool.plugins.discovery.shell:ShellDiscoveryPlugin"
+xml = "statick_tool.plugins.discovery.xml:XMLDiscoveryPlugin"
+yaml = "statick_tool.plugins.discovery.yaml:YAMLDiscoveryPlugin"
+
+[project.entry-points."statick_tool.plugins.reporting"]
+code_climate = "statick_tool.plugins.reporting.code_climate:CodeClimateReportingPlugin"
+do_nothing = "statick_tool.plugins.reporting.do_nothing:DoNothingReportingPlugin"
+json = "statick_tool.plugins.reporting.json:JsonReportingPlugin"
+print_to_console = "statick_tool.plugins.reporting.print_to_console:PrintToConsoleReportingPlugin"
+write_jenkins_warnings_ng = "statick_tool.plugins.reporting.write_jenkins_warnings_ng:WriteJenkinsWarningsNGReportingPlugin"
+
+[project.entry-points."statick_tool.plugins.tool"]
+bandit = "statick_tool.plugins.tool.bandit:BanditToolPlugin"
+black = "statick_tool.plugins.tool.black:BlackToolPlugin"
+catkin_lint = "statick_tool.plugins.tool.catkin_lint:CatkinLintToolPlugin"
+cccc = "statick_tool.plugins.tool.cccc:CCCCToolPlugin"
+clang-format = "statick_tool.plugins.tool.clang_format:ClangFormatToolPlugin"
+clang-tidy = "statick_tool.plugins.tool.clang_tidy:ClangTidyToolPlugin"
+cmakelint = "statick_tool.plugins.tool.cmakelint:CMakelintToolPlugin"
+cppcheck = "statick_tool.plugins.tool.cppcheck:CppcheckToolPlugin"
+cpplint = "statick_tool.plugins.tool.cpplint:CpplintToolPlugin"
+docformatter = "statick_tool.plugins.tool.docformatter:DocformatterToolPlugin"
+do_nothing = "statick_tool.plugins.tool.do_nothing:DoNothingToolPlugin"
+flawfinder = "statick_tool.plugins.tool.flawfinder:FlawfinderToolPlugin"
+groovylint = "statick_tool.plugins.tool.groovylint:GroovyLintToolPlugin"
+isort = "statick_tool.plugins.tool.isort:IsortToolPlugin"
+lizard = "statick_tool.plugins.tool.lizard:LizardToolPlugin"
+make = "statick_tool.plugins.tool.make:MakeToolPlugin"
+mypy = "statick_tool.plugins.tool.mypy:MypyToolPlugin"
+perlcritic = "statick_tool.plugins.tool.perlcritic:PerlCriticToolPlugin"
+pycodestyle = "statick_tool.plugins.tool.pycodestyle:PycodestyleToolPlugin"
+pydocstyle = "statick_tool.plugins.tool.pydocstyle:PydocstyleToolPlugin"
+pyflakes = "statick_tool.plugins.tool.pyflakes:PyflakesToolPlugin"
+pylint = "statick_tool.plugins.tool.pylint:PylintToolPlugin"
+ruff = "statick_tool.plugins.tool.ruff:RuffToolPlugin"
+shellcheck = "statick_tool.plugins.tool.shellcheck:ShellcheckToolPlugin"
+spotbugs = "statick_tool.plugins.tool.spotbugs:SpotbugsToolPlugin"
+uncrustify = "statick_tool.plugins.tool.uncrustify:UncrustifyToolPlugin"
+xmllint = "statick_tool.plugins.tool.xmllint:XmllintToolPlugin"
+yamllint = "statick_tool.plugins.tool.yamllint:YamllintToolPlugin"
+
+[project.urls]
+"Homepage" = "https://github.com/sscpac/statick"
+"Bug Tracker" = "https://github.com/sscpac/statick/issues"
+
+[project.optional-dependencies]
+test = [
+    "coverage",
+    "lark",
+    "mock",
+    "pylint-django",
+    "pytest",
+    "pytest-cov",
+    "tox",
+    "tox-gh-actions",
+]
+docs = [
+    "sphinx==1.7.9",
+    "yaml-1.3",
+]
+
+[tool.isort]
+profile = "black"

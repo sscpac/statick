@@ -1,6 +1,0 @@
-levels:
-  custom:
-    discovery:
-      - cmake
-    tool:
-      - do_nothing

@@ -1,3 +1,0 @@
-[Core]
-Name = Catkin Lint Tool Plugin
-Module = catkin_lint_tool_plugin

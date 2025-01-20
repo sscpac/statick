@@ -1,3 +1,0 @@
-[Core]
-Name = Pylint Tool Plugin
-Module = pylint_tool_plugin

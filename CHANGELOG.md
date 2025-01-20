@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+### Added
+
+- Use of `pyproject.toml` instead of `setup.py` and `requirements.txt`.
+- Added support for Python 3.12 and 3.13.
+- Switched from yapsy to setuptools for plugin mechanism. (#508)
+
+### Fixed
+
+- Run `isort` on unit test files.
+- Handle updated warning type from `cppcheck` introduced in version 2.8.
+
 ## v0.10.0 - 2025-01-03
 
 ### Added

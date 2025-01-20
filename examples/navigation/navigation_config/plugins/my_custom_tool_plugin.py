@@ -6,8 +6,8 @@ import shlex
 import subprocess
 
 from statick_tool.issue import Issue  # pylint: disable=import-error
-from statick_tool.tool_plugin import (
-    ToolPlugin,  # pylint: disable=import-error,no-name-in-module,syntax-error
+from statick_tool.tool_plugin import (  # pylint: disable=import-error,no-name-in-module,syntax-error
+    ToolPlugin,
 )
 
 

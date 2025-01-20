@@ -14,6 +14,7 @@ build/
 dist/
 *.egg-info/
 MANIFEST
+requirements.txt
 
 docs/_build
 

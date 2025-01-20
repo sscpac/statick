@@ -1,3 +1,0 @@
-[Core]
-Name = CMake Discovery Plugin
-Module = cmake_discovery_plugin
