@@ -1,1 +1,0 @@
-"""TeX file discovery plugin."""

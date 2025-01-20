@@ -2,18 +2,23 @@
 import argparse
 import os
 import subprocess
+import sys
+from pathlib import Path
 
 import mock
 import pytest
-from yapsy.PluginManager import PluginManager
-
-import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.lacheck_tool_plugin import LacheckToolPlugin
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
+
+import statick_tool
+from statick_tool.plugins.tool.lacheck import LacheckToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_lacheck_tool_plugin():
@@ -39,27 +44,13 @@ def setup_lacheck_tool_plugin():
 
 def test_lacheck_tool_plugin_found():
     """Test that the plugin manager can find the lacheck plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "lacheck"
+    tool_plugins = {}
+    plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in plugins:
+        plugin = plugin_type.load()
+        tool_plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "lacheck"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named Lacheck Tool Plugin
-    assert any(
-        plugin_info.name == "Lacheck Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "lacheck" for _, plugin in list(tool_plugins.items())
     )
 
 
@@ -77,6 +68,13 @@ def test_lacheck_tool_plugin_scan_valid():
     issues = ltp.scan(package, "level")
     # We expect to have space before punctuation mark warning.
     assert len(issues) == 1
+
+    try:
+        os.remove(os.path.join(os.getcwd(), "lacheck.log"))
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
+    except OSError as ex:
+        print(f"Error: {ex}")
 
 
 def test_lacheck_tool_plugin_parse_valid():
@@ -104,7 +102,7 @@ def test_lacheck_tool_plugin_parse_invalid():
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.lacheck_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.lacheck.subprocess.check_output")
 def test_lacheck_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
     Test what happens when a CalledProcessError is raised (usually means lacheck hit an error).
@@ -131,7 +129,7 @@ def test_lacheck_tool_plugin_scan_calledprocesserror(mock_subprocess_check_outpu
     assert not issues
 
 
-@mock.patch("statick_tool.plugins.tool.lacheck_tool_plugin.subprocess.check_output")
+@mock.patch("statick_tool.plugins.tool.lacheck.subprocess.check_output")
 def test_lacheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
     Test what happens when an OSError is raised (usually means lacheck doesn't exist).
@@ -148,3 +146,12 @@ def test_lacheck_tool_plugin_scan_oserror(mock_subprocess_check_output):
     ]
     issues = ltp.scan(package, "level")
     assert issues is None
+
+    log_file = Path("lacheck.log")
+    if log_file.is_file():
+        try:
+            log_file.unlink()
+        except FileNotFoundError as ex:
+            print(f"Error: {ex}")
+        except OSError as ex:
+            print(f"Error: {ex}")
