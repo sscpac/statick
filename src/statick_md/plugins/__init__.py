@@ -1,1 +1,0 @@
-"""Markdown plugins for Statick."""

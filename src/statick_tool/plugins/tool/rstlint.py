@@ -5,7 +5,6 @@ from typing import List, Optional
 
 import restructuredtext_lint
 from docutils.utils import SystemMessage
-
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
