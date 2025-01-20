@@ -79,14 +79,22 @@ class DockerfileULintToolPlugin(ToolPlugin):  # type: ignore
         """Add the filename to the json output.
 
         This is because dockerfile-lint does not include the filename in the output.
+
+        Some warnings and errors are included in the tool output, but they are not in
+        json format. Those lines start with a "(". Any line that does not start with a
+        "(" is considered to be a line of output.
         """
+        updated_output = ""
+        for line in output.splitlines():
+            if not line.startswith("("):
+                updated_output = updated_output + line + "\n"
         try:
-            json_dict = json.loads(output)
+            json_dict = json.loads(updated_output)
             json_dict["filename"] = src
             return json.dumps(json_dict)
         except ValueError as ex:
             logging.warning("ValueError: %s", ex)
-            return output
+            return updated_output
 
     def parse_output(
         self, total_output: List[str], package: Optional[Package] = None

@@ -1,3 +1,0 @@
-[Core]
-Name = Dockerfile Discovery Plugin
-Module = dockerfile_discovery_plugin

@@ -1,22 +1,23 @@
 """Unit tests for the dockerfilelint plugin."""
-
 import argparse
 import os
 import subprocess
+import sys
 
 import mock
 import pytest
-from yapsy.PluginManager import PluginManager
-
-import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.dockerfilelint_tool_plugin import (
-    DockerfileLintToolPlugin,
-)
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
+
+import statick_tool
+from statick_tool.plugins.tool.dockerfilelint import DockerfileLintToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_dockerfilelint_tool_plugin(package="valid_package"):
@@ -45,27 +46,13 @@ def setup_dockerfilelint_tool_plugin(package="valid_package"):
 
 def test_dockerfilelint_tool_plugin_found():
     """Test that the plugin manager can find the dockerfilelint plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "dockerfilelint"
+    tool_plugins = {}
+    plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in plugins:
+        plugin = plugin_type.load()
+        tool_plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "dockerfilelint"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named dockerfilelint Tool Plugin
-    assert any(
-        plugin_info.name == "DockerfileLint Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "dockerfilelint" for _, plugin in list(tool_plugins.items())
     )
 
 
@@ -155,7 +142,7 @@ def test_dockerfilelint_tool_plugin_scan_invalid_rc_file():
     # at Array.forEach (<anonymous>)
     # at Object.<anonymous> (/usr/local/lib/node_modules/dockerfilelint/bin/dockerfilelint:65:8)
     # at Module._compile (internal/modules/cjs/loader.js:1063:30)
-    assert len(issues) == 14
+    assert len(issues) == 15
     assert issues[2].filename == "EXCEPTION"
     assert issues[2].line_number == "0"
     assert issues[2].tool == "dockerfilelint"
@@ -165,7 +152,7 @@ def test_dockerfilelint_tool_plugin_scan_invalid_rc_file():
 
 
 @mock.patch(
-    "statick_tool.plugins.tool.dockerfilelint_tool_plugin.subprocess.check_output"
+    "statick_tool.plugins.tool.dockerfilelint.subprocess.check_output"
 )
 def test_dockerfilelint_tool_plugin_scan_calledprocesserror(
     mock_subprocess_check_output,
@@ -202,7 +189,7 @@ def test_dockerfilelint_tool_plugin_scan_calledprocesserror(
 
 
 @mock.patch(
-    "statick_tool.plugins.tool.dockerfilelint_tool_plugin.subprocess.check_output"
+    "statick_tool.plugins.tool.dockerfilelint.subprocess.check_output"
 )
 def test_dockerfilelint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """

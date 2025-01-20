@@ -1,3 +1,0 @@
-[Core]
-Name = Dockerfile Lint Tool Plugin
-Module = dockerfile_lint_tool_plugin
