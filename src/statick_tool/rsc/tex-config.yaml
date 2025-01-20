@@ -1,0 +1,20 @@
+levels:
+  tex:
+    discovery:
+      tex:
+        flags: ""
+    tool:
+      chktex:
+        flags: ""
+      lacheck:
+        flags: ""
+
+  tex_with_pylint:
+    inherits_from:
+      - "tex"
+    discovery:
+      python:
+        flags: ""
+    tool:
+      pylint:
+        flags: "--good-names=f,i,j,k,x,y,z,ex,_"
