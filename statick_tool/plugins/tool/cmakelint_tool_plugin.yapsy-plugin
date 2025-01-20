@@ -1,3 +1,0 @@
-[Core]
-Name = cmakelint Tool Plugin
-Module = cmakelint_tool_plugin

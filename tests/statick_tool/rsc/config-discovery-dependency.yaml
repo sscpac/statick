@@ -1,0 +1,8 @@
+levels:
+  custom:
+    discovery:
+      # We want to check that a dependency is not run a second time if it runs before the plugin that depends on it.
+      - ros  # Put ros first so it runs before cmake.
+      - cmake  # Put cmake second since it depends on ros. The ros plugin should not run twice.
+    tool:
+      - do_nothing

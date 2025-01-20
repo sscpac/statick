@@ -1,0 +1,1 @@
+"""Making code quality easier."""

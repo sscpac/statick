@@ -14,69 +14,36 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-20.04, ubuntu-22.04, windows-latest]
-        python-version: ['3.9', '3.10', '3.11']
+        os: [macos-latest, ubuntu-20.04, ubuntu-22.04, ubuntu-24.04, windows-latest]
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '16'
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
-      - uses: actions/cache@v3
-        if: startsWith(runner.os, 'Linux')
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - uses: actions/cache@v3
-        if: startsWith(runner.os, 'macOS')
-        with:
-          path: ~/Library/Caches/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - uses: actions/cache@v3
-        if: startsWith(runner.os, 'Windows')
-        with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install --upgrade -r requirements.txt
-          python -m pip install --upgrade mypy
-          python -m pip install --upgrade setuptools
-          python -m pip install --upgrade tox
-          python -m pip install --upgrade tox-gh-actions
-          python -m pip install --upgrade types-deprecated
-          python -m pip install --upgrade types-PyYAML
-          python -m pip install --upgrade types-tabulate
-          python -m pip install --upgrade wheel
+          pip install --upgrade pip
+          pip install .[docs,test]
 
       # Remove apt repos that are known to break from time to time.
       # See https://github.com/actions/virtual-environments/issues/323
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+        if: runner.os == 'Linux'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
-      # Use apt-get instead of apt as apt does not have a stable CLI interface. The apt tool prints out
-      # "WARNING: apt does not have a stable CLI interface. Use with caution in scripts."
       - name: Install tools (Linux)
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install cccc
@@ -98,24 +65,25 @@ jobs:
           sudo apt-get install clang-format-14
           sudo apt-get install clang-tidy-14
 
-      # Have to install newer version from non-apt source due to SSL library compatibility issues.
-      - name: Install node
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+      - name: Install node tools
+        if: runner.os == 'Linux'
         run: |
           npm install -g markdownlint-cli@0.21.0
           npm install -g npm-groovy-lint
 
       - name: Test with mypy
         run: |
-          mypy --ignore-missing-imports --strict statick statick_tool/
+          mypy --ignore-missing-imports --strict src/statick_tool/
 
-      - name: Statick markdown
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
-        run: |
-          statick . --check --profile documentation.yaml
+      # Re-enable this step when statick-md switches from yapsy to entry points plugin approach.
+      # - name: Statick markdown
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     pip install statick-md
+      #     statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu.22.04'
+        if: runner.os == 'Linux'
         uses: ammaraskar/sphinx-action@master
         with:
           docs-folder: 'docs/'
@@ -125,12 +93,13 @@ jobs:
           python -m tox
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Self check
-        if: matrix.os == 'ubuntu-20.04' || matrix.os == 'ubuntu-22.04'
+        if: runner.os == 'Linux'
         run: |
           mkdir statick-output
-          ./statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
+          statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
