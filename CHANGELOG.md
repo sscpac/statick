@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## Unreleased
+## v0.11.0 - 2025-01-20
+
+API breaking changes introduced.
+Pin statick<0.11 if you need the older plugin approach based on yapsy.
 
 ### Added
 
