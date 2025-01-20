@@ -1,1 +1,0 @@
-"""Web plugins for Statick."""

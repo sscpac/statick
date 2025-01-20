@@ -1,1 +1,0 @@
-"""Web file discovery plugins."""

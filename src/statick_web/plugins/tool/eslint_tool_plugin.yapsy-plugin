@@ -1,3 +1,0 @@
-[Core]
-Name = ESLint Tool Plugin
-Module = eslint_tool_plugin
