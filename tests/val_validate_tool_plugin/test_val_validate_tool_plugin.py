@@ -6,15 +6,18 @@ import sys
 
 import mock
 import pytest
-from yapsy.PluginManager import PluginManager
-
-import statick_tool
 from statick_tool.config import Config
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
-from statick_tool.plugins.tool.val_validate_tool_plugin import ValValidateToolPlugin
 from statick_tool.resources import Resources
-from statick_tool.tool_plugin import ToolPlugin
+
+import statick_tool
+from statick_tool.plugins.tool.val_validate import ValValidateToolPlugin
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
 
 
 def setup_val_validate_tool_plugin(binary=None):
@@ -44,27 +47,13 @@ def setup_val_validate_tool_plugin(binary=None):
 
 def test_val_validate_tool_plugin_found():
     """Test that the plugin manager finds the Validate plugin."""
-    manager = PluginManager()
-    # Get the path to statick_tool/__init__.py, get the directory part, and
-    # add 'plugins' to that to get the standard plugins dir
-    manager.setPluginPlaces(
-        [os.path.join(os.path.dirname(statick_tool.__file__), "plugins")]
-    )
-    manager.setCategoriesFilter(
-        {
-            "Tool": ToolPlugin,
-        }
-    )
-    manager.collectPlugins()
-    # Verify that a plugin's get_name() function returns "val_validate"
+    tool_plugins = {}
+    plugins = entry_points(group="statick_tool.plugins.tool")
+    for plugin_type in plugins:
+        plugin = plugin_type.load()
+        tool_plugins[plugin_type.name] = plugin()
     assert any(
-        plugin_info.plugin_object.get_name() == "val_validate"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
-    )
-    # While we're at it, verify that a plugin is named Validate Tool Plugin
-    assert any(
-        plugin_info.name == "VAL Validate Tool Plugin"
-        for plugin_info in manager.getPluginsOfCategory("Tool")
+        plugin.get_name() == "val_validate" for _, plugin in list(tool_plugins.items())
     )
 
 
@@ -95,6 +84,13 @@ def test_val_validate_tool_plugin_scan_valid():
     issues = vtp.scan(package, "level")
     assert not issues
 
+    try:
+        os.remove(os.path.join(os.getcwd(), "val_validate.log"))
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
+    except OSError as ex:
+        print(f"Error: {ex}")
+
 
 def test_val_validate_tool_plugin_no_sources():
     """Make sure no issues are found if no sources are provided.
@@ -113,6 +109,13 @@ def test_val_validate_tool_plugin_no_sources():
     package["pddl_domain_src"] = []
     issues = vtp.scan(package, "level")
     assert not issues
+
+    try:
+        os.remove(os.path.join(os.getcwd(), "val_validate.log"))
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
+    except OSError as ex:
+        print(f"Error: {ex}")
 
 
 def test_val_validate_tool_plugin_scan_wrong_binary():
@@ -133,6 +136,13 @@ def test_val_validate_tool_plugin_scan_wrong_binary():
     ]
     issues = vtp.scan(package, "level")
     assert issues is None
+
+    try:
+        os.remove(os.path.join(os.getcwd(), "val_validate.log"))
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
+    except OSError as ex:
+        print(f"Error: {ex}")
 
 
 def test_val_validate_tool_plugin_parse_valid():
@@ -198,7 +208,7 @@ def test_val_validate_tool_plugin_parse_invalid():
 
 
 @mock.patch(
-    "statick_tool.plugins.tool.val_validate_tool_plugin.subprocess.check_output"
+    "statick_tool.plugins.tool.val_validate.subprocess.check_output"
 )
 def test_val_validate_tool_plugin_scan_calledprocesserror(mock_subprocess_check_output):
     """
@@ -231,9 +241,16 @@ def test_val_validate_tool_plugin_scan_calledprocesserror(mock_subprocess_check_
     issues = vtp.scan(package, "level")
     assert issues is None
 
+    try:
+        os.remove(os.path.join(os.getcwd(), "val_validate.log"))
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
+    except OSError as ex:
+        print(f"Error: {ex}")
+
 
 @mock.patch(
-    "statick_tool.plugins.tool.val_validate_tool_plugin.subprocess.check_output"
+    "statick_tool.plugins.tool.val_validate.subprocess.check_output"
 )
 def test_val_validate_tool_plugin_scan_oserror(mock_subprocess_check_output):
     """
@@ -259,3 +276,10 @@ def test_val_validate_tool_plugin_scan_oserror(mock_subprocess_check_output):
     ]
     issues = vtp.scan(package, "level")
     assert issues is None
+
+    try:
+        os.remove(os.path.join(os.getcwd(), "val_validate.log"))
+    except FileNotFoundError as ex:
+        print(f"Error: {ex}")
+    except OSError as ex:
+        print(f"Error: {ex}")

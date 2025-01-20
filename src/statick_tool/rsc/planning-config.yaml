@@ -1,0 +1,11 @@
+levels:
+  planning:
+    discovery:
+      - pddl
+    reporting:
+      - print_to_console
+    tool:
+      val_parser:
+        flags: ""
+      val_validate:
+        flags: ""

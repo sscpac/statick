@@ -1,1 +1,0 @@
-"""TeX plugins for Statick."""

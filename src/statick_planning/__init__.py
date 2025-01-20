@@ -1,1 +1,0 @@
-"""Statick tool."""
