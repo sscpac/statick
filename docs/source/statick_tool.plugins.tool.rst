@@ -12,18 +12,18 @@ Module contents
 Submodules
 ----------
 
-statick_tool.plugins.tool.chktex_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+statick_tool.plugins.tool.chktex module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: statick_tool.plugins.tool.chktex_tool_plugin
+.. automodule:: statick_tool.plugins.tool.chktex
     :members:
     :undoc-members:
     :show-inheritance:
 
-statick_tool.plugins.tool.lacheck_tool_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+statick_tool.plugins.tool.lacheck module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: statick_tool.plugins.tool.lacheck_tool_plugin
+.. automodule:: statick_tool.plugins.tool.lacheck
     :members:
     :undoc-members:
     :show-inheritance:

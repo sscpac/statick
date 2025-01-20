@@ -12,10 +12,10 @@ Module contents
 Submodules
 ----------
 
-statick_tool.plugins.discovery.tex_discovery_plugin module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+statick_tool.plugins.discovery.tex module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. automodule:: statick_tool.plugins.discovery.tex_discovery_plugin
+.. automodule:: statick_tool.plugins.discovery.tex
     :members:
     :undoc-members:
     :show-inheritance:
