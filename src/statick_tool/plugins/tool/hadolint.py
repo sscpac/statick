@@ -49,13 +49,17 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
             tool_bin = self.plugin_context.args.hadolint_bin
 
         tool_config = ".hadolint.yaml"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        user_config = None
+        if self.plugin_context is not None:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
 
-        config_file_path = self.plugin_context.resources.get_file(tool_config)
+        config_file_path = None
+        if self.plugin_context is not None:
+            config_file_path = self.plugin_context.resources.get_file(tool_config)
         flags: List[str] = ["-f", "json", "--no-fail"]
         if "-f" in user_flags:
             idx = user_flags.index("-f")
@@ -73,6 +77,7 @@ class HadolintToolPlugin(ToolPlugin):  # type: ignore
             self.plugin_context
             and self.plugin_context.args.hadolint_docker is not None
             and self.plugin_context.args.hadolint_docker
+            and config_file_path is not None
         ):
             output = self.scan_docker(tool_bin, flags, files, config_file_path)
         else:

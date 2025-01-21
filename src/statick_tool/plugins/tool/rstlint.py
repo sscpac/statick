@@ -5,6 +5,7 @@ from typing import List, Optional
 
 import restructuredtext_lint
 from docutils.utils import SystemMessage
+
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
@@ -61,7 +62,7 @@ class RstlintToolPlugin(ToolPlugin):  # type: ignore
                     output.line,  # type: ignore
                     self.get_name(),
                     output.type,  # type: ignore
-                    output.level,
+                    str(output.level),
                     output.message,  # type: ignore
                     None,
                 )

@@ -30,16 +30,22 @@ class DockerfileLintToolPlugin(ToolPlugin):  # type: ignore
         tool_bin = "dockerfilelint"
 
         tool_config = ".dockerfilelintrc"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        user_config = None
+        if self.plugin_context is not None:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
 
-        format_file_name = self.plugin_context.resources.get_file(tool_config)
-        format_file_path = pathlib.Path(format_file_name).resolve().parent
+        format_file_name = None
+        format_file_path = None
+        if self.plugin_context is not None:
+            format_file_name = self.plugin_context.resources.get_file(tool_config)
+            if format_file_name is not None:
+                format_file_path = pathlib.Path(format_file_name).resolve().parent
         flags: List[str] = []
-        if format_file_name is not None:
+        if format_file_path is not None:
             flags += ["-c", str(format_file_path)]
         flags += ["-o", "json"]
         flags += user_flags

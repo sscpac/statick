@@ -9,6 +9,7 @@ Tool is from King's College London. Tool authors are:
 
 https://github.com/KCL-Planning/VAL/tree/master/applications#parser
 """
+
 import argparse
 import logging
 import re
@@ -45,7 +46,10 @@ class ValParserToolPlugin(ToolPlugin):  # type: ignore
         flags += self.get_user_flags(level)
 
         parser_bin = "Parser"
-        if self.plugin_context.args.val_parser_bin is not None:
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args.val_parser_bin is not None
+        ):
             parser_bin = self.plugin_context.args.val_parser_bin
 
         try:

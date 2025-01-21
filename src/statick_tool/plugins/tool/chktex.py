@@ -2,6 +2,7 @@
 
 Chktex documentation at http://mirrors.rit.edu/CTAN/systems/doc/chktex/ChkTeX.pdf.
 """
+
 import logging
 import re
 import subprocess

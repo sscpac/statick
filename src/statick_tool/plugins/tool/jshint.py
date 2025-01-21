@@ -29,13 +29,17 @@ class JSHintToolPlugin(ToolPlugin):  # type: ignore
         tool_bin = "jshint"
 
         tool_config = ".jshintrc"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        user_config = None
+        if self.plugin_context is not None:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
 
-        format_file_name = self.plugin_context.resources.get_file(tool_config)
+        format_file_name = None
+        if self.plugin_context is not None:
+            format_file_name = self.plugin_context.resources.get_file(tool_config)
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["-c", format_file_name]
@@ -88,7 +92,7 @@ class JSHintToolPlugin(ToolPlugin):  # type: ignore
                     filename = match.group(1)
                     line_number = match.group(2)
                     issue_type = "jshint"
-                    severity = 5
+                    severity = "5"
                     message = match.group(4)
                     issues.append(
                         Issue(

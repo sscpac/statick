@@ -23,37 +23,46 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
         """Return a list of file types the plugin can scan."""
         return ["html_src", "javascript_src"]
 
-    def get_format_file(self, level: str) -> Tuple[str, bool]:
+    def get_format_file(self, level: str) -> Tuple[Optional[str], bool]:
         """Retrieve format file path."""
         tool_config = "eslint.config.mjs"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        user_config = None
+        if self.plugin_context is not None:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
 
-        install_dir = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "install_dir"
-        )
+        install_dir = None
+        if self.plugin_context is not None:
+            install_dir = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "install_dir"
+            )
         copied_file = False
+        format_file_name = None
         if install_dir is not None:
             format_file_path = pathlib.Path(install_dir, tool_config).expanduser()
 
-            if not format_file_path.exists():
-                config_file_path = pathlib.Path(
-                    self.plugin_context.resources.get_file(tool_config)
-                )
-                install_dir_path = pathlib.Path(install_dir).expanduser()
-                logging.info(
-                    "Copying eslint format file %s to: %s",
-                    config_file_path,
-                    install_dir_path,
-                )
-                shutil.copy(str(config_file_path), str(install_dir_path))
-                copied_file = True
+            if (
+                not format_file_path.exists()
+                and tool_config is not None
+                and self.plugin_context is not None
+            ):
+                file_path = self.plugin_context.resources.get_file(tool_config)
+                if file_path is not None:
+                    config_file_path = pathlib.Path(file_path)
+                    install_dir_path = pathlib.Path(install_dir).expanduser()
+                    logging.info(
+                        "Copying eslint format file %s to: %s",
+                        config_file_path,
+                        install_dir_path,
+                    )
+                    shutil.copy(str(config_file_path), str(install_dir_path))
+                    copied_file = True
 
             format_file_name = str(format_file_path)
-        else:
+        elif self.plugin_context is not None:
             format_file_name = self.plugin_context.resources.get_file(tool_config)
 
         return (format_file_name, copied_file)
@@ -104,17 +113,17 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
                         "%s failed! Returncode = %d", tool_bin, ex.returncode
                     )
                     logging.warning("%s exception: %s", self.get_name(), ex.output)
-                    if copied_file:
+                    if copied_file and format_file_name is not None:
                         self.remove_config_file(format_file_name)
                     return None
 
             except OSError as ex:
                 logging.warning("Couldn't find %s! (%s)", tool_bin, ex)
-                if copied_file:
+                if copied_file and format_file_name is not None:
                     self.remove_config_file(format_file_name)
                 return None
 
-        if copied_file:
+        if copied_file and format_file_name is not None:
             self.remove_config_file(format_file_name)
 
         return total_output
@@ -141,12 +150,12 @@ class ESLintToolPlugin(ToolPlugin):  # type: ignore
                     file_path = line["filePath"]
                     for issue in line["messages"]:
                         severity_str = issue["severity"]
-                        severity = 3
+                        severity = "3"
                         if severity_str == 1:  # warning
-                            severity = 3
+                            severity = "3"
                         elif severity_str == 2:  # error
-                            severity = 5
-                        line_num = None
+                            severity = "5"
+                        line_num = "0"
                         if "line" in issue:
                             line_num = issue["line"]
                         issues.append(
