@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -47,16 +47,26 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install cccc
+          sudo apt-get install chktex
           sudo apt-get install clang
           sudo apt-get install clang-format
           sudo apt-get install clang-tidy
           sudo apt-get install cppcheck
+          sudo apt-get install lacheck
           sudo apt-get install libpcre3-dev
           sudo apt-get install libperl-critic-perl
           sudo apt-get install libxml2
           sudo apt-get install libxml2-utils
           sudo apt-get install shellcheck
           sudo apt-get install uncrustify
+
+          git clone https://github.com/KCL-Planning/VAL
+          cd VAL/scripts/linux
+          sh build_linux64.sh all Release
+          cd ../../..
+          mkdir -p /opt/val/bin/
+          cp -r VAL/build/linux64/Release/install/bin/* /opt/val/bin/
+          rm -rf VAL
 
       - name: Install clang tools (for unit tests)
         if: matrix.os == 'ubuntu-22.04'
@@ -65,11 +75,46 @@ jobs:
           sudo apt-get install clang-format-14
           sudo apt-get install clang-tidy-14
 
+      # Do not install on macos until there is a hadolint release for macos (Darwin on arm64 architecture).
+      - name: Install Hadolint binary (github)
+        if: runner.os == 'Linux' || runner.os == 'Windows'
+        run: |
+          mkdir -p $HOME/.local/bin
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          curl -sL -o hadolint https://github.com/hadolint/hadolint/releases/download/v2.6.0/hadolint-$(uname -s)-$(uname -m)
+          chmod +x hadolint
+          mv hadolint $HOME/.local/bin/
+
+      - name: Install Hadolint docker image (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          docker pull hadolint/hadolint:latest
+
       - name: Install node tools
         if: runner.os == 'Linux'
         run: |
-          npm install -g markdownlint-cli@0.21.0
+          npm install -g dockerfile_lint
+          npm install -g dockerfilelint
+          npm install -g htmllint-cli
+          npm install -g jshint
+          npm install -g markdownlint-cli
           npm install -g npm-groovy-lint
+          npm install -g postcss-html # needed for stylelint to process html
+          npm install -g prettier
+          npm install -g stylelint
+          npm install -g stylelint-config-standard
+          npm install -g write-good
+          npm install -g eslint
+          # eslint plugins and configs should be installed locally
+          # https://eslint.org/docs/user-guide/migrating-to-6.0.0#plugins-and-shareable-configs-are-no-longer-affected-by-eslints-location
+          npm install --prefix $HOME/.node_modules --save-dev eslint-plugin-html
+          npm install --prefix $HOME/.node_modules --save-dev eslint-plugin-prettier
+          npm install --prefix $HOME/.node_modules --save-dev eslint-config-prettier
+          npm install --prefix $HOME/.node_modules --save-dev eslint @eslint/js
+          # View versions of installed packages
+          npm list
+          npm list --prefix $HOME/.node_modules
+          npm list -g
 
       - name: Test with mypy
         run: |
