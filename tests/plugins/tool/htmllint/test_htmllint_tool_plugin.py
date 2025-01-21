@@ -98,7 +98,7 @@ def test_htmllint_tool_plugin_parse_valid():
     assert issues[0].line_number == "12"
     assert issues[0].tool == "htmllint"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == 3
+    assert issues[0].severity == "3"
     assert issues[0].message == "tag is not closed"
 
 

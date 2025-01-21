@@ -101,7 +101,7 @@ def test_jshint_tool_plugin_parse_valid():
     assert issues[0].line_number == "8"
     assert issues[0].tool == "jshint"
     assert issues[0].issue_type == "jshint"
-    assert issues[0].severity == 5
+    assert issues[0].severity == "5"
     assert issues[0].message == "'log_out' is defined but never used."
 
 

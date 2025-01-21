@@ -101,7 +101,7 @@ def test_eslint_tool_plugin_parse_valid():
     assert issues[0].line_number == 1
     assert issues[0].tool == "eslint"
     assert issues[0].issue_type == "quotes"
-    assert issues[0].severity == 5
+    assert issues[0].severity == "5"
     assert issues[0].message == "Strings must use singlequote."
 
 
@@ -117,7 +117,7 @@ def test_eslint_tool_plugin_parse_valid_error():
     assert issues[0].line_number == 1
     assert issues[0].tool == "eslint"
     assert issues[0].issue_type == None
-    assert issues[0].severity == 5
+    assert issues[0].severity == "5"
     assert issues[0].message == "Parsing error: Unexpected token <"
 
 

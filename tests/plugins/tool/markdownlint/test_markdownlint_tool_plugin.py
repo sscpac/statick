@@ -95,7 +95,7 @@ def test_markdownlint_tool_plugin_parse_valid():
     assert issues[0].line_number == "305"
     assert issues[0].tool == "markdownlint"
     assert issues[0].issue_type == "MD012/no-multiple-blanks"
-    assert issues[0].severity == 3
+    assert issues[0].severity == "3"
     assert (
         issues[0].message == "Multiple consecutive blank lines [Expected: 1; Actual: 3]"
     )
