@@ -78,7 +78,7 @@ jobs:
       - name: Statick markdown
         if: runner.os == 'Linux'
         run: |
-          statick . --check --profile documentation.yaml
+          statick . --check --level documentation --log info
 
       - name: Sphinx lint
         if: runner.os == 'Linux'

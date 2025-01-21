@@ -538,14 +538,14 @@ An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick 
 Known external Statick plugins.
 All of these have been merged into the main repository, but they can serve as examples of how to make custom packages.
 
-| Plugin Name      | Repository Location                              |
-| :--------------- | :----------------------------------------------- |
-| statick-fortify  | <https://github.com/soartech/statick-fortify>    |
-| statick-md       | <https://github.com/sscpac/statick-md>           |
-| statick-planning | <https://github.com/tdenewiler/statick-planning> |
-| statick-tex      | <https://github.com/tdenewiler/statick-tex>      |
-| statick-tooling  | <https://github.com/sscpac/statick-tooling>      |
-| statick-web      | <https://github.com/sscpac/statick-web>          |
+Plugin Name      | Repository Location
+:--------------- | :-----------------------------------------------
+statick-fortify  | <https://github.com/soartech/statick-fortify>
+statick-md       | <https://github.com/sscpac/statick-md>
+statick-planning | <https://github.com/tdenewiler/statick-planning>
+statick-tex      | <https://github.com/tdenewiler/statick-tex>
+statick-tooling  | <https://github.com/sscpac/statick-tooling>
+statick-web      | <https://github.com/sscpac/statick-web>
 
 ## Customization
 
@@ -940,7 +940,6 @@ npm install -g markdownlint-cli
 npm install -g write-good
 ```
 
-
 #### Planning Plugins
 
 The [Validate](https://github.com/KCL-Planning/VAL) tool has compilation instructions on their
@@ -984,6 +983,7 @@ His commits were scrubbed from git history upon the initial public release.
 [lizard]: https://github.com/terryyin/lizard
 [logging]: https://docs.python.org/3/howto/logging.html
 [make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
+[markdownlint]: https://github.com/igorshubovych/markdownlint-cli
 [module entry point]: https://setuptools.pypa.io/en/latest/userguide/entry_point.html#entry-points-syntax
 [mypy]: https://github.com/python/mypy
 [npm-groovy-lint]: https://nvuillam.github.io/npm-groovy-lint/
@@ -995,6 +995,8 @@ His commits were scrubbed from git history upon the initial public release.
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
 [ros]: https://www.ros.org/
+[rst-lint]: https://github.com/twolfson/restructuredtext-lint
+[rstcheck]: https://github.com/myint/rstcheck
 [ruff]: https://github.com/charliermarsh/ruff
 [shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
@@ -1004,5 +1006,6 @@ His commits were scrubbed from git history upon the initial public release.
 [uncrustify]: https://github.com/uncrustify/uncrustify
 [val-parser]: https://github.com/KCL-Planning/VAL
 [val-validate]: https://github.com/KCL-Planning/VAL
+[write-good]: https://github.com/btford/write-good
 [xmllint]: http://xmlsoft.org/
 [yamllint]: https://yamllint.readthedocs.io/en/stable/
