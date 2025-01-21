@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class StylelintToolPlugin(ToolPlugin):  # type: ignore
+class StylelintToolPlugin(ToolPlugin):
     """Apply stylelint tool and gather results."""
 
     def get_name(self) -> str:

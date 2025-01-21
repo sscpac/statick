@@ -9,7 +9,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class CSSDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
+class CSSDiscoveryPlugin(DiscoveryPlugin):
     """Discover CSS files to analyze."""
 
     def get_name(self) -> str:

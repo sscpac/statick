@@ -9,7 +9,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class MarkdownDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
+class MarkdownDiscoveryPlugin(DiscoveryPlugin):
     """Discover Markdown files to analyze."""
 
     def get_name(self) -> str:

@@ -21,7 +21,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class ValParserToolPlugin(ToolPlugin):  # type: ignore
+class ValParserToolPlugin(ToolPlugin):
     """Apply Parser tool and gather results."""
 
     def get_name(self) -> str:

@@ -9,7 +9,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class JavaScriptDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
+class JavaScriptDiscoveryPlugin(DiscoveryPlugin):
     """Discover JavaScript files to analyze."""
 
     def get_name(self) -> str:

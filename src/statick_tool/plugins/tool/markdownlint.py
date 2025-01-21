@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class MarkdownlintToolPlugin(ToolPlugin):  # type: ignore
+class MarkdownlintToolPlugin(ToolPlugin):
     """Apply markdownlint tool and gather results."""
 
     def get_name(self) -> str:

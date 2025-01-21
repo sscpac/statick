@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class DockerfileULintToolPlugin(ToolPlugin):  # type: ignore
+class DockerfileULintToolPlugin(ToolPlugin):
     """Apply dockerfile-lint tool and gather results."""
 
     def get_name(self) -> str:

@@ -11,7 +11,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class RstlintToolPlugin(ToolPlugin):  # type: ignore
+class RstlintToolPlugin(ToolPlugin):
     """Apply rst-lint tool and gather results."""
 
     def get_name(self) -> str:

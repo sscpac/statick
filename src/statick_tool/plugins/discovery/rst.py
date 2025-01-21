@@ -9,7 +9,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class RstDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
+class RstDiscoveryPlugin(DiscoveryPlugin):
     """Discover rst files to analyze."""
 
     def get_name(self) -> str:

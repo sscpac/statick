@@ -9,7 +9,7 @@ from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
 
 
-class HTMLDiscoveryPlugin(DiscoveryPlugin):  # type: ignore
+class HTMLDiscoveryPlugin(DiscoveryPlugin):
     """Discover HTML files to analyze."""
 
     def get_name(self) -> str:

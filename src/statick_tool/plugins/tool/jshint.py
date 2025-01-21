@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class JSHintToolPlugin(ToolPlugin):  # type: ignore
+class JSHintToolPlugin(ToolPlugin):
     """Apply jshint tool and gather results."""
 
     def get_name(self) -> str:
