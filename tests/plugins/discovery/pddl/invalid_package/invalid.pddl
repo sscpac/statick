@@ -1,0 +1,1 @@
+; An empty PDDL file.
