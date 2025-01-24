@@ -222,3 +222,18 @@ def test_eslint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     ]
     issues = plugin.scan(package, "level")
     assert issues is None
+
+
+@mock.patch("statick_tool.plugins.tool.eslint.json.loads")
+def test_eslint_tool_plugin_parse_output_value_error(mock_json_loads):
+    """
+    Test what happens when a ValueError is raised while reading JSON data.
+
+    Expected result: issues is None
+    """
+    mock_json_loads.side_effect = ValueError("mocked error")
+    plugin = setup_eslint_tool_plugin()
+    plugin = setup_eslint_tool_plugin()
+    output = "some made up text to parse"
+    issues = plugin.parse_output([output])
+    assert not issues
