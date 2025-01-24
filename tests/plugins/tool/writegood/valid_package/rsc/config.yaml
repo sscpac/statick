@@ -1,0 +1,8 @@
+levels:
+  level:
+    discovery:
+      markdown:
+        flags: ""
+    tool:
+      writegood:
+        flags: ""
