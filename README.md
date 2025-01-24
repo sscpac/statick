@@ -536,7 +536,7 @@ An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick 
 ### External Plugins
 
 Known external Statick plugins.
-All of these have been merged into the main repository, but they can serve as examples of how to make custom packages.
+Nearly all of these have been merged into the main repository, but they can serve as examples of how to make custom packages.
 
 Plugin Name      | Repository Location
 :--------------- | :-----------------------------------------------
