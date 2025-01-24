@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class RstcheckToolPlugin(ToolPlugin):  # type: ignore
+class RstcheckToolPlugin(ToolPlugin):
     """Apply rstcheck tool and gather results."""
 
     def get_name(self) -> str:
