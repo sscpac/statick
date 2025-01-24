@@ -195,6 +195,12 @@ Require stack:",
     issues = plugin.scan(package, "level")
     assert issues is None
 
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="Generic error message"
+    )
+    issues = plugin.scan(package, "level")
+    assert not issues
+
 
 @mock.patch("statick_tool.plugins.tool.eslint.subprocess.check_output")
 def test_eslint_tool_plugin_scan_oserror(mock_subprocess_check_output):
