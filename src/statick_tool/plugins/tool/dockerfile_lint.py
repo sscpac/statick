@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class DockerfileULintToolPlugin(ToolPlugin):  # type: ignore
+class DockerfileULintToolPlugin(ToolPlugin):
     """Apply dockerfile-lint tool and gather results."""
 
     def get_name(self) -> str:
@@ -29,13 +29,17 @@ class DockerfileULintToolPlugin(ToolPlugin):  # type: ignore
         tool_bin = "dockerfile_lint"
 
         tool_config = "dockerfile_lint_rules.yaml"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        user_config = None
+        if self.plugin_context is not None:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
 
-        format_file_name = self.plugin_context.resources.get_file(tool_config)
+        format_file_name = None
+        if self.plugin_context is not None:
+            format_file_name = self.plugin_context.resources.get_file(tool_config)
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["-r", format_file_name]

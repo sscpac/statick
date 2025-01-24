@@ -29,6 +29,7 @@ dependencies = [
     "docformatter",
     "flawfinder",
     "importlib_metadata",
+    "importlib_metadata",
     "isort",
     "lizard",
     "mypy",
@@ -37,9 +38,13 @@ dependencies = [
     "pydocstyle",
     "pyflakes",
     "pylint",
+    "restructuredtext-lint",
+    "rstcheck",
     "ruff>=0.0.237",
+    "sphinx",
     "tabulate",
     "types-PyYAML",
+    "types-docutils",
     "types-setuptools",
     "types-tabulate",
     "xmltodict",
@@ -64,13 +69,21 @@ pythonpath = [
 [project.entry-points."statick_tool.plugins.discovery"]
 c = "statick_tool.plugins.discovery.c:CDiscoveryPlugin"
 cmake = "statick_tool.plugins.discovery.cmake:CMakeDiscoveryPlugin"
+css = "statick_tool.plugins.discovery.css:CSSDiscoveryPlugin"
+dockerfile = "statick_tool.plugins.discovery.dockerfile:DockerfileDiscoveryPlugin"
 groovy = "statick_tool.plugins.discovery.groovy:GroovyDiscoveryPlugin"
+html = "statick_tool.plugins.discovery.html:HTMLDiscoveryPlugin"
 java = "statick_tool.plugins.discovery.java:JavaDiscoveryPlugin"
+javascript = "statick_tool.plugins.discovery.javascript:JavaScriptDiscoveryPlugin"
+markdown = "statick_tool.plugins.discovery.markdown:MarkdownDiscoveryPlugin"
 maven = "statick_tool.plugins.discovery.maven:MavenDiscoveryPlugin"
+pddl = "statick_tool.plugins.discovery.pddl:PDDLDiscoveryPlugin"
 perl = "statick_tool.plugins.discovery.perl:PerlDiscoveryPlugin"
 python = "statick_tool.plugins.discovery.python:PythonDiscoveryPlugin"
 ros = "statick_tool.plugins.discovery.ros:RosDiscoveryPlugin"
+rst = "statick_tool.plugins.discovery.rst:RstDiscoveryPlugin"
 shell = "statick_tool.plugins.discovery.shell:ShellDiscoveryPlugin"
+tex = "statick_tool.plugins.discovery.tex:TexDiscoveryPlugin"
 xml = "statick_tool.plugins.discovery.xml:XMLDiscoveryPlugin"
 yaml = "statick_tool.plugins.discovery.yaml:YAMLDiscoveryPlugin"
 
@@ -86,28 +99,43 @@ bandit = "statick_tool.plugins.tool.bandit:BanditToolPlugin"
 black = "statick_tool.plugins.tool.black:BlackToolPlugin"
 catkin_lint = "statick_tool.plugins.tool.catkin_lint:CatkinLintToolPlugin"
 cccc = "statick_tool.plugins.tool.cccc:CCCCToolPlugin"
+chktex = "statick_tool.plugins.tool.chktex:ChktexToolPlugin"
 clang-format = "statick_tool.plugins.tool.clang_format:ClangFormatToolPlugin"
 clang-tidy = "statick_tool.plugins.tool.clang_tidy:ClangTidyToolPlugin"
 cmakelint = "statick_tool.plugins.tool.cmakelint:CMakelintToolPlugin"
 cppcheck = "statick_tool.plugins.tool.cppcheck:CppcheckToolPlugin"
 cpplint = "statick_tool.plugins.tool.cpplint:CpplintToolPlugin"
-docformatter = "statick_tool.plugins.tool.docformatter:DocformatterToolPlugin"
 do_nothing = "statick_tool.plugins.tool.do_nothing:DoNothingToolPlugin"
+docformatter = "statick_tool.plugins.tool.docformatter:DocformatterToolPlugin"
+dockerfile-lint = "statick_tool.plugins.tool.dockerfile_lint:DockerfileULintToolPlugin"
+dockerfilelint = "statick_tool.plugins.tool.dockerfilelint:DockerfileLintToolPlugin"
+eslint = "statick_tool.plugins.tool.eslint:ESLintToolPlugin"
 flawfinder = "statick_tool.plugins.tool.flawfinder:FlawfinderToolPlugin"
 groovylint = "statick_tool.plugins.tool.groovylint:GroovyLintToolPlugin"
+hadolint = "statick_tool.plugins.tool.hadolint:HadolintToolPlugin"
+htmllint = "statick_tool.plugins.tool.htmllint:HTMLLintToolPlugin"
 isort = "statick_tool.plugins.tool.isort:IsortToolPlugin"
+jshint = "statick_tool.plugins.tool.jshint:JSHintToolPlugin"
+lacheck = "statick_tool.plugins.tool.lacheck:LacheckToolPlugin"
 lizard = "statick_tool.plugins.tool.lizard:LizardToolPlugin"
 make = "statick_tool.plugins.tool.make:MakeToolPlugin"
+markdownlint = "statick_tool.plugins.tool.markdownlint:MarkdownlintToolPlugin"
 mypy = "statick_tool.plugins.tool.mypy:MypyToolPlugin"
 perlcritic = "statick_tool.plugins.tool.perlcritic:PerlCriticToolPlugin"
 pycodestyle = "statick_tool.plugins.tool.pycodestyle:PycodestyleToolPlugin"
 pydocstyle = "statick_tool.plugins.tool.pydocstyle:PydocstyleToolPlugin"
 pyflakes = "statick_tool.plugins.tool.pyflakes:PyflakesToolPlugin"
 pylint = "statick_tool.plugins.tool.pylint:PylintToolPlugin"
+rstcheck = "statick_tool.plugins.tool.rstcheck:RstcheckToolPlugin"
+rstlint = "statick_tool.plugins.tool.rstlint:RstlintToolPlugin"
 ruff = "statick_tool.plugins.tool.ruff:RuffToolPlugin"
 shellcheck = "statick_tool.plugins.tool.shellcheck:ShellcheckToolPlugin"
 spotbugs = "statick_tool.plugins.tool.spotbugs:SpotbugsToolPlugin"
+stylelint = "statick_tool.plugins.tool.stylelint:StylelintToolPlugin"
 uncrustify = "statick_tool.plugins.tool.uncrustify:UncrustifyToolPlugin"
+val_parser = "statick_tool.plugins.tool.val_parser:ValParserToolPlugin"
+val_validate = "statick_tool.plugins.tool.val_validate:ValValidateToolPlugin"
+writegood = "statick_tool.plugins.tool.writegood:WriteGoodToolPlugin"
 xmllint = "statick_tool.plugins.tool.xmllint:XmllintToolPlugin"
 yamllint = "statick_tool.plugins.tool.yamllint:YamllintToolPlugin"
 
@@ -120,7 +148,6 @@ test = [
     "coverage",
     "lark",
     "mock",
-    "pylint-django",
     "pytest",
     "pytest-cov",
     "tox",

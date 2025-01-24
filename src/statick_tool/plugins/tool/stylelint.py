@@ -10,7 +10,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class StylelintToolPlugin(ToolPlugin):  # type: ignore
+class StylelintToolPlugin(ToolPlugin):
     """Apply stylelint tool and gather results."""
 
     def get_name(self) -> str:
@@ -29,13 +29,17 @@ class StylelintToolPlugin(ToolPlugin):  # type: ignore
         tool_bin = "stylelint"
 
         tool_config = ".stylelintrc"
-        user_config = self.plugin_context.config.get_tool_config(
-            self.get_name(), level, "config"
-        )
+        user_config = None
+        if self.plugin_context is not None:
+            user_config = self.plugin_context.config.get_tool_config(
+                self.get_name(), level, "config"
+            )
         if user_config is not None:
             tool_config = user_config
 
-        format_file_name = self.plugin_context.resources.get_file(tool_config)
+        format_file_name = None
+        if self.plugin_context is not None:
+            format_file_name = self.plugin_context.resources.get_file(tool_config)
         flags: List[str] = []
         if format_file_name is not None:
             flags += ["--config", format_file_name]
@@ -86,11 +90,11 @@ class StylelintToolPlugin(ToolPlugin):  # type: ignore
                     err_dict = json.loads(line)[0]
                     for issue in err_dict["warnings"]:
                         severity_str = issue["severity"]
-                        severity = 3
+                        severity = "3"
                         if severity_str == "warning":
-                            severity = 3
+                            severity = "3"
                         elif severity_str == "error":
-                            severity = 5
+                            severity = "5"
                         issues.append(
                             Issue(
                                 err_dict["source"],

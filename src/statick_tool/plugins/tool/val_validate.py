@@ -9,6 +9,7 @@ Tool is from King's College London. Tool authors are:
 
 https://github.com/KCL-Planning/VAL/tree/master/applications#validate
 """
+
 import argparse
 import logging
 import subprocess
@@ -19,7 +20,7 @@ from statick_tool.package import Package
 from statick_tool.tool_plugin import ToolPlugin
 
 
-class ValValidateToolPlugin(ToolPlugin):  # type: ignore
+class ValValidateToolPlugin(ToolPlugin):
     """Apply Validate tool and gather results."""
 
     def get_name(self) -> str:
@@ -44,7 +45,11 @@ class ValValidateToolPlugin(ToolPlugin):  # type: ignore
         flags += self.get_user_flags(level)
 
         validate_bin = "Validate"
-        if self.plugin_context.args.val_validate_bin is not None:
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args is not None
+            and self.plugin_context.args.val_validate_bin is not None
+        ):
             validate_bin = self.plugin_context.args.val_validate_bin
 
         try:
@@ -85,6 +90,11 @@ class ValValidateToolPlugin(ToolPlugin):  # type: ignore
         issues: List[Issue] = []
         issue_found = False
         for item in output.splitlines():
+            msg = ""
+            warning_level = "0"
+            issue_type = "0"
+            line_number = "0"
+
             if item.startswith("Error:"):
                 issue_found = True
                 warning_level = "3"
