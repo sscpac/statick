@@ -44,6 +44,14 @@ statick_tool.plugins.tool.cccc module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.chktex module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.chktex
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.clang_format module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -120,6 +128,14 @@ statick_tool.plugins.tool.isort module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.isort
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.lacheck module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.lacheck
     :members:
     :undoc-members:
     :show-inheritance:

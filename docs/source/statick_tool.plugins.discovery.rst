@@ -92,6 +92,14 @@ statick_tool.plugins.discovery.shell module
     :show-inheritance:
 
 
+statick_tool.plugins.discovery.tex module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.discovery.tex
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.discovery.xml module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
