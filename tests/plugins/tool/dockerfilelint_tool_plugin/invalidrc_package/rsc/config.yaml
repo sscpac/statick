@@ -1,0 +1,6 @@
+levels:
+  level:
+    tool:
+      dockerfilelint:
+        flags: ""
+        config: ".dockerfilelintrc"
