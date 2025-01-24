@@ -1,0 +1,66 @@
+levels:
+  eslint:
+    discovery:
+      html:
+        flags: ""
+      javascript:
+        flags: ""
+    tool:
+      eslint:
+        flags: ""
+
+  htmllint:
+    discovery:
+      html:
+        flags: ""
+    tool:
+      htmllint:
+        flags: ""
+
+  jshint:
+    discovery:
+      html:
+        flags: ""
+      javascript:
+        flags: ""
+    tool:
+      jshint:
+        flags: ""
+
+  stylelint:
+    discovery:
+      css:
+        flags: ""
+      html:
+        flags: ""
+    tool:
+      stylelint:
+        flags: ""
+
+  web:
+    discovery:
+      css:
+        flags: ""
+      html:
+        flags: ""
+      javascript:
+        flags: ""
+    tool:
+      eslint:
+        flags: ""
+      htmllint:
+        flags: ""
+      jshint:
+        flags: ""
+      stylelint:
+        flags: ""
+
+  web_with_pylint:
+    inherits_from:
+      - "web"
+    discovery:
+      python:
+        flags: ""
+    tool:
+      pylint:
+        flags: "--good-names=f,i,j,k,x,y,z,ex,_"

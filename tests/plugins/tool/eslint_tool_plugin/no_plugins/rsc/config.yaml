@@ -1,0 +1,6 @@
+levels:
+  level:
+    tool:
+      eslint:
+        flags: ""
+        config: "eslint.config.mjs"
