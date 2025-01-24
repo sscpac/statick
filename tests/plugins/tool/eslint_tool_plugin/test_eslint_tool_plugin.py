@@ -101,7 +101,7 @@ def test_eslint_tool_plugin_parse_valid():
     assert issues[0].line_number == 1
     assert issues[0].tool == "eslint"
     assert issues[0].issue_type == "quotes"
-    assert issues[0].severity == 5
+    assert issues[0].severity == "5"
     assert issues[0].message == "Strings must use singlequote."
 
 
@@ -117,7 +117,7 @@ def test_eslint_tool_plugin_parse_valid_error():
     assert issues[0].line_number == 1
     assert issues[0].tool == "eslint"
     assert issues[0].issue_type == None
-    assert issues[0].severity == 5
+    assert issues[0].severity == "5"
     assert issues[0].message == "Parsing error: Unexpected token <"
 
 
@@ -195,6 +195,12 @@ Require stack:",
     issues = plugin.scan(package, "level")
     assert issues is None
 
+    mock_subprocess_check_output.side_effect = subprocess.CalledProcessError(
+        1, "", output="Generic error message"
+    )
+    issues = plugin.scan(package, "level")
+    assert not issues
+
 
 @mock.patch("statick_tool.plugins.tool.eslint.subprocess.check_output")
 def test_eslint_tool_plugin_scan_oserror(mock_subprocess_check_output):
@@ -216,3 +222,18 @@ def test_eslint_tool_plugin_scan_oserror(mock_subprocess_check_output):
     ]
     issues = plugin.scan(package, "level")
     assert issues is None
+
+
+@mock.patch("statick_tool.plugins.tool.eslint.json.loads")
+def test_eslint_tool_plugin_parse_output_value_error(mock_json_loads):
+    """
+    Test what happens when a ValueError is raised while reading JSON data.
+
+    Expected result: issues is None
+    """
+    mock_json_loads.side_effect = ValueError("mocked error")
+    plugin = setup_eslint_tool_plugin()
+    plugin = setup_eslint_tool_plugin()
+    output = "some made up text to parse"
+    issues = plugin.parse_output([output])
+    assert not issues
