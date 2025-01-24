@@ -1,0 +1,5 @@
+global:
+  exceptions:
+    file:
+      - tools: all
+        globs: ['*/ignore_this/*']
