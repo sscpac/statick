@@ -100,10 +100,34 @@ statick_tool.plugins.tool.docformatter module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.dockerfile_lint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.dockerfile_lint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.dockerfilelint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.dockerfilelint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.do_nothing module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.do_nothing
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.eslint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.eslint
     :members:
     :undoc-members:
     :show-inheritance:
@@ -124,10 +148,34 @@ statick_tool.plugins.tool.groovylint module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.hadolint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.hadolint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.htmllint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.htmllint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.isort module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.isort
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.jshint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.jshint
     :members:
     :undoc-members:
     :show-inheritance:
@@ -152,6 +200,14 @@ statick_tool.plugins.tool.make module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.make
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.markdownlint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.markdownlint
     :members:
     :undoc-members:
     :show-inheritance:
@@ -204,6 +260,22 @@ statick_tool.plugins.tool.pylint module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.rstcheck module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.rstcheck
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.rstlint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.rstlint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.ruff module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -236,10 +308,42 @@ statick_tool.plugins.tool.spotbugs module
     :undoc-members:
     :show-inheritance:
 
+statick_tool.plugins.tool.stylelint module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.stylelint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 statick_tool.plugins.tool.uncrustify module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: statick_tool.plugins.tool.uncrustify
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.val_parser module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.val_parser
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.val_validate module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.val_validate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+statick_tool.plugins.tool.writegood module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. automodule:: statick_tool.plugins.tool.writegood
     :members:
     :undoc-members:
     :show-inheritance:
