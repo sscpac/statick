@@ -911,7 +911,7 @@ docformatter -i --wrap-summaries 88 --wrap-descriptions 88 <file>
 
 ### Additional Installation
 
-#### Documentation Plugins
+#### Plugins for NPM Tools
 
 Make sure you install all the dependencies from apt/npm.
 See <https://github.com/nodesource/distributions> for Node/npm installation instructions.
