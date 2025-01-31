@@ -65,9 +65,9 @@ Statick is a plugin-based tool with an explicit goal to support external, option
     - [Tests](#tests)
     - [Mypy](#mypy)
     - [Formatting](#formatting)
-    - [Additional Installation](#additional-installation)
-      - [Documentation Plugins](#documentation-plugins)
-      - [Planning Plugins](#planning-plugins)
+  - [Additional Installation](#additional-installation)
+    - [NPM Tools](#npm-tools)
+    - [Planning Plugins](#planning-plugins)
   - [Original Author](#original-author)
 
 ## Installation
@@ -909,11 +909,11 @@ black statick statick_tool tests
 docformatter -i --wrap-summaries 88 --wrap-descriptions 88 <file>
 ```
 
-### Additional Installation
+## Additional Installation
 
-#### Plugins for NPM Tools
+### NPM Tools
 
-Make sure you install all the dependencies from apt/npm.
+Make sure you install all the dependencies from npm.
 See <https://github.com/nodesource/distributions> for Node/npm installation instructions.
 
 Configure npm to allow a non-root user to install packages.
@@ -940,7 +940,7 @@ npm install -g markdownlint-cli
 npm install -g write-good
 ```
 
-#### Planning Plugins
+### Planning Plugins
 
 The [Validate](https://github.com/KCL-Planning/VAL) tool has compilation instructions on their
 [Github repository](https://github.com/KCL-Planning/VAL#how-to-compile-val).
