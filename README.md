@@ -65,6 +65,9 @@ Statick is a plugin-based tool with an explicit goal to support external, option
     - [Tests](#tests)
     - [Mypy](#mypy)
     - [Formatting](#formatting)
+  - [Additional Installation](#additional-installation)
+    - [NPM Tools](#npm-tools)
+    - [Planning Plugins](#planning-plugins)
   - [Original Author](#original-author)
 
 ## Installation
@@ -436,51 +439,74 @@ as a specific file type.
 This type of discovery must be supported by the discovery plugin and only works on operating systems where the `file`
 command exists.
 
-File Type | Extensions
-:-------- | :---------
-catkin    | `CMakeLists.txt` and `package.xml`
-C         | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
-CMake     | `CMakeLists.txt`, `.cmake`
-groovy    | `.groovy`, `.gradle`, `Jenkinsfile*`
-java      | `.class`, `.java`
-Maven     | `pom.xml`
-Perl      | `.pl`
-Python    | `.py`
-ROS       | `CMakeLists.txt` and `package.xml`
-Shell     | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`
-XML       | `.xml`, `.launch`
-Yaml      | `.yaml`
+File Type        | Extensions
+:--------------- | :---------
+C                | `.c`, `.cc`, `.cpp`, `.cxx`, `.h`, `.hxx`, `.hpp`
+CMake            | `CMakeLists.txt`, `.cmake`
+Maven            | `pom.xml`
+PDDL             | `.pddl`
+Perl             | `.pl`
+Python           | `.py`
+ROS              | `CMakeLists.txt` and `package.xml`
+Shell            | `.sh`, `.bash`, `.zsh`, `.csh`, `.ksh`, `.dash`
+TeX              | `.tex`, `.bib`
+XML              | `.xml`, `.launch`
+Yaml             | `.yaml`
+catkin           | `CMakeLists.txt` and `package.xml`
+css              | `.css`
+dockerfile       | `Dockerfile*`
+groovy           | `.groovy`, `.gradle`, `Jenkinsfile*`
+html             | `.html`
+java             | `.class`, `.java`
+javascript       | `.js`
+markdown         | `.md`
+reStructuredText | `.rst`
 
 The `.launch` extension is mapped to XML files due to use with ROS launch files.
 
 ### Tool Plugins
 
-Tool | About
-:--- | :----
+Tool                               | About
+:--------------------------------- | :----
 [bandit][bandit]                   | Bandit is a tool designed to find common security issues in Python code.
 [black][black]                     | The uncompromising Python code formatter
 [catkin_lint][catkin_lint]         | Check catkin packages for common errors
 [cccc][cccc]                       | Source code counter and metrics tool for C++, C, and Java
+[chktex]                           | LaTeX semantic checker.
 [clang-format][clang-format]       | Format C/C++/Java/JavaScript/Objective-C/Protobuf/C# code.
 [clang-tidy][clang-tidy]           | Provide an extensible framework for diagnosing and fixing typical programming errors.
 [cmakelint][cmakelint]             | The cmake-lint program will check your listfiles for style violations, common mistakes, and anti-patterns.
 [cppcheck][cppcheck]               | static analysis of C/C++ code
 [cpplint][cpplint]                 | Static code checker for C++
 [docformatter][docformatter]       | Formats docstrings to follow PEP 257
+[dockerfile-lint][dockerfile-lint] | A rule based 'linter' for Dockerfiles.
+[dockerfilelint][dockerfilelint]   | A rule based 'linter' for Dockerfiles.
+[eslint][eslint]                   | Find and fix problems in your JavaScript code.
 [flawfinder][flawfinder]           | Examines C/C++ source code and reports possible security weaknesses ("flaws") sorted by risk level.
-[npm-groovy-lint][npm-groovy-lint] | This package will track groovy errors and correct a part of them.
+[hadolint][hadolint]               | Dockerfile linter, validate inline bash, written in Haskell.
+[htmllint][htmllint]               | An unofficial html5 linter and validator.
+[jshint][jshint]                   | JSHint is a community-driven tool that detects errors and potential problems in JavaScript code.
+[lacheck]                          | Lacheck is a tool for finding common mistakes in LaTeX documents.
 [lizard][lizard]                   | A simple code complexity analyser without caring about the C/C++ header files or Java imports, supports most of the popular languages.
 [make][make]                       | C++ compiler.
+[markdownlint][markdownlint]       | A Node.js style checker and lint tool for Markdown/CommonMark files.
 [mypy][mypy]                       | Optional static typing for Python 3 and 2 (PEP 484)
+[npm-groovy-lint][npm-groovy-lint] | This package will track groovy errors and correct a part of them.
 [perlcritic][perlcritic]           | Critique Perl source code for best-practices.
 [pycodestyle][pycodestyle]         | Python style guide checker
 [pydocstyle][pydocstyle]           | A static analysis tool for checking compliance with Python docstring conventions.
 [pyflakes][pyflakes]               | A simple program which checks Python source files for errors
 [pylint][pylint]                   | It's not just a linter that annoys you!
+[rst-lint][rst-lint]               | Checks syntax of reStructuredText and code blocks nested within it.
+[rstcheck][rstcheck]               | Checks syntax of reStructuredText and code blocks nested within it.
 [ruff][ruff]                       | An extremely fast Python linter, written in Rust.
 [shellcheck][shellcheck]           | A static analysis tool for shell scripts
 [spotbugs][spotbugs]               | A tool for static analysis to look for bugs in Java code.
+[stylelint][stylelint]             | A mighty, modern linter that helps you avoid errors and enforce conventions in your styles.
 [uncrustify][uncrustify]           | Code beautifier
+[val-parser]                       | The plan validation system.
+[val-validate]                     | The plan validation system.
+[write-good]                       | Naive linter for English prose.
 [xmllint][xmllint]                 | Lint XML files.
 [yamllint][yamllint]               | A linter for YAML files.
 
@@ -510,15 +536,16 @@ An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick 
 ### External Plugins
 
 Known external Statick plugins.
+Nearly all of these have been merged into the main repository, but they can serve as examples of how to make custom packages.
 
-| Plugin Name      | Repository Location                              |
-| :--------------- | :----------------------------------------------- |
-| statick-fortify  | <https://github.com/soartech/statick-fortify>    |
-| statick-md       | <https://github.com/sscpac/statick-md>           |
-| statick-planning | <https://github.com/tdenewiler/statick-planning> |
-| statick-tex      | <https://github.com/tdenewiler/statick-tex>      |
-| statick-tooling  | <https://github.com/sscpac/statick-tooling>      |
-| statick-web      | <https://github.com/sscpac/statick-web>          |
+Plugin Name      | Repository Location
+:--------------- | :-----------------------------------------------
+statick-fortify  | <https://github.com/soartech/statick-fortify>
+statick-md       | <https://github.com/sscpac/statick-md>
+statick-planning | <https://github.com/tdenewiler/statick-planning>
+statick-tex      | <https://github.com/tdenewiler/statick-tex>
+statick-tooling  | <https://github.com/sscpac/statick-tooling>
+statick-web      | <https://github.com/sscpac/statick-web>
 
 ## Customization
 
@@ -882,6 +909,49 @@ black statick statick_tool tests
 docformatter -i --wrap-summaries 88 --wrap-descriptions 88 <file>
 ```
 
+## Additional Installation
+
+### NPM Tools
+
+Make sure you install all the dependencies from npm.
+See <https://github.com/nodesource/distributions> for Node/npm installation instructions.
+
+Configure npm to allow a non-root user to install packages.
+
+```shell
+npm config set prefix '~/.local/'
+```
+
+Make sure `~/.local/bin` exists.
+Check your `PATH` with `echo $PATH`.
+If `~/.local/bin` is not listed then add it to your `PATH`.
+
+```shell
+mkdir -p ~/.local/bin
+echo 'export PATH="$HOME/.local/bin/:$PATH"' >> ~/.bashrc
+```
+
+Install packages.
+
+```shell
+npm install -g dockerfile_lint
+npm install -g dockerfilelint
+npm install -g markdownlint-cli
+npm install -g write-good
+```
+
+### Planning Plugins
+
+The [Validate](https://github.com/KCL-Planning/VAL) tool has compilation instructions on their
+[Github repository](https://github.com/KCL-Planning/VAL#how-to-compile-val).
+The way this tool has been used and tested with Statick is by obtaining the binaries via zip file and putting the
+binaries at `/opt/val/`.
+The important part is to get the path to the `Validate` binary.
+In our typical setup this binary is at `/opt/val/bin/Validate`.
+If you have that binary in a different location you will have to update the commands in the rest of this documentation.
+An example of where to obtain the zip file is
+<https://dev.azure.com/schlumberger/4e6bcb11-cd68-40fe-98a2-e3777bfec0a6/_apis/build/builds/52/artifacts?artifactName=linux64&api-version=6.0&%24format=zip>.
+
 ## Original Author
 
 A special note should be made that the original primary author was Mark Tjersland (@Prognarok).
@@ -891,6 +961,7 @@ His commits were scrubbed from git history upon the initial public release.
 [black]: https://github.com/psf/black
 [catkin_lint]: https://github.com/fkie/catkin_lint
 [cccc]: https://github.com/sarnold/cccc
+[chktex]: https://www.nongnu.org/chktex/
 [clang-format]: https://clang.llvm.org/docs/ClangFormat.html
 [clang-tidy]: http://clang.llvm.org/extra/clang-tidy/
 [cmakelint]: https://cmake-format.readthedocs.io/en/latest/cmake-lint.html
@@ -898,13 +969,21 @@ His commits were scrubbed from git history upon the initial public release.
 [cppcheck]: https://github.com/danmar/cppcheck/
 [cpplint]: https://github.com/cpplint/cpplint
 [docformatter]: https://github.com/myint/docformatter
+[dockerfile-lint]: https://github.com/projectatomic/dockerfile_lint
+[dockerfilelint]: https://github.com/replicatedhq/dockerfilelint
+[eslint]: https://eslint.org/
 [flawfinder]: https://dwheeler.com/flawfinder/
 [gitlab-cc]: https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#implementing-a-custom-tool
+[hadolint]: https://github.com/hadolint/hadolint
+[htmllint]: https://github.com/htmllint/htmllint
 [jenkins-warnings-ng]: https://plugins.jenkins.io/warnings-ng/
+[jshint]: https://jshint.com/about/
 [json]: https://www.json.org/json-en.html
+[lacheck]: https://ctan.org/pkg/lacheck
 [lizard]: https://github.com/terryyin/lizard
 [logging]: https://docs.python.org/3/howto/logging.html
 [make]: https://gcc.gnu.org/onlinedocs/libstdc++/index.html
+[markdownlint]: https://github.com/igorshubovych/markdownlint-cli
 [module entry point]: https://setuptools.pypa.io/en/latest/userguide/entry_point.html#entry-points-syntax
 [mypy]: https://github.com/python/mypy
 [npm-groovy-lint]: https://nvuillam.github.io/npm-groovy-lint/
@@ -916,11 +995,17 @@ His commits were scrubbed from git history upon the initial public release.
 [pyflakes]: https://github.com/PyCQA/pyflakes
 [pylint]: https://pylint.org/
 [ros]: https://www.ros.org/
+[rst-lint]: https://github.com/twolfson/restructuredtext-lint
+[rstcheck]: https://github.com/myint/rstcheck
 [ruff]: https://github.com/charliermarsh/ruff
 [shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
 [statick-md]: https://github.com/sscpac/statick-md
 [statick-tex]: https://github.com/tdenewiler/statick-tex
+[stylelint]: https://stylelint.io/
 [uncrustify]: https://github.com/uncrustify/uncrustify
+[val-parser]: https://github.com/KCL-Planning/VAL
+[val-validate]: https://github.com/KCL-Planning/VAL
+[write-good]: https://github.com/btford/write-good
 [xmllint]: http://xmlsoft.org/
 [yamllint]: https://yamllint.readthedocs.io/en/stable/

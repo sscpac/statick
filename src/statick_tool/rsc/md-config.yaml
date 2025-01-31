@@ -1,0 +1,68 @@
+levels:
+  markdownlint:
+    discovery:
+      markdown:
+        flags: ""
+    tool:
+      markdownlint:
+        flags: ""
+
+  rst:
+    discovery:
+      rst:
+        flags: ""
+    tool:
+      rstcheck:
+        flags: ""
+      rstlint:
+        flags: ""
+
+  rstcheck:
+    discovery:
+      rst:
+        flags: ""
+    tool:
+      rstcheck:
+        flags: ""
+
+  rstlint:
+    discovery:
+      rst:
+        flags: ""
+    tool:
+      rstlint:
+        flags: ""
+
+  writegood:
+    discovery:
+      markdown:
+        flags: ""
+      rst:
+        flags: ""
+    tool:
+      writegood:
+        flags: ""
+
+  md:
+    discovery:
+      markdown:
+        flags: ""
+      rst:
+        flags: ""
+    tool:
+      markdownlint:
+        flags: ""
+      rstcheck:
+        flags: ""
+      rstlint:
+        flags: ""
+
+  md_with_pylint:
+    inherits_from:
+      - "md"
+    discovery:
+      python:
+        flags: ""
+    tool:
+      pylint:
+        flags: "--good-names=f,i,j,k,x,y,z,ex,_"

@@ -1,0 +1,14 @@
+% Minimal working example from:
+% http://kawahara.ca/latex-minimum-working-example/
+
+% Specifies the type of document you have.
+\documentclass{article}
+
+% Start of the document.
+\begin{document}
+
+% Your content.
+Hello World! 
+
+% End of the document.
+\end{document}
