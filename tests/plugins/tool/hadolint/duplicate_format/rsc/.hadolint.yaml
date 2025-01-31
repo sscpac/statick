@@ -1,0 +1,6 @@
+ignored:
+  - DL3008  # don't care about pinning apt package versions
+  - DL3013  # don't care about pinning pip package versions
+  - DL3016  # don't care about pinning npm package versions
+
+strict-labels: false

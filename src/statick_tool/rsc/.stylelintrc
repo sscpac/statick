@@ -1,0 +1,17 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "declaration-colon-space-after": [
+      "always",
+      {
+        "severity": "warning"
+      }
+    ],
+  },
+  "overrides": [
+    {
+      "files": ["/**/*.html"],
+      "customSyntax": "postcss-html",
+    }
+  ],
+}

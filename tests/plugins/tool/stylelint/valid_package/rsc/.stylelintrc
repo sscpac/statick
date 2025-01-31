@@ -1,0 +1,17 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "comment-no-empty": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
+  },
+  "overrides": [
+    {
+      "files": ["/**/*.html"],
+      "customSyntax": "postcss-html",
+    }
+  ],
+}
