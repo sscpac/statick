@@ -76,11 +76,11 @@ jobs:
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       # Re-enable this step when statick-md switches from yapsy to entry points plugin approach.
-      # - name: Statick markdown
-      #   if: runner.os == 'Linux'
-      #   run: |
-      #     pip install statick-md
-      #     statick . --check --profile documentation.yaml
+      - name: Statick markdown
+        if: runner.os == 'Linux'
+        run: |
+          pip install statick-md
+          statick . --check --profile documentation.yaml
 
       - name: Sphinx lint
         if: runner.os == 'Linux'
