@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Upcoming
+
+## Fixed
+
+- Pin `lizard` dependency to v1.17.14 while looking for more permanent fix to using the warning flag with `lizard`. (#521)
+  - Issue for `lizard` filed at <https://github.com/terryyin/lizard/issues/407>.
+
 ## v0.11.1 - 2025-01-20
 
 API breaking changes introduced.
