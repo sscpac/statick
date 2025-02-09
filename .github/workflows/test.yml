@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade uv
-          uv pip install .[docs,test]
+          uv pip install .[docs,test] --system
 
       - name: Allow uv to use the system Python by default
         run: echo "UV_SYSTEM_PYTHON=1" >> $GITHUB_ENV

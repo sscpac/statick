@@ -28,9 +28,7 @@ jobs:
       - name: Install tools
         run: |
           pip install --upgrade uv
-          uv venv
-          . .venv/bin/activate
-          uv pip install .[docs]
+          uv pip install .[docs] --system
 
       - name: Build a binary wheel and a source tarball
         run: |
