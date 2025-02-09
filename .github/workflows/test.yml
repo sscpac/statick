@@ -30,13 +30,20 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
-      - name: Install dependencies
+      - name: Install uv
         run: |
           pip install --upgrade uv
-          uv pip install .[docs,test] --system
+          uv venv
 
-      - name: Allow uv to use the system Python by default
-        run: echo "UV_SYSTEM_PYTHON=1" >> $GITHUB_ENV
+      - name: Install dependencies (Linux/Mac)
+      if runner.os == 'Linux' || runner.os == 'macos'
+          . .venv/bin/activate
+          uv pip install .[docs,test]
+
+      - name: Install dependencies (Windows)
+      if runner.os == 'Windows'
+          . .venv/Scripts/activate
+          uv pip install .[docs,test]
 
       - name: Install tools (Linux)
         if: runner.os == 'Linux'
@@ -65,14 +72,7 @@ jobs:
           rm -rf VAL
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-22.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install clang-format-14
-          sudo apt-get install clang-tidy-14
-
-      - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install clang-format-18
@@ -121,11 +121,13 @@ jobs:
 
       - name: Test with mypy
         run: |
+          . .venv/bin/activate
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       - name: Statick markdown
         if: runner.os == 'Linux'
         run: |
+          . .venv/bin/activate
           statick . --check --level documentation --log info
 
       - name: Sphinx lint
@@ -136,6 +138,7 @@ jobs:
 
       - name: Test with tox
         run: |
+          . .venv/bin/activate
           python -m tox
 
       - name: Upload coverage to Codecov
@@ -147,5 +150,6 @@ jobs:
       - name: Self check
         if: runner.os == 'Linux'
         run: |
+          . .venv/bin/activate
           mkdir statick-output
           statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
