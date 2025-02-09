@@ -38,12 +38,14 @@ jobs:
       - name: Install dependencies (Linux/Mac)
         if: runner.os == 'Linux' || runner.os == 'macos'
         run: |
+          echo "START_VENV='. .venv/bin/activate'" >> "$GITHUB_ENV"
           . .venv/bin/activate
           uv pip install .[docs,test]
 
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
+        echo "START_VENV='. .venv/Scripts/activate'" >> "$GITHUB_ENV"
           . .venv/Scripts/activate
           uv pip install .[docs,test]
 
@@ -123,11 +125,13 @@ jobs:
 
       - name: Test with mypy
         run: |
+          ${{ env.START_VENV }}
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       - name: Statick markdown
         if: runner.os == 'Linux'
         run: |
+          ${{ env.START_VENV }}
           statick . --check --level documentation --log info
 
       - name: Sphinx lint
@@ -138,6 +142,7 @@ jobs:
 
       - name: Test with tox
         run: |
+          ${{ env.START_VENV }}
           python -m tox
 
       - name: Upload coverage to Codecov
@@ -149,5 +154,6 @@ jobs:
       - name: Self check
         if: runner.os == 'Linux'
         run: |
+          ${{ env.START_VENV }}
           mkdir statick-output
           statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
