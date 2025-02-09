@@ -33,9 +33,10 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade uv
-          uv venv
-          . .venv/bin/activate
           uv pip install .[docs,test]
+
+      - name: Allow uv to use the system Python by default
+        run: echo "UV_SYSTEM_PYTHON=1" >> $GITHUB_ENV
 
       - name: Install tools (Linux)
         if: runner.os == 'Linux'
@@ -120,13 +121,11 @@ jobs:
 
       - name: Test with mypy
         run: |
-          . .venv/bin/activate
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       - name: Statick markdown
         if: runner.os == 'Linux'
         run: |
-          . .venv/bin/activate
           statick . --check --level documentation --log info
 
       - name: Sphinx lint
@@ -137,7 +136,6 @@ jobs:
 
       - name: Test with tox
         run: |
-          . .venv/bin/activate
           python -m tox
 
       - name: Upload coverage to Codecov
@@ -149,6 +147,5 @@ jobs:
       - name: Self check
         if: runner.os == 'Linux'
         run: |
-          . .venv/bin/activate
           mkdir statick-output
           statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
