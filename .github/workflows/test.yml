@@ -43,6 +43,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade uv
+          uv venv
+          . .venv/bin/activate
           uv pip install .[docs,test]
 
       - name: Install tools (Linux)
