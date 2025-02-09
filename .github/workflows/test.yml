@@ -37,11 +37,13 @@ jobs:
 
       - name: Install dependencies (Linux/Mac)
         if: runner.os == 'Linux' || runner.os == 'macos'
+        run: |
           . .venv/bin/activate
           uv pip install .[docs,test]
 
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
+        run: |
           . .venv/Scripts/activate
           uv pip install .[docs,test]
 
