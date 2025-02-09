@@ -150,6 +150,7 @@ test = [
     "mock",
     "pytest",
     "pytest-cov",
+    "setuptools",
     "tox",
     "tox-gh-actions",
     "tox-uv",
