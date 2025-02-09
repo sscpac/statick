@@ -987,8 +987,6 @@ His commits were scrubbed from git history upon the initial public release.
 [mypy]: https://github.com/python/mypy
 [npm-groovy-lint]: https://nvuillam.github.io/npm-groovy-lint/
 [perlcritic]: http://perlcritic.com/
-[pip-git-install]: https://pip.pypa.io/en/stable/reference/pip_install/#git
-[pip-install-git-repo-branch]: https://stackoverflow.com/questions/20101834/pip-install-from-git-repo-branch
 [pycodestyle]: https://pycodestyle.pycqa.org/en/latest/
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes
