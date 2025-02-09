@@ -30,16 +30,6 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
-      # - name: Install uv
-      #   if: runner.os == 'Linux' || runner.os == 'macos'
-      #   run: |
-      #     curl -LsSf https://astral.sh/uv/install.sh | sh
-
-      # - name: Install uv
-      #   if: runner.os == 'Windows'
-      #   run: |
-      #     powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-
       - name: Install dependencies
         run: |
           pip install --upgrade uv
@@ -130,11 +120,13 @@ jobs:
 
       - name: Test with mypy
         run: |
+          . .venv/bin/activate
           mypy --ignore-missing-imports --strict src/statick_tool/
 
       - name: Statick markdown
         if: runner.os == 'Linux'
         run: |
+          . .venv/bin/activate
           statick . --check --level documentation --log info
 
       - name: Sphinx lint
@@ -145,6 +137,7 @@ jobs:
 
       - name: Test with tox
         run: |
+          . .venv/bin/activate
           python -m tox
 
       - name: Upload coverage to Codecov
@@ -156,5 +149,6 @@ jobs:
       - name: Self check
         if: runner.os == 'Linux'
         run: |
+          . .venv/bin/activate
           mkdir statick-output
           statick . --output-directory statick-output --check --profile self_check.yaml --log INFO
