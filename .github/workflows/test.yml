@@ -30,7 +30,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
-      - name: Install uv
+      - name: Install dependencies
         run: |
           pip install --upgrade uv
           uv pip install .[docs,test] --system
