@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Upcoming
+
+### Changed
+
+- Use uv to manage virtual environments and dependencies.
+  - Updated CI workflows to use `uv`.
+  - Updated README to give options for `uv` and `venv`, with a recommendation for `uv`.
+
 ## v0.11.1 - 2025-01-20
 
 API breaking changes introduced.
