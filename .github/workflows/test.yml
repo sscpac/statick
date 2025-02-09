@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
-        echo "START_VENV='. .venv/Scripts/activate'" >> "$GITHUB_ENV"
+          echo "START_VENV='. .venv/Scripts/activate'" >> "$GITHUB_ENV"
           . .venv/Scripts/activate
           uv pip install .[docs,test]
 
