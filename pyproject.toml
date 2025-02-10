@@ -31,7 +31,7 @@ dependencies = [
     "importlib_metadata",
     "importlib_metadata",
     "isort",
-    "lizard==1.17.14",
+    "lizard",
     "mypy",
     "packaging",
     "pycodestyle",
