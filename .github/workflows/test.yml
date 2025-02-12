@@ -32,15 +32,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install .[docs,test]
-
-      # Remove apt repos that are known to break from time to time.
-      # See https://github.com/actions/virtual-environments/issues/323
-      - name: Remove broken apt repos [Ubuntu]
-        if: runner.os == 'Linux'
-        run: |
-          for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+          pip install --upgrade uv
+          uv pip install .[docs,test] --system
 
       - name: Install tools (Linux)
         if: runner.os == 'Linux'
@@ -69,11 +62,11 @@ jobs:
           rm -rf VAL
 
       - name: Install clang tools (for unit tests)
-        if: matrix.os == 'ubuntu-22.04'
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
-          sudo apt-get install clang-format-14
-          sudo apt-get install clang-tidy-14
+          sudo apt-get install clang-format-18
+          sudo apt-get install clang-tidy-18
 
       # Do not install on macos until there is a hadolint release for macos (Darwin on arm64 architecture).
       - name: Install Hadolint binary (github)

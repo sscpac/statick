@@ -31,6 +31,8 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 - [Statick](#statick)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
+    - [Tool Installation](#tool-installation)
+    - [Local Development](#local-development)
   - [Basic Usage](#basic-usage)
   - [Concepts](#concepts)
     - [Discovery](#discovery)
@@ -41,7 +43,6 @@ Statick is a plugin-based tool with an explicit goal to support external, option
     - [Profiles](#profiles)
     - [Exceptions](#exceptions)
     - [Timings](#timings)
-  - [Advanced Installation](#advanced-installation)
   - [Existing Plugins](#existing-plugins)
     - [Discovery Plugins](#discovery-plugins)
     - [Tool Plugins](#tool-plugins)
@@ -75,23 +76,29 @@ Statick is a plugin-based tool with an explicit goal to support external, option
 Statick requires Python 3 to run, but can be used to analyze Python 2 projects, among many other languages.
 
 The recommended install method is to create a Python virtual environment and install there.
+You can use `venv` or `uv`.
+
 Getting the Python `venv` tool is operating system-specific.
 On Ubuntu Linux use `sudo apt-get install python3-venv`.
 Activating a Python virtual environment is also operating system-specific.
 The example command below is for Linux systems, but it will be similar for other operating systems.
 
 ```shell
-python3 -m venv venv
-. venv/bin/activate
+python3 -m venv .venv
+. .venv/bin/activate
 pip install statick
 ```
 
-For local development you can clone this repository, activate the virtual environment, then do a local install.
+To use `uv`, follow the [installation instructions](https://docs.astral.sh/uv/).
+Create the virtual environment.
 
 ```shell
-cd statick-clone-directory
-pip install -e .
+uv venv
+. .venv/bin/activate
+pip install statick
 ```
+
+### Tool Installation
 
 You will also need to install any tools you want to use.
 Some tools are installed with Statick if you install via pip.
@@ -102,16 +109,20 @@ For example, on Ubuntu Linux if you want to use the `clang-tidy` _tool_ plugin y
 sudo apt-get install clang-tidy
 ```
 
-If you want to install a custom version of Statick you can install from a git repository.
-Options are detailed from [PyPA][pip-git-install] documentation.
-Stack Overflow has a discussion about [installing a git branch][pip-install-git-repo-branch].
-The general idea is to install from a git repository with an optional branch or commit hash.
-Use one of the following commands from the activated Python virtual environment.
+### Local Development
+
+For local development you can clone this repository, activate the virtual environment, then do a local install.
+We recommend the virtual environment be outside the Statick directory so that searching through files can skip a large
+number of files.
 
 ```shell
-pip install git+https://github.com/user/statick.git
-pip install git+https://github.com/user/statick.git@branch-name
-pip install git+https://github.com/user/statick.git@hash
+mkdir -p ~/src/statick
+cd ~/src/statick
+uv venv
+. .venv/bin/activate
+git clone <forked repository>
+cd statick
+uv pip install -e .[docs,test]
 ```
 
 ## Basic Usage
@@ -416,18 +427,6 @@ $ statick . --output-directory /tmp/x --timings
 | statick | print_to_console |  Reporting  |  0.0318  |
 | Overall |                  |             | 89.6734  |
 +---------+------------------+-------------+----------+
-```
-
-## Advanced Installation
-
-To install from source best practices is to use a virtual environment.
-These instructions are for Linux, activating a virtual environment on Mac/Windows is similar.
-To install Statick from source on your system:
-
-```shell
-python3 -m venv venv
-. venv/bin/activate
-pip install .
 ```
 
 ## Existing Plugins
@@ -988,8 +987,6 @@ His commits were scrubbed from git history upon the initial public release.
 [mypy]: https://github.com/python/mypy
 [npm-groovy-lint]: https://nvuillam.github.io/npm-groovy-lint/
 [perlcritic]: http://perlcritic.com/
-[pip-git-install]: https://pip.pypa.io/en/stable/reference/pip_install/#git
-[pip-install-git-repo-branch]: https://stackoverflow.com/questions/20101834/pip-install-from-git-repo-branch
 [pycodestyle]: https://pycodestyle.pycqa.org/en/latest/
 [pydocstyle]: http://www.pydocstyle.org/en/stable/
 [pyflakes]: https://github.com/PyCQA/pyflakes

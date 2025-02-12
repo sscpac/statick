@@ -22,16 +22,17 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.13'
           cache: 'pip'
 
       - name: Install tools
         run: |
-          pip install .[docs]
+          pip install --upgrade uv
+          uv pip install .[docs] --system
 
       - name: Build a binary wheel and a source tarball
         run: |
-          pip install -q build
+          uv pip install -q build
           python -m build
 
       - name: Publish distribution 📦 to PyPI

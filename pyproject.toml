@@ -152,6 +152,7 @@ test = [
     "pytest-cov",
     "tox",
     "tox-gh-actions",
+    "tox-uv",
 ]
 docs = [
     "sphinx==1.7.9",
