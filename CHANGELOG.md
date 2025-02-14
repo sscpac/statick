@@ -4,9 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## Upcoming
+## v0.12.0 - 2025-02-14
 
-## Fixed
+### Added
+
+- All plugins from external repositories owned by NIWC PAC team members were moved into this main repository.
+  - Plugins in external repositories are marked as deprecated.
+
+### Fixed
 
 - Found issue with `lizard` output.
   Updated unit test for new output after fix applied upstream.
