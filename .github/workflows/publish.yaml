@@ -32,7 +32,7 @@ jobs:
 
       - name: Build a binary wheel and a source tarball
         run: |
-          uv pip install -q build
+          uv pip install -q build --system
           python -m build
 
       - name: Publish distribution 📦 to PyPI
