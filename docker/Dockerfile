@@ -73,7 +73,7 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh && \
 
 # Install Hadolint binary
 RUN mkdir hadolint-bin && \
-    curl -sL -o hadolint "https://github.com/hadolint/hadolint/releases/download/v2.6.0/hadolint-$(uname -s)-$(uname -m)" && \
+    curl -sL -o hadolint "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-$(uname -s)-$(uname -m)" && \
     chmod +x hadolint && \
     mv hadolint hadolint-bin/.
 ENV PATH=./hadolint-bin:$PATH
