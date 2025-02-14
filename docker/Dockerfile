@@ -56,7 +56,7 @@ RUN . /opt/venv/bin/activate && pip install -r requirements.txt
 
 # Version pinning may be added in the future, but ignore for now.
 # hadolint ignore=DL3008,DL3016
-RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh && \
+RUN curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh && \
     bash nodesource_setup.sh && \
     apt-get update && apt-get install -y --no-install-recommends nodejs && rm -rf /var/lib/apt/lists/* && \
     npm config set prefix -g /usr && \
