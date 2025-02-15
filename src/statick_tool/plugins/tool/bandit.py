@@ -4,7 +4,7 @@ import argparse
 import csv
 import logging
 import subprocess
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -24,19 +24,19 @@ class BanditToolPlugin(ToolPlugin):
             "--bandit-bin", dest="bandit_bin", type=str, help="bandit binary path"
         )
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
         bandit_bin: str = "bandit"
         if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
             bandit_bin = self.plugin_context.args.bandit_bin
 
-        flags: List[str] = ["--format=csv"]
+        flags: list[str] = ["--format=csv"]
         flags += user_flags
 
         try:
@@ -61,10 +61,10 @@ class BanditToolPlugin(ToolPlugin):
         return output.splitlines()
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         # Copy output for modification
         output_minus_log = list(total_output)

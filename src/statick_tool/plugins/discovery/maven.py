@@ -4,7 +4,7 @@ import fnmatch
 import logging
 import os
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -22,8 +22,8 @@ class MavenDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for maven files."""
-        top_poms: List[str] = []
-        all_poms: List[str] = []
+        top_poms: list[str] = []
+        all_poms: list[str] = []
         deepest_pom_level = 999999
 
         for root, _, files in os.walk(package.path):

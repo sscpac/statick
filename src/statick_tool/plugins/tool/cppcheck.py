@@ -5,7 +5,7 @@ import logging
 import os
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from packaging.version import Version
 
@@ -55,14 +55,14 @@ class CppcheckToolPlugin(ToolPlugin):
         return version
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if (
             "make_targets" not in package and "headers" not in package
         ) or self.plugin_context is None:
             return []
 
-        flags: List[str] = [
+        flags: list[str] = [
             "--report-progress",
             "--verbose",
             "--inline-suppr",
@@ -101,8 +101,8 @@ class CppcheckToolPlugin(ToolPlugin):
             logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
-        files: List[str] = []
-        include_dirs: List[str] = []
+        files: list[str] = []
+        include_dirs: list[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -140,7 +140,7 @@ class CppcheckToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(output)
+        issues: list[Issue] = self.parse_tool_output(output)
         return issues
 
     # pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
@@ -153,11 +153,11 @@ class CppcheckToolPlugin(ToolPlugin):
             return True
         return False
 
-    def parse_tool_output(self, output: str) -> List[Issue]:
+    def parse_tool_output(self, output: str) -> list[Issue]:
         """Parse tool output and report issues."""
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
         parse: Pattern[str] = re.compile(cppcheck_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():
             match: Optional[Match[str]] = parse.match(line)

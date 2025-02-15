@@ -5,7 +5,7 @@ Handles chaining user directories and the default statick resource directory.
 
 import logging
 import os
-from typing import List, Optional
+from typing import Optional
 
 
 class Resources:
@@ -14,9 +14,9 @@ class Resources:
     Handles chaining user directories and the default statick resource directory.
     """
 
-    def __init__(self, paths: List[str]) -> None:
+    def __init__(self, paths: list[str]) -> None:
         """Initialize resource handling."""
-        self.paths: List[str] = []
+        self.paths: list[str] = []
 
         for path in paths:
             if os.path.exists(path) and os.path.isdir(path):
@@ -30,7 +30,7 @@ class Resources:
         default_path = os.path.dirname(__file__)
         self.paths.append(default_path)
 
-    def get_plugin_paths(self) -> List[str]:
+    def get_plugin_paths(self) -> list[str]:
         """Get paths where plugins are located."""
         plugin_paths = []
         for path in self.paths:
