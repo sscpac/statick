@@ -67,7 +67,7 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_no_plugin_context():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+                Issue("test.txt", 1, "tool_a", "type", 1, "This is a test", None)
             ]
         }
         _, success = wfrp.report(package, issues, "level")
@@ -83,7 +83,7 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_nocert():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+                Issue("test.txt", 1, "tool_a", "type", 1, "This is a test", None)
             ]
         }
         _, success = wfrp.report(package, issues, "level")
@@ -121,7 +121,7 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_severities():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "0", "This is a test", None),
+                Issue("test.txt", 1, "tool_a", "type", 0, "This is a test", None),
                 Issue(
                     "test.txt",
                     1,
@@ -131,9 +131,9 @@ def test_write_jenkins_warnings_ng_reporting_plugin_report_severities():
                     "This is a test",
                     None,
                 ),
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None),
+                Issue("test.txt", 1, "tool_a", "type", 1, "This is a test", None),
                 Issue("test.txt", 1, "tool_a", "type", 3, "This is a test", None),
-                Issue("test.txt", 1, "tool_a", "type", "5", "This is a test", None),
+                Issue("test.txt", 1, "tool_a", "type", 5, "This is a test", None),
             ]
         }
         _, success = wfrp.report(package, issues, "level")

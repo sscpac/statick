@@ -92,10 +92,10 @@ def test_rstcheck_tool_plugin_parse_valid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "test.rst"
-    assert issues[0].line_number == "305"
+    assert issues[0].line_number == 305
     assert issues[0].tool == "rstcheck"
     assert issues[0].issue_type == "WARNING"
-    assert issues[0].severity == "2"
+    assert issues[0].severity == 2
     assert issues[0].message == "Title underline too short."
 
 

@@ -100,18 +100,18 @@ class ValParserToolPlugin(ToolPlugin):
             if issue_found:
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
-                    warning_level = "1"
+                    severity = 1
                     if match.group(4) == "Warning":
-                        warning_level = "3"
+                        severity = 3
                     elif match.group(4) == "Error":
-                        warning_level = "5"
+                        severity = 5
 
                     issue = Issue(
                         match.group(1),
-                        match.group(3),
+                        int(match.group(3)),
                         self.get_name(),
                         "PDDL",
-                        warning_level,
+                        severity,
                         match.group(5) + " " + match.group(6),
                         None,
                     )

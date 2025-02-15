@@ -61,7 +61,7 @@ class MyCustomToolPlugin(ToolPlugin):
                         match.group(2),
                         self.get_name(),
                         "banned_pattern",
-                        "5",
+                        5,
                         "Banned pattern found: " + match.group(3),
                     )
                 )

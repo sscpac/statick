@@ -152,33 +152,33 @@ def test_cccc_tool_plugin_parse_valid():
     issues = ctp.parse_tool_output(output, "tmp/not_a_file.c", config_file)
     assert len(issues) == 2
     assert issues[0].filename == "tmp/not_a_file.c"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "cccc"
 
-    if issues[0].severity == "5":
+    if issues[0].severity == 5:
         assert issues[0].issue_type == "error"
-        assert issues[0].severity == "5"
+        assert issues[0].severity == 5
         assert (
             issues[0].message
             == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, thresholds warning: 100.0, error: 1000.0"
         )
 
         assert issues[1].issue_type == "warn"
-        assert issues[1].severity == "3"
+        assert issues[1].severity == 3
         assert (
             issues[1].message
             == "Example1 - Fan in (concrete uses only) - value: 7.0, thresholds warning: 6.0, error: 12.0"
         )
     else:
         assert issues[0].issue_type == "warn"
-        assert issues[0].severity == "3"
+        assert issues[0].severity == 3
         assert (
             issues[0].message
             == "Example1 - Fan in (concrete uses only) - value: 7.0, thresholds warning: 6.0, error: 12.0"
         )
 
         assert issues[1].issue_type == "error"
-        assert issues[1].severity == "5"
+        assert issues[1].severity == 5
         assert (
             issues[1].message
             == "Example1 - Henry-Kafura/Shepperd measure (overall) - value: 10000.0, thresholds warning: 100.0, error: 1000.0"

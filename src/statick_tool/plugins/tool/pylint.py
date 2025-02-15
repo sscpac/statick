@@ -77,10 +77,10 @@ class PylintToolPlugin(ToolPlugin):
                             issues.append(
                                 Issue(
                                     match.group(1),
-                                    match.group(2),
+                                    int(match.group(2)),
                                     self.get_name(),
                                     parts[0],
-                                    "5",
+                                    5,
                                     match.group(4),
                                     None,
                                 )
@@ -89,10 +89,10 @@ class PylintToolPlugin(ToolPlugin):
                             issues.append(
                                 Issue(
                                     match.group(1),
-                                    match.group(2),
+                                    int(match.group(2)),
                                     self.get_name(),
                                     parts[0],
-                                    "5",
+                                    5,
                                     parts[1].strip() + ": " + match.group(4),
                                     None,
                                 )
@@ -101,10 +101,10 @@ class PylintToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 match.group(1),
-                                match.group(2),
+                                int(match.group(2)),
                                 self.get_name(),
                                 match.group(3),
-                                "5",
+                                5,
                                 match.group(4),
                                 None,
                             )

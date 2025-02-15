@@ -187,19 +187,19 @@ class HadolintToolPlugin(ToolPlugin):
                         err_arr = json.loads(line)
                         for issue in err_arr:
                             severity_str = issue["level"]
-                            severity = "1"
+                            severity = 1
                             if severity_str == "style":
-                                severity = "1"
+                                severity = 1
                             elif severity_str == "info":
-                                severity = "1"
+                                severity = 1
                             elif severity_str == "warning":
-                                severity = "3"
+                                severity = 3
                             elif severity_str == "error":
-                                severity = "5"
+                                severity = 5
                             issues.append(
                                 Issue(
                                     issue["file"],
-                                    str(issue["line"]),
+                                    int(issue["line"]),
                                     self.get_name(),
                                     issue["code"],
                                     severity,

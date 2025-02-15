@@ -89,10 +89,10 @@ def test_isort_tool_plugin_parse_valid():
     issues = itp.parse_output(total_output)
     assert len(issues) == 2
     assert issues[0].filename == "/tmp/x.py"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "isort"
     assert issues[0].issue_type == "formatting"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Imports are incorrectly sorted and/or formatted."
     assert issues[1].filename == "/tmp/y.py"
 

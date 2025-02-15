@@ -70,30 +70,30 @@ def test_black_tool_plugin_parse_valid():
     issues = btp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/format_errors.py"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "black"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "would reformat"
 
     output = "error: cannot format /home/user/file: INTERNAL ERROR: message: /tmp/x"
     issues = btp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/file"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "black"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "message"
 
     output = "error: cannot format /home/user/file: Cannot parse: 1:3: {faulty line}"
     issues = btp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/file"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "black"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Cannot parse {faulty line}"
 
 

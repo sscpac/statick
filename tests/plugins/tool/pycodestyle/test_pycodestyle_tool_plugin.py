@@ -67,10 +67,10 @@ def test_pycodestyle_tool_plugin_parse_valid():
     issues = pcstp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/e501.py"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "pycodestyle"
     assert issues[0].issue_type == "E501"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "line too long (88 > 79 characters)"
 
 

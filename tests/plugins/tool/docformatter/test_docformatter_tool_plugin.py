@@ -82,10 +82,10 @@ def test_docformatter_tool_plugin_parse_valid():
     issues = dtp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "wrong.py")
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "docformatter"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "would reformat"
 
 

@@ -155,10 +155,10 @@ def test_catkin_lint_tool_plugin_parse_valid():
     issues = cltp.parse_output(output, package)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join(package.path, "package.xml")
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "catkin_lint"
     assert issues[0].issue_type == "notice"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message == "use ${PROJECT_NAME} instead of 'custom_pkg' "
         "(I can't really tell if this applies for "
@@ -168,11 +168,11 @@ def test_catkin_lint_tool_plugin_parse_valid():
 
     output = ["custom_pkg: warning: target 'custom_target' is not installed"]
     issues = cltp.parse_output(output, package)
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
 
     output = ["custom_pkg: error: missing build_depend on 'catkin'"]
     issues = cltp.parse_output(output, package)
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
     output = ["custom_pkg: notice: missing build_depend on 'rostest'"]
     issues = cltp.parse_output(output, package)
@@ -215,10 +215,10 @@ def test_catkin_lint_tool_plugin_parse_valid_no_package():
     issues = cltp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "package.xml"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "catkin_lint"
     assert issues[0].issue_type == "notice"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message == "use ${PROJECT_NAME} instead of 'custom_pkg' "
         "(I can't really tell if this applies for "

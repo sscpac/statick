@@ -81,10 +81,10 @@ def test_spotbugs_tool_plugin_scan_valid():
     package["all_poms"] = [os.path.join(package.path, "pom.xml")]
     issues = sbtp.scan(package, "level")
     assert len(issues) == 1
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "spotbugs"
     assert issues[0].issue_type == "MS_MUTABLE_COLLECTION_PKGPROTECT"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message
         == "Test.h is a mutable collection which should be package protected"
@@ -146,10 +146,10 @@ def test_spotbugs_tool_plugin_scan_custom_exclude():
     package["all_poms"] = [os.path.join(package.path, "pom.xml")]
     issues = sbtp.scan(package, "local")
     assert len(issues) == 1
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "spotbugs"
     assert issues[0].issue_type == "MS_MUTABLE_COLLECTION_PKGPROTECT"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message
         == "Test.h is a mutable collection which should be package protected"
@@ -167,10 +167,10 @@ def test_spotbugs_tool_plugin_parse_valid():
     assert issues[0].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "src", "main", "java", "Test.java"
     )
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "spotbugs"
     assert issues[0].issue_type == "MS_MUTABLE_COLLECTION_PKGPROTECT"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message
         == "Test.h is a mutable collection which should be package protected"
@@ -181,14 +181,14 @@ def test_spotbugs_tool_plugin_parse_valid():
     )
     assert len(issues) == 1
     issues = sbtp.parse_file_output(output)
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
 
     output = "<BugCollection version='3.1.11' threshold='low' effort='max'><file classname='Test'><BugInstance type='MS_MUTABLE_COLLECTION_PKGPROTECT' priority='High' category='MALICIOUS_CODE' message='Test.h is a mutable collection which should be package protected' lineNumber='4'/></file><Error></Error><Project><SrcDir>{}</SrcDir></Project></BugCollection>".format(
         os.path.join(os.path.dirname(__file__), "valid_package", "src", "main", "java")
     )
     issues = sbtp.parse_file_output(output)
     assert len(issues) == 1
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
 
 def test_make_tool_plugin_parse_warnings_mapping():

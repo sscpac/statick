@@ -101,7 +101,7 @@ def test_stylelint_tool_plugin_parse_valid():
     assert issues[0].line_number == 3
     assert issues[0].tool == "stylelint"
     assert issues[0].issue_type == "declaration-block-trailing-semicolon"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message
         == "Expected a trailing semicolon (declaration-block-trailing-semicolon)"

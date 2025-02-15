@@ -88,8 +88,6 @@ class HTMLLintToolPlugin(ToolPlugin):
 
         return total_output
 
-    # pylint: enable=too-many-locals
-
     def parse_output(
         self, total_output: List[str], package: Optional[Package] = None
     ) -> List[Issue]:
@@ -104,9 +102,8 @@ class HTMLLintToolPlugin(ToolPlugin):
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     filename = match.group(1)
-                    line_number = match.group(2)
+                    line_number = int(match.group(2))
                     issue_type = "format"
-                    severity = "3"
                     message = match.group(3)
                     issues.append(
                         Issue(
@@ -114,7 +111,7 @@ class HTMLLintToolPlugin(ToolPlugin):
                             line_number,
                             self.get_name(),
                             issue_type,
-                            severity,
+                            3,
                             message,
                             None,
                         )

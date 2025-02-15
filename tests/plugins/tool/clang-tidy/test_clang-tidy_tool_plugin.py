@@ -101,10 +101,10 @@ def test_clang_tidy_tool_plugin_scan_valid():
     assert issues[0].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "test.c"
     )
-    assert issues[0].line_number == "6"
+    assert issues[0].line_number == 6
     assert issues[0].tool == "clang-tidy"
     assert issues[0].issue_type == "warning/clang-analyzer-deadcode.DeadStores"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Value stored to 'si' is never read"
 
 
@@ -156,10 +156,10 @@ def test_clang_tidy_tool_plugin_scan_custom_version():
     package["src_dir"] = os.path.join(os.path.dirname(__file__), "valid_package")
     issues = cttp.scan(package, "unit_tests")
     assert len(issues) == 1
-    assert issues[0].line_number == "6"
+    assert issues[0].line_number == 6
     assert issues[0].tool == "clang-tidy"
     assert issues[0].issue_type == "warning/clang-analyzer-deadcode.DeadStores"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Value stored to 'si' is never read"
 
 
@@ -195,10 +195,10 @@ def test_clang_tidy_tool_plugin_parse_valid():
     issues = cttp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
-    assert issues[0].line_number == "6"
+    assert issues[0].line_number == 6
     assert issues[0].tool == "clang-tidy"
     assert issues[0].issue_type == "warning/clang-analyzer-deadcode.DeadStores"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Value stored to 'si' is never read"
 
 
@@ -211,10 +211,10 @@ def test_clang_tidy_tool_plugin_parse_warnings_mappings():
     issues = cttp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
-    assert issues[0].line_number == "6"
+    assert issues[0].line_number == 6
     assert issues[0].tool == "clang-tidy"
     assert issues[0].issue_type == "warning/cert-dcl50-cpp"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "message"
     assert issues[0].cert_reference == "DCL50-CPP"
 

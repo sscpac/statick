@@ -81,7 +81,7 @@ class LizardToolPlugin(ToolPlugin):
         issues: List[Issue] = []
         for item in matches:
             issue = Issue(
-                item[0], item[1], self.get_name(), item[2], "5", item[3], None
+                item[0], int(item[1]), self.get_name(), item[2], 5, item[3], None
             )
             if issue not in issues:
                 issues.append(issue)

@@ -87,10 +87,10 @@ def test_lacheck_tool_plugin_parse_valid():
     issues = ltp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/test.tex"
-    assert issues[0].line_number == "13"
+    assert issues[0].line_number == 13
     assert issues[0].tool == "lacheck"
     assert issues[0].issue_type == "lacheck"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Whitespace before punctation mark in ' .'"
 
 

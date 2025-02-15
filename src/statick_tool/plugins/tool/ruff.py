@@ -63,10 +63,10 @@ class RuffToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             issue_type,
-                            "5",
+                            5,
                             message,
                             None,
                         )

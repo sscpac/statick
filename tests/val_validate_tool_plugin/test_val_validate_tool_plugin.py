@@ -176,10 +176,10 @@ def test_val_validate_tool_plugin_parse_valid():
     issues = vtp.parse_tool_output(output, "/home/user/test.pddl")
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/test.pddl"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "val_validate"
     assert issues[0].issue_type == "0"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 5
     assert (
         issues[0].message
         == "Exact file and line number unknown. Parser failed to read file!"
@@ -189,10 +189,10 @@ def test_val_validate_tool_plugin_parse_valid():
     issues = vtp.parse_tool_output(output, "/home/user/test.pddl")
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/test.pddl"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "val_validate"
     assert issues[0].issue_type == "1"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert (
         issues[0].message
         == "Exact file and line number unknown. Problem in domain definition!"

@@ -77,10 +77,10 @@ class DocformatterToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             os.path.join(match.group(1), match.group(2)),
-                            "0",
+                            0,
                             self.get_name(),
                             "format",
-                            "3",
+                            3,
                             "would reformat",
                             None,
                         )

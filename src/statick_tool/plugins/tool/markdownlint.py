@@ -100,10 +100,10 @@ class MarkdownlintToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match_with_col.group(1),
-                            match_with_col.group(2),
+                            int(match_with_col.group(2)),
                             self.get_name(),
                             match_with_col.group(4),
-                            "3",
+                            3,
                             match_with_col.group(5),
                             None,
                         )
@@ -114,10 +114,10 @@ class MarkdownlintToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 match.group(1),
-                                match.group(2),
+                                int(match.group(2)),
                                 self.get_name(),
                                 match.group(3),
-                                "3",
+                                3,
                                 match.group(4),
                                 None,
                             )

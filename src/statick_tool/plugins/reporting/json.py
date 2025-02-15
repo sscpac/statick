@@ -24,11 +24,10 @@ class JsonReportingPlugin(ReportingPlugin):
         """Go through the issues list and print them in JSON format.
 
         Args:
-            package (:obj:`Package`): The Package object that was analyzed.
-            issues (:obj:`dict` of :obj:`str` to :obj:`Issue`): The issues
-                found by the Statick analysis, keyed by the tool that found
-                them.
-            level: (:obj:`str`): Name of the level used in the scan.
+            package: The Package object that was analyzed.
+            issues: The issues found by the Statick analysis,
+                    keyed by the tool that found them.
+            level: Name of the level used in the scan.
         """
         if not self.plugin_context or not self.plugin_context.config:
             return None, False
@@ -51,10 +50,10 @@ class JsonReportingPlugin(ReportingPlugin):
             for issue in value:
                 issue_dict = OrderedDict()
                 issue_dict["fileName"] = issue.filename
-                issue_dict["lineNumber"] = issue.line_number
+                issue_dict["lineNumber"] = str(issue.line_number)
                 issue_dict["tool"] = issue.tool
                 issue_dict["type"] = issue.issue_type
-                issue_dict["severity"] = issue.severity
+                issue_dict["severity"] = str(issue.severity)
                 issue_dict["message"] = issue.message
                 issue_dict["certReference"] = ""
                 if issue.cert_reference:

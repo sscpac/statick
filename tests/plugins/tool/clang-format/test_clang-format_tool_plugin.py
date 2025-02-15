@@ -273,10 +273,10 @@ def test_clang_format_tool_plugin_parse_valid():
     issues = cftp.parse_tool_output([output], [])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/indents.c"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "clang-format"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert issues[0].message == "1 replacements"
 
 
@@ -301,10 +301,10 @@ with
 """
     assert len(issues) == 2
     assert issues[0].filename == files[0]
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "clang-format"
     assert issues[0].issue_type == "format"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert issues[0].message == msg
 
 

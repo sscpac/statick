@@ -69,13 +69,13 @@ class CatkinLintToolPlugin(ToolPlugin):
         return False
 
     @classmethod
-    def get_level(cls, issue_type: str) -> str:
+    def get_level(cls, issue_type: str) -> int:
         """Get level for given issue type."""
         if issue_type == "error":
-            return "5"
+            return 5
         if issue_type == "warning":
-            return "3"
-        return "1"
+            return 3
+        return 1
 
     def parse_output(
         self, total_output: List[str], package: Optional[Package] = None
@@ -103,10 +103,10 @@ class CatkinLintToolPlugin(ToolPlugin):
                 issues.append(
                     Issue(
                         norm_path,
-                        match.group(3),
+                        int(match.group(3)),
                         self.get_name(),
                         match.group(4),
-                        self.get_level(match.group(4)),
+                        int(self.get_level(match.group(4))),
                         match.group(5),
                         None,
                     )
@@ -139,7 +139,7 @@ class CatkinLintToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             norm_path,
-                            "1",
+                            1,
                             self.get_name(),
                             match2.group(2),
                             self.get_level(match2.group(2)),

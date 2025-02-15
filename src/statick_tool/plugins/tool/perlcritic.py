@@ -81,10 +81,10 @@ class PerlCriticToolPlugin(ToolPlugin):
             issues.append(
                 Issue(
                     split_line[0],
-                    split_line[1],
+                    int(split_line[1]),
                     self.get_name(),
                     split_line[2],
-                    split_line[4],
+                    int(split_line[4]),
                     split_line[3],
                     cert_reference,
                 )

@@ -78,10 +78,10 @@ class WriteGoodToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             "suggestion",
-                            "1",
+                            1,
                             match.group(4),
                             None,
                         )

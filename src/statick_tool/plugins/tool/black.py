@@ -87,10 +87,10 @@ class BlackToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 match.group(3),
-                                "0",
+                                0,
                                 self.get_name(),
                                 "format",
-                                "3",
+                                3,
                                 "would reformat",
                                 None,
                             )
@@ -104,10 +104,10 @@ class BlackToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 match_parse_error.group(1).split(" ")[2].rstrip(":"),
-                                match_parse_error.group(3),
+                                int(match_parse_error.group(3)),
                                 self.get_name(),
                                 "format",
-                                "3",
+                                3,
                                 match_parse_error.group(2)
                                 + " "
                                 + match_parse_error.group(5),
@@ -118,10 +118,10 @@ class BlackToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 match_tool_error.group(1).split(" ")[2].rstrip(":"),
-                                "0",
+                                0,
                                 self.get_name(),
                                 "format",
-                                "3",
+                                3,
                                 match_tool_error.group(3),
                                 None,
                             )

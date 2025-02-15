@@ -79,15 +79,15 @@ class BanditToolPlugin(ToolPlugin):
 
         csvreader = csv.DictReader(output_minus_log)
         for csv_line in csvreader:
-            severity = "1"
+            severity = 1
             if csv_line["issue_confidence"] == "MEDIUM":
-                severity = "3"
+                severity = 3
             elif csv_line["issue_confidence"] == "HIGH":
-                severity = "5"
+                severity = 5
             issues.append(
                 Issue(
                     csv_line["filename"],
-                    csv_line["line_number"],
+                    int(csv_line["line_number"]),
                     self.get_name(),
                     csv_line["test_id"],
                     severity,

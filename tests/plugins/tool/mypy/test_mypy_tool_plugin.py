@@ -82,10 +82,10 @@ def test_mypy_tool_plugin_parse_valid():
     issues = mtp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/wrong_mypy.py"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "mypy"
     assert issues[0].issue_type == "assignment"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message
         == "Incompatible types in assignment (expression has type str, variable has type int)"

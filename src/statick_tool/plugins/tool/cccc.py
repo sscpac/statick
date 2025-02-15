@@ -227,10 +227,10 @@ class CCCCToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 src,
-                                "0",
+                                0,
                                 self.get_name(),
                                 "error",
-                                "5",
+                                5,
                                 msg,
                                 None,
                             )
@@ -241,10 +241,10 @@ class CCCCToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 src,
-                                "0",
+                                0,
                                 self.get_name(),
                                 "warn",
-                                "3",
+                                3,
                                 msg,
                                 None,
                             )

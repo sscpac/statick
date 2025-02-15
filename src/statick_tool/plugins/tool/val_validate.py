@@ -91,21 +91,21 @@ class ValValidateToolPlugin(ToolPlugin):
         issue_found = False
         for item in output.splitlines():
             msg = ""
-            warning_level = "0"
+            severity = 0
             issue_type = "0"
-            line_number = "0"
+            line_number = 0
 
             if item.startswith("Error:"):
                 issue_found = True
-                warning_level = "3"
-                line_number = "0"
+                severity = 5
+                line_number = 0
                 issue_type = "0"
                 msg = "Exact file and line number unknown. " + item.lstrip("Error: ")
 
             if item.startswith("Problem"):
                 issue_found = True
-                warning_level = "3"
-                line_number = "0"
+                severity = 3
+                line_number = 0
                 issue_type = "1"
                 msg = "Exact file and line number unknown. " + item
 
@@ -115,7 +115,7 @@ class ValValidateToolPlugin(ToolPlugin):
                     line_number,
                     self.get_name(),
                     issue_type,
-                    warning_level,
+                    severity,
                     msg,
                     None,
                 )
