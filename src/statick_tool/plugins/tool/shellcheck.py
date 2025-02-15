@@ -88,22 +88,22 @@ class ShellcheckToolPlugin(ToolPlugin):
                 logging.debug("  Found invalid shellcheck output: %s", item)
                 continue
             if item["level"] == "style":
-                warning_level = "1"
+                severity = 1
             elif item["level"] == "info":
-                warning_level = "1"
+                severity = 1
             elif item["level"] == "warning":
-                warning_level = "3"
+                severity = 3
             elif item["level"] == "error":
-                warning_level = "5"
+                severity = 5
             else:
-                warning_level = "3"
+                severity = 3
 
             issue = Issue(
                 item["file"],
-                str(item["line"]),
+                int(item["line"]),
                 self.get_name(),
                 "SC" + str(item["code"]),
-                warning_level,
+                severity,
                 item["message"],
                 None,
             )

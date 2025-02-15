@@ -108,7 +108,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         issue_dict["location"] = OrderedDict()
         issue_dict["location"]["path"] = issue.filename
         issue_dict["location"]["lines"] = OrderedDict()
-        issue_dict["location"]["lines"]["begin"] = int(issue.line_number)
+        issue_dict["location"]["lines"]["begin"] = issue.line_number
 
         # Exclude fields not used by gitlab if the report is too large (>10MB)
         # https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#no-code-quality-report-is-displayed-in-a-merge-request

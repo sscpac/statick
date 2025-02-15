@@ -80,14 +80,14 @@ def test_cppcheck_tool_plugin_scan_valid():
     assert issues[0].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "test.c"
     )
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "cppcheck"
     version = cctp.get_version("cppcheck")
     if Version(version) >= Version("2.8"):
         assert issues[0].issue_type == "error/legacyUninitvar"
     else:
         assert issues[0].issue_type == "error/uninitvar"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Uninitialized variable: si"
 
 
@@ -166,10 +166,10 @@ def test_cppcheck_tool_plugin_parse_valid():
     issues = cctp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "test.c"
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "cppcheck"
     assert issues[0].issue_type == "error/uninitvar"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Uninitialized variable: si"
 
 

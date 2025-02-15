@@ -68,17 +68,16 @@ class YamllintToolPlugin(ToolPlugin):
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issue_type = match.group(4)
+                    severity = 3
                     if issue_type == "error":
-                        level = "5"
-                    else:
-                        level = "3"
+                        severity = 5
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             match.group(6),
-                            level,
+                            severity,
                             match.group(5),
                             None,
                         )

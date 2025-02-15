@@ -57,8 +57,6 @@ class RstcheckToolPlugin(ToolPlugin):
 
         return total_output
 
-    # pylint: enable=too-many-locals
-
     def parse_output(
         self, total_output: List[str], package: Optional[Package] = None
     ) -> List[Issue]:
@@ -74,10 +72,10 @@ class RstcheckToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             match.group(3),
-                            match.group(4),
+                            int(match.group(4)),
                             match.group(5),
                             None,
                         )

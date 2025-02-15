@@ -67,20 +67,20 @@ def test_ruff_tool_plugin_parse_valid():
     issues = rtp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "some_file.py"
-    assert issues[0].line_number == "644"
+    assert issues[0].line_number == 644
     assert issues[0].tool == "ruff"
     assert issues[0].issue_type == "E501"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Line too long (96 > 88 characters)"
 
     output = "a_file.py:21:1: E402 Module level import not at top of file"
     issues = rtp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "a_file.py"
-    assert issues[0].line_number == "21"
+    assert issues[0].line_number == 21
     assert issues[0].tool == "ruff"
     assert issues[0].issue_type == "E402"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Module level import not at top of file"
 
 

@@ -68,7 +68,7 @@ class ChktexToolPlugin(ToolPlugin):
         parse: Pattern[str] = re.compile(tool_re)
         issues: List[Issue] = []
         filename: str = ""
-        line_number: str = "0"
+        line_number: int = 0
         issue_type: str = ""
         message: str = ""
 
@@ -79,7 +79,7 @@ class ChktexToolPlugin(ToolPlugin):
                     if match.group(1) == "Warning":
                         filename = match.group(4)
                         issue_type = match.group(2)
-                        line_number = match.group(6)
+                        line_number = int(match.group(6))
                         message = match.group(7)
                         issues.append(
                             Issue(
@@ -87,7 +87,7 @@ class ChktexToolPlugin(ToolPlugin):
                                 line_number,
                                 self.get_name(),
                                 issue_type,
-                                "3",
+                                3,
                                 message,
                                 None,
                             )

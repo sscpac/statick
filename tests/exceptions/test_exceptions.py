@@ -190,10 +190,10 @@ def test_filter_issues():
     )
 
     filename = "x.py"
-    line_number = "4"
+    line_number = 4
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
-    severity = "5"
+    severity = 5
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -216,10 +216,10 @@ def test_filter_issues_empty_exceptions():
     )
 
     filename = "x.py"
-    line_number = "4"
+    line_number = 4
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
-    severity = "5"
+    severity = 5
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -242,10 +242,10 @@ def test_filter_issues_globs():
     )
 
     filename = "x.py"
-    line_number = "4"
+    line_number = 4
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
-    severity = "5"
+    severity = 5
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -268,10 +268,10 @@ def test_filter_issues_globs_wrong_file_pattern():
     )
 
     filename = "filename_does_not_match_glob_pattern.py"
-    line_number = "4"
+    line_number = 4
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
-    severity = "5"
+    severity = 5
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -294,10 +294,10 @@ def test_filter_issues_travis_build():
     )
 
     filename = "/home/travis/build/x.py"
-    line_number = "4"
+    line_number = 4
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
-    severity = "5"
+    severity = 5
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -320,10 +320,10 @@ def test_filter_issues_filename_abs_path():
     )
 
     filename = "/home/travis/build/x.py"
-    line_number = "4"
+    line_number = 4
     tool = "pylint"
     issue_type = "R0205(useless-object-inheritance)"
-    severity = "5"
+    severity = 5
     message = "R0205: Class 'Example' inherits from object, can be safely removed from bases in python3"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -346,10 +346,10 @@ def test_filter_issues_nolint():
     )
 
     filename = os.path.join(os.path.dirname(__file__), "valid_package") + "/x.py"
-    line_number = "3"
+    line_number = 3
     tool = "pylint"
     issue_type = "missing-docstring"
-    severity = "3"
+    severity = 3
     message = "C0111: Missing module docstring"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -369,10 +369,10 @@ def test_filter_issues_nolint_empty_log():
     )
 
     filename = os.path.join(os.path.dirname(__file__), "config") + "/rsc" + "/empty.log"
-    line_number = "0"
+    line_number = 0
     tool = "dummy_tool"
     issue_type = "dummy_issue_type"
-    severity = "0"
+    severity = 0
     message = "dummy_message"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -399,10 +399,10 @@ def test_filter_issues_nolint_unicode_decode_error():
         os.path.join(os.path.dirname(__file__), "unicode_decode_error_package")
         + "/status.rst"
     )
-    line_number = "0"
+    line_number = 0
     tool = "dummy_tool"
     issue_type = "dummy_issue_type"
-    severity = "0"
+    severity = 0
     message = "dummy_message"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -426,10 +426,10 @@ def test_filter_issues_nolint_file_not_found_error():
         # Make a temporary executable
         with tempfile.NamedTemporaryFile(dir=tmp_dir) as tmp_file:
             filename = tmp_file.name
-            line_number = "0"
+            line_number = 0
             tool = "dummy_tool"
             issue_type = "dummy_issue_type"
-            severity = "0"
+            severity = 0
             message = "dummy_message"
             tool_issue = Issue(
                 filename, line_number, tool, issue_type, severity, message, None
@@ -454,10 +454,10 @@ def test_filter_issues_nolint_not_abs_path():
     )
 
     filename = "valid_package/x.py"
-    line_number = "3"
+    line_number = 3
     tool = "pylint"
     issue_type = "missing-docstring"
-    severity = "3"
+    severity = 3
     message = "C0111: Missing module docstring"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}
@@ -481,10 +481,10 @@ def test_filter_issues_wildcard_exceptions():
     )
 
     filename = "valid_package/x.py"
-    line_number = "3"
+    line_number = 3
     tool = "pylint"
     issue_type = "missing-docstring"
-    severity = "3"
+    severity = 3
     message = "C0111: Missing module docstring"
     tool_issue = Issue(filename, line_number, tool, issue_type, severity, message, None)
     issues = {}

@@ -62,7 +62,7 @@ class RstlintToolPlugin(ToolPlugin):
                     output.line,  # type: ignore
                     self.get_name(),
                     output.type,  # type: ignore
-                    str(output.level),
+                    output.level,
                     output.message,  # type: ignore
                     None,
                 )

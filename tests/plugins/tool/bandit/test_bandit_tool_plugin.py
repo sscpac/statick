@@ -158,10 +158,10 @@ def test_bandit_tool_plugin_parse_valid():
     issues = btp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/b404.py"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "bandit"
     assert issues[0].issue_type == "B404"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message
         == "Consider possible security implications associated with subprocess module."
@@ -173,7 +173,7 @@ def test_bandit_tool_plugin_parse_valid():
     ]
     issues = btp.parse_output(output)
     assert len(issues) == 1
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
 
 
 def test_bandit_tool_plugin_parse_invalid():

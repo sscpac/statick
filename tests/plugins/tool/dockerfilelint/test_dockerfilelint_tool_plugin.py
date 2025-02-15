@@ -94,10 +94,10 @@ def test_dockerfilelint_tool_plugin_parse_valid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "Dockerfile"
-    assert issues[0].line_number == "2"
+    assert issues[0].line_number == 2
     assert issues[0].tool == "dockerfilelint"
     assert issues[0].issue_type == "Extra Arguments"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "This command has extra arguments and will be ignored."
 
 
@@ -108,10 +108,10 @@ def test_dockerfilelint_tool_plugin_parse_invalid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "EXCEPTION"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "dockerfilelint"
     assert issues[0].issue_type == "ValueError"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Expecting value: line 1 column 1 (char 0), on line: invalid text"
 
 
@@ -144,10 +144,10 @@ def test_dockerfilelint_tool_plugin_scan_invalid_rc_file():
     # at Module._compile (internal/modules/cjs/loader.js:1063:30)
     assert len(issues) == 15
     assert issues[2].filename == "EXCEPTION"
-    assert issues[2].line_number == "0"
+    assert issues[2].line_number == 0
     assert issues[2].tool == "dockerfilelint"
     assert issues[2].issue_type == "ValueError"
-    assert issues[2].severity == "5"
+    assert issues[2].severity == 5
     assert issues[2].message == "Expecting value: line 1 column 14 (char 13), on line:              ^"
 
 
@@ -181,10 +181,10 @@ def test_dockerfilelint_tool_plugin_scan_calledprocesserror(
     issues = plugin.scan(package, "level")
     assert len(issues) == 1
     assert issues[0].filename == "EXCEPTION"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "dockerfilelint"
     assert issues[0].issue_type == "ValueError"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Expecting value: line 1 column 1 (char 0), on line: mocked error"
 
 

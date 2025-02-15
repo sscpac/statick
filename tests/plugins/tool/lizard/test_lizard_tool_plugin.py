@@ -64,10 +64,10 @@ def test_lizard_tool_plugin_scan_valid():
     assert issues[0].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "test.c"
     )
-    assert issues[0].line_number == "2"
+    assert issues[0].line_number == 2
     assert issues[0].tool == "lizard"
     assert issues[0].issue_type == "warning"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message == "func has 52 NLOC, 16 CCN, 143 token, 0 PARAM, 69 length, 0 ND"
     )
@@ -84,10 +84,10 @@ def test_lizard_tool_plugin_parse_valid():
     issues = ltp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "lizard"
     assert issues[0].issue_type == "warning"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message == "func has 22 NLOC, 18 CCN, 143 token, 0 PARAM, 69 length"
     )

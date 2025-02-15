@@ -97,10 +97,10 @@ class CpplintToolPlugin(ToolPlugin):
                 issues.append(
                     Issue(
                         norm_path,
-                        match.group(2),
+                        int(match.group(2)),
                         self.get_name(),
                         match.group(4),
-                        match.group(5),
+                        int(match.group(5)),
                         match.group(3),
                         None,
                     )

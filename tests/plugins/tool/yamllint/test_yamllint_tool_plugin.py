@@ -70,15 +70,15 @@ def test_yamllint_tool_plugin_parse_valid():
     issues = yltp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/document-start.yaml"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "yamllint"
     assert issues[0].issue_type == "document-start"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == 'missing document start "---"'
 
     output = 'valid_package/document-start.yaml:1:1: [error] missing document start "---" (document-start)'
     issues = yltp.parse_output([output])
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
 
 def test_yamllint_tool_plugin_parse_invalid():

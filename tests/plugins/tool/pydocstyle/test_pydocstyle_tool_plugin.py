@@ -68,10 +68,10 @@ def test_pydocstyle_tool_plugin_parse_valid():
     issues = pdstp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/d103.py"
-    assert issues[0].line_number == "3"
+    assert issues[0].line_number == 3
     assert issues[0].tool == "pydocstyle"
     assert issues[0].issue_type == "D103"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Missing docstring in public function"
 
 

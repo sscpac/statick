@@ -140,10 +140,10 @@ def test_shellcheck_tool_plugin_parse_valid():
     issues = sctp.parse_json_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.sh"
-    assert issues[0].line_number == "3"
+    assert issues[0].line_number == 3
     assert issues[0].tool == "shellcheck"
     assert issues[0].issue_type == "SC2164"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert (
         issues[0].message
         == "Use 'cd ... || exit' or 'cd ... || return' in case cd fails."
@@ -165,10 +165,10 @@ def test_shellcheck_tool_plugin_parse_valid():
     issues = sctp.parse_json_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/basic.bash"
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "shellcheck"
     assert issues[0].issue_type == "SC1091"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message
         == "Not following: ./devel/setup.bash was not specified as input (see shellcheck -x)."
@@ -188,7 +188,7 @@ def test_shellcheck_tool_plugin_parse_valid():
         }
     ]
     issues = sctp.parse_json_output(output)
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
 
     output = [
         {
@@ -204,7 +204,7 @@ def test_shellcheck_tool_plugin_parse_valid():
         }
     ]
     issues = sctp.parse_json_output(output)
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
     output = [
         {
@@ -220,7 +220,7 @@ def test_shellcheck_tool_plugin_parse_valid():
         }
     ]
     issues = sctp.parse_json_output(output)
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
 
     output = [
         {

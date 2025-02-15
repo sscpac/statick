@@ -131,10 +131,10 @@ class ClangTidyToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             match.group(4) + "/" + match.group(6),
-                            "3",
+                            3,
                             match.group(5),
                             cert_reference,
                         )

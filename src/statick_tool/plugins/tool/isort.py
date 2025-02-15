@@ -70,10 +70,10 @@ class IsortToolPlugin(ToolPlugin):
             issues.append(
                 Issue(
                     output,
-                    "0",
+                    0,
                     self.get_name(),
                     "formatting",
-                    "3",
+                    3,
                     msg,
                     None,
                 )

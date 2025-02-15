@@ -65,7 +65,7 @@ def test_code_climate_reporting_plugin_report_cc_output():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "black", "format", "1", "This is a test", None)
+                Issue("test.txt", 1, "black", "format", 1, "This is a test", None)
             ]
         }
         _, success = plugin.report(package, issues, "level")
@@ -96,7 +96,7 @@ def test_code_climate_reporting_plugin_report_gitlab_output():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "3", "This is a test", None)
+                Issue("test.txt", 1, "tool_a", "type", 3, "This is a test", None)
             ]
         }
         _, success = plugin.report(package, issues, "level")
@@ -125,7 +125,7 @@ def test_code_climate_reporting_plugin_report_cert_reference():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "5", "This is a test", "CERT")
+                Issue("test.txt", 1, "tool_a", "type", 5, "This is a test", "CERT")
             ]
         }
         _, success = plugin.report(package, issues, "level")
@@ -173,7 +173,7 @@ def test_code_climate_reporting_plugin_report_no_plugin_context():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+                Issue("test.txt", 1, "tool_a", "type", 1, "This is a test", None)
             ]
         }
         _, success = plugin.report(package, issues, "level")

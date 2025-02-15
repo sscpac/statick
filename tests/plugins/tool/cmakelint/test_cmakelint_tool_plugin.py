@@ -99,15 +99,15 @@ def test_cmakelint_tool_plugin_parse_valid():
     issues = cmltp.parse_output(output)
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/CMakeLists.txt"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "cmakelint"
     assert issues[0].issue_type == "whitespace/extra"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Extra spaces between 'INVALID_FUNCTION' and its ()"
 
     output = ["valid_package/CMakeLists.txt:1: fake warning [syntax]"]
     issues = cmltp.parse_output(output)
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
 
 def test_cmakelint_tool_plugin_parse_invalid():
