@@ -4,7 +4,7 @@ Sets what flags are used for each plugin at those levels.
 """
 
 import os
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 import yaml
 
@@ -70,9 +70,9 @@ class Config:
         """Check if given level exists in config."""
         return "levels" in self.config and level in self.config["levels"]
 
-    def get_enabled_plugins(self, level: str, plugin_type: str) -> List[str]:
+    def get_enabled_plugins(self, level: str, plugin_type: str) -> list[str]:
         """Get what plugins are enabled for a certain level."""
-        plugins: List[str] = []
+        plugins: list[str] = []
 
         if level == self.default_level:
             return plugins
@@ -96,15 +96,15 @@ class Config:
                                 plugins.append(plugin)
         return plugins
 
-    def get_enabled_tool_plugins(self, level: str) -> List[str]:
+    def get_enabled_tool_plugins(self, level: str) -> list[str]:
         """Get what tool plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "tool")
 
-    def get_enabled_discovery_plugins(self, level: str) -> List[str]:
+    def get_enabled_discovery_plugins(self, level: str) -> list[str]:
         """Get what discovery plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "discovery")
 
-    def get_enabled_reporting_plugins(self, level: str) -> List[str]:
+    def get_enabled_reporting_plugins(self, level: str) -> list[str]:
         """Get what reporting plugins are enabled for a certain level."""
         return self.get_enabled_plugins(level, "reporting")
 

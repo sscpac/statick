@@ -1,7 +1,7 @@
 """Discover PDDL files to analyze."""
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -19,7 +19,7 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for PDDL files."""
-        pddl_files: List[str] = []
+        pddl_files: list[str] = []
 
         self.find_files(package)
 

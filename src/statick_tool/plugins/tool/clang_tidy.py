@@ -4,7 +4,7 @@ import argparse
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -19,7 +19,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         return "clang-tidy"
 
     @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
+    def get_tool_dependencies(cls) -> list[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
@@ -32,7 +32,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             help="clang-tidy binary path",
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if (
             "make_targets" not in package
@@ -57,7 +57,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context.args.clang_tidy_bin is not None:
             clang_tidy_bin = self.plugin_context.args.clang_tidy_bin
 
-        flags: List[str] = [
+        flags: list[str] = [
             "-header-filter=" + package["src_dir"] + "/.*",
             "-p",
             package["bin_dir"] + "/compile_commands.json",
@@ -65,7 +65,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         ]
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
+        files: list[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -97,7 +97,7 @@ class ClangTidyToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(output)
+        issues: list[Issue] = self.parse_tool_output(output)
         return issues
 
     @classmethod
@@ -110,11 +110,11 @@ class ClangTidyToolPlugin(ToolPlugin):
             return True
         return False
 
-    def parse_tool_output(self, output: str) -> List[Issue]:
+    def parse_tool_output(self, output: str) -> list[Issue]:
         """Parse tool output and report issues."""
         clang_tidy_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)\]"
         parse: Pattern[str] = re.compile(clang_tidy_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         for line in output.splitlines():

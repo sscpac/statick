@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -21,7 +21,7 @@ class ReportingPlugin:
         """Gather arguments."""
 
     def report(  # type: ignore[empty-body]
-        self, package: Package, issues: Dict[str, List[Issue]], level: str
+        self, package: Package, issues: dict[str, list[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
         """Run the report generator."""
 
@@ -29,7 +29,7 @@ class ReportingPlugin:
         """Setter for plugin_context."""
         self.plugin_context = plugin_context
 
-    def load_mapping(self) -> Dict[str, str]:
+    def load_mapping(self) -> dict[str, str]:
         """Load a mapping between two sets."""
         file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
@@ -56,7 +56,7 @@ class ReportingPlugin:
 
         if full_path is None:
             return {}
-        warning_mapping: Dict[str, str] = {}
+        warning_mapping: dict[str, str] = {}
         with open(full_path, "r", encoding="utf8") as mapping_file:
             for line in mapping_file.readlines():
                 split_line = line.strip().split(":")

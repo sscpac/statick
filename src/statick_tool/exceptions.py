@@ -13,7 +13,7 @@ import fnmatch
 import logging
 import os
 import re
-from typing import Any, Dict, List, Match, Optional, Pattern
+from typing import Any, Match, Optional, Pattern
 
 import yaml
 
@@ -30,13 +30,13 @@ class Exceptions:
             raise ValueError(f"{filename} is not a valid file")
         with open(filename, encoding="utf8") as fname:
             try:
-                self.exceptions: Dict[Any, Any] = yaml.safe_load(fname)
+                self.exceptions: dict[Any, Any] = yaml.safe_load(fname)
             except (yaml.YAMLError, yaml.scanner.ScannerError) as ex:
                 raise ValueError(f"{filename} is not a valid YAML file: {ex}") from ex
 
-    def get_ignore_packages(self) -> List[str]:
+    def get_ignore_packages(self) -> list[str]:
         """Get list of packages to skip when scanning a workspace."""
-        ignore: List[str] = []
+        ignore: list[str] = []
         if (
             "ignore_packages" in self.exceptions
             and self.exceptions["ignore_packages"] is not None
@@ -44,9 +44,9 @@ class Exceptions:
             ignore = self.exceptions["ignore_packages"]
         return ignore
 
-    def get_exceptions(self, package: Package) -> Dict[Any, Any]:
+    def get_exceptions(self, package: Package) -> dict[Any, Any]:
         """Get specific exceptions for given package."""
-        exceptions: Dict[Any, Any] = {"file": [], "message_regex": []}
+        exceptions: dict[Any, Any] = {"file": [], "message_regex": []}
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
             global_exceptions = self.exceptions["global"]["exceptions"]
@@ -77,15 +77,15 @@ class Exceptions:
         return exceptions
 
     def filter_file_exceptions_early(
-        self, package: Package, file_list: List[str]
-    ) -> List[str]:
+        self, package: Package, file_list: list[str]
+    ) -> list[str]:
         """Filter files based on file pattern exceptions list.
 
         Only filters files which have tools=all, intended for use after the discovery
         plugins have been run (so that Statick doesn't run the tool plugins against
         files which will be ignored anyway).
         """
-        exceptions: Dict[Any, Any] = self.get_exceptions(package)
+        exceptions: dict[Any, Any] = self.get_exceptions(package)
         to_remove = []
         for filename in file_list:
             removed = False
@@ -107,14 +107,14 @@ class Exceptions:
         return file_list
 
     def filter_file_exceptions(
-        self, package: Package, exceptions: List[Any], issues: Dict[str, List[Issue]]
-    ) -> Dict[str, List[Issue]]:
+        self, package: Package, exceptions: list[Any], issues: dict[str, list[Issue]]
+    ) -> dict[str, list[Issue]]:
         """Filter issues based on file pattern exceptions list."""
         for tool, tool_issues in list(  # pylint: disable=too-many-nested-blocks
             issues.items()
         ):
             warning_printed = False
-            to_remove: List[Issue] = []
+            to_remove: list[Issue] = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:
@@ -140,8 +140,8 @@ class Exceptions:
 
     @classmethod
     def filter_regex_exceptions(
-        cls, exceptions: List[Any], issues: Dict[str, List[Issue]]
-    ) -> Dict[str, List[Issue]]:
+        cls, exceptions: list[Any], issues: dict[str, list[Issue]]
+    ) -> dict[str, list[Issue]]:
         """Filter issues based on message regex exceptions list."""
         for exception in exceptions:  # pylint: disable=too-many-nested-blocks
             exception_re = exception["regex"]
@@ -179,7 +179,7 @@ class Exceptions:
                 ]
         return issues
 
-    def filter_nolint(self, issues: Dict[str, List[Issue]]) -> Dict[str, List[Issue]]:
+    def filter_nolint(self, issues: dict[str, list[Issue]]) -> dict[str, list[Issue]]:
         """Filter out lines that have an explicit NOLINT on them.
 
         Sometimes the tools themselves don't properly filter these out if there is a
@@ -187,7 +187,7 @@ class Exceptions:
         """
         for tool, tool_issues in list(issues.items()):
             warning_printed: bool = False
-            to_remove: List[Issue] = []
+            to_remove: list[Issue] = []
             for issue in tool_issues:
                 if not os.path.isabs(issue.filename):
                     if not warning_printed:
@@ -215,8 +215,8 @@ class Exceptions:
         return issues
 
     def filter_issues(
-        self, package: Package, issues: Dict[str, List[Issue]]
-    ) -> Dict[str, List[Issue]]:
+        self, package: Package, issues: dict[str, list[Issue]]
+    ) -> dict[str, list[Issue]]:
         """Filter issues based on exceptions list."""
         exceptions = self.get_exceptions(package)
 

@@ -4,7 +4,7 @@ import argparse
 import json
 import logging
 import subprocess
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -33,14 +33,14 @@ class HadolintToolPlugin(ToolPlugin):
             help="Use hadolint docker image instead of binary",
         )
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["dockerfile_src"]
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
         tool_bin = "hadolint"
 
@@ -60,7 +60,7 @@ class HadolintToolPlugin(ToolPlugin):
         config_file_path = None
         if self.plugin_context is not None:
             config_file_path = self.plugin_context.resources.get_file(tool_config)
-        flags: List[str] = ["-f", "json", "--no-fail"]
+        flags: list[str] = ["-f", "json", "--no-fail"]
         if "-f" in user_flags:
             idx = user_flags.index("-f")
             logging.warning(
@@ -72,7 +72,7 @@ class HadolintToolPlugin(ToolPlugin):
             user_flags.pop(idx)
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
         if (
             self.plugin_context
             and self.plugin_context.args.hadolint_docker is not None
@@ -98,7 +98,7 @@ class HadolintToolPlugin(ToolPlugin):
     # pylint: enable=too-many-locals
 
     def scan_local_binary(
-        self, tool_bin: str, flags: List[str], files: List[str]
+        self, tool_bin: str, flags: list[str], files: list[str]
     ) -> Optional[str]:
         """Use locally installed hadolint binary to scan."""
         try:
@@ -119,7 +119,7 @@ class HadolintToolPlugin(ToolPlugin):
             return None
 
     def scan_docker(
-        self, tool_bin: str, flags: List[str], files: List[str], config_file_path: str
+        self, tool_bin: str, flags: list[str], files: list[str], config_file_path: str
     ) -> Optional[str]:
         """Use hadolint docker image to scan."""
         try:
@@ -174,10 +174,10 @@ class HadolintToolPlugin(ToolPlugin):
             return None
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         # pylint: disable=too-many-nested-blocks
         for output in total_output:

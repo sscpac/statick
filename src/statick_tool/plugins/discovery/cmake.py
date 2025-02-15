@@ -16,7 +16,7 @@ import os
 import re
 import shutil
 import subprocess
-from typing import List, Match, Optional, Pattern, Union
+from typing import Match, Optional, Pattern, Union
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -31,7 +31,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         return "cmake"
 
     @classmethod
-    def get_discovery_dependencies(cls) -> List[str]:
+    def get_discovery_dependencies(cls) -> list[str]:
         """Get a list of plugins that must run before this one."""
         return ["ros"]
 
@@ -80,7 +80,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         if tool_flags is not None:
             extra_gcc_flags = tool_flags
 
-        subproc_args: List[str] = [
+        subproc_args: list[str] = [
             "cmake",
             ".",
         ]
@@ -90,7 +90,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         # defaults. In an effort to not break existing installations, we have made it
         # so that new CMake flags must explicitly be set in order to override the
         # default flags.
-        default_flags: List[str] = [
+        default_flags: list[str] = [
             "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
             "-DBUILD_GMOCK=ON",
             "-DBUILD_GTEST=OFF",
@@ -102,12 +102,12 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         if "cmake_flags" in package and package["cmake_flags"]:
             default_flags.append(package["cmake_flags"])
 
-        path_flags: List[str] = [
+        path_flags: list[str] = [
             "-DINPUT_DIR=" + package.path,
             "-DSTATICK_EXTRA_GCC_FLAGS=" + extra_gcc_flags,
         ]
 
-        cmake_flags: List[str] = []
+        cmake_flags: list[str] = []
         if self.plugin_context.args.cmake_flags is not None:
             cmake_flags = self.plugin_context.args.cmake_flags.split(",")
 

@@ -4,7 +4,7 @@ import logging
 import os
 import subprocess
 import sys
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
@@ -20,7 +20,7 @@ class DiscoveryPlugin:
         """Get name of plugin."""
 
     @classmethod
-    def get_discovery_dependencies(cls) -> List[str]:
+    def get_discovery_dependencies(cls) -> list[str]:
         """Get a list of discovery plugins that must run before this one."""
         return []
 
