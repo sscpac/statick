@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Upcoming
+
+### Fixed
+
+- Update permissions allowed when publishing Sphinx documentation. (#515)
+
 ## v0.12.0 - 2025-02-14
 
 ### Added
