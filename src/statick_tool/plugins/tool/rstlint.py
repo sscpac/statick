@@ -1,7 +1,7 @@
 """Apply rst-lint tool and gather results."""
 
 import logging
-from typing import List, Optional
+from typing import Optional
 
 import restructuredtext_lint
 from docutils.utils import SystemMessage
@@ -19,17 +19,17 @@ class RstlintToolPlugin(ToolPlugin):
         return "rstlint"
 
     # pylint: disable=too-many-locals
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
-        flags: List[str] = []
+        flags: list[str] = []
         user_flags = self.get_user_flags(level)
         flags += user_flags
 
-        files: List[str] = []
+        files: list[str] = []
         if "rst_src" in package:
             files += package["rst_src"]
 
-        total_output: List[SystemMessage] = []
+        total_output: list[SystemMessage] = []
 
         for src in files:
             output = restructuredtext_lint.lint_file(src, None, flags)
@@ -42,14 +42,14 @@ class RstlintToolPlugin(ToolPlugin):
             for output in total_output:
                 fid.write(str(output))
 
-        issues: List[Issue] = self.parse_tool_output(total_output)
+        issues: list[Issue] = self.parse_tool_output(total_output)
         return issues
 
     # pylint: enable=too-many-locals
 
-    def parse_tool_output(self, total_output: List[SystemMessage]) -> List[Issue]:
+    def parse_tool_output(self, total_output: list[SystemMessage]) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         # Have to ignore some type hints as they are an addition to SystemMessage
         # and not in the typeshed stubs.

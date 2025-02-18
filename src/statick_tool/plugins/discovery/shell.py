@@ -2,7 +2,7 @@
 
 import logging
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -20,7 +20,7 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for shell files."""
-        shell_files: List[str] = []
+        shell_files: list[str] = []
         shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
         shell_output = ("shell script", "dash script", "zsh script")
 

@@ -2,7 +2,7 @@
 
 import logging
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -20,7 +20,7 @@ class RstDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for rst files."""
-        src_files: List[str] = []
+        src_files: list[str] = []
 
         self.find_files(package)
 

@@ -4,7 +4,7 @@ import argparse
 import logging
 import os
 import shlex
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -22,19 +22,19 @@ class ToolPlugin:
         pass  # pylint: disable=unnecessary-pass
 
     @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
+    def get_tool_dependencies(cls) -> list[str]:
         """Get a list of tools that must run before this one."""
         return []
 
     def gather_args(self, args: argparse.Namespace) -> None:
         """Gather arguments."""
 
-    def get_file_types(self) -> List[str]:  # type: ignore[empty-body]
+    def get_file_types(self) -> list[str]:  # type: ignore[empty-body]
         """Return a list of file types the plugin can scan."""
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
-        files: List[str] = []
+        files: list[str] = []
         for file_type in self.get_file_types():
             if file_type in package and package[file_type]:
                 files += package[file_type]
@@ -56,20 +56,20 @@ class ToolPlugin:
         return []
 
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
 
     def parse_output(  # type: ignore[empty-body]
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
         self.plugin_context = plugin_context
 
-    def load_mapping(self) -> Dict[str, str]:
+    def load_mapping(self) -> dict[str, str]:
         """Load a mapping between warnings and identifiers."""
         file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
@@ -96,7 +96,7 @@ class ToolPlugin:
 
         if full_path is None:
             return {}
-        warning_mapping: Dict[str, str] = {}
+        warning_mapping: dict[str, str] = {}
         with open(full_path, "r", encoding="utf8") as mapping_file:
             for line in mapping_file.readlines():
                 split_line = line.strip().split(":")
@@ -108,13 +108,13 @@ class ToolPlugin:
                 warning_mapping[split_line[0]] = split_line[1]
         return warning_mapping
 
-    def get_user_flags(self, level: str, name: Optional[str] = None) -> List[str]:
+    def get_user_flags(self, level: str, name: Optional[str] = None) -> list[str]:
         """Get the user-defined extra flags for a specific tool/level combination."""
         if name is None:
             name = self.get_name()  # pylint: disable=assignment-from-no-return
         assert self.plugin_context is not None
         user_flags = self.plugin_context.config.get_tool_config(name, level, "flags")
-        flags: List[str] = []
+        flags: list[str] = []
         if user_flags:
             # See https://github.com/python/typeshed/issues/1476 for
             # justification to ignore.

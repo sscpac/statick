@@ -4,7 +4,7 @@ import argparse
 import difflib
 import logging
 import subprocess
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -29,7 +29,7 @@ class UncrustifyToolPlugin(ToolPlugin):
 
     def scan(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, level: str
-    ) -> Optional[List[Issue]]:
+    ) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
@@ -41,17 +41,17 @@ class UncrustifyToolPlugin(ToolPlugin):
         if self.plugin_context.args.uncrustify_bin is not None:
             uncrustify_bin = self.plugin_context.args.uncrustify_bin
 
-        flags: List[str] = []
+        flags: list[str] = []
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
+        files: list[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
         if "headers" in package:
             files += package["headers"]
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         try:
             format_file_name = self.plugin_context.resources.get_file("uncrustify.cfg")
@@ -106,14 +106,14 @@ class UncrustifyToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues: List[Issue] = self.parse_output(total_output, package)
+        issues: list[Issue] = self.parse_output(total_output, package)
         return issues
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         for output in total_output:
             issues.append(
                 Issue(

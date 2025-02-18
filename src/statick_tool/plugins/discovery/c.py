@@ -2,7 +2,7 @@
 
 import logging
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -20,7 +20,7 @@ class CDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for C files."""
-        c_files: List[str] = []
+        c_files: list[str] = []
         c_extensions = (".c", ".cc", ".cpp", ".cxx", ".h", ".hxx", ".hpp")
         c_output = ("c source", "c program", "c++ source")
 
