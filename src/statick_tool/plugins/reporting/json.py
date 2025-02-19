@@ -4,7 +4,7 @@ import json
 import logging
 import os
 from collections import OrderedDict
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -48,7 +48,7 @@ class JsonReportingPlugin(ReportingPlugin):
         all_issues = []
         for _, value in issues.items():
             for issue in value:
-                issue_dict: OrderedDict[str, str | int] = OrderedDict()
+                issue_dict: OrderedDict[str, Union[str, int]] = OrderedDict()
                 issue_dict["fileName"] = issue.filename
                 issue_dict["lineNumber"] = issue.line_number
                 issue_dict["tool"] = issue.tool

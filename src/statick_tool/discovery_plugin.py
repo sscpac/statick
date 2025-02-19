@@ -4,7 +4,7 @@ import logging
 import os
 import subprocess
 import sys
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
@@ -87,7 +87,7 @@ class DiscoveryPlugin:
             logging.warning("OSError on file command for %s", full_path)
             return ""
 
-    def set_plugin_context(self, plugin_context: None | PluginContext) -> None:
+    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
         self.plugin_context = plugin_context
 

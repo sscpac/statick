@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -25,7 +25,7 @@ class ReportingPlugin:
     ) -> Tuple[Optional[None], bool]:
         """Run the report generator."""
 
-    def set_plugin_context(self, plugin_context: None | PluginContext) -> None:
+    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Setter for plugin_context."""
         self.plugin_context = plugin_context
 
@@ -33,7 +33,9 @@ class ReportingPlugin:
         """Load a mapping between two sets."""
         file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
-        full_path: Any | str | None = self.plugin_context.resources.get_file(file_name)
+        full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(
+            file_name
+        )
         if (
             "mapping_file_suffix" in self.plugin_context.args
             and self.plugin_context.args.mapping_file_suffix is not None

@@ -16,7 +16,7 @@ import os
 import re
 import shutil
 import subprocess
-from typing import Match, Optional, Pattern
+from typing import Match, Optional, Pattern, Union
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -72,7 +72,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         cmake_template = self.plugin_context.resources.get_file("CMakeLists.txt.in")
         shutil.copyfile(cmake_template, "CMakeLists.txt")  # type: ignore
 
-        tool_flags: str | None = self.plugin_context.config.get_tool_config(
+        tool_flags: Union[str, None] = self.plugin_context.config.get_tool_config(
             "make", level, "flags", ""
         )
 

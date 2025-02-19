@@ -1,6 +1,6 @@
 """Manages which scan levels are run for packages."""
 
-from typing import Any
+from typing import Any, Union
 
 import yaml
 
@@ -24,7 +24,7 @@ class Profile:  # pylint: disable=too-few-public-methods
             if "default" not in self.profile:
                 raise ValueError(f"No 'default' key found in {filename}!")
 
-    def get_package_level(self, package: Package) -> str | Any:
+    def get_package_level(self, package: Package) -> Union[str, Any]:
         """Get which scan level to use for a given package."""
         if "packages" in self.profile:
             packages_profile = self.profile["packages"]

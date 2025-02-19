@@ -4,7 +4,7 @@ Sets what flags are used for each plugin at those levels.
 """
 
 import os
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import yaml
 
@@ -129,7 +129,7 @@ class Config:
         level: str,
         key: str,
         default: Optional[str] = None,
-    ) -> str | None | Any:
+    ) -> Optional[Union[str, Any]]:
         """Get flags to use for a plugin at a certain level."""
         if level not in self.config["levels"]:
             return default

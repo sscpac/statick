@@ -4,7 +4,7 @@ import argparse
 import logging
 import os
 import shlex
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -65,7 +65,7 @@ class ToolPlugin:
     ) -> list[Issue]:
         """Parse tool output and report issues."""
 
-    def set_plugin_context(self, plugin_context: None | PluginContext) -> None:
+    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
         """Set the plugin context."""
         self.plugin_context = plugin_context
 
@@ -73,7 +73,9 @@ class ToolPlugin:
         """Load a mapping between warnings and identifiers."""
         file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
-        full_path: Any | str | None = self.plugin_context.resources.get_file(file_name)
+        full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(
+            file_name
+        )
         if (
             "mapping_file_suffix" in self.plugin_context.args
             and self.plugin_context.args.mapping_file_suffix is not None

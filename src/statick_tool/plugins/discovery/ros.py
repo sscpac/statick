@@ -3,7 +3,7 @@
 import logging
 import os
 from functools import reduce
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 import xmltodict
 
@@ -22,7 +22,7 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
     @classmethod
     def deep_get(
         cls,
-        dictionary: str | dict[Any, str],
+        dictionary: Union[str, dict[Any, str]],
         keys: str,
         default: str = "",
     ) -> Any:
