@@ -13,7 +13,7 @@ https://github.com/KCL-Planning/VAL/tree/master/applications#validate
 import argparse
 import logging
 import subprocess
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -36,12 +36,12 @@ class ValValidateToolPlugin(ToolPlugin):
             help="VAL Validate binary path",
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
             return []
 
-        flags: List[str] = ["-v"]
+        flags: list[str] = ["-v"]
         flags += self.get_user_flags(level)
 
         validate_bin = "Validate"
@@ -53,7 +53,7 @@ class ValValidateToolPlugin(ToolPlugin):
             validate_bin = self.plugin_context.args.val_validate_bin
 
         try:
-            subproc_args: List[str] = (
+            subproc_args: list[str] = (
                 [validate_bin]
                 + flags
                 + package["pddl_domain_src"]
@@ -80,32 +80,32 @@ class ValValidateToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf-8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(
+        issues: list[Issue] = self.parse_tool_output(
             output, package["pddl_domain_src"][0]
         )
         return issues
 
-    def parse_tool_output(self, output: str, filename: str) -> List[Issue]:
+    def parse_tool_output(self, output: str, filename: str) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         issue_found = False
         for item in output.splitlines():
             msg = ""
-            warning_level = "0"
+            severity = 0
             issue_type = "0"
-            line_number = "0"
+            line_number = 0
 
             if item.startswith("Error:"):
                 issue_found = True
-                warning_level = "3"
-                line_number = "0"
+                severity = 5
+                line_number = 0
                 issue_type = "0"
                 msg = "Exact file and line number unknown. " + item.lstrip("Error: ")
 
             if item.startswith("Problem"):
                 issue_found = True
-                warning_level = "3"
-                line_number = "0"
+                severity = 3
+                line_number = 0
                 issue_type = "1"
                 msg = "Exact file and line number unknown. " + item
 
@@ -115,7 +115,7 @@ class ValValidateToolPlugin(ToolPlugin):
                     line_number,
                     self.get_name(),
                     issue_type,
-                    warning_level,
+                    severity,
                     msg,
                     None,
                 )

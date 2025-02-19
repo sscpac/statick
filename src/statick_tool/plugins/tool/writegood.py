@@ -6,7 +6,7 @@ Website: https://github.com/btford/write-good
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -20,21 +20,21 @@ class WriteGoodToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "writegood"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["md_src", "rst_src"]
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
         tool_bin = "write-good"
 
-        flags: List[str] = ["--parse"]
+        flags: list[str] = ["--parse"]
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         try:
             exe = [tool_bin] + flags + files
@@ -64,12 +64,12 @@ class WriteGoodToolPlugin(ToolPlugin):
         return total_output
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         writegood_re = r"(.+):(\d+):(\d+):(.+)"
         parse: Pattern[str] = re.compile(writegood_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
@@ -78,10 +78,10 @@ class WriteGoodToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             "suggestion",
-                            "1",
+                            1,
                             match.group(4),
                             None,
                         )

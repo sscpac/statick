@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,18 +17,18 @@ class YamllintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "yamllint"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["yaml"]
 
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        flags: List[str] = ["-f", "parsable"]
+        flags: list[str] = ["-f", "parsable"]
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
         output: str = ""
 
         try:
@@ -56,29 +56,28 @@ class YamllintToolPlugin(ToolPlugin):
         return total_output
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         yamllint_re = r"(.+):(\d+):(\d+):\s\[(.+)\]\s(.+)\s\((.+)\)"
         parse: Pattern[str] = re.compile(yamllint_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     issue_type = match.group(4)
+                    severity = 3
                     if issue_type == "error":
-                        level = "5"
-                    else:
-                        level = "3"
+                        severity = 5
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             match.group(6),
-                            level,
+                            severity,
                             match.group(5),
                             None,
                         )

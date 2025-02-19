@@ -6,7 +6,7 @@ import logging
 import os
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -52,7 +52,7 @@ class ClangFormatToolPlugin(ToolPlugin):
     def scan(  # pylint: disable=too-many-return-statements, too-many-branches
         self, package: Package, level: str
     ) -> Optional[
-        List[Issue]
+        list[Issue]
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
@@ -75,7 +75,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         ):
             clang_format_bin = self.plugin_context.args.clang_format_bin
 
-        files: List[str] = []
+        files: list[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -88,7 +88,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         if not check:
             return []
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         try:
             for src in files:
@@ -137,7 +137,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 for output in total_output:
                     fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(total_output, files)
+        issues: list[Issue] = self.parse_tool_output(total_output, files)
         return issues
 
     def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
@@ -198,12 +198,12 @@ class ClangFormatToolPlugin(ToolPlugin):
         return True
 
     def parse_tool_output(  # pylint: disable=too-many-locals
-        self, total_output: List[str], files: List[str]
-    ) -> List[Issue]:
+        self, total_output: list[str], files: list[str]
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         clangformat_re = r"<replacement offset="
         parse: Pattern[str] = re.compile(clangformat_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         if (
             not self.plugin_context
@@ -221,10 +221,10 @@ class ClangFormatToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             filename,
-                            "0",
+                            0,
                             self.get_name(),
                             "format",
-                            "1",
+                            1,
                             str(count) + " replacements",
                             None,
                         )
@@ -240,10 +240,10 @@ class ClangFormatToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             filename,
-                            str(issue["line_no"]),
+                            int(issue["line_no"]),
                             self.get_name(),
                             "format",
-                            "1",
+                            1,
                             msg,
                             None,
                         )

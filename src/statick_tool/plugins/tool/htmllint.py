@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,14 +17,14 @@ class HTMLLintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "htmllint"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["html_src"]
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
         tool_bin = "htmllint"
 
@@ -40,12 +40,12 @@ class HTMLLintToolPlugin(ToolPlugin):
         format_file_name = None
         if self.plugin_context is not None:
             format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags: List[str] = []
+        flags: list[str] = []
         if format_file_name is not None:
             flags += ["--rc", format_file_name]
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         for src in files:
             try:
@@ -88,15 +88,13 @@ class HTMLLintToolPlugin(ToolPlugin):
 
         return total_output
 
-    # pylint: enable=too-many-locals
-
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         re_str = r"(.+):\s.+\s(\d+),\s.+,\s(.+)"
         parse: Pattern[str] = re.compile(re_str)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             lines = output.split("\n")
@@ -104,9 +102,8 @@ class HTMLLintToolPlugin(ToolPlugin):
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     filename = match.group(1)
-                    line_number = match.group(2)
+                    line_number = int(match.group(2))
                     issue_type = "format"
-                    severity = "3"
                     message = match.group(3)
                     issues.append(
                         Issue(
@@ -114,7 +111,7 @@ class HTMLLintToolPlugin(ToolPlugin):
                             line_number,
                             self.get_name(),
                             issue_type,
-                            severity,
+                            3,
                             message,
                             None,
                         )

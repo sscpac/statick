@@ -4,7 +4,7 @@ import logging
 import os
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -18,19 +18,19 @@ class DocformatterToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "docformatter"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        flags: List[str] = ["-c"]
+        flags: list[str] = ["-c"]
         flags += user_flags
         tool_bin = "docformatter"
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         try:
             subproc_args = [tool_bin] + flags + files
@@ -61,13 +61,13 @@ class DocformatterToolPlugin(ToolPlugin):
     # pylint: enable=too-many-locals, too-many-branches, too-many-return-statements
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         # Gives relative path to file.
         tool_re = r"(.+)[\\/](.+)"
         parse: Pattern[str] = re.compile(tool_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             lines = output.splitlines()
@@ -77,10 +77,10 @@ class DocformatterToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             os.path.join(match.group(1), match.group(2)),
-                            "0",
+                            0,
                             self.get_name(),
                             "format",
-                            "3",
+                            3,
                             "would reformat",
                             None,
                         )

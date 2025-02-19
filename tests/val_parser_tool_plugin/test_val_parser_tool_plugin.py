@@ -114,28 +114,28 @@ def test_val_parser_tool_plugin_scan_find_errors():
     assert issues[0].filename == os.path.join(
         os.path.dirname(__file__), "error_package", "domain.pddl"
     )
-    assert issues[0].line_number == "7"
+    assert issues[0].line_number == 7
     assert issues[0].tool == "val_parser"
     assert issues[0].issue_type == "PDDL"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Syntax error in domain"
 
     assert issues[1].filename == os.path.join(
         os.path.dirname(__file__), "error_package", "problem.pddl"
     )
-    assert issues[1].line_number == "22"
+    assert issues[1].line_number == 22
     assert issues[1].tool == "val_parser"
     assert issues[1].issue_type == "PDDL"
-    assert issues[1].severity == "3"
+    assert issues[1].severity == 3
     assert issues[1].message == "Undeclared symbol: room"
 
     assert issues[2].filename == os.path.join(
         os.path.dirname(__file__), "error_package", "problem.pddl"
     )
-    assert issues[2].line_number == "24"
+    assert issues[2].line_number == 24
     assert issues[2].tool == "val_parser"
     assert issues[2].issue_type == "PDDL"
-    assert issues[2].severity == "3"
+    assert issues[2].severity == 3
     assert issues[2].message == "Undeclared symbol: ball"
 
     try:
@@ -220,16 +220,16 @@ def test_val_parser_tool_plugin_parse_valid():
     issues = vtp.parse_tool_output(output)
     assert len(issues) == 2
     assert issues[0].filename == "/tmp/dummy_package/domain.pddl"
-    assert issues[0].line_number == "83"
+    assert issues[0].line_number == 83
     assert issues[0].tool == "val_parser"
     assert issues[0].issue_type == "PDDL"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Syntax error in domain"
     assert issues[1].filename == "/tmp/dummy_package/problem.pddl"
-    assert issues[1].line_number == "42"
+    assert issues[1].line_number == 42
     assert issues[1].tool == "val_parser"
     assert issues[1].issue_type == "PDDL"
-    assert issues[1].severity == "3"
+    assert issues[1].severity == 3
     assert issues[1].message == "Undeclared symbol: x"
 
 

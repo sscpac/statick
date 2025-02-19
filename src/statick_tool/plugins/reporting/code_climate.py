@@ -5,7 +5,7 @@ import json
 import logging
 import os
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional, Tuple
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -20,7 +20,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         return "code_climate"
 
     def report(
-        self, package: Package, issues: Dict[str, List[Issue]], level: str
+        self, package: Package, issues: dict[str, list[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
         """Go through the issues list and print them in JSON format.
 
@@ -70,8 +70,8 @@ class CodeClimateReportingPlugin(ReportingPlugin):
 
     @classmethod
     def get_issue_dict(
-        cls, issue: Issue, category_mapping: Dict[str, str], gitlab: bool
-    ) -> Dict[str, Any]:
+        cls, issue: Issue, category_mapping: dict[str, str], gitlab: bool
+    ) -> dict[str, Any]:
         """Convert Issue object into dictionary."""
         severity = "info"
         try:
@@ -88,7 +88,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
                 issue.severity,
                 ex,
             )
-        issue_dict: Dict[str, Any] = OrderedDict()
+        issue_dict: dict[str, Any] = OrderedDict()
 
         issue_dict["severity"] = severity
 
@@ -108,7 +108,7 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         issue_dict["location"] = OrderedDict()
         issue_dict["location"]["path"] = issue.filename
         issue_dict["location"]["lines"] = OrderedDict()
-        issue_dict["location"]["lines"]["begin"] = int(issue.line_number)
+        issue_dict["location"]["lines"]["begin"] = issue.line_number
 
         # Exclude fields not used by gitlab if the report is too large (>10MB)
         # https://docs.gitlab.com/ee/user/project/merge_requests/code_quality.html#no-code-quality-report-is-displayed-in-a-merge-request

@@ -14,7 +14,7 @@ import argparse
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -37,12 +37,12 @@ class ValParserToolPlugin(ToolPlugin):
             help="VAL Parser binary path",
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
             return []
 
-        flags: List[str] = []
+        flags: list[str] = []
         flags += self.get_user_flags(level)
 
         parser_bin = "Parser"
@@ -53,7 +53,7 @@ class ValParserToolPlugin(ToolPlugin):
             parser_bin = self.plugin_context.args.val_parser_bin
 
         try:
-            subproc_args: List[str] = (
+            subproc_args: list[str] = (
                 [parser_bin]
                 + flags
                 + package["pddl_domain_src"]
@@ -80,14 +80,14 @@ class ValParserToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf-8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(output)
+        issues: list[Issue] = self.parse_tool_output(output)
         return issues
 
-    def parse_tool_output(self, output: str) -> List[Issue]:
+    def parse_tool_output(self, output: str) -> list[Issue]:
         """Parse tool output and report issues."""
         tool_re: str = r"(.+):\s(.+):\s(.+):\s(.+):\s(.+)\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         issue_found = False
 
         for line in output.splitlines():
@@ -100,18 +100,18 @@ class ValParserToolPlugin(ToolPlugin):
             if issue_found:
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
-                    warning_level = "1"
+                    severity = 1
                     if match.group(4) == "Warning":
-                        warning_level = "3"
+                        severity = 3
                     elif match.group(4) == "Error":
-                        warning_level = "5"
+                        severity = 5
 
                     issue = Issue(
                         match.group(1),
-                        match.group(3),
+                        int(match.group(3)),
                         self.get_name(),
                         "PDDL",
-                        warning_level,
+                        severity,
                         match.group(5) + " " + match.group(6),
                         None,
                     )

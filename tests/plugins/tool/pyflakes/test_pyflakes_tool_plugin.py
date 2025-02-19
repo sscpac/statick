@@ -70,19 +70,19 @@ def test_pyflakes_tool_plugin_parse_valid():
     issues = pftp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "pyflakes_test.py"
-    assert issues[0].line_number == "39"
+    assert issues[0].line_number == 39
     assert issues[0].tool == "pyflakes"
     assert issues[0].issue_type == "invalid syntax"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
     output = "pyflakes_test.py:4: 'django.utils.simplejson as json' imported but unused"
     issues = pftp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "pyflakes_test.py"
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "pyflakes"
     assert issues[0].issue_type == "imported but unused"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
     output = (
         "/home/user/valid_package/pyflakes_test.py:4:5 "
@@ -91,10 +91,10 @@ def test_pyflakes_tool_plugin_parse_valid():
     issues = pftp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/pyflakes_test.py"
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "pyflakes"
     assert issues[0].issue_type == "imported but unused"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
 
 
 def test_pyflakes_tool_plugin_parse_invalid():

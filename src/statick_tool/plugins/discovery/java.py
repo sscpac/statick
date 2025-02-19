@@ -2,7 +2,7 @@
 
 import logging
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.discovery_plugin import DiscoveryPlugin
 from statick_tool.exceptions import Exceptions
@@ -20,8 +20,8 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
         """Scan package looking for java files."""
-        java_src_files: List[str] = []
-        java_class_files: List[str] = []
+        java_src_files: list[str] = []
+        java_class_files: list[str] = []
 
         self.find_files(package)
 

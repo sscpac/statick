@@ -13,7 +13,7 @@ import csv
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import xmltodict
 import yaml
@@ -41,7 +41,7 @@ class CCCCToolPlugin(ToolPlugin):
 
     def scan(  # pylint: disable=too-many-branches,too-many-locals
         self, package: Package, level: str
-    ) -> Optional[List[Issue]]:
+    ) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "c_src" not in package.keys() or not package["c_src"]:
             return []
@@ -63,14 +63,14 @@ class CCCCToolPlugin(ToolPlugin):
             return []
         opts.append(" --lang=c++")
 
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for src in package["c_src"]:
             tool_output_dir: str = ".cccc-" + Path(src).name
             opts.append("--outdir=" + tool_output_dir)
 
             try:
-                subproc_args: List[str] = [cccc_bin] + opts + [src]
+                subproc_args: list[str] = [cccc_bin] + opts + [src]
                 logging.debug(" ".join(subproc_args))
                 log_output: bytes = subprocess.check_output(
                     subproc_args, stderr=subprocess.STDOUT
@@ -105,8 +105,8 @@ class CCCCToolPlugin(ToolPlugin):
         return issues
 
     def parse_tool_output(  # pylint: disable=too-many-branches
-        self, output: Dict[Any, Any], src: str, config_file: str
-    ) -> List[Issue]:
+        self, output: dict[Any, Any], src: str, config_file: str
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         if "CCCC_Project" not in output:
             return []
@@ -114,7 +114,7 @@ class CCCCToolPlugin(ToolPlugin):
         config = self.parse_config(config_file)
         logging.debug(config)
 
-        results: Dict[Any, Any] = {}
+        results: dict[Any, Any] = {}
         logging.debug(yaml.dump(output))
         if (
             "structural_summary" in output["CCCC_Project"]
@@ -124,7 +124,7 @@ class CCCCToolPlugin(ToolPlugin):
             for module in output["CCCC_Project"]["structural_summary"]["module"]:
                 if "name" not in module or isinstance(module, str):
                     break
-                metrics: Dict[Any, Any] = {}
+                metrics: dict[Any, Any] = {}
                 for field in module:
                     metrics[field] = {}
                     if "@value" in module[field]:
@@ -167,12 +167,12 @@ class CCCCToolPlugin(ToolPlugin):
                         metrics[field]["level"] = module[field]["@level"]
                 results[module["name"]] = metrics
 
-        issues: List[Issue] = self.find_issues(config, results, src)
+        issues: list[Issue] = self.find_issues(config, results, src)
 
         return issues
 
     @classmethod
-    def parse_config(cls, config_file: str) -> Dict[str, str]:
+    def parse_config(cls, config_file: str) -> dict[str, str]:
         """Parse CCCC configuration file.
 
         Gets warning and error thresholds for all the metrics. An explanation to dump
@@ -181,7 +181,7 @@ class CCCCToolPlugin(ToolPlugin):
 
         `cccc --opt_outfile=cccc.opt`
         """
-        config: Dict[Any, Any] = {}
+        config: dict[Any, Any] = {}
 
         if config_file is None:
             return config
@@ -200,10 +200,10 @@ class CCCCToolPlugin(ToolPlugin):
         return config
 
     def find_issues(
-        self, config: Dict[Any, Any], results: Dict[Any, Any], src: str
-    ) -> List[Issue]:
+        self, config: dict[Any, Any], results: dict[Any, Any], src: str
+    ) -> list[Issue]:
         """Identify issues by comparing tool results with tool configuration."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         dummy = []
 
         logging.debug("Results")
@@ -227,10 +227,10 @@ class CCCCToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 src,
-                                "0",
+                                0,
                                 self.get_name(),
                                 "error",
-                                "5",
+                                5,
                                 msg,
                                 None,
                             )
@@ -241,10 +241,10 @@ class CCCCToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 src,
-                                "0",
+                                0,
                                 self.get_name(),
                                 "warn",
-                                "3",
+                                3,
                                 msg,
                                 None,
                             )

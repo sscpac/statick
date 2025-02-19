@@ -4,7 +4,7 @@ import logging
 import os
 import subprocess
 import xml.etree.ElementTree as etree
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -19,11 +19,11 @@ class SpotbugsToolPlugin(ToolPlugin):
         return "spotbugs"
 
     @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
+    def get_tool_dependencies(cls) -> list[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists("mvn"):
@@ -35,7 +35,7 @@ class SpotbugsToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return None
 
-        flags: List[str] = [
+        flags: list[str] = [
             "-Dspotbugs.effort=Max",
             "-Dspotbugs.threshold=Low",
             "-Dspotbugs.xmlOutput=true",
@@ -56,7 +56,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             exclude_file_path = self.plugin_context.resources.get_file(exclude_file)
             flags += [f"-Dspotbugs.excludeFilterFile={exclude_file_path}"]
 
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         total_output: str = ""
         for pom in package["top_poms"]:
             try:
@@ -96,9 +96,9 @@ class SpotbugsToolPlugin(ToolPlugin):
 
     def parse_file_output(  # pylint: disable=too-many-locals
         self, output: str
-    ) -> Optional[List[Issue]]:
+    ) -> Optional[list[Issue]]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         try:
@@ -128,11 +128,11 @@ class SpotbugsToolPlugin(ToolPlugin):
                 )
                 file_path = java_path_string
             for issue in file_entry.findall("BugInstance"):
-                severity = "1"
+                severity = 1
                 if issue.attrib["priority"] == "Normal":
-                    severity = "3"
+                    severity = 3
                 elif issue.attrib["priority"] == "High":
-                    severity = "5"
+                    severity = 5
 
                 cert_reference = None
                 if issue.attrib["type"] in warnings_mapping:
@@ -140,7 +140,7 @@ class SpotbugsToolPlugin(ToolPlugin):
                 issues.append(
                     Issue(
                         file_path,
-                        issue.attrib["lineNumber"],
+                        int(issue.attrib["lineNumber"]),
                         self.get_name(),
                         issue.attrib["type"],
                         severity,

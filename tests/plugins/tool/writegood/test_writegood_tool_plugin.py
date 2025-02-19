@@ -84,22 +84,22 @@ def test_writegood_tool_plugin_scan_valid_with_issues():
     issues = plugin.scan(package, "level")
     assert len(issues) == 3
     assert issues[0].filename == os.path.join(os.path.dirname(__file__), "valid_package", "test.md")
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "writegood"
     assert issues[0].issue_type == "suggestion"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert issues[0].message == "\"So\" adds no meaning"
     assert issues[1].filename == os.path.join(os.path.dirname(__file__), "valid_package", "test.md")
-    assert issues[1].line_number == "4"
+    assert issues[1].line_number == 4
     assert issues[1].tool == "writegood"
     assert issues[1].issue_type == "suggestion"
-    assert issues[1].severity == "1"
+    assert issues[1].severity == 1
     assert issues[1].message == "\"was stolen\" may be passive voice"
     assert issues[2].filename == os.path.join(os.path.dirname(__file__), "valid_package", "test.md")
-    assert issues[2].line_number == "6"
+    assert issues[2].line_number == 6
     assert issues[2].tool == "writegood"
     assert issues[2].issue_type == "suggestion"
-    assert issues[2].severity == "1"
+    assert issues[2].severity == 1
     assert issues[2].message == "\"only\" can weaken meaning"
 
 
@@ -117,22 +117,22 @@ def test_writegood_tool_plugin_scan_valid_with_issues_rst():
     issues = plugin.scan(package, "level")
     assert len(issues) == 3
     assert issues[0].filename == os.path.join(os.path.dirname(__file__), "valid_package", "test.rst")
-    assert issues[0].line_number == "4"
+    assert issues[0].line_number == 4
     assert issues[0].tool == "writegood"
     assert issues[0].issue_type == "suggestion"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert issues[0].message == "\"So\" adds no meaning"
     assert issues[1].filename == os.path.join(os.path.dirname(__file__), "valid_package", "test.rst")
-    assert issues[1].line_number == "4"
+    assert issues[1].line_number == 4
     assert issues[1].tool == "writegood"
     assert issues[1].issue_type == "suggestion"
-    assert issues[1].severity == "1"
+    assert issues[1].severity == 1
     assert issues[1].message == "\"was stolen\" may be passive voice"
     assert issues[2].filename == os.path.join(os.path.dirname(__file__), "valid_package", "test.rst")
-    assert issues[2].line_number == "6"
+    assert issues[2].line_number == 6
     assert issues[2].tool == "writegood"
     assert issues[2].issue_type == "suggestion"
-    assert issues[2].severity == "1"
+    assert issues[2].severity == 1
     assert issues[2].message == "\"only\" can weaken meaning"
 
 
@@ -143,10 +143,10 @@ def test_writegood_tool_plugin_parse_valid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "README.md"
-    assert issues[0].line_number == "16"
+    assert issues[0].line_number == 16
     assert issues[0].tool == "writegood"
     assert issues[0].issue_type == "suggestion"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message == "be applied may be passive voice"
     )

@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,14 +17,14 @@ class JSHintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "jshint"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["html_src", "javascript_src"]
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
         tool_bin = "jshint"
 
@@ -40,13 +40,13 @@ class JSHintToolPlugin(ToolPlugin):
         format_file_name = None
         if self.plugin_context is not None:
             format_file_name = self.plugin_context.resources.get_file(tool_config)
-        flags: List[str] = []
+        flags: list[str] = []
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += ["-e", ".js,.html", "--extract", "auto", "--reporter", "unix"]
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         for src in files:
             try:
@@ -74,15 +74,13 @@ class JSHintToolPlugin(ToolPlugin):
 
         return total_output
 
-    # pylint: enable=too-many-locals
-
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         jshint_re = r"(.+):(\d+):(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(jshint_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             lines = output.split("\n")
@@ -90,9 +88,8 @@ class JSHintToolPlugin(ToolPlugin):
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     filename = match.group(1)
-                    line_number = match.group(2)
+                    line_number = int(match.group(2))
                     issue_type = "jshint"
-                    severity = "5"
                     message = match.group(4)
                     issues.append(
                         Issue(
@@ -100,7 +97,7 @@ class JSHintToolPlugin(ToolPlugin):
                             line_number,
                             self.get_name(),
                             issue_type,
-                            severity,
+                            5,
                             message,
                             None,
                         )

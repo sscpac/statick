@@ -6,7 +6,7 @@ Chktex documentation at http://mirrors.rit.edu/CTAN/systems/doc/chktex/ChkTeX.pd
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -20,23 +20,23 @@ class ChktexToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "chktex"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["tex"]
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        flags: List[str] = []
+        flags: list[str] = []
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         tool_bin: str = "chktex"
         try:
-            subproc_args: List[str] = [tool_bin] + flags + files
+            subproc_args: list[str] = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
@@ -61,14 +61,14 @@ class ChktexToolPlugin(ToolPlugin):
         return total_output
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         tool_re: str = r"(.+)\s(\d+)\s(.+)\s(.+)\s(.+)\s(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         filename: str = ""
-        line_number: str = "0"
+        line_number: int = 0
         issue_type: str = ""
         message: str = ""
 
@@ -79,7 +79,7 @@ class ChktexToolPlugin(ToolPlugin):
                     if match.group(1) == "Warning":
                         filename = match.group(4)
                         issue_type = match.group(2)
-                        line_number = match.group(6)
+                        line_number = int(match.group(6))
                         message = match.group(7)
                         issues.append(
                             Issue(
@@ -87,7 +87,7 @@ class ChktexToolPlugin(ToolPlugin):
                                 line_number,
                                 self.get_name(),
                                 issue_type,
-                                "3",
+                                3,
                                 message,
                                 None,
                             )

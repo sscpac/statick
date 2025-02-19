@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import Any, List, Match, Optional, Pattern
+from typing import Any, Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,14 +17,14 @@ class MakeToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "make"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package or not package["make_targets"]:
             logging.info("  Skipping make. No targets.")
             return []
 
         output = None
-        make_args: List[str] = ["make", "statick_cmake_target"]
+        make_args: list[str] = ["make", "statick_cmake_target"]
 
         try:
             output = subprocess.check_output(["make", "clean"], universal_newlines=True)
@@ -48,7 +48,7 @@ class MakeToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_package_output(package, output)
+        issues: list[Issue] = self.parse_package_output(package, output)
         return issues
 
     @classmethod
@@ -83,7 +83,7 @@ class MakeToolPlugin(ToolPlugin):
 
     def parse_package_output(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, output: str
-    ) -> List[Issue]:
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
@@ -98,7 +98,7 @@ class MakeToolPlugin(ToolPlugin):
                 matches.append(match.groups())
 
         filtered_matches = self.filter_matches(matches, package)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         for item in filtered_matches:
             cert_reference = None
             warning_list = warning_parse.match(item[4])
@@ -118,20 +118,20 @@ class MakeToolPlugin(ToolPlugin):
                 category = warning_list.groups("1")[0]
 
             if item[3].lower() == "warning":
-                warning_level = "3"
+                severity = 3
             elif item[3].lower() == "error":
-                warning_level = "5"
+                severity = 5
             elif item[3].lower() == "fatal error":
-                warning_level = "5"
+                severity = 5
             else:
-                warning_level = "3"
+                severity = 3
 
             issue = Issue(
                 item[0],
-                item[1],
+                int(item[1]),
                 self.get_name(),
                 category,
-                warning_level,
+                severity,
                 item[4],
                 cert_reference,
             )
@@ -143,10 +143,10 @@ class MakeToolPlugin(ToolPlugin):
             issues.append(
                 Issue(
                     "Linker",
-                    "0",
+                    0,
                     self.get_name(),
                     "linker",
-                    "5",
+                    5,
                     "Linking failed",
                     None,
                 )

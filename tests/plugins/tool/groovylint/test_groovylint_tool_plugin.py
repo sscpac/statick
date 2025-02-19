@@ -97,10 +97,10 @@ def test_groovylint_tool_plugin_parse_valid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "test_errors.groovy"
-    assert issues[0].line_number == "3"
+    assert issues[0].line_number == 3
     assert issues[0].tool == "groovylint"
     assert issues[0].issue_type == "UnnecessaryGString"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message
         == "The String 'Hello World!' can be wrapped in single quotes instead of double quotes"

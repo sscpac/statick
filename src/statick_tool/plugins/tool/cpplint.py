@@ -4,7 +4,7 @@ import logging
 import os
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -18,7 +18,7 @@ class CpplintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "cpplint"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
             return []
@@ -30,11 +30,11 @@ class CpplintToolPlugin(ToolPlugin):
             logging.warning("  cpplint not found!")
             return None
 
-        flags: List[str] = []
+        flags: list[str] = []
         flags += self.get_user_flags(level)
         cpplint = package["cpplint"]
 
-        files: List[str] = []
+        files: list[str] = []
         if "make_targets" in package:
             for target in package["make_targets"]:
                 files += target["src"]
@@ -62,7 +62,7 @@ class CpplintToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(output)
+        issues: list[Issue] = self.parse_tool_output(output)
         return issues
 
     @classmethod
@@ -85,11 +85,11 @@ class CpplintToolPlugin(ToolPlugin):
             return True
         return False
 
-    def parse_tool_output(self, output: str) -> List[Issue]:
+    def parse_tool_output(self, output: str) -> list[Issue]:
         """Parse tool output and report issues."""
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
         parse: Pattern[str] = re.compile(lint_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         for line in output.splitlines():
             match: Optional[Match[str]] = parse.match(line)
             if match and not self.check_for_exceptions(match):
@@ -97,10 +97,10 @@ class CpplintToolPlugin(ToolPlugin):
                 issues.append(
                     Issue(
                         norm_path,
-                        match.group(2),
+                        int(match.group(2)),
                         self.get_name(),
                         match.group(4),
-                        match.group(5),
+                        int(match.group(5)),
                         match.group(3),
                         None,
                     )

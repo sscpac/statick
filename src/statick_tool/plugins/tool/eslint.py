@@ -5,7 +5,7 @@ import logging
 import pathlib
 import shutil
 import subprocess
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -19,7 +19,7 @@ class ESLintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "eslint"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["html_src", "javascript_src"]
 
@@ -69,20 +69,20 @@ class ESLintToolPlugin(ToolPlugin):
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
         tool_bin = "eslint"
 
         (format_file_name, copied_file) = self.get_format_file(level)
 
-        flags: List[str] = ["-f", "json"]
+        flags: list[str] = ["-f", "json"]
         if format_file_name is not None:
             flags += ["-c", format_file_name]
         flags += []
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         for src in files:
             try:
@@ -139,10 +139,10 @@ class ESLintToolPlugin(ToolPlugin):
             format_file_path.unlink()
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         for output in total_output:
             try:
                 data = json.loads(output)
@@ -150,12 +150,12 @@ class ESLintToolPlugin(ToolPlugin):
                     file_path = line["filePath"]
                     for issue in line["messages"]:
                         severity_str = issue["severity"]
-                        severity = "3"
+                        severity = 3
                         if severity_str == 1:  # warning
-                            severity = "3"
+                            severity = 3
                         elif severity_str == 2:  # error
-                            severity = "5"
-                        line_num = "0"
+                            severity = 5
+                        line_num = 0
                         if "line" in issue:
                             line_num = issue["line"]
                         issues.append(

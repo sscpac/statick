@@ -77,10 +77,10 @@ def test_perlcritic_tool_plugin_scan_valid():
     ]
     issues = pctp.scan(package, "level")
     assert len(issues) == 1
-    assert issues[0].line_number == "2"
+    assert issues[0].line_number == 2
     assert issues[0].tool == "perlcritic"
     assert issues[0].issue_type == "InputOutput::ProhibitBarewordFileHandles"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Bareword file handle opened"
 
 
@@ -106,10 +106,10 @@ def test_perlcritic_tool_plugin_parse_valid():
     issues = pctp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/test.pl"
-    assert issues[0].line_number == "2"
+    assert issues[0].line_number == 2
     assert issues[0].tool == "perlcritic"
     assert issues[0].issue_type == "InputOutput::ProhibitBarewordFileHandles"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Bareword file handle opened"
 
 
@@ -123,10 +123,10 @@ def test_perlcritic_tool_plugin_parse_warnings_mapping():
     issues = pctp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/test.pl"
-    assert issues[0].line_number == "2"
+    assert issues[0].line_number == 2
     assert issues[0].tool == "perlcritic"
     assert issues[0].issue_type == "InputOutput::ProhibitTwoArgOpen"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "any string"
     assert issues[0].cert_reference == "IDS31-PL"
 

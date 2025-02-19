@@ -94,10 +94,10 @@ def test_cpplint_tool_plugin_scan_valid():
     assert issues[2].filename == os.path.join(
         os.path.dirname(__file__), "valid_package", "test.c"
     )
-    assert issues[2].line_number == "6"
+    assert issues[2].line_number == 6
     assert issues[2].tool == "cpplint"
     assert issues[2].issue_type == "whitespace/line_length"
-    assert issues[2].severity == "2"
+    assert issues[2].severity == 2
     assert issues[2].message == " Lines should be <= 80 characters long "
 
 
@@ -111,10 +111,10 @@ def test_cpplint_tool_plugin_parse_valid():
     issues = ctp.parse_tool_output(output)
     assert len(issues) == 1
     assert issues[0].filename == os.path.join("valid_package", "test.c")
-    assert issues[0].line_number == "14"
+    assert issues[0].line_number == 14
     assert issues[0].tool == "cpplint"
     assert issues[0].issue_type == "whitespace/blank_line"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert (
         issues[0].message
         == "Redundant blank line at the end of a code block should be deleted."

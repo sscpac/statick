@@ -7,7 +7,7 @@ import argparse
 import json
 import logging
 import subprocess
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -30,7 +30,7 @@ class ShellcheckToolPlugin(ToolPlugin):
             help="shellcheck binary path",
         )
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "shell_src" not in package or not package["shell_src"]:
             return []
@@ -40,10 +40,10 @@ class ShellcheckToolPlugin(ToolPlugin):
             shellcheck_bin = self.plugin_context.args.shellcheck_bin
 
         # Get output in JSON format.
-        flags: List[str] = ["-f", "json"]
+        flags: list[str] = ["-f", "json"]
         flags += self.get_user_flags(level)
 
-        files: List[str] = []
+        files: list[str] = []
         if "shell_src" in package:
             files += package["shell_src"]
 
@@ -71,12 +71,12 @@ class ShellcheckToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_json_output(json.loads(output))
+        issues: list[Issue] = self.parse_json_output(json.loads(output))
         return issues
 
-    def parse_json_output(self, output: Any) -> List[Issue]:
+    def parse_json_output(self, output: Any) -> list[Issue]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         for item in output:
             if (
                 "level" not in item
@@ -88,22 +88,22 @@ class ShellcheckToolPlugin(ToolPlugin):
                 logging.debug("  Found invalid shellcheck output: %s", item)
                 continue
             if item["level"] == "style":
-                warning_level = "1"
+                severity = 1
             elif item["level"] == "info":
-                warning_level = "1"
+                severity = 1
             elif item["level"] == "warning":
-                warning_level = "3"
+                severity = 3
             elif item["level"] == "error":
-                warning_level = "5"
+                severity = 5
             else:
-                warning_level = "3"
+                severity = 3
 
             issue = Issue(
                 item["file"],
-                str(item["line"]),
+                int(item["line"]),
                 self.get_name(),
                 "SC" + str(item["code"]),
-                warning_level,
+                severity,
                 item["message"],
                 None,
             )

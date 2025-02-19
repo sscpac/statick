@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,15 +17,15 @@ class PylintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "pylint"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        flags: List[str] = [
+        flags: list[str] = [
             "--msg-template='{abspath}:{line}: [{msg_id}({symbol}), {obj}] {msg}'",
             "--reports=no",
         ]
@@ -33,7 +33,7 @@ class PylintToolPlugin(ToolPlugin):
         if self.plugin_context and self.plugin_context.args.max_procs is not None:
             flags += [f"-j {self.plugin_context.args.max_procs}"]
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         try:
             subproc_args = ["pylint"] + flags + files
@@ -60,12 +60,12 @@ class PylintToolPlugin(ToolPlugin):
         return total_output
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         pylint_re = r"(.+):(\d+):\s\[(.+)\]\s(.+)"
         parse: Pattern[str] = re.compile(pylint_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():
@@ -77,10 +77,10 @@ class PylintToolPlugin(ToolPlugin):
                             issues.append(
                                 Issue(
                                     match.group(1),
-                                    match.group(2),
+                                    int(match.group(2)),
                                     self.get_name(),
                                     parts[0],
-                                    "5",
+                                    5,
                                     match.group(4),
                                     None,
                                 )
@@ -89,10 +89,10 @@ class PylintToolPlugin(ToolPlugin):
                             issues.append(
                                 Issue(
                                     match.group(1),
-                                    match.group(2),
+                                    int(match.group(2)),
                                     self.get_name(),
                                     parts[0],
-                                    "5",
+                                    5,
                                     parts[1].strip() + ": " + match.group(4),
                                     None,
                                 )
@@ -101,10 +101,10 @@ class PylintToolPlugin(ToolPlugin):
                         issues.append(
                             Issue(
                                 match.group(1),
-                                match.group(2),
+                                int(match.group(2)),
                                 self.get_name(),
                                 match.group(3),
-                                "5",
+                                5,
                                 match.group(4),
                                 None,
                             )
