@@ -4,7 +4,7 @@ import logging
 import os
 import subprocess
 import sys
-from typing import Any, List, Optional, Union
+from typing import Any, Optional
 
 from statick_tool.exceptions import Exceptions
 from statick_tool.package import Package
@@ -20,7 +20,7 @@ class DiscoveryPlugin:
         """Get name of plugin."""
 
     @classmethod
-    def get_discovery_dependencies(cls) -> List[str]:
+    def get_discovery_dependencies(cls) -> list[str]:
         """Get a list of discovery plugins that must run before this one."""
         return []
 
@@ -87,7 +87,7 @@ class DiscoveryPlugin:
             logging.warning("OSError on file command for %s", full_path)
             return ""
 
-    def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
+    def set_plugin_context(self, plugin_context: None | PluginContext) -> None:
         """Set the plugin context."""
         self.plugin_context = plugin_context
 

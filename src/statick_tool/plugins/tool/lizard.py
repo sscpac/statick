@@ -4,7 +4,7 @@ import io
 import logging
 import re
 from contextlib import redirect_stdout
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 import lizard
 
@@ -24,7 +24,7 @@ class LizardToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "lizard"
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if not package.path:
             return []
@@ -64,11 +64,11 @@ class LizardToolPlugin(ToolPlugin):
             with open(self.get_name() + ".log", "w", encoding="utf8") as fid:
                 fid.write(output)
 
-        issues: List[Issue] = self.parse_tool_output(output)
+        issues: list[Issue] = self.parse_tool_output(output)
 
         return issues
 
-    def parse_tool_output(self, output: str) -> List[Issue]:
+    def parse_tool_output(self, output: str) -> list[Issue]:
         """Parse tool output and report issues."""
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
         parse: Pattern[str] = re.compile(lizard_re)
@@ -78,7 +78,7 @@ class LizardToolPlugin(ToolPlugin):
             if match:
                 matches.append(match.groups())
 
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         for item in matches:
             issue = Issue(
                 item[0], int(item[1]), self.get_name(), item[2], 5, item[3], None
@@ -88,7 +88,7 @@ class LizardToolPlugin(ToolPlugin):
 
         return issues
 
-    def remove_invalid_flags(self, flag_list: List[str]) -> List[str]:
+    def remove_invalid_flags(self, flag_list: list[str]) -> list[str]:
         """Filter out all disabled flags."""
         return [x for x in flag_list if self.valid_flag(x)]
 

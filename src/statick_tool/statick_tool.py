@@ -10,7 +10,7 @@ import sys
 import time
 from importlib.metadata import version
 from logging.handlers import MemoryHandler
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional, Tuple
 
 from statick_tool.config import Config
 from statick_tool.discovery_plugin import DiscoveryPlugin
@@ -31,24 +31,24 @@ else:
 class Statick:  # pylint: disable=too-many-instance-attributes
     """Code analysis front-end."""
 
-    def __init__(self, user_paths: List[str]) -> None:
+    def __init__(self, user_paths: list[str]) -> None:
         """Initialize Statick."""
         self.default_level = "default"
         self.resources = Resources(user_paths)
 
-        self.discovery_plugins: Dict[str, Any] = {}
+        self.discovery_plugins: dict[str, Any] = {}
         plugins = entry_points(group="statick_tool.plugins.discovery")
         for plugin_type in plugins:
             plugin = plugin_type.load()
             self.discovery_plugins[plugin_type.name] = plugin()
 
-        self.reporting_plugins: Dict[str, Any] = {}
+        self.reporting_plugins: dict[str, Any] = {}
         plugins = entry_points(group="statick_tool.plugins.reporting")
         for plugin_type in plugins:
             plugin = plugin_type.load()
             self.reporting_plugins[plugin_type.name] = plugin()
 
-        self.tool_plugins: Dict[str, Any] = {}
+        self.tool_plugins: dict[str, Any] = {}
         plugins = entry_points(group="statick_tool.plugins.tool")
         for plugin_type in plugins:
             plugin = plugin_type.load()
@@ -56,7 +56,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         self.config: Optional[Config] = None
         self.exceptions: Optional[Exceptions] = None
-        self.timings: List[Timing] = []
+        self.timings: list[Timing] = []
 
     @staticmethod
     def set_logging_level(args: argparse.Namespace) -> None:
@@ -127,7 +127,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         except ValueError as ex:
             logging.error("Exceptions file %s has errors: %s", exceptions_filename, ex)
 
-    def get_ignore_packages(self) -> List[str]:
+    def get_ignore_packages(self) -> list[str]:
         """Get packages to ignore during scan process."""
         if self.exceptions is None:
             return []
@@ -275,7 +275,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         timing = Timing(package, name, plugin_type, duration)
         self.timings.append(timing)
 
-    def get_timings(self) -> List[Timing]:
+    def get_timings(self) -> list[Timing]:
         """Return list of timings for each component."""
         return self.timings
 
@@ -283,7 +283,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     # pylint: disable=too-many-statements
     def run(
         self, path: str, args: argparse.Namespace, start_time: Optional[float] = None
-    ) -> Tuple[Optional[Dict[str, List[Issue]]], bool]:
+    ) -> Tuple[Optional[dict[str, list[Issue]]], bool]:
         """Run scan tools against targets on path."""
         success = True
 
@@ -337,7 +337,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             "Scanning package %s (%s) at level %s", package.name, package.path, level
         )
 
-        issues: Dict[str, List[Issue]] = {}
+        issues: dict[str, list[Issue]] = {}
 
         ignore_packages = self.get_ignore_packages()
         if package.name in ignore_packages:
@@ -365,7 +365,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         timing = Timing(package.name, "find files", "Discovery", duration)
         self.timings.append(timing)
 
-        plugins_ran: List[Any] = []
+        plugins_ran: list[Any] = []
         for plugin_name in discovery_plugins:
             if plugin_name not in self.discovery_plugins:
                 logging.error("Can't find specified discovery plugin %s!", plugin_name)
@@ -409,7 +409,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             enabled_plugins = list(self.tool_plugins)
         plugins_to_run = copy.copy(enabled_plugins)
         plugins_ran = []
-        plugin_dependencies: List[str] = []
+        plugin_dependencies: list[str] = []
         while plugins_to_run:
             plugin_name = plugins_to_run[0]
 
@@ -507,7 +507,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def run_workspace(
         self, parsed_args: argparse.Namespace, start_time: Optional[float] = None
     ) -> Tuple[
-        Optional[Dict[str, List[Issue]]], bool
+        Optional[dict[str, list[Issue]]], bool
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
         """Run statick on a workspace."""
         if parsed_args.output_directory:
@@ -565,7 +565,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             return None, True
 
         count = 0
-        total_issues: List[Any] = []
+        total_issues: list[Any] = []
         num_packages = len(packages)
         mp_args = []
         if multiprocessing.get_start_method() == "fork":
@@ -601,7 +601,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         logging.info("-- overall report --")
 
         success = True
-        issues: Dict[str, List[Issue]] = {}
+        issues: dict[str, list[Issue]] = {}
         for issue in total_issues:
             if issue is not None:
                 for key, value in list(issue.items()):
@@ -614,7 +614,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
                         if value:
                             success = False
 
-        enabled_reporting_plugins: List[str] = []
+        enabled_reporting_plugins: list[str] = []
 
         # Make a fake 'all' package for reporting
         dummy_all_package = Package("all_packages", parsed_args.path)
@@ -659,7 +659,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         count: int,
         package: Package,
         num_packages: int,
-    ) -> Tuple[Optional[Dict[str, List[Issue]]], List[Timing]]:
+    ) -> Tuple[Optional[dict[str, list[Issue]]], list[Timing]]:
         """Scan each package in a separate process while buffering output."""
         logger = logging.getLogger()
         old_handler = None

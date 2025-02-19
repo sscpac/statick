@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,18 +17,18 @@ class BlackToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "black"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        flags: List[str] = ["--check"]
+        flags: list[str] = ["--check"]
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         tool_bin = "black"
         try:
@@ -62,8 +62,8 @@ class BlackToolPlugin(ToolPlugin):
         return total_output
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         tool_re_reformat = r"(.+)\s(.+)\s(.+)"
         parse_reformat: Pattern[str] = re.compile(tool_re_reformat)
@@ -77,7 +77,7 @@ class BlackToolPlugin(ToolPlugin):
         # error: cannot format /home/user/file: Cannot parse: 1:3: {faulty_line}
         tool_re_parse_error = r"\w+:\s(.+):\s(.+):\s([0-9]+):([0-9]+):\s(.+)"
         parse_error: Pattern[str] = re.compile(tool_re_parse_error)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
 
         for output in total_output:
             for line in output.splitlines():

@@ -3,7 +3,7 @@
 import logging
 import re
 import subprocess
-from typing import List, Match, Optional, Pattern
+from typing import Match, Optional, Pattern
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -17,23 +17,23 @@ class LacheckToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "lacheck"
 
-    def get_file_types(self) -> List[str]:
+    def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["tex"]
 
     # pylint: disable=too-many-locals
     def process_files(
-        self, package: Package, level: str, files: List[str], user_flags: List[str]
-    ) -> Optional[List[str]]:
+        self, package: Package, level: str, files: list[str], user_flags: list[str]
+    ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        flags: List[str] = []
+        flags: list[str] = []
         flags += user_flags
 
-        total_output: List[str] = []
+        total_output: list[str] = []
 
         tool_bin: str = "lacheck"
         try:
-            subproc_args: List[str] = [tool_bin] + flags + files
+            subproc_args: list[str] = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
@@ -57,12 +57,12 @@ class LacheckToolPlugin(ToolPlugin):
         return total_output
 
     def parse_output(
-        self, total_output: List[str], package: Optional[Package] = None
-    ) -> List[Issue]:
+        self, total_output: list[str], package: Optional[Package] = None
+    ) -> list[Issue]:
         """Parse tool output and report issues."""
         tool_re: str = r"(.+)\s(.+)\s(\d+):\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         filename: str = ""
         line_number: int = 0
         issue_type: str = ""

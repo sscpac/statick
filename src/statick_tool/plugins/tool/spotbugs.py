@@ -4,7 +4,7 @@ import logging
 import os
 import subprocess
 import xml.etree.ElementTree as etree
-from typing import List, Optional
+from typing import Optional
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -19,11 +19,11 @@ class SpotbugsToolPlugin(ToolPlugin):
         return "spotbugs"
 
     @classmethod
-    def get_tool_dependencies(cls) -> List[str]:
+    def get_tool_dependencies(cls) -> list[str]:
         """Get a list of tools that must run before this one."""
         return ["make"]
 
-    def scan(self, package: Package, level: str) -> Optional[List[Issue]]:
+    def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         # Sanity check - make sure mvn exists
         if not self.command_exists("mvn"):
@@ -35,7 +35,7 @@ class SpotbugsToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return None
 
-        flags: List[str] = [
+        flags: list[str] = [
             "-Dspotbugs.effort=Max",
             "-Dspotbugs.threshold=Low",
             "-Dspotbugs.xmlOutput=true",
@@ -56,7 +56,7 @@ class SpotbugsToolPlugin(ToolPlugin):
             exclude_file_path = self.plugin_context.resources.get_file(exclude_file)
             flags += [f"-Dspotbugs.excludeFilterFile={exclude_file_path}"]
 
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         total_output: str = ""
         for pom in package["top_poms"]:
             try:
@@ -96,9 +96,9 @@ class SpotbugsToolPlugin(ToolPlugin):
 
     def parse_file_output(  # pylint: disable=too-many-locals
         self, output: str
-    ) -> Optional[List[Issue]]:
+    ) -> Optional[list[Issue]]:
         """Parse tool output and report issues."""
-        issues: List[Issue] = []
+        issues: list[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()
         try:
