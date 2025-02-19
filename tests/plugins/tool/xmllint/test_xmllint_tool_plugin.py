@@ -70,10 +70,10 @@ def test_xmllint_tool_plugin_parse_valid():
     issues = xltp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/premature_end.xml"
-    assert issues[0].line_number == "3"
+    assert issues[0].line_number == 3
     assert issues[0].tool == "xmllint"
     assert issues[0].issue_type == "parser error"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message == "Opening and ending tag mismatch: notclosed line 2 and tag"
     )

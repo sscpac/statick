@@ -86,10 +86,10 @@ def test_pylint_tool_plugin_parse_valid():
     issues = pltp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "pylint_basic.py"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "pylint"
     assert issues[0].issue_type == "W0611(unused-import)"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Unused import subprocess"
 
     output = "pylint_basic.py:1: [W0611(unused-import)] Unused import subprocess"

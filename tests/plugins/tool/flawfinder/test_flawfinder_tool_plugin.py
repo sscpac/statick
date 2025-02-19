@@ -124,10 +124,10 @@ def test_flawfinder_tool_plugin_parse_valid():
     issues = fftp.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "strlen.c"
-    assert issues[0].line_number == "2"
+    assert issues[0].line_number == 2
     assert issues[0].tool == "flawfinder"
     assert issues[0].issue_type == "(buffer) strlen"
-    assert issues[0].severity == "1"
+    assert issues[0].severity == 1
     assert (
         issues[0].message
         == "Does not handle strings that are not \0-terminated; if given one it may perform an over-read (it could cause a crash if unprotected) (CWE-126)."

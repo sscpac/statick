@@ -94,10 +94,10 @@ def test_dockerfilelint_tool_plugin_parse_valid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "Dockerfile"
-    assert issues[0].line_number == "1"
+    assert issues[0].line_number == 1
     assert issues[0].tool == "dockerfile-lint"
     assert issues[0].issue_type == "is_latest_tag"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert (
         issues[0].message
         == "base image uses 'latest' tag: using the 'latest' tag may cause unpredictable builds. It is recommended that a specific tag is used in the FROM line or *-released which is the latest supported release."
@@ -111,10 +111,10 @@ def test_dockerfilelint_tool_plugin_parse_invalid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "EXCEPTION"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "dockerfile-lint"
     assert issues[0].issue_type == "ValueError"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Expecting value: line 1 column 1 (char 0)"
 
 
@@ -148,10 +148,10 @@ def test_dockerfilelint_tool_plugin_scan_calledprocesserror(
     issues = plugin.scan(package, "level")
     assert len(issues) == 1
     assert issues[0].filename == "EXCEPTION"
-    assert issues[0].line_number == "0"
+    assert issues[0].line_number == 0
     assert issues[0].tool == "dockerfile-lint"
     assert issues[0].issue_type == "ValueError"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Expecting value: line 1 column 1 (char 0)"
 
 

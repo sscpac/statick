@@ -86,8 +86,8 @@ def test_make_tool_plugin_parse_valid():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "valid_package/hello.c"
-    assert issues[0].line_number == "7"
-    assert issues[0].severity == "5"
+    assert issues[0].line_number == 7
+    assert issues[0].severity == 5
     assert issues[0].message == "expected ; before return"
 
 
@@ -113,8 +113,8 @@ def test_make_tool_plugin_parse_overloaded_virtual():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
-    assert issues[0].line_number == "7"
-    assert issues[0].severity == "5"
+    assert issues[0].line_number == 7
+    assert issues[0].severity == 5
     assert issues[0].message == "overloaded-virtual: second line"
 
 
@@ -126,8 +126,8 @@ def test_make_tool_plugin_parse_warning_levels():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
-    assert issues[0].line_number == "7"
-    assert issues[0].severity == "5"
+    assert issues[0].line_number == 7
+    assert issues[0].severity == 5
     assert issues[0].message == "This is a fatal error"
     assert issues[0].issue_type == "fatal-error"
 
@@ -135,8 +135,8 @@ def test_make_tool_plugin_parse_warning_levels():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
-    assert issues[0].line_number == "8"
-    assert issues[0].severity == "3"
+    assert issues[0].line_number == 8
+    assert issues[0].severity == 3
     assert issues[0].message == "This is a warning"
     assert issues[0].issue_type == "unknown-error"
 
@@ -144,8 +144,8 @@ def test_make_tool_plugin_parse_warning_levels():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.c"
-    assert issues[0].line_number == "8"
-    assert issues[0].severity == "3"
+    assert issues[0].line_number == 8
+    assert issues[0].severity == 3
     assert issues[0].message == "This is not a type"
     assert issues[0].issue_type == "unknown-error"
 
@@ -164,8 +164,8 @@ def test_make_tool_plugin_parse_linker_error():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "Linker"
-    assert issues[0].line_number == "0"
-    assert issues[0].severity == "5"
+    assert issues[0].line_number == 0
+    assert issues[0].severity == 5
     assert issues[0].message == "Linking failed"
     assert issues[0].issue_type == "linker"
 
@@ -178,8 +178,8 @@ def test_make_tool_plugin_parse_warnings_mapping():
     issues = mtp.parse_package_output(package, output)
     assert len(issues) == 1
     assert issues[0].filename == "/home/user/valid_package/hello.cpp"
-    assert issues[0].line_number == "8"
-    assert issues[0].severity == "3"
+    assert issues[0].line_number == 8
+    assert issues[0].severity == 3
     assert issues[0].message == "'Class::i_' will be initialized after [-Wreorder]"
     assert issues[0].issue_type == "-Wreorder"
     assert issues[0].cert_reference == "OOP53-CPP"

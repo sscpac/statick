@@ -66,7 +66,7 @@ class PydocstyleToolPlugin(ToolPlugin):
         parse_second: Pattern[str] = re.compile(tool_re_second)
         issues: list[Issue] = []
         filename = ""
-        line_number = "0"
+        line_number = 0
         issue_type = ""
         message = ""
 
@@ -78,7 +78,7 @@ class PydocstyleToolPlugin(ToolPlugin):
                     first_line = False
                     if match:
                         filename = match.group(1)
-                        line_number = match.group(2)
+                        line_number = int(match.group(2))
                 else:
                     match_second: Optional[Match[str]] = parse_second.match(line)
                     first_line = True
@@ -91,7 +91,7 @@ class PydocstyleToolPlugin(ToolPlugin):
                                 line_number,
                                 self.get_name(),
                                 issue_type,
-                                "5",
+                                5,
                                 message,
                                 None,
                             )

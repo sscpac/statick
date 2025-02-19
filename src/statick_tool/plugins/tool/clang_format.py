@@ -221,10 +221,10 @@ class ClangFormatToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             filename,
-                            "0",
+                            0,
                             self.get_name(),
                             "format",
-                            "1",
+                            1,
                             str(count) + " replacements",
                             None,
                         )
@@ -240,10 +240,10 @@ class ClangFormatToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             filename,
-                            str(issue["line_no"]),
+                            int(issue["line_no"]),
                             self.get_name(),
                             "format",
-                            "1",
+                            1,
                             msg,
                             None,
                         )

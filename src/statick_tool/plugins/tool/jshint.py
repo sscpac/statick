@@ -74,8 +74,6 @@ class JSHintToolPlugin(ToolPlugin):
 
         return total_output
 
-    # pylint: enable=too-many-locals
-
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
@@ -90,9 +88,8 @@ class JSHintToolPlugin(ToolPlugin):
                 match: Optional[Match[str]] = parse.match(line)
                 if match:
                     filename = match.group(1)
-                    line_number = match.group(2)
+                    line_number = int(match.group(2))
                     issue_type = "jshint"
-                    severity = "5"
                     message = match.group(4)
                     issues.append(
                         Issue(
@@ -100,7 +97,7 @@ class JSHintToolPlugin(ToolPlugin):
                             line_number,
                             self.get_name(),
                             issue_type,
-                            severity,
+                            5,
                             message,
                             None,
                         )

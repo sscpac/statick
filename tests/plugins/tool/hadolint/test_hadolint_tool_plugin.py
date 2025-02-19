@@ -93,10 +93,10 @@ def test_hadolint_tool_plugin_parse_valid():
     issues = plugin.parse_output([output])
     assert len(issues) == 1
     assert issues[0].filename == "Dockerfile"
-    assert issues[0].line_number == "3"
+    assert issues[0].line_number == 3
     assert issues[0].tool == "hadolint"
     assert issues[0].issue_type == "DL3020"
-    assert issues[0].severity == "5"
+    assert issues[0].severity == 5
     assert issues[0].message == "Use COPY instead of ADD for files and folders"
 
 

@@ -64,7 +64,7 @@ class LacheckToolPlugin(ToolPlugin):
         parse: Pattern[str] = re.compile(tool_re)
         issues: list[Issue] = []
         filename: str = ""
-        line_number: str = "0"
+        line_number: int = 0
         issue_type: str = ""
         message: str = ""
 
@@ -74,7 +74,7 @@ class LacheckToolPlugin(ToolPlugin):
                 if match:
                     filename = match.group(1)[1:-2]
                     issue_type = "lacheck"
-                    line_number = match.group(3)
+                    line_number = int(match.group(3))
                     message = match.group(4)
                     issues.append(
                         Issue(
@@ -82,7 +82,7 @@ class LacheckToolPlugin(ToolPlugin):
                             line_number,
                             self.get_name(),
                             issue_type,
-                            "3",
+                            3,
                             message,
                             None,
                         )

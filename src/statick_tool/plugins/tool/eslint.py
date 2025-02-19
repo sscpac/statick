@@ -150,12 +150,12 @@ class ESLintToolPlugin(ToolPlugin):
                     file_path = line["filePath"]
                     for issue in line["messages"]:
                         severity_str = issue["severity"]
-                        severity = "3"
+                        severity = 3
                         if severity_str == 1:  # warning
-                            severity = "3"
+                            severity = 3
                         elif severity_str == 2:  # error
-                            severity = "5"
-                        line_num = "0"
+                            severity = 5
+                        line_num = 0
                         if "line" in issue:
                             line_num = issue["line"]
                         issues.append(

@@ -96,17 +96,17 @@ class GroovyLintToolPlugin(ToolPlugin):
                 if "errors" in file_errs:
                     for issue in file_errs["errors"]:
                         severity_str = issue["severity"]
-                        severity = "3"
+                        severity = 3
                         if severity_str == "info":
-                            severity = "1"
+                            severity = 1
                         elif severity_str == "warning":
-                            severity = "3"
+                            severity = 3
                         elif severity_str == "error":
-                            severity = "5"
+                            severity = 5
                         issues.append(
                             Issue(
                                 file_name,
-                                str(issue["line"]),
+                                issue["line"],
                                 self.get_name(),
                                 issue["rule"],
                                 severity,

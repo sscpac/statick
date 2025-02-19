@@ -90,11 +90,11 @@ class StylelintToolPlugin(ToolPlugin):
                     err_dict = json.loads(line)[0]
                     for issue in err_dict["warnings"]:
                         severity_str = issue["severity"]
-                        severity = "3"
+                        severity = 3
                         if severity_str == "warning":
-                            severity = "3"
+                            severity = 3
                         elif severity_str == "error":
-                            severity = "5"
+                            severity = 5
                         issues.append(
                             Issue(
                                 err_dict["source"],

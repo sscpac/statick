@@ -118,10 +118,10 @@ class UncrustifyToolPlugin(ToolPlugin):
             issues.append(
                 Issue(
                     output,
-                    "0",
+                    0,
                     self.get_name(),
                     "format",
-                    "1",
+                    1,
                     "Uncrustify mis-match",
                     None,
                 )

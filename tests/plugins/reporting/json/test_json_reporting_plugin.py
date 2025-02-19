@@ -56,7 +56,7 @@ def test_json_reporting_plugin_report_cert_reference():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", "CERT")
+                Issue("test.txt", 1, "tool_a", "type", 1, "This is a test", "CERT")
             ]
         }
         _, success = jrp.report(package, issues, "level")
@@ -72,7 +72,7 @@ def test_json_reporting_plugin_report_no_plugin_context():
         )
         issues = {
             "tool_a": [
-                Issue("test.txt", 1, "tool_a", "type", "1", "This is a test", None)
+                Issue("test.txt", 1, "tool_a", "type", 1, "This is a test", None)
             ]
         }
         _, success = jrp.report(package, issues, "level")

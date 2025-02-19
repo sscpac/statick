@@ -86,10 +86,10 @@ def test_chktex_tool_plugin_parse_valid():
     )
     issues = cttp.parse_output([output])
     assert len(issues) == 1
-    assert issues[0].line_number == "13"
+    assert issues[0].line_number == 13
     assert issues[0].tool == "chktex"
     assert issues[0].issue_type == "8"
-    assert issues[0].severity == "3"
+    assert issues[0].severity == 3
     assert issues[0].message == "Wrong length of dash may have been used."
 
 

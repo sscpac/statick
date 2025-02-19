@@ -69,7 +69,7 @@ class PyflakesToolPlugin(ToolPlugin):
         parse_fourth: Pattern[str] = re.compile(tool_re_fourth)
         issues: list[Issue] = []
         filename = ""
-        line_number = "0"
+        line_number = 0
         issue_type = ""
         message = ""
 
@@ -83,14 +83,14 @@ class PyflakesToolPlugin(ToolPlugin):
                     if match:
                         found_match = True
                         filename = match.group(1)
-                        line_number = match.group(2)
+                        line_number = int(match.group(2))
                         issue_type = match.group(4)
                     else:
                         match_second: Optional[Match[str]] = parse_second.match(line)
                         if match_second:
                             found_match = True
                             filename = match_second.group(1)
-                            line_number = match_second.group(2)
+                            line_number = int(match_second.group(2))
                             issue_type = match_second.group(4)
                         else:
                             match_fourth: Optional[Match[str]] = parse_fourth.match(
@@ -99,7 +99,7 @@ class PyflakesToolPlugin(ToolPlugin):
                             if match_fourth:
                                 found_match = True
                                 filename = match_fourth.group(1)
-                                line_number = match_fourth.group(2)
+                                line_number = int(match_fourth.group(2))
                                 issue_type = match_fourth.group(5)
                 else:
                     match_third: Optional[Match[str]] = parse_third.match(line)
@@ -114,7 +114,7 @@ class PyflakesToolPlugin(ToolPlugin):
                         line_number,
                         self.get_name(),
                         issue_type,
-                        "5",
+                        5,
                         message,
                         None,
                     )

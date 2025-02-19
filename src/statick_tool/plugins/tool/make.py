@@ -118,20 +118,20 @@ class MakeToolPlugin(ToolPlugin):
                 category = warning_list.groups("1")[0]
 
             if item[3].lower() == "warning":
-                warning_level = "3"
+                severity = 3
             elif item[3].lower() == "error":
-                warning_level = "5"
+                severity = 5
             elif item[3].lower() == "fatal error":
-                warning_level = "5"
+                severity = 5
             else:
-                warning_level = "3"
+                severity = 3
 
             issue = Issue(
                 item[0],
-                item[1],
+                int(item[1]),
                 self.get_name(),
                 category,
-                warning_level,
+                severity,
                 item[4],
                 cert_reference,
             )
@@ -143,10 +143,10 @@ class MakeToolPlugin(ToolPlugin):
             issues.append(
                 Issue(
                     "Linker",
-                    "0",
+                    0,
                     self.get_name(),
                     "linker",
-                    "5",
+                    5,
                     "Linking failed",
                     None,
                 )

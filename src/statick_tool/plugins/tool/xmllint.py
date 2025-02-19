@@ -69,10 +69,10 @@ class XmllintToolPlugin(ToolPlugin):
                     issues.append(
                         Issue(
                             match.group(1),
-                            match.group(2),
+                            int(match.group(2)),
                             self.get_name(),
                             match.group(3),
-                            "5",
+                            5,
                             match.group(4),
                             None,
                         )

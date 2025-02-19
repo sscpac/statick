@@ -117,11 +117,11 @@ class DockerfileULintToolPlugin(ToolPlugin):
                 ]:
                     for issue in file_issues:
                         severity_str = issue["level"]
-                        severity = "1"
+                        severity = 1
                         if severity_str == "warn":
-                            severity = "3"
+                            severity = 3
                         elif severity_str == "error":
-                            severity = "5"
+                            severity = 5
 
                         message = issue["message"]
                         if "description" in issue:
@@ -129,7 +129,7 @@ class DockerfileULintToolPlugin(ToolPlugin):
 
                         title = severity_str
                         if "line" in issue:
-                            line = str(issue["line"])
+                            line = issue["line"]
                         else:
                             line = "-1"
                         if "label" in issue:
@@ -151,10 +151,10 @@ class DockerfileULintToolPlugin(ToolPlugin):
                 issues.append(
                     Issue(
                         "EXCEPTION",
-                        "0",
+                        0,
                         self.get_name(),
                         "ValueError",
-                        "5",
+                        5,
                         str(ex),
                         None,
                     )
