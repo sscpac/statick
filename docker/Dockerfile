@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 LABEL "name"="Statick"
 LABEL "version"="0.0"
@@ -15,14 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cccc \
     chktex \
     clang \
-    clang-6.0 \
-    clang-10 \
+    clang-18 \
     clang-format \
-    clang-format-6.0 \
-    clang-format-10 \
+    clang-format-18 \
     clang-tidy \
-    clang-tidy-6.0 \
-    clang-tidy-10 \
+    clang-tidy-18 \
     cmake \
     cppcheck \
     curl \
@@ -43,13 +40,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     uncrustify \
     wget \
     && rm -rf /var/lib/apt/lists/*
-# Version pinning may be added in the future, but ignore for now.
-# hadolint ignore=DL3013
-RUN python3 -m pip install --no-cache-dir --upgrade pip
 
-RUN python3 -m venv /opt/venv
 COPY requirements.txt .
-RUN . /opt/venv/bin/activate && pip install -r requirements.txt
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    . $HOME/.local/bin/env && \
+    uv venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    uv pip install statick[docs,test]
 
 # Statick npm tools.
 # Newer version is installed from non-apt source due to SSL library compatibility issues.
@@ -76,9 +73,9 @@ RUN curl -sL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh && \
 
 # Install Hadolint binary
 RUN mkdir hadolint-bin && \
-    curl -sL -o hadolint "https://github.com/hadolint/hadolint/releases/download/v2.6.0/hadolint-$(uname -s)-$(uname -m)" && \
+    curl -sL -o hadolint "https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-$(uname -s)-$(uname -m)" && \
     chmod +x hadolint && \
     mv hadolint hadolint-bin/.
-ENV PATH $PWD/hadolint-bin:$PATH
+ENV PATH=./hadolint-bin:$PATH
 
 CMD ["bash"]

@@ -10,6 +10,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Update permissions allowed when publishing Sphinx documentation. (#515)
 
+### Updated
+
+- Docker image now based on Ubuntu 24.04 instead of Ubuntu 20.04.
+
+### Removed
+
+- Stopped testing on Ubuntu 20.04 runners. (#524)
+  - GitHub sent notifications that Ubuntu 20.04 runners will be phased out and completely removed by April 1, 2025.
+
 ## v0.12.0 - 2025-02-14
 
 ### Added
