@@ -32,6 +32,10 @@ class ClangTidyToolPlugin(ToolPlugin):
             help="clang-tidy binary path",
         )
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "clang-tidy"
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if (
@@ -44,7 +48,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return []
 
-        clang_tidy_bin = "clang-tidy"
+        clang_tidy_bin = self.get_binary()
 
         user_version = self.plugin_context.config.get_tool_config(
             self.get_name(), level, "version"

@@ -1,5 +1,6 @@
 """Do nothing, this is primarily useful for testing purposes."""
 
+from importlib.metadata import version
 from typing import Optional
 
 from statick_tool.issue import Issue
@@ -29,3 +30,7 @@ class DoNothingToolPlugin(ToolPlugin):
     ) -> list[Issue]:
         """Parse tool output and report issues."""
         return []
+
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed."""
+        return version("statick")

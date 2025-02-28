@@ -22,6 +22,10 @@ class DocformatterToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "docformatter"
+
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
@@ -29,7 +33,7 @@ class DocformatterToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         flags: list[str] = ["-c"]
         flags += user_flags
-        tool_bin = "docformatter"
+        tool_bin = self.get_binary()
         total_output: list[str] = []
 
         try:

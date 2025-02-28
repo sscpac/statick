@@ -22,15 +22,20 @@ class CatkinLintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["catkin"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "catkin_lint"
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
         flags: list[str] = []
         flags += user_flags
+        tool_bin = self.get_binary()
 
         try:
-            subproc_args = ["catkin_lint", package.path] + flags
+            subproc_args = [tool_bin, package.path] + flags
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

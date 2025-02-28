@@ -24,6 +24,13 @@ class ChktexToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["tex"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "chktex"
+
+    def get_version_re(self) -> str:
+        return r"(.+) v([0-9]*\.?[0-9]+\.?[0-9]+)"
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
@@ -34,7 +41,7 @@ class ChktexToolPlugin(ToolPlugin):
 
         total_output: list[str] = []
 
-        tool_bin: str = "chktex"
+        tool_bin = self.get_binary()
         try:
             subproc_args: list[str] = [tool_bin] + flags + files
             output = subprocess.check_output(

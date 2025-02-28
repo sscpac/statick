@@ -21,6 +21,10 @@ class CMakelintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["cmake_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "cmakelint"
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
@@ -34,8 +38,9 @@ class CMakelintToolPlugin(ToolPlugin):
             for cmake_file in package["cmake_src"]:
                 cmake_files.append(cmake_file)
 
+        tool_bin = self.get_binary()
         try:
-            subproc_args = ["cmakelint"] + flags + cmake_files
+            subproc_args = [tool_bin] + flags + cmake_files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

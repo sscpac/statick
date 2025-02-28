@@ -37,6 +37,21 @@ class ToolPlugin:
         """Get tool binary name."""
         return None
 
+    def get_version_re(self) -> str:
+        return r"(.+) ([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        return 2
+
+    def process_version(self, output) -> str:
+        version = "Unknown"
+        ver_re = self.get_version_re()
+        parse: Pattern[str] = re.compile(ver_re)
+        match: Optional[Match[str]] = parse.match(output)
+        if match:
+            version = match.group(self.get_version_match_group())
+        return version
+
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
 
@@ -46,19 +61,13 @@ class ToolPlugin:
         if tool_bin is None:
             return "Unknown"
 
-        version = "Unknown"
         output = subprocess.check_output(
             [tool_bin, "--version"],
             stderr=subprocess.STDOUT,
             universal_newlines=True,
         )
-        ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
-        parse: Pattern[str] = re.compile(ver_re)
-        match: Optional[Match[str]] = parse.match(output)
-        if match:
-            version = match.group(2)
 
-        return version
+        return self.process_version(output)
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
