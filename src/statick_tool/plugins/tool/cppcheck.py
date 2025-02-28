@@ -34,28 +34,12 @@ class CppcheckToolPlugin(ToolPlugin):
             "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
         )
 
-    def get_version(self) -> str:
-        """Get version of tool.
-
-        If no version is found the function returns "0.0".
-        """
+    def get_binary(self) -> str:
+        """Get tool binary name."""
         cppcheck_bin = "cppcheck"
         if self.plugin_context.args.cppcheck_bin is not None:
             cppcheck_bin = self.plugin_context.args.cppcheck_bin
-
-        version = "0.0"
-        output = subprocess.check_output(
-            [cppcheck_bin, "--version"],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
-        ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
-        parse: Pattern[str] = re.compile(ver_re)
-        match: Optional[Match[str]] = parse.match(output)
-        if match:
-            version = match.group(2)
-
-        return version
+        return cppcheck_bin
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:

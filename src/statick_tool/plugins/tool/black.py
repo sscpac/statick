@@ -21,6 +21,10 @@ class BlackToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "black"
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
@@ -30,7 +34,7 @@ class BlackToolPlugin(ToolPlugin):
 
         total_output: list[str] = []
 
-        tool_bin = "black"
+        tool_bin = self.get_binary()
         try:
             subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(

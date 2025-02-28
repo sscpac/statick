@@ -3,7 +3,9 @@
 import argparse
 import logging
 import os
+import re
 import shlex
+import subprocess
 from typing import Any, Optional, Union
 
 from statick_tool.issue import Issue
@@ -11,7 +13,6 @@ from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
-# No stubs available for IPlugin so ignoring type.
 class ToolPlugin:
     """Default implementation of tool plugin."""
 
@@ -32,9 +33,32 @@ class ToolPlugin:
     def get_file_types(self) -> list[str]:  # type: ignore[empty-body]
         """Return a list of file types the plugin can scan."""
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return None
+
     def get_version(self) -> str:
-        """Figure out and return the version of the tool that's installed."""
-        return "Unknown"
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Unknown".
+        """
+        tool_bin = self.get_binary()
+        if tool_bin is None:
+            return "Unknown"
+
+        version = "Unknown"
+        output = subprocess.check_output(
+            [tool_bin, "--version"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+        ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
+        parse: Pattern[str] = re.compile(ver_re)
+        match: Optional[Match[str]] = parse.match(output)
+        if match:
+            version = match.group(2)
+
+        return version
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
