@@ -61,9 +61,7 @@ class CppcheckToolPlugin(ToolPlugin):
             self.get_name(), level, "version"
         )
 
-        cppcheck_bin = "cppcheck"
-        if self.plugin_context.args.cppcheck_bin is not None:
-            cppcheck_bin = self.plugin_context.args.cppcheck_bin
+        cppcheck_bin = self.get_binary()
 
         try:
             version = self.get_version()
