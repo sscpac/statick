@@ -10,6 +10,7 @@ import sys
 import time
 from importlib.metadata import version
 from logging.handlers import MemoryHandler
+from tabulate import tabulate
 from typing import Any, Optional, Tuple
 
 from statick_tool.config import Config
@@ -244,14 +245,6 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         for _, plugin in list(self.tool_plugins.items()):
             plugin.gather_args(args)
 
-    def show_tool_versions(self) -> bool:
-        """Print out all tool versions."""
-        versions = []
-        for plugin_name, plugin in list(self.tool_plugins.items()):
-            versions.append([plugin_name, plugin.get_version()])
-
-        print(tabulate(timings, headers=["Tool", "Version"], tablefmt="pretty"))
-
     def get_level(self, path: str, args: argparse.Namespace) -> Optional[str]:
         """Get level to scan package at."""
         path = os.path.abspath(path)
@@ -292,6 +285,37 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def get_timings(self) -> list[Timing]:
         """Return list of timings for each component."""
         return self.timings
+
+    def show_tool_versions(self, args: argparse.Namespace) -> bool:
+        """Print out all tool versions."""
+        success = True
+
+        path = os.path.abspath(args.path)
+        if not os.path.exists(path):
+            logging.error("No package found at %s!", path)
+            return None, False
+
+        package = Package(os.path.basename(path), path)
+        level: Optional[str] = self.get_level(path, args)
+        logging.info("level: %s", level)
+        if level is None:
+            logging.error("Level is not valid.")
+            return None, False
+
+        if not self.config or (
+            level != self.default_level and not self.config.has_level(level)
+        ):
+            logging.error("Can't find specified level %s in config!", level)
+            return None, False
+
+        plugin_context = PluginContext(args, self.resources, self.config)
+
+        versions = []
+        for plugin_name, plugin in list(self.tool_plugins.items()):
+            plugin.set_plugin_context(plugin_context)
+            versions.append([plugin_name, plugin.get_version()])
+
+        print(tabulate(versions, headers=["Tool", "Version"], tablefmt="pretty"))
 
     # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
     # pylint: disable=too-many-statements

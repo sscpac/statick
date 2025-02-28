@@ -34,12 +34,15 @@ class CppcheckToolPlugin(ToolPlugin):
             "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
         )
 
-    @classmethod
-    def get_version(cls, cppcheck_bin: str) -> str:
+    def get_version(self) -> str:
         """Get version of tool.
 
         If no version is found the function returns "0.0".
         """
+        cppcheck_bin = "cppcheck"
+        if self.plugin_context.args.cppcheck_bin is not None:
+            cppcheck_bin = self.plugin_context.args.cppcheck_bin
+
         version = "0.0"
         output = subprocess.check_output(
             [cppcheck_bin, "--version"],
@@ -79,7 +82,7 @@ class CppcheckToolPlugin(ToolPlugin):
             cppcheck_bin = self.plugin_context.args.cppcheck_bin
 
         try:
-            version = self.get_version(cppcheck_bin)
+            version = self.get_version()
             # If specific version is not specified just use the installed version.
             if user_version is not None and Version(version) != Version(user_version):
                 logging.warning(
