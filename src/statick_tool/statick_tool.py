@@ -188,6 +188,12 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             version=f"%(prog)s {version('statick')}",
         )
         args.add_argument(
+            "--tool-versions",
+            action="store_true",
+            dest="show_tool_versions",
+            help="Show versions of all tools.",
+        )
+        args.add_argument(
             "--mapping-file-suffix",
             dest="mapping_file_suffix",
             type=str,
@@ -237,6 +243,14 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         for _, plugin in list(self.tool_plugins.items()):
             plugin.gather_args(args)
+
+    def show_tool_versions(self) -> bool:
+        """Print out all tool versions."""
+        versions = []
+        for plugin_name, plugin in list(self.tool_plugins.items()):
+            versions.append([plugin_name, plugin.get_version()])
+
+        print(tabulate(timings, headers=["Tool", "Version"], tablefmt="pretty"))
 
     def get_level(self, path: str, args: argparse.Namespace) -> Optional[str]:
         """Get level to scan package at."""

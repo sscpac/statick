@@ -39,7 +39,9 @@ def main() -> None:  # pragma: no cover
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    if parsed_args.workspace:
+    if parsed_args.show_tool_versions:
+        success = statick.show_tool_versions(parsed_args)
+    elif parsed_args.workspace:
         _, success = statick.run_workspace(parsed_args, start_time)
     else:
         success = run(statick, parsed_args, start_time)

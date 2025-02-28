@@ -32,6 +32,10 @@ class ToolPlugin:
     def get_file_types(self) -> list[str]:  # type: ignore[empty-body]
         """Return a list of file types the plugin can scan."""
 
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed."""
+        return "Unknown"
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         files: list[str] = []
