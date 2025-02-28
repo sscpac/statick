@@ -293,20 +293,20 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         path = os.path.abspath(args.path)
         if not os.path.exists(path):
             logging.error("No package found at %s!", path)
-            return None, False
+            return False
 
         package = Package(os.path.basename(path), path)
         level: Optional[str] = self.get_level(path, args)
         logging.info("level: %s", level)
         if level is None:
             logging.error("Level is not valid.")
-            return None, False
+            return False
 
         if not self.config or (
             level != self.default_level and not self.config.has_level(level)
         ):
             logging.error("Can't find specified level %s in config!", level)
-            return None, False
+            return False
 
         plugin_context = PluginContext(args, self.resources, self.config)
 
@@ -316,6 +316,8 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             versions.append([plugin_name, plugin.get_version()])
 
         print(tabulate(versions, headers=["Tool", "Version"], tablefmt="pretty"))
+
+        return success
 
     # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
     # pylint: disable=too-many-statements
