@@ -38,9 +38,11 @@ class ToolPlugin:
         return None
 
     def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
         return r"(.+) ([0-9]*\.?[0-9]+\.?[0-9]+)"
 
     def get_version_match_group(self) -> int:
+        """Match group version number."""
         return 2
 
     def process_version(self, output) -> str:
@@ -68,6 +70,33 @@ class ToolPlugin:
         )
 
         return self.process_version(output)
+
+    def get_version_from_npm(self, is_global=True) -> str:
+        """Figure out and return the version of the tool that's installed by npm.
+
+        If no version is found the function returns "Unknown".
+        """
+        version = "Unknown"
+
+        if is_global:
+            global_flag = "-g"
+        else:
+            global_flag = ""
+
+        output = subprocess.check_output(
+            ["npm", global_flag, "list"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+
+        ver_re = rf"(.+{self.get_binary()}.*)@([0-9]*\.?[0-9]+\.?[0-9]+)"
+        parse: Pattern[str] = re.compile(ver_re)
+        for line in output.splitlines():
+            match: Optional[Match[str]] = parse.match(line)
+            if match:
+                version = match.group(2)
+                return version
+        return version
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""

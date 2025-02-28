@@ -24,12 +24,24 @@ class WriteGoodToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["md_src", "rst_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "write-good"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "write-good"
+        tool_bin = self.get_binary()
 
         flags: list[str] = ["--parse"]
         flags += user_flags

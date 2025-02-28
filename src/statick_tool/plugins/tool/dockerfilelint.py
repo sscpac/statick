@@ -22,12 +22,24 @@ class DockerfileLintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["dockerfile_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "dockerfilelint"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "dockerfilelint"
+        tool_bin = self.get_binary()
 
         tool_config = ".dockerfilelintrc"
         user_config = None

@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import subprocess
 from typing import Optional
 
@@ -15,18 +16,29 @@ class DockerfileULintToolPlugin(ToolPlugin):
 
     def get_name(self) -> str:
         """Get name of tool."""
-        return "dockerfile-lint"
+        return "dockerfile_lint"
 
     def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["dockerfile_src"]
+
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "dockerfile_lint"
+
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Unknown".
+        """
+        return self.get_version_from_npm()
 
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "dockerfile_lint"
+        tool_bin = self.get_binary()
 
         tool_config = "dockerfile_lint_rules.yaml"
         user_config = None

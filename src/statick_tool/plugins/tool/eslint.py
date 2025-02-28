@@ -23,6 +23,18 @@ class ESLintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["html_src", "javascript_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "eslint"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"v([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     def get_format_file(self, level: str) -> Tuple[Optional[str], bool]:
         """Retrieve format file path."""
         tool_config = "eslint.config.mjs"
@@ -72,7 +84,7 @@ class ESLintToolPlugin(ToolPlugin):
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "eslint"
+        tool_bin = self.get_binary()
 
         (format_file_name, copied_file) = self.get_format_file(level)
 
