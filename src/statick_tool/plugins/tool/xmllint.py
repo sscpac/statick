@@ -29,15 +29,6 @@ class XmllintToolPlugin(ToolPlugin):
         """Return regular expression to parse output for version number."""
         return r"(.*) ([0-9]*\.?[0-9]+\.?[0-9]+)"
 
-    def process_version(self, output) -> str:
-        version = "Unknown"
-        ver_re = self.get_version_re()
-        parse: Pattern[str] = re.compile(ver_re)
-        match: Optional[Match[str]] = parse.match(output)
-        if match:
-            version = match.group(self.get_version_match_group())
-        return version
-
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
