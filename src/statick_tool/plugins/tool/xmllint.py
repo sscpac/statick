@@ -25,10 +25,6 @@ class XmllintToolPlugin(ToolPlugin):
         """Get tool binary name."""
         return "xmllint"
 
-    def get_version_re(self) -> str:
-        """Return regular expression to parse output for version number."""
-        return r"(.*) ([0-9]*\.?[0-9]+\.?[0-9]+)"
-
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
