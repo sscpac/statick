@@ -5,6 +5,7 @@ the issues you can run `isort <file>`.
 """
 
 import logging
+import re
 import subprocess
 from typing import Optional
 
@@ -23,6 +24,21 @@ class IsortToolPlugin(ToolPlugin):
     def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
+
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "isort"
+
+    def process_version(self, output) -> str:
+        version = "Unknown"
+        ver_re = r"(.*) ([0-9]*\.?[0-9]+\.?[0-9]+)"
+        parse: Pattern[str] = re.compile(ver_re)
+        for line in output.splitlines():
+            match: Optional[Match[str]] = parse.match(line)
+            if match:
+                version = match.group(2)
+                return version
+        return version
 
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

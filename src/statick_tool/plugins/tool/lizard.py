@@ -24,6 +24,18 @@ class LizardToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "lizard"
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "lizard"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if not package.path:

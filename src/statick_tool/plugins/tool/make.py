@@ -17,17 +17,23 @@ class MakeToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "make"
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "make"
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package or not package["make_targets"]:
             logging.info("  Skipping make. No targets.")
             return []
 
+        tool_bin = self.get_binary()
+
         output = None
-        make_args: list[str] = ["make", "statick_cmake_target"]
+        make_args: list[str] = [tool_bin, "statick_cmake_target"]
 
         try:
-            output = subprocess.check_output(["make", "clean"], universal_newlines=True)
+            output = subprocess.check_output([tool_bin, "clean"], universal_newlines=True)
             output = subprocess.check_output(
                 make_args, stderr=subprocess.STDOUT, universal_newlines=True
             )
