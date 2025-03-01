@@ -21,6 +21,18 @@ class PydocstyleToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "pydocstyle"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
@@ -29,7 +41,7 @@ class PydocstyleToolPlugin(ToolPlugin):
         flags += user_flags
         total_output = []
 
-        tool_bin = "pydocstyle"
+        tool_bin = self.get_binary()
 
         try:
             subproc_args = [tool_bin] + flags + files

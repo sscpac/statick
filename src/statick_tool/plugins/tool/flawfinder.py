@@ -21,6 +21,18 @@ class FlawfinderToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["c_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "flawfinder"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"([0-9]*\.?[0-9]+\.?[0-9]+)"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
@@ -28,9 +40,10 @@ class FlawfinderToolPlugin(ToolPlugin):
         flags: list[str] = ["--quiet", "-D", "--singleline"]
         flags += user_flags
         total_output: list[str] = []
+        tool_bin = self.get_binary()
 
         try:
-            subproc_args = ["flawfinder"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

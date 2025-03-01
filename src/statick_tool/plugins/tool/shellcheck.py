@@ -6,6 +6,7 @@ The output from the tool is collected in JSON format to facilitate parsing.
 import argparse
 import json
 import logging
+import re
 import subprocess
 from typing import Any, Optional
 
@@ -30,14 +31,30 @@ class ShellcheckToolPlugin(ToolPlugin):
             help="shellcheck binary path",
         )
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        shellcheck_bin: str = "shellcheck"
+        if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
+            shellcheck_bin = self.plugin_context.args.shellcheck_bin
+        return shellcheck_bin
+
+    def process_version(self, output) -> str:
+        version = "Unknown"
+        ver_re = r"version: ([0-9]*\.?[0-9]+\.?[0-9]+)"
+        parse: Pattern[str] = re.compile(ver_re)
+        for line in output.splitlines():
+            match: Optional[Match[str]] = parse.match(line)
+            if match:
+                version = match.group(1)
+                return version
+        return version
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "shell_src" not in package or not package["shell_src"]:
             return []
 
-        shellcheck_bin: str = "shellcheck"
-        if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
-            shellcheck_bin = self.plugin_context.args.shellcheck_bin
+        shellcheck_bin = self.get_binary()
 
         # Get output in JSON format.
         flags: list[str] = ["-f", "json"]

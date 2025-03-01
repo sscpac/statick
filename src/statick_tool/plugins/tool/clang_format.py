@@ -49,6 +49,18 @@ class ClangFormatToolPlugin(ToolPlugin):
             help="clang-format will report an issue per line of diff instead of per file",
         )
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        clang_format_bin = "clang-format"
+
+        # If the user explicitly specifies a binary, let that override the user_version
+        if (
+            self.plugin_context
+            and self.plugin_context.args.clang_format_bin is not None
+        ):
+            clang_format_bin = self.plugin_context.args.clang_format_bin
+        return clang_format_bin
+
     def scan(  # pylint: disable=too-many-return-statements, too-many-branches
         self, package: Package, level: str
     ) -> Optional[
@@ -58,22 +70,18 @@ class ClangFormatToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
+        clang_format_bin = "clang-format"
+
         user_version = None
         if self.plugin_context:
             user_version = self.plugin_context.config.get_tool_config(
                 self.get_name(), level, "version"
             )
 
-        clang_format_bin = "clang-format"
         if user_version is not None:
             clang_format_bin = f"{clang_format_bin}-{user_version}"
 
-        # If the user explicitly specifies a binary, let that override the user_version
-        if (
-            self.plugin_context
-            and self.plugin_context.args.clang_format_bin is not None
-        ):
-            clang_format_bin = self.plugin_context.args.clang_format_bin
+        clang_format_bin = self.get_binary()
 
         files: list[str] = []
         if "make_targets" in package:

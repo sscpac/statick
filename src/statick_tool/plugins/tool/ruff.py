@@ -21,6 +21,10 @@ class RuffToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "ruff"
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:

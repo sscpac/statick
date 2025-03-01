@@ -21,18 +21,23 @@ class YamllintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["yaml"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "yamllint"
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
         flags: list[str] = ["-f", "parsable"]
         flags += user_flags
+        tool_bin = self.get_binary()
 
         total_output: list[str] = []
         output: str = ""
 
         try:
-            subproc_args = ["yamllint"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

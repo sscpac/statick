@@ -21,6 +21,10 @@ class PylintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "pylint"
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
@@ -33,10 +37,12 @@ class PylintToolPlugin(ToolPlugin):
         if self.plugin_context and self.plugin_context.args.max_procs is not None:
             flags += [f"-j {self.plugin_context.args.max_procs}"]
 
+        tool_bin = self.get_binary()
+
         total_output: list[str] = []
 
         try:
-            subproc_args = ["pylint"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

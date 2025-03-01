@@ -21,17 +21,30 @@ class PyflakesToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "pyflakes"
+
+    def get_version_re(self) -> str:
+        """Return regular expression to parse output for version number."""
+        return r"([0-9]*\.?[0-9]+\.?[0-9]+).*"
+
+    def get_version_match_group(self) -> int:
+        """Match group version number."""
+        return 1
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
         flags: list[str] = []
         flags += user_flags
+        tool_bin = self.get_binary()
 
         total_output: list[str] = []
 
         try:
-            subproc_args = ["pyflakes"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

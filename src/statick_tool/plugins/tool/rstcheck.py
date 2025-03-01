@@ -21,12 +21,16 @@ class RstcheckToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["rst_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "rstcheck"
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "rstcheck"
+        tool_bin = self.get_binary()
 
         flags: list[str] = []
         flags += user_flags
