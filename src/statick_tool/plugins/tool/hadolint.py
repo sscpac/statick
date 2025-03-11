@@ -60,7 +60,7 @@ class HadolintToolPlugin(ToolPlugin):
             return self.get_version_from_docker()
 
         version = super().get_version()
-        if version in ["Uninstalled", "Unknown"]:
+        if version in [ToolPlugin.TOOL_MISSING_STR, ToolPlugin.TOOL_UNKNOWN_STR]:
             version = self.get_version_from_docker()
         return version
 

@@ -18,6 +18,7 @@ class ToolPlugin:
 
     plugin_context = None
     TOOL_MISSING_STR = "Not installed"
+    TOOL_UNKNOWN_STR = "Unknown"
 
     def get_name(self) -> str:  # type: ignore[empty-body]
         """Get name of tool."""
@@ -47,7 +48,7 @@ class ToolPlugin:
         """
         tool_bin = self.get_binary()
         if not tool_bin:
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
 
         try:
             output = subprocess.check_output(
@@ -55,7 +56,7 @@ class ToolPlugin:
             )
             return output.decode("utf-8")
         except subprocess.CalledProcessError:  # NOLINT
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
         except FileNotFoundError:  # NOLINT
             return self.TOOL_MISSING_STR
 
@@ -70,9 +71,9 @@ class ToolPlugin:
                 universal_newlines=True,
             )
         except subprocess.CalledProcessError:  # NOLINT
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
         except FileNotFoundError:  # NOLINT
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
 
         parse: Pattern[str] = re.compile(ver_re_str)
         for line in output.splitlines():
@@ -85,7 +86,7 @@ class ToolPlugin:
         """Figure out and return the version of the tool that's installed by apt."""
         tool_bin = self.get_binary()
         if not tool_bin:
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
 
         return self.get_version_from_pkg(
             subproc_args=["dpkg", "-l"], ver_re_str=rf"(.+{tool_bin}.*)"
@@ -95,7 +96,7 @@ class ToolPlugin:
         """Figure out and return the version of the tool that's installed by docker."""
         tool_bin = self.get_binary()
         if not tool_bin:
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
 
         return self.get_version_from_pkg(
             subproc_args=["docker", "image", "list"], ver_re_str=rf"(.+{tool_bin}.*)"
@@ -105,13 +106,13 @@ class ToolPlugin:
         """Figure out and return the version of the tool that's installed by npm."""
         tool_bin = self.get_binary()
         if not tool_bin:
-            return "Unknown"
+            return self.TOOL_UNKNOWN_STR
 
         ver_re = rf"(.+{tool_bin}.*)@([0-9]*\.?[0-9]+\.?[0-9]+)"
         version = self.get_version_from_pkg(
             subproc_args=["npm", "list"], ver_re_str=ver_re
         )
-        if version in ["Unknown", self.TOOL_MISSING_STR]:
+        if version in [self.TOOL_MISSING_STR, self.TOOL_UNKNOWN_STR]:
             # if not found locally, check globally
             version = self.get_version_from_pkg(
                 subproc_args=["npm", "list", "-g"], ver_re_str=ver_re
