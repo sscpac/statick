@@ -30,16 +30,21 @@ class PerlCriticToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["perl_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        binary = "perlcritic"
+        if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:
+            binary = self.plugin_context.args.perlcritic_bin
+        return binary
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        perlcritic_bin = "perlcritic"
-        if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:
-            perlcritic_bin = self.plugin_context.args.perlcritic_bin
-
         flags = ["--nocolor", "--verbose=%f:::%l:::%p:::%m:::%s\n"]
         flags += self.get_user_flags(level)
+
+        perlcritic_bin = self.get_binary()
 
         try:
             output = subprocess.check_output(

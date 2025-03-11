@@ -52,17 +52,58 @@ class ToolPlugin:
             )
             return output.decode("utf-8")
         except subprocess.CalledProcessError as e:  # NOLINT
-            print(e)
-            return ""
-        except FileNotFoundError:  # NOLINT
+            return "Unknown"
+        except FileNotFoundError as e:  # NOLINT
             return "Uninstalled"
-            
+
+    def get_version_from_apt(self) -> str:
+        """Figure out and return the version of the tool that's installed by apt.
+
+        If no version is found the function returns "Uninstalled".
+        """
+        version = "Uninstalled"
+
+        output = subprocess.check_output(
+            ["dpkg", "-l"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+
+        ver_re = rf"(.+{self.get_binary()}.*)"
+        parse: Pattern[str] = re.compile(ver_re)
+        for line in output.splitlines():
+            match: Optional[Match[str]] = parse.match(line)
+            if match:
+                return line
+        return version
+
+    def get_version_from_docker(self) -> str:
+        """Figure out and return the version of the tool that's installed by docker.
+
+        If no version is found the function returns "Uninstalled".
+        """
+        version = "Uninstalled"
+
+        output = subprocess.check_output(
+            ["docker", "image", "list"],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+
+        ver_re = rf"(.+{self.get_binary()}.*)"
+        parse: Pattern[str] = re.compile(ver_re)
+        for line in output.splitlines():
+            match: Optional[Match[str]] = parse.match(line)
+            if match:
+                return line
+        return version
+
     def get_version_from_npm(self, is_global=True) -> str:
         """Figure out and return the version of the tool that's installed by npm.
 
-        If no version is found the function returns "Unknown".
+        If no version is found the function returns "Uninstalled".
         """
-        version = "Unknown"
+        version = "Uninstalled"
 
         if is_global:
             global_flag = "-g"

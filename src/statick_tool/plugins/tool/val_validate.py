@@ -36,6 +36,17 @@ class ValValidateToolPlugin(ToolPlugin):
             help="VAL Validate binary path",
         )
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        binary = "Validate"
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args is not None
+            and self.plugin_context.args.val_validate_bin is not None
+        ):
+            binary = self.plugin_context.args.val_validate_bin
+        return binary
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
@@ -44,13 +55,7 @@ class ValValidateToolPlugin(ToolPlugin):
         flags: list[str] = ["-v"]
         flags += self.get_user_flags(level)
 
-        validate_bin = "Validate"
-        if (
-            self.plugin_context is not None
-            and self.plugin_context.args is not None
-            and self.plugin_context.args.val_validate_bin is not None
-        ):
-            validate_bin = self.plugin_context.args.val_validate_bin
+        validate_bin = self.get_binary()
 
         try:
             subproc_args: list[str] = (

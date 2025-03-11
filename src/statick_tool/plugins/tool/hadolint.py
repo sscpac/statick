@@ -37,24 +37,33 @@ class HadolintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["dockerfile_src"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        binary = "hadolint"
+        # If the user explicitly specifies a binary, let that override the default
+        if self.plugin_context and self.plugin_context.args.hadolint_bin is not None:
+            binary = self.plugin_context.args.hadolint_bin
+        return binary
+
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
 
         If no version is found the function returns "Unknown".
         """
-        return "Getting version unsupported"
+        if (
+            self.plugin_context
+            and self.plugin_context.args.hadolint_docker is not None
+            and self.plugin_context.args.hadolint_docker
+        ):
+            return self.get_version_from_docker()
+        else:
+            return super().get_version()
 
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "hadolint"
-
-        # If the user explicitly specifies a binary, let that override the default
-        if self.plugin_context and self.plugin_context.args.hadolint_bin is not None:
-            tool_bin = self.plugin_context.args.hadolint_bin
-
         tool_config = ".hadolint.yaml"
         user_config = None
         if self.plugin_context is not None:
@@ -78,6 +87,8 @@ class HadolintToolPlugin(ToolPlugin):
             user_flags.pop(idx)
             user_flags.pop(idx)
         flags += user_flags
+
+        tool_bin = self.get_binary()
 
         total_output: list[str] = []
         if (
