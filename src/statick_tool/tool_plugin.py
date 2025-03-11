@@ -71,6 +71,8 @@ class ToolPlugin:
             )
         except subprocess.CalledProcessError:  # NOLINT
             return "Unknown"
+        except FileNotFoundError:  # NOLINT
+            return "Unknown"
 
         parse: Pattern[str] = re.compile(ver_re_str)
         for line in output.splitlines():
