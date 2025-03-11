@@ -52,7 +52,7 @@ def main() -> None:  # pragma: no cover
 
     if parsed_args.show_all_tool_versions or parsed_args.show_run_tool_versions:
         tool_versions = statick.get_tool_versions()
-        print(tabulate(tool_versions, headers="keys", tablefmt="pretty"))
+        print(tabulate(tool_versions, headers="keys", tablefmt="grid"))
 
     if parsed_args.check and not success:
         statick.print_exit_status(False)

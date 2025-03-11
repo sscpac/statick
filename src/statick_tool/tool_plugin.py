@@ -17,6 +17,7 @@ class ToolPlugin:
     """Default implementation of tool plugin."""
 
     plugin_context = None
+    TOOL_MISSING_STR = "Not installed"
 
     def get_name(self) -> str:  # type: ignore[empty-body]
         """Get name of tool."""
@@ -56,7 +57,7 @@ class ToolPlugin:
         except subprocess.CalledProcessError as e:  # NOLINT
             return "Unknown"
         except FileNotFoundError as e:  # NOLINT
-            return "Uninstalled"
+            return self.TOOL_MISSING_STR
 
     def get_version_from_apt(self) -> str:
         """Figure out and return the version of the tool that's installed by apt.
@@ -67,7 +68,7 @@ class ToolPlugin:
         if not tool_bin:
             return "Unknown"
 
-        version = "Uninstalled"
+        version = self.TOOL_MISSING_STR
 
         output = subprocess.check_output(
             ["dpkg", "-l"],
@@ -92,7 +93,7 @@ class ToolPlugin:
         if not tool_bin:
             return "Unknown"
 
-        version = "Uninstalled"
+        version = self.TOOL_MISSING_STR
 
         output = subprocess.check_output(
             ["docker", "image", "list"],
@@ -117,7 +118,7 @@ class ToolPlugin:
         if not tool_bin:
             return "Unknown"
 
-        version = "Uninstalled"
+        version = self.TOOL_MISSING_STR
 
         if is_global:
             global_flag = "-g"
