@@ -6,7 +6,6 @@ The output from the tool is collected in JSON format to facilitate parsing.
 import argparse
 import json
 import logging
-import re
 import subprocess
 from typing import Any, Optional
 

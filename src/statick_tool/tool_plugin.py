@@ -6,7 +6,7 @@ import os
 import re
 import shlex
 import subprocess
-from typing import Any, Optional, Union
+from typing import Any, Match, Optional, Pattern, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
@@ -44,7 +44,7 @@ class ToolPlugin:
 
         If no version is found the function returns "Unknown".
         """
-        tool_bin = self.get_binary()
+        tool_bin = self.get_binary()  # pylint: disable=assignment-from-none
         if tool_bin is None:
             return "Unknown"
 

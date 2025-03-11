@@ -58,10 +58,11 @@ class HadolintToolPlugin(ToolPlugin):
             and self.plugin_context.args.hadolint_docker
         ):
             return self.get_version_from_docker()
-        else:
-            version = super().get_version()
-            if version in ["Uninstalled", "Unknown"]:
-                return self.get_version_from_docker()
+
+        version = super().get_version()
+        if version in ["Uninstalled", "Unknown"]:
+            version = self.get_version_from_docker()
+        return version
 
     # pylint: disable=too-many-locals
     def process_files(

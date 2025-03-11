@@ -2,7 +2,6 @@
 
 import json
 import logging
-import re
 import subprocess
 from typing import Optional
 

@@ -10,7 +10,6 @@ import sys
 import time
 from importlib.metadata import version
 from logging.handlers import MemoryHandler
-from tabulate import tabulate
 from typing import Any, Optional, Tuple
 
 from statick_tool.config import Config
@@ -312,7 +311,6 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logging.error("No package found at %s!", path)
             return False
 
-        package = Package(os.path.basename(path), path)
         level: Optional[str] = self.get_level(path, args)
         logging.info("level: %s", level)
         if level is None:

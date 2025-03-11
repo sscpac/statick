@@ -81,7 +81,7 @@ class ClangFormatToolPlugin(ToolPlugin):
         if "make_targets" not in package and "headers" not in package:
             return []
 
-        clang_format_bin = self.tool_bin(level=level)
+        clang_format_bin = self.get_binary(level=level)
 
         files: list[str] = []
         if "make_targets" in package:

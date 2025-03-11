@@ -5,7 +5,6 @@ the issues you can run `isort <file>`.
 """
 
 import logging
-import re
 import subprocess
 from typing import Optional
 
