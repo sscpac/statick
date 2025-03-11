@@ -27,7 +27,7 @@ class ESLintToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        return "eslint"
+        return self.get_name()
 
     def get_format_file(self, level: str) -> Tuple[Optional[str], bool]:
         """Retrieve format file path."""

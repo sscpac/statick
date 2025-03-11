@@ -25,7 +25,7 @@ class JSHintToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        return "jshint"
+        return self.get_name()
 
     # pylint: disable=too-many-locals
     def process_files(

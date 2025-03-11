@@ -31,7 +31,7 @@ class UncrustifyToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        binary = "uncrustify"
+        binary = self.get_name()
         if (
             self.plugin_context is not None
             and self.plugin_context.args.uncrustify_bin is not None

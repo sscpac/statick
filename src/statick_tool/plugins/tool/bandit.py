@@ -32,10 +32,10 @@ class BanditToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        bandit_bin: str = "bandit"
+        binary = self.get_name()
         if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
-            bandit_bin = self.plugin_context.args.bandit_bin
-        return bandit_bin
+            binary = self.plugin_context.args.bandit_bin
+        return binary
 
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

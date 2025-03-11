@@ -43,7 +43,7 @@ class CCCCToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        binary = "cccc"
+        binary = self.get_name()
         if (
             self.plugin_context is not None
             and self.plugin_context.args.cccc_bin is not None

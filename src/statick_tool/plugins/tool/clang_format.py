@@ -59,7 +59,7 @@ class ClangFormatToolPlugin(ToolPlugin):
                 self.get_name(), level, "version"
             )
 
-        binary = "clang-format"
+        binary = self.get_name()
         if user_version is not None:
             binary = f"{binary}-{user_version}"
 

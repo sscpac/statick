@@ -34,7 +34,7 @@ class PerlCriticToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        binary = "perlcritic"
+        binary = self.get_name()
         if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:
             binary = self.plugin_context.args.perlcritic_bin
         return binary

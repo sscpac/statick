@@ -15,7 +15,7 @@ class DockerfileULintToolPlugin(ToolPlugin):
 
     def get_name(self) -> str:
         """Get name of tool."""
-        return "dockerfile_lint"
+        return "dockerfile-lint"
 
     def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""

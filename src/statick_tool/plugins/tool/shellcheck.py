@@ -34,10 +34,10 @@ class ShellcheckToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        shellcheck_bin: str = "shellcheck"
+        binary = self.get_name()
         if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
-            shellcheck_bin = self.plugin_context.args.shellcheck_bin
-        return shellcheck_bin
+            binary = self.plugin_context.args.shellcheck_bin
+        return binary
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""

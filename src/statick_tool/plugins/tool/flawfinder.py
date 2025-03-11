@@ -25,7 +25,7 @@ class FlawfinderToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        return "flawfinder"
+        return self.get_name()
 
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

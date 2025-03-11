@@ -22,7 +22,7 @@ class CpplintToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Return the name of the tool binary."""
-        binary = "cpplint"
+        binary = self.get_name()
         if package is not None and "cpplint" in package:
             binary = package["cpplint"]
 
