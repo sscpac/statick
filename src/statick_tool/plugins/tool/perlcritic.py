@@ -30,7 +30,9 @@ class PerlCriticToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["perl_src"]
 
-    def get_binary(self) -> str:
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
         """Get tool binary name."""
         binary = "perlcritic"
         if self.plugin_context and self.plugin_context.args.perlcritic_bin is not None:

@@ -18,7 +18,9 @@ class RstlintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "rstlint"
 
-    def get_binary(self) -> str:
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
         """Get tool binary name."""
         return "rst-lint"
 

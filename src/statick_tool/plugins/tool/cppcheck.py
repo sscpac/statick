@@ -34,7 +34,9 @@ class CppcheckToolPlugin(ToolPlugin):
             "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
         )
 
-    def get_binary(self) -> str:
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
         """Get tool binary name."""
         cppcheck_bin = "cppcheck"
         if self.plugin_context.args.cppcheck_bin is not None:

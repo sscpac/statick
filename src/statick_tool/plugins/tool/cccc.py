@@ -39,10 +39,10 @@ class CCCCToolPlugin(ToolPlugin):
             "--cccc-config", dest="cccc_config", type=str, help="cccc config file"
         )
 
-    def get_binary(
+    def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Return the name of the tool binary."""
+        """Get tool binary name."""
         binary = "cccc"
         if (
             self.plugin_context is not None

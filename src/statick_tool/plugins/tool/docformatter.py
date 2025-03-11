@@ -22,7 +22,9 @@ class DocformatterToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
-    def get_binary(self) -> str:
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
         """Get tool binary name."""
         return "docformatter"
 

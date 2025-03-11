@@ -27,7 +27,9 @@ class UncrustifyToolPlugin(ToolPlugin):
             help="uncrustify binary path",
         )
 
-    def get_binary(self) -> str:
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
         """Get tool binary name."""
         uncrustify_bin = "uncrustify"
         if self.plugin_context.args.uncrustify_bin is not None:
