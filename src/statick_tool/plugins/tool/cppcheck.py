@@ -47,7 +47,7 @@ class CppcheckToolPlugin(ToolPlugin):
 
         return binary
 
-    def parse_version(self, version_str) -> str:
+    def parse_version(self, version_str: str) -> str:
         """Parse version of tool.
         If no version is found the function returns "0.0".
         """
