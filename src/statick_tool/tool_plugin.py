@@ -37,15 +37,15 @@ class ToolPlugin:
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        return None
+        return ""
 
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
 
         If no version is found the function returns "Unknown".
         """
-        tool_bin = self.get_binary()  # pylint: disable=assignment-from-none
-        if tool_bin is None:
+        tool_bin = self.get_binary()
+        if not tool_bin:
             return "Unknown"
 
         try:
@@ -63,6 +63,10 @@ class ToolPlugin:
 
         If no version is found the function returns "Uninstalled".
         """
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return "Unknown"
+
         version = "Uninstalled"
 
         output = subprocess.check_output(
@@ -71,7 +75,7 @@ class ToolPlugin:
             universal_newlines=True,
         )
 
-        ver_re = rf"(.+{self.get_binary()}.*)"
+        ver_re = rf"(.+{tool_bin}.*)"
         parse: Pattern[str] = re.compile(ver_re)
         for line in output.splitlines():
             match: Optional[Match[str]] = parse.match(line)
@@ -84,6 +88,10 @@ class ToolPlugin:
 
         If no version is found the function returns "Uninstalled".
         """
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return "Unknown"
+
         version = "Uninstalled"
 
         output = subprocess.check_output(
@@ -92,7 +100,7 @@ class ToolPlugin:
             universal_newlines=True,
         )
 
-        ver_re = rf"(.+{self.get_binary()}.*)"
+        ver_re = rf"(.+{tool_bin}.*)"
         parse: Pattern[str] = re.compile(ver_re)
         for line in output.splitlines():
             match: Optional[Match[str]] = parse.match(line)
@@ -105,6 +113,10 @@ class ToolPlugin:
 
         If no version is found the function returns "Uninstalled".
         """
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return "Unknown"
+
         version = "Uninstalled"
 
         if is_global:
@@ -118,7 +130,7 @@ class ToolPlugin:
             universal_newlines=True,
         )
 
-        ver_re = rf"(.+{self.get_binary()}.*)@([0-9]*\.?[0-9]+\.?[0-9]+)"
+        ver_re = rf"(.+{tool_bin}.*)@([0-9]*\.?[0-9]+\.?[0-9]+)"
         parse: Pattern[str] = re.compile(ver_re)
         for line in output.splitlines():
             match: Optional[Match[str]] = parse.match(line)
