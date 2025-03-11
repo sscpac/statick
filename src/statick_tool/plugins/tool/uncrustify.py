@@ -31,10 +31,14 @@ class UncrustifyToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        uncrustify_bin = "uncrustify"
-        if self.plugin_context and self.plugin_context.args.uncrustify_bin is not None:
-            uncrustify_bin = self.plugin_context.args.uncrustify_bin
-        return uncrustify_bin
+        binary = "uncrustify"
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args.uncrustify_bin is not None
+        ):
+            binary = self.plugin_context.args.uncrustify_bin
+
+        return binary
 
     def scan(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, level: str

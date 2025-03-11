@@ -38,10 +38,14 @@ class CppcheckToolPlugin(ToolPlugin):
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        cppcheck_bin = "cppcheck"
-        if self.plugin_context and self.plugin_context.args.cppcheck_bin is not None:
-            cppcheck_bin = self.plugin_context.args.cppcheck_bin
-        return cppcheck_bin
+        binary = "cppcheck"
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args.cppcheck_bin is not None
+        ):
+            binary = self.plugin_context.args.cppcheck_bin
+
+        return binary
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
