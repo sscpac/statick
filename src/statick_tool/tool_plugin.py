@@ -54,90 +54,66 @@ class ToolPlugin:
                 [tool_bin, "--version"], stderr=subprocess.STDOUT
             )
             return output.decode("utf-8")
-        except subprocess.CalledProcessError as e:  # NOLINT
+        except subprocess.CalledProcessError:  # NOLINT
             return "Unknown"
-        except FileNotFoundError as e:  # NOLINT
+        except FileNotFoundError:  # NOLINT
             return self.TOOL_MISSING_STR
 
-    def get_version_from_apt(self) -> str:
-        """Figure out and return the version of the tool that's installed by apt.
-
-        If no version is found the function returns "Uninstalled".
-        """
-        tool_bin = self.get_binary()
-        if not tool_bin:
-            return "Unknown"
-
+    def get_version_from_pkg(self, subproc_args: list[str], ver_re_str: str) -> str:
+        """Figure out and return the version of the tool that's installed."""
         version = self.TOOL_MISSING_STR
 
-        output = subprocess.check_output(
-            ["dpkg", "-l"],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
+        try:
+            output = subprocess.check_output(
+                subproc_args,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            )
+        except subprocess.CalledProcessError:  # NOLINT
+            return "Unknown"
 
-        ver_re = rf"(.+{tool_bin}.*)"
-        parse: Pattern[str] = re.compile(ver_re)
+        parse: Pattern[str] = re.compile(ver_re_str)
         for line in output.splitlines():
             match: Optional[Match[str]] = parse.match(line)
             if match:
                 return line
         return version
+
+    def get_version_from_apt(self) -> str:
+        """Figure out and return the version of the tool that's installed by apt."""
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return "Unknown"
+
+        return self.get_version_from_pkg(
+            subproc_args=["dpkg", "-l"], ver_re_str=rf"(.+{tool_bin}.*)"
+        )
 
     def get_version_from_docker(self) -> str:
-        """Figure out and return the version of the tool that's installed by docker.
-
-        If no version is found the function returns "Uninstalled".
-        """
+        """Figure out and return the version of the tool that's installed by docker."""
         tool_bin = self.get_binary()
         if not tool_bin:
             return "Unknown"
 
-        version = self.TOOL_MISSING_STR
-
-        output = subprocess.check_output(
-            ["docker", "image", "list"],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
+        return self.get_version_from_pkg(
+            subproc_args=["docker", "image", "list"], ver_re_str=rf"(.+{tool_bin}.*)"
         )
 
-        ver_re = rf"(.+{tool_bin}.*)"
-        parse: Pattern[str] = re.compile(ver_re)
-        for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
-            if match:
-                return line
-        return version
-
-    def get_version_from_npm(self, is_global=True) -> str:
-        """Figure out and return the version of the tool that's installed by npm.
-
-        If no version is found the function returns "Uninstalled".
-        """
+    def get_version_from_npm(self) -> str:
+        """Figure out and return the version of the tool that's installed by npm."""
         tool_bin = self.get_binary()
         if not tool_bin:
             return "Unknown"
-
-        version = self.TOOL_MISSING_STR
-
-        if is_global:
-            global_flag = "-g"
-        else:
-            global_flag = ""
-
-        output = subprocess.check_output(
-            ["npm", global_flag, "list"],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
 
         ver_re = rf"(.+{tool_bin}.*)@([0-9]*\.?[0-9]+\.?[0-9]+)"
-        parse: Pattern[str] = re.compile(ver_re)
-        for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
-            if match:
-                version = match.group(2)
-                return version
+        version = self.get_version_from_pkg(
+            subproc_args=["npm", "list"], ver_re_str=ver_re
+        )
+        if version in ["Unknown", self.TOOL_MISSING_STR]:
+            # if not found locally, check globally
+            version = self.get_version_from_pkg(
+                subproc_args=["npm", "list", "-g"], ver_re_str=ver_re
+            )
         return version
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
