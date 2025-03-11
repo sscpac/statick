@@ -90,6 +90,8 @@ def test_hadolint_tool_plugin_gather_args():
 def test_hadolint_tool_plugin_version():
     """Test that the hadolint tool plugin arguments are collected."""
     plugin = setup_hadolint_tool_plugin()
+    if not plugin.command_exists("hadolint"):
+        pytest.skip("Missing hadolint executable, skipping test.")
 
     version = plugin.get_version()
     assert "Haskell Dockerfile Linter" in version
