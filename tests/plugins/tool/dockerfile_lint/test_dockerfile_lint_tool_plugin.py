@@ -52,7 +52,7 @@ def test_dockerfilelint_tool_plugin_found():
         plugin = plugin_type.load()
         tool_plugins[plugin_type.name] = plugin()
     assert any(
-        plugin.get_name() == "dockerfile_lint" for _, plugin in list(tool_plugins.items())
+        plugin.get_name() == "dockerfile-lint" for _, plugin in list(tool_plugins.items())
     )
 
 
@@ -95,7 +95,7 @@ def test_dockerfilelint_tool_plugin_parse_valid():
     assert len(issues) == 1
     assert issues[0].filename == "Dockerfile"
     assert issues[0].line_number == 1
-    assert issues[0].tool == "dockerfile_lint"
+    assert issues[0].tool == "dockerfile-lint"
     assert issues[0].issue_type == "is_latest_tag"
     assert issues[0].severity == 5
     assert (
@@ -112,7 +112,7 @@ def test_dockerfilelint_tool_plugin_parse_invalid():
     assert len(issues) == 1
     assert issues[0].filename == "EXCEPTION"
     assert issues[0].line_number == 0
-    assert issues[0].tool == "dockerfile_lint"
+    assert issues[0].tool == "dockerfile-lint"
     assert issues[0].issue_type == "ValueError"
     assert issues[0].severity == 5
     assert issues[0].message == "Expecting value: line 1 column 1 (char 0)"
@@ -149,7 +149,7 @@ def test_dockerfilelint_tool_plugin_scan_calledprocesserror(
     assert len(issues) == 1
     assert issues[0].filename == "EXCEPTION"
     assert issues[0].line_number == 0
-    assert issues[0].tool == "dockerfile_lint"
+    assert issues[0].tool == "dockerfile-lint"
     assert issues[0].issue_type == "ValueError"
     assert issues[0].severity == 5
     assert issues[0].message == "Expecting value: line 1 column 1 (char 0)"
