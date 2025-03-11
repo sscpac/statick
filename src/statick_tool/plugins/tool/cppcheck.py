@@ -47,6 +47,18 @@ class CppcheckToolPlugin(ToolPlugin):
 
         return binary
 
+    def parse_version(self, version_str) -> str:
+        """Parse version of tool.
+        If no version is found the function returns "0.0".
+        """
+        version = "0.0"
+        ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
+        parse: Pattern[str] = re.compile(ver_re)
+        match: Optional[Match[str]] = parse.match(version_str)
+        if match:
+            version = match.group(2)
+        return version
+
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
@@ -70,7 +82,7 @@ class CppcheckToolPlugin(ToolPlugin):
         cppcheck_bin = self.get_binary()
 
         try:
-            version = self.get_version()
+            version = self.parse_version(self.get_version())
             # If specific version is not specified just use the installed version.
             if user_version is not None and Version(version) != Version(user_version):
                 logging.warning(

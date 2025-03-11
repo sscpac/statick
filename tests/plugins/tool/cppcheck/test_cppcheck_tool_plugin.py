@@ -51,14 +51,12 @@ def test_cppcheck_tool_plugin_found():
     for plugin_type in tool_plugins:
         plugin = plugin_type.load()
         plugins[plugin_type.name] = plugin()
-    assert any(
-        plugin.get_name() == "cppcheck" for _, plugin in list(plugins.items())
-    )
+    assert any(plugin.get_name() == "cppcheck" for _, plugin in list(plugins.items()))
 
 
 def test_cppcheck_tool_plugin_scan_valid():
     """Integration test: Make sure the cppcheck output hasn't changed."""
-    cctp = setup_cppcheck_tool_plugin()
+    cctp = setup_cppcheck_tool_plugin(use_plugin_context=True)
     if not cctp.command_exists("cppcheck"):
         pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
     package = Package(
@@ -82,7 +80,7 @@ def test_cppcheck_tool_plugin_scan_valid():
     )
     assert issues[0].line_number == 4
     assert issues[0].tool == "cppcheck"
-    version = cctp.get_version("cppcheck")
+    version = cctp.parse_version(cctp.get_version())
     if Version(version) >= Version("2.8"):
         assert issues[0].issue_type == "error/legacyUninitvar"
     else:
