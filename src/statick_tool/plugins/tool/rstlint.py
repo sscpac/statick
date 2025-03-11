@@ -22,14 +22,6 @@ class RstlintToolPlugin(ToolPlugin):
         """Get tool binary name."""
         return "rst-lint"
 
-    def get_version_re(self) -> str:
-        """Return regular expression to parse output for version number."""
-        return r"([0-9]*\.?[0-9]+\.?[0-9]+).*"
-
-    def get_version_match_group(self) -> int:
-        """Match group version number."""
-        return 1
-
     # pylint: disable=too-many-locals
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""

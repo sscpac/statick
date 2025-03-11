@@ -28,9 +28,6 @@ class ChktexToolPlugin(ToolPlugin):
         """Get tool binary name."""
         return "chktex"
 
-    def get_version_re(self) -> str:
-        return r"(.+) v([0-9]*\.?[0-9]+\.?[0-9]+)"
-
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

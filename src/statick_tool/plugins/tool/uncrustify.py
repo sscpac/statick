@@ -34,10 +34,6 @@ class UncrustifyToolPlugin(ToolPlugin):
             uncrustify_bin = self.plugin_context.args.uncrustify_bin
         return uncrustify_bin
 
-    def get_version_re(self) -> str:
-        """Return regular expression to parse output for version number."""
-        return r"(.+)-([0-9]*\.?[0-9]+\.?[0-9]+)"
-
     def scan(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, level: str
     ) -> Optional[list[Issue]]:

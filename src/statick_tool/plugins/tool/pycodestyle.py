@@ -25,14 +25,6 @@ class PycodestyleToolPlugin(ToolPlugin):
         """Get tool binary name."""
         return "pycodestyle"
 
-    def get_version_re(self) -> str:
-        """Return regular expression to parse output for version number."""
-        return r"([0-9]*\.?[0-9]+\.?[0-9]+)"
-
-    def get_version_match_group(self) -> int:
-        """Match group version number."""
-        return 1
-
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:

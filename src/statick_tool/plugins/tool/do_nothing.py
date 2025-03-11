@@ -19,6 +19,10 @@ class DoNothingToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return []
 
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed."""
+        return version("statick")
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
@@ -30,7 +34,3 @@ class DoNothingToolPlugin(ToolPlugin):
     ) -> list[Issue]:
         """Parse tool output and report issues."""
         return []
-
-    def get_version(self) -> str:
-        """Figure out and return the version of the tool that's installed."""
-        return version("statick")

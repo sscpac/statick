@@ -21,6 +21,10 @@ class LacheckToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["tex"]
 
+    def get_binary(self) -> str:
+        """Get tool binary name."""
+        return "lacheck"
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
@@ -31,7 +35,7 @@ class LacheckToolPlugin(ToolPlugin):
 
         total_output: list[str] = []
 
-        tool_bin: str = "lacheck"
+        tool_bin = self.get_binary()
         try:
             subproc_args: list[str] = [tool_bin] + flags + files
             output = subprocess.check_output(

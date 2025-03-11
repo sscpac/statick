@@ -37,23 +37,6 @@ class ToolPlugin:
         """Get tool binary name."""
         return None
 
-    def get_version_re(self) -> str:
-        """Return regular expression to parse output for version number."""
-        return r"(.+) ([0-9]*\.?[0-9]+\.?[0-9]+)"
-
-    def get_version_match_group(self) -> int:
-        """Match group version number."""
-        return 2
-
-    def process_version(self, output) -> str:
-        version = "Unknown"
-        ver_re = self.get_version_re()
-        parse: Pattern[str] = re.compile(ver_re)
-        match: Optional[Match[str]] = parse.match(output)
-        if match:
-            version = match.group(self.get_version_match_group())
-        return version
-
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
 
@@ -63,14 +46,17 @@ class ToolPlugin:
         if tool_bin is None:
             return "Unknown"
 
-        output = subprocess.check_output(
-            [tool_bin, "--version"],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
-
-        return self.process_version(output)
-
+        try:
+            output = subprocess.check_output(
+                [tool_bin, "--version"], stderr=subprocess.STDOUT
+            )
+            return output.decode("utf-8")
+        except subprocess.CalledProcessError as e:  # NOLINT
+            print(e)
+            return ""
+        except FileNotFoundError:  # NOLINT
+            return "Uninstalled"
+            
     def get_version_from_npm(self, is_global=True) -> str:
         """Figure out and return the version of the tool that's installed by npm.
 

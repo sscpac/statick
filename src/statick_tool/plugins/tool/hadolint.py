@@ -37,6 +37,13 @@ class HadolintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["dockerfile_src"]
 
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Unknown".
+        """
+        return "Getting version unsupported"
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

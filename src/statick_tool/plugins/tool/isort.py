@@ -29,17 +29,6 @@ class IsortToolPlugin(ToolPlugin):
         """Get tool binary name."""
         return "isort"
 
-    def process_version(self, output) -> str:
-        version = "Unknown"
-        ver_re = r"(.*) ([0-9]*\.?[0-9]+\.?[0-9]+)"
-        parse: Pattern[str] = re.compile(ver_re)
-        for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
-            if match:
-                version = match.group(2)
-                return version
-        return version
-
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:

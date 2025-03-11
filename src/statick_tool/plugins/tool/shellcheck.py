@@ -38,17 +38,6 @@ class ShellcheckToolPlugin(ToolPlugin):
             shellcheck_bin = self.plugin_context.args.shellcheck_bin
         return shellcheck_bin
 
-    def process_version(self, output) -> str:
-        version = "Unknown"
-        ver_re = r"version: ([0-9]*\.?[0-9]+\.?[0-9]+)"
-        parse: Pattern[str] = re.compile(ver_re)
-        for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
-            if match:
-                version = match.group(1)
-                return version
-        return version
-
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "shell_src" not in package or not package["shell_src"]:

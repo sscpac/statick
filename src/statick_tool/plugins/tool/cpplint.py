@@ -22,17 +22,6 @@ class CpplintToolPlugin(ToolPlugin):
         """Get tool binary name."""
         return "cpplint"
 
-    def process_version(self, output) -> str:
-        version = "Unknown"
-        ver_re = r"cpplint ([0-9]*\.?[0-9]+\.?[0-9]+)"
-        parse: Pattern[str] = re.compile(ver_re)
-        for line in output.splitlines():
-            match: Optional[Match[str]] = parse.match(line)
-            if match:
-                version = match.group(1)
-                return version
-        return version
-
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package and "headers" not in package:
