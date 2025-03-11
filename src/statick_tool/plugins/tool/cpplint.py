@@ -21,8 +21,12 @@ class CpplintToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
-        return "cpplint"
+        """Return the name of the tool binary."""
+        binary = "cpplint"
+        if package is not None and "cpplint" in package:
+            binary = package["cpplint"]
+
+        return binary
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
@@ -38,7 +42,7 @@ class CpplintToolPlugin(ToolPlugin):
 
         flags: list[str] = []
         flags += self.get_user_flags(level)
-        cpplint = package["cpplint"]
+        cpplint = self.get_binary(package=package)
 
         files: list[str] = []
         if "make_targets" in package:
