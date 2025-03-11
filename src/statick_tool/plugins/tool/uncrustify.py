@@ -32,7 +32,7 @@ class UncrustifyToolPlugin(ToolPlugin):
     ) -> str:
         """Get tool binary name."""
         uncrustify_bin = "uncrustify"
-        if self.plugin_context.args.uncrustify_bin is not None:
+        if self.plugin_context and self.plugin_context.args.uncrustify_bin is not None:
             uncrustify_bin = self.plugin_context.args.uncrustify_bin
         return uncrustify_bin
 

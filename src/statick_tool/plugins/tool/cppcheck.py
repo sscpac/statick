@@ -39,7 +39,7 @@ class CppcheckToolPlugin(ToolPlugin):
     ) -> str:
         """Get tool binary name."""
         cppcheck_bin = "cppcheck"
-        if self.plugin_context.args.cppcheck_bin is not None:
+        if self.plugin_context and self.plugin_context.args.cppcheck_bin is not None:
             cppcheck_bin = self.plugin_context.args.cppcheck_bin
         return cppcheck_bin
 
