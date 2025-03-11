@@ -22,6 +22,7 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
 from statick_tool.resources import Resources
 from statick_tool.timing import Timing
+from statick_tool.tool_version import ToolVersion
 
 if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
@@ -58,6 +59,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         self.config: Optional[Config] = None
         self.exceptions: Optional[Exceptions] = None
         self.timings: list[Timing] = []
+        self.tool_versions: list[ToolVersion] = []
 
     @staticmethod
     def set_logging_level(args: argparse.Namespace) -> None:
@@ -189,9 +191,15 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             version=f"%(prog)s {version('statick')}",
         )
         args.add_argument(
-            "--tool-versions",
+            "--tool-versions-all",
             action="store_true",
-            dest="show_tool_versions",
+            dest="show_all_tool_versions",
+            help="Show versions of all tools.",
+        )
+        args.add_argument(
+            "--tool-versions-run",
+            action="store_true",
+            dest="show_run_tool_versions",
             help="Show versions of all tools.",
         )
         args.add_argument(
@@ -286,7 +294,16 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         """Return list of timings for each component."""
         return self.timings
 
-    def show_tool_versions(self, args: argparse.Namespace) -> bool:
+    def add_tool_version(self, tool: str, tool_version: str) -> None:
+        """Add an entry to the timings list."""
+        this_tool_version = ToolVersion(tool, tool_version)
+        self.tool_versions.append(this_tool_version)
+
+    def get_tool_versions(self) -> list[ToolVersion]:
+        """Return list of version for each tool."""
+        return self.tool_versions
+
+    def collect_tool_versions(self, args: argparse.Namespace) -> bool:
         """Print out all tool versions."""
         success = True
 
@@ -310,12 +327,9 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         plugin_context = PluginContext(args, self.resources, self.config)
 
-        versions = []
         for plugin_name, plugin in list(self.tool_plugins.items()):
             plugin.set_plugin_context(plugin_context)
-            versions.append([plugin_name, plugin.get_version()])
-
-        print(tabulate(versions, headers=["Tool", "Version"], tablefmt="pretty"))
+            self.add_tool_version(plugin_name, plugin.get_version())
 
         return success
 
@@ -496,6 +510,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             duration = format(time.time() - plugin_start, ".4f")
             timing = Timing(package.name, plugin.get_name(), "Tool", duration)
             self.timings.append(timing)
+            self.add_tool_version(plugin.get_name(), plugin.get_version())
             if tool_issues is not None:
                 issues[plugin_name] = tool_issues
                 logging.info("%s tool plugin done.", plugin.get_name())
