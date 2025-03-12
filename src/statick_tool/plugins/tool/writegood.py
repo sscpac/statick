@@ -24,12 +24,18 @@ class WriteGoodToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["md_src", "rst_src"]
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        return "write-good"
+
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "write-good"
+        tool_bin = self.get_binary()
 
         flags: list[str] = ["--parse"]
         flags += user_flags

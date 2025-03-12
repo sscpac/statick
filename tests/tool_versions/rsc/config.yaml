@@ -1,0 +1,4 @@
+levels:
+  default:
+    tool:
+      black:

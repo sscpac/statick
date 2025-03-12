@@ -1,4 +1,5 @@
 """Unit tests for the hadolint plugin."""
+
 import argparse
 import json
 import os
@@ -84,6 +85,30 @@ def test_hadolint_tool_plugin_gather_args():
     args = arg_parser.parse_args(["--hadolint-bin", "test-bin"])
     assert args.hadolint_bin == "test-bin"
     assert not args.hadolint_docker
+
+
+def test_hadolint_tool_plugin_version():
+    """Test that the hadolint tool plugin arguments are collected."""
+    plugin = setup_hadolint_tool_plugin()
+    if not plugin.command_exists("hadolint"):
+        pytest.skip("Missing hadolint executable, skipping test.")
+
+    version = plugin.get_version()
+    assert "Haskell Dockerfile Linter" in version
+
+
+def test_hadolint_tool_plugin_version_from_docker():
+    """Test that the hadolint tool plugin arguments are collected."""
+    plugin = setup_hadolint_tool_plugin(use_docker=True)
+    if not plugin.command_exists("docker"):
+        pytest.skip("Missing docker executable, skipping test.")
+    if sys.platform == "win32":
+        pytest.skip(
+            "Docker only supports windows containers on windows, skipping test."
+        )
+
+    version = plugin.get_version()
+    assert "hadolint" in version
 
 
 def test_hadolint_tool_plugin_parse_valid():

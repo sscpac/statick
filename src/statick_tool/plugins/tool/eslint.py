@@ -72,7 +72,7 @@ class ESLintToolPlugin(ToolPlugin):
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "eslint"
+        tool_bin = self.get_binary()
 
         (format_file_name, copied_file) = self.get_format_file(level)
 

@@ -37,6 +37,18 @@ class ValParserToolPlugin(ToolPlugin):
             help="VAL Parser binary path",
         )
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        binary = "Parser"
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args.val_parser_bin is not None
+        ):
+            binary = self.plugin_context.args.val_parser_bin
+        return binary
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
@@ -45,12 +57,7 @@ class ValParserToolPlugin(ToolPlugin):
         flags: list[str] = []
         flags += self.get_user_flags(level)
 
-        parser_bin = "Parser"
-        if (
-            self.plugin_context is not None
-            and self.plugin_context.args.val_parser_bin is not None
-        ):
-            parser_bin = self.plugin_context.args.val_parser_bin
+        parser_bin = self.get_binary()
 
         try:
             subproc_args: list[str] = (

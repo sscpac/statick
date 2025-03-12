@@ -27,11 +27,12 @@ class XmllintToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         flags: list[str] = []
         flags += user_flags
+        tool_bin = self.get_binary()
 
         total_output: list[str] = []
 
         try:
-            subproc_args = ["xmllint"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

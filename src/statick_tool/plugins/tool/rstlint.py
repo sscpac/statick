@@ -18,6 +18,12 @@ class RstlintToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "rstlint"
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        return "rst-lint"
+
     # pylint: disable=too-many-locals
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""

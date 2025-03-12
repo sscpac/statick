@@ -34,8 +34,9 @@ class CMakelintToolPlugin(ToolPlugin):
             for cmake_file in package["cmake_src"]:
                 cmake_files.append(cmake_file)
 
+        tool_bin = self.get_binary()
         try:
-            subproc_args = ["cmakelint"] + flags + cmake_files
+            subproc_args = [tool_bin] + flags + cmake_files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

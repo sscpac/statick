@@ -29,7 +29,7 @@ class DocformatterToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         flags: list[str] = ["-c"]
         flags += user_flags
-        tool_bin = "docformatter"
+        tool_bin = self.get_binary()
         total_output: list[str] = []
 
         try:

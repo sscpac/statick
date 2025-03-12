@@ -39,7 +39,9 @@ def main() -> None:  # pragma: no cover
     statick.get_config(parsed_args)
     statick.get_exceptions(parsed_args)
 
-    if parsed_args.workspace:
+    if parsed_args.show_all_tool_versions:
+        success = statick.collect_tool_versions(parsed_args)
+    elif parsed_args.workspace:
         _, success = statick.run_workspace(parsed_args, start_time)
     else:
         success = run(statick, parsed_args, start_time)
@@ -47,6 +49,10 @@ def main() -> None:  # pragma: no cover
     timings = statick.get_timings()
     if parsed_args.timings:
         print(tabulate(timings, headers="keys", tablefmt="pretty"))
+
+    if parsed_args.show_all_tool_versions or parsed_args.show_run_tool_versions:
+        tool_versions = statick.get_tool_versions()
+        print(tabulate(tool_versions, headers="keys", tablefmt="grid"))
 
     if parsed_args.check and not success:
         statick.print_exit_status(False)

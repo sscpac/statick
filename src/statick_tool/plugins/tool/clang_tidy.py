@@ -44,7 +44,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return []
 
-        clang_tidy_bin = "clang-tidy"
+        clang_tidy_bin = self.get_binary()
 
         user_version = self.plugin_context.config.get_tool_config(
             self.get_name(), level, "version"

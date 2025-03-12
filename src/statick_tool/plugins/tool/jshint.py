@@ -26,7 +26,7 @@ class JSHintToolPlugin(ToolPlugin):
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "jshint"
+        tool_bin = self.get_binary()
 
         tool_config = ".jshintrc"
         user_config = None

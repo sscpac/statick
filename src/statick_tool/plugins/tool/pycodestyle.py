@@ -30,7 +30,7 @@ class PycodestyleToolPlugin(ToolPlugin):
 
         total_output: list[str] = []
 
-        tool_bin = "pycodestyle"
+        tool_bin = self.get_binary()
         try:
             subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(

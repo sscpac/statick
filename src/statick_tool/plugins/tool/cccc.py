@@ -39,6 +39,25 @@ class CCCCToolPlugin(ToolPlugin):
             "--cccc-config", dest="cccc_config", type=str, help="cccc config file"
         )
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        binary = self.get_name()
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args.cccc_bin is not None
+        ):
+            binary = self.plugin_context.args.cccc_bin
+        return binary
+
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Uninstalled".
+        """
+        return self.get_version_from_apt()
+
     def scan(  # pylint: disable=too-many-branches,too-many-locals
         self, package: Package, level: str
     ) -> Optional[list[Issue]]:
@@ -49,9 +68,7 @@ class CCCCToolPlugin(ToolPlugin):
         if self.plugin_context is None:
             return None
 
-        cccc_bin = "cccc"
-        if self.plugin_context.args.cccc_bin is not None:
-            cccc_bin = self.plugin_context.args.cccc_bin
+        cccc_bin = self.get_binary()
 
         cccc_config = "cccc.opt"
         if self.plugin_context.args.cccc_config is not None:

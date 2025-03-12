@@ -28,13 +28,20 @@ class BanditToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["python_src"]
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        binary = self.get_name()
+        if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
+            binary = self.plugin_context.args.bandit_bin
+        return binary
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        bandit_bin: str = "bandit"
-        if self.plugin_context and self.plugin_context.args.bandit_bin is not None:
-            bandit_bin = self.plugin_context.args.bandit_bin
+        bandit_bin = self.get_binary()
 
         flags: list[str] = ["--format=csv"]
         flags += user_flags

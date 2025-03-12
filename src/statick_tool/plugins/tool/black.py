@@ -30,7 +30,7 @@ class BlackToolPlugin(ToolPlugin):
 
         total_output: list[str] = []
 
-        tool_bin = "black"
+        tool_bin = self.get_binary()
         try:
             subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(

@@ -34,24 +34,30 @@ class CppcheckToolPlugin(ToolPlugin):
             "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
         )
 
-    @classmethod
-    def get_version(cls, cppcheck_bin: str) -> str:
-        """Get version of tool.
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        binary = self.get_name()
+        if (
+            self.plugin_context is not None
+            and self.plugin_context.args.cppcheck_bin is not None
+        ):
+            binary = self.plugin_context.args.cppcheck_bin
+
+        return binary
+
+    def parse_version(self, version_str: str) -> str:
+        """Parse version of tool.
 
         If no version is found the function returns "0.0".
         """
         version = "0.0"
-        output = subprocess.check_output(
-            [cppcheck_bin, "--version"],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
         ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
         parse: Pattern[str] = re.compile(ver_re)
-        match: Optional[Match[str]] = parse.match(output)
+        match: Optional[Match[str]] = parse.match(version_str)
         if match:
             version = match.group(2)
-
         return version
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
@@ -74,12 +80,10 @@ class CppcheckToolPlugin(ToolPlugin):
             self.get_name(), level, "version"
         )
 
-        cppcheck_bin = "cppcheck"
-        if self.plugin_context.args.cppcheck_bin is not None:
-            cppcheck_bin = self.plugin_context.args.cppcheck_bin
+        cppcheck_bin = self.get_binary()
 
         try:
-            version = self.get_version(cppcheck_bin)
+            version = self.parse_version(self.get_version())
             # If specific version is not specified just use the installed version.
             if user_version is not None and Version(version) != Version(user_version):
                 logging.warning(
@@ -93,12 +97,6 @@ class CppcheckToolPlugin(ToolPlugin):
 
         except OSError as ex:
             logging.warning("Cppcheck not found! (%s)", ex)
-            return None
-
-        except subprocess.CalledProcessError as ex:
-            output = ex.output
-            logging.warning("Cppcheck failed! Returncode = %d", ex.returncode)
-            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         files: list[str] = []

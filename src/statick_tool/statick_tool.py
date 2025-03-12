@@ -21,6 +21,7 @@ from statick_tool.plugin_context import PluginContext
 from statick_tool.profile import Profile
 from statick_tool.resources import Resources
 from statick_tool.timing import Timing
+from statick_tool.tool_version import ToolVersion
 
 if sys.version_info < (3, 10):
     from importlib_metadata import entry_points
@@ -57,6 +58,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         self.config: Optional[Config] = None
         self.exceptions: Optional[Exceptions] = None
         self.timings: list[Timing] = []
+        self.tool_versions: list[ToolVersion] = []
 
     @staticmethod
     def set_logging_level(args: argparse.Namespace) -> None:
@@ -188,6 +190,18 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             version=f"%(prog)s {version('statick')}",
         )
         args.add_argument(
+            "--tool-versions-all",
+            action="store_true",
+            dest="show_all_tool_versions",
+            help="Show versions of all tools.",
+        )
+        args.add_argument(
+            "--tool-versions-run",
+            action="store_true",
+            dest="show_run_tool_versions",
+            help="Show versions of tools that are run at current level.",
+        )
+        args.add_argument(
             "--mapping-file-suffix",
             dest="mapping_file_suffix",
             type=str,
@@ -278,6 +292,44 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def get_timings(self) -> list[Timing]:
         """Return list of timings for each component."""
         return self.timings
+
+    def add_tool_version(self, tool: str, tool_version: str) -> None:
+        """Add an entry to the timings list."""
+        this_tool_version = ToolVersion(tool, tool_version)
+        self.tool_versions.append(this_tool_version)
+
+    def get_tool_versions(self) -> list[ToolVersion]:
+        """Return list of version for each tool."""
+        return self.tool_versions
+
+    def collect_tool_versions(self, args: argparse.Namespace) -> bool:
+        """Print out all tool versions."""
+        success = True
+
+        path = os.path.abspath(args.path)
+        if not os.path.exists(path):
+            logging.error("No package found at %s!", path)
+            return False
+
+        level: Optional[str] = self.get_level(path, args)
+        logging.info("level: %s", level)
+        if level is None:
+            logging.error("Level is not valid.")
+            return False
+
+        if not self.config or (
+            level != self.default_level and not self.config.has_level(level)
+        ):
+            logging.error("Can't find specified level %s in config!", level)
+            return False
+
+        plugin_context = PluginContext(args, self.resources, self.config)
+
+        for plugin_name, plugin in list(self.tool_plugins.items()):
+            plugin.set_plugin_context(plugin_context)
+            self.add_tool_version(plugin_name, plugin.get_version())
+
+        return success
 
     # pylint: disable=too-many-locals, too-many-return-statements, too-many-branches
     # pylint: disable=too-many-statements
@@ -456,6 +508,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             duration = format(time.time() - plugin_start, ".4f")
             timing = Timing(package.name, plugin.get_name(), "Tool", duration)
             self.timings.append(timing)
+            self.add_tool_version(plugin.get_name(), plugin.get_version())
             if tool_issues is not None:
                 issues[plugin_name] = tool_issues
                 logging.info("%s tool plugin done.", plugin.get_name())

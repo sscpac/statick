@@ -33,7 +33,7 @@ class MypyToolPlugin(ToolPlugin):
             "--no-error-summary",
         ]
         flags += user_flags
-        tool_bin = "mypy"
+        tool_bin = self.get_binary()
         total_output: list[str] = []
 
         try:

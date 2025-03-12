@@ -30,14 +30,21 @@ class ShellcheckToolPlugin(ToolPlugin):
             help="shellcheck binary path",
         )
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        binary = self.get_name()
+        if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
+            binary = self.plugin_context.args.shellcheck_bin
+        return binary
+
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "shell_src" not in package or not package["shell_src"]:
             return []
 
-        shellcheck_bin: str = "shellcheck"
-        if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
-            shellcheck_bin = self.plugin_context.args.shellcheck_bin
+        shellcheck_bin = self.get_binary()
 
         # Get output in JSON format.
         flags: list[str] = ["-f", "json"]

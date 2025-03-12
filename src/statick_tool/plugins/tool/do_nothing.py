@@ -1,5 +1,6 @@
 """Do nothing, this is primarily useful for testing purposes."""
 
+from importlib.metadata import version
 from typing import Optional
 
 from statick_tool.issue import Issue
@@ -17,6 +18,16 @@ class DoNothingToolPlugin(ToolPlugin):
     def get_file_types(self) -> list[str]:
         """Return a list of file types the plugin can scan."""
         return []
+
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        return ""
+
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed."""
+        return version("statick")
 
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

@@ -28,9 +28,10 @@ class FlawfinderToolPlugin(ToolPlugin):
         flags: list[str] = ["--quiet", "-D", "--singleline"]
         flags += user_flags
         total_output: list[str] = []
+        tool_bin = self.get_binary()
 
         try:
-            subproc_args = ["flawfinder"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

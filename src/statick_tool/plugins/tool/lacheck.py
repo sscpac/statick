@@ -31,7 +31,7 @@ class LacheckToolPlugin(ToolPlugin):
 
         total_output: list[str] = []
 
-        tool_bin: str = "lacheck"
+        tool_bin = self.get_binary()
         try:
             subproc_args: list[str] = [tool_bin] + flags + files
             output = subprocess.check_output(

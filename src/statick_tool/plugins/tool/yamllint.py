@@ -27,12 +27,13 @@ class YamllintToolPlugin(ToolPlugin):
         """Run tool and gather output."""
         flags: list[str] = ["-f", "parsable"]
         flags += user_flags
+        tool_bin = self.get_binary()
 
         total_output: list[str] = []
         output: str = ""
 
         try:
-            subproc_args = ["yamllint"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

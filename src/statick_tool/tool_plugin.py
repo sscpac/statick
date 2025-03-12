@@ -3,19 +3,22 @@
 import argparse
 import logging
 import os
+import re
 import shlex
-from typing import Any, Optional, Union
+import subprocess
+from typing import Any, Match, Optional, Pattern, Union
 
 from statick_tool.issue import Issue
 from statick_tool.package import Package
 from statick_tool.plugin_context import PluginContext
 
 
-# No stubs available for IPlugin so ignoring type.
 class ToolPlugin:
     """Default implementation of tool plugin."""
 
     plugin_context = None
+    TOOL_MISSING_STR = "Not installed"
+    TOOL_UNKNOWN_STR = "Unknown"
 
     def get_name(self) -> str:  # type: ignore[empty-body]
         """Get name of tool."""
@@ -31,6 +34,90 @@ class ToolPlugin:
 
     def get_file_types(self) -> list[str]:  # type: ignore[empty-body]
         """Return a list of file types the plugin can scan."""
+
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        return self.get_name()
+
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Unknown".
+        """
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return self.TOOL_UNKNOWN_STR
+
+        try:
+            output = subprocess.check_output(
+                [tool_bin, "--version"], stderr=subprocess.STDOUT
+            )
+            return output.decode("utf-8")
+        except subprocess.CalledProcessError:  # NOLINT
+            return self.TOOL_UNKNOWN_STR
+        except FileNotFoundError:  # NOLINT
+            return self.TOOL_MISSING_STR
+
+    def get_version_from_pkg(self, subproc_args: list[str], ver_re_str: str) -> str:
+        """Figure out and return the version of the tool that's installed."""
+        version = self.TOOL_MISSING_STR
+
+        try:
+            output = subprocess.check_output(
+                subproc_args,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+            )
+        except subprocess.CalledProcessError:  # NOLINT
+            return self.TOOL_UNKNOWN_STR
+        except FileNotFoundError:  # NOLINT
+            return self.TOOL_UNKNOWN_STR
+
+        parse: Pattern[str] = re.compile(ver_re_str)
+        for line in output.splitlines():
+            match: Optional[Match[str]] = parse.match(line)
+            if match:
+                return line
+        return version
+
+    def get_version_from_apt(self) -> str:
+        """Figure out and return the version of the tool that's installed by apt."""
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return self.TOOL_UNKNOWN_STR
+
+        return self.get_version_from_pkg(
+            subproc_args=["dpkg", "-l"], ver_re_str=rf"(.+{tool_bin}.*)"
+        )
+
+    def get_version_from_docker(self) -> str:
+        """Figure out and return the version of the tool that's installed by docker."""
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return self.TOOL_UNKNOWN_STR
+
+        return self.get_version_from_pkg(
+            subproc_args=["docker", "image", "list"], ver_re_str=rf"(.+{tool_bin}.*)"
+        )
+
+    def get_version_from_npm(self) -> str:
+        """Figure out and return the version of the tool that's installed by npm."""
+        tool_bin = self.get_binary()
+        if not tool_bin:
+            return self.TOOL_UNKNOWN_STR
+
+        ver_re = rf"(.+{tool_bin}.*)@([0-9]*\.?[0-9]+\.?[0-9]+)"
+        version = self.get_version_from_pkg(
+            subproc_args=["npm", "list"], ver_re_str=ver_re
+        )
+        if version in [self.TOOL_MISSING_STR, self.TOOL_UNKNOWN_STR]:
+            # if not found locally, check globally
+            version = self.get_version_from_pkg(
+                subproc_args=["npm", "list", "-g"], ver_re_str=ver_re
+            )
+        return version
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""

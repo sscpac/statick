@@ -33,10 +33,12 @@ class PylintToolPlugin(ToolPlugin):
         if self.plugin_context and self.plugin_context.args.max_procs is not None:
             flags += [f"-j {self.plugin_context.args.max_procs}"]
 
+        tool_bin = self.get_binary()
+
         total_output: list[str] = []
 
         try:
-            subproc_args = ["pylint"] + flags + files
+            subproc_args = [tool_bin] + flags + files
             output = subprocess.check_output(
                 subproc_args, stderr=subprocess.STDOUT, universal_newlines=True
             )

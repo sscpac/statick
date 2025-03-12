@@ -29,7 +29,7 @@ class PydocstyleToolPlugin(ToolPlugin):
         flags += user_flags
         total_output = []
 
-        tool_bin = "pydocstyle"
+        tool_bin = self.get_binary()
 
         try:
             subproc_args = [tool_bin] + flags + files

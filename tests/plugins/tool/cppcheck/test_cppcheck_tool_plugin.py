@@ -51,14 +51,12 @@ def test_cppcheck_tool_plugin_found():
     for plugin_type in tool_plugins:
         plugin = plugin_type.load()
         plugins[plugin_type.name] = plugin()
-    assert any(
-        plugin.get_name() == "cppcheck" for _, plugin in list(plugins.items())
-    )
+    assert any(plugin.get_name() == "cppcheck" for _, plugin in list(plugins.items()))
 
 
 def test_cppcheck_tool_plugin_scan_valid():
     """Integration test: Make sure the cppcheck output hasn't changed."""
-    cctp = setup_cppcheck_tool_plugin()
+    cctp = setup_cppcheck_tool_plugin(use_plugin_context=True)
     if not cctp.command_exists("cppcheck"):
         pytest.skip("Can't find cppcheck, unable to test cppcheck plugin")
     package = Package(
@@ -82,7 +80,7 @@ def test_cppcheck_tool_plugin_scan_valid():
     )
     assert issues[0].line_number == 4
     assert issues[0].tool == "cppcheck"
-    version = cctp.get_version("cppcheck")
+    version = cctp.parse_version(cctp.get_version())
     if Version(version) >= Version("2.8"):
         assert issues[0].issue_type == "error/legacyUninitvar"
     else:
@@ -224,7 +222,7 @@ def calledprocesserror_helper(*popenargs, **kwargs):
     """
     # Workaround so that the --version check doesn't throw a CalledProcessError
     if "--version" in popenargs[0]:
-        return "1.2.3"
+        return b"1.2.3"
     else:
         raise subprocess.CalledProcessError(2, "", output="mocked error")
 
@@ -273,7 +271,7 @@ def test_checkforexceptions_false():
 def test_cppcheck_tool_plugin_version_match(mock_subprocess_check_output):
     """Test the result of passing a requested version to the plugin when that version
     isn't available."""
-    mock_subprocess_check_output.return_value = "Cppcheck 1.2"
+    mock_subprocess_check_output.return_value = b"Cppcheck 1.2"
     cctp = setup_cppcheck_tool_plugin()
     # Mock the return value of self.plugin_context.config.get_tool_config
     cctp.plugin_context.config.get_tool_config = mock.MagicMock(return_value="1.3")

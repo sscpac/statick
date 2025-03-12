@@ -21,11 +21,24 @@ class GroovyLintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["groovy_src"]
 
+    def get_binary(  # pylint: disable=unused-argument
+        self, level: Optional[str] = None, package: Optional[Package] = None
+    ) -> str:
+        """Get tool binary name."""
+        return "npm-groovy-lint"
+
+    def get_version(self) -> str:
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Unknown".
+        """
+        return self.get_version_from_npm()
+
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
         """Run tool and gather output."""
-        tool_bin = "npm-groovy-lint"
+        tool_bin = self.get_binary()
 
         tool_config = ".groovylintrc.json"
         user_config = None

@@ -15,6 +15,15 @@ from statick_tool.resources import Resources
 from statick_tool.tool_plugin import ToolPlugin
 
 
+def test_tool_plugin_get_version_no_binary():
+    """Test that getting a version with no binary specified returns the correct string."""
+    tp = ToolPlugin()
+    assert tp.get_version() == "Unknown"
+    assert tp.get_version_from_apt() == "Unknown"
+    assert tp.get_version_from_docker() == "Unknown"
+    assert tp.get_version_from_npm() == "Unknown"
+
+
 def test_tool_plugin_load_mapping_valid():
     """Test that we can load the warnings mapping."""
     arg_parser = argparse.ArgumentParser()
