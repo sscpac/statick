@@ -199,7 +199,7 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             "--tool-versions-run",
             action="store_true",
             dest="show_run_tool_versions",
-            help="Show versions of all tools.",
+            help="Show versions of tools that are run at current level.",
         )
         args.add_argument(
             "--mapping-file-suffix",
