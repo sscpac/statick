@@ -26,15 +26,19 @@ def test_do_nothing_tool_plugin_found():
     for plugin_type in tool_plugins:
         plugin = plugin_type.load()
         plugins[plugin_type.name] = plugin()
-    assert any(
-        plugin.get_name() == "do_nothing" for _, plugin in list(plugins.items())
-    )
+    assert any(plugin.get_name() == "do_nothing" for _, plugin in list(plugins.items()))
 
 
 def test_do_nothing_tool_plugin_get_file_types():
     """Integration test: Make sure the do_nothing output hasn't changed."""
     plugin = setup_do_nothing_tool_plugin()
     assert not plugin.get_file_types()
+
+
+def test_do_nothing_tool_plugin_get_binary():
+    """Integration test: Make sure the do_nothing output hasn't changed."""
+    plugin = setup_do_nothing_tool_plugin()
+    assert not plugin.get_binary()
 
 
 def test_do_nothing_tool_plugin_process_files():
