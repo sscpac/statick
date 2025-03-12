@@ -21,12 +21,6 @@ class HTMLLintToolPlugin(ToolPlugin):
         """Return a list of file types the plugin can scan."""
         return ["html_src"]
 
-    def get_binary(  # pylint: disable=unused-argument
-        self, level: Optional[str] = None, package: Optional[Package] = None
-    ) -> str:
-        """Get tool binary name."""
-        return self.get_name()
-
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]

@@ -17,12 +17,6 @@ class MakeToolPlugin(ToolPlugin):
         """Get name of tool."""
         return "make"
 
-    def get_binary(  # pylint: disable=unused-argument
-        self, level: Optional[str] = None, package: Optional[Package] = None
-    ) -> str:
-        """Get tool binary name."""
-        return self.get_name()
-
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
         """Run tool and gather output."""
         if "make_targets" not in package or not package["make_targets"]:

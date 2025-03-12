@@ -39,7 +39,7 @@ class ToolPlugin:
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
         """Get tool binary name."""
-        return ""
+        return self.get_name()
 
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
