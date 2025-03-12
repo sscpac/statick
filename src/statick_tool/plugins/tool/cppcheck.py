@@ -49,7 +49,6 @@ class CppcheckToolPlugin(ToolPlugin):
 
     def parse_version(self, version_str: str) -> str:
         """Parse version of tool.
-
         If no version is found the function returns "0.0".
         """
         version = "0.0"
@@ -97,12 +96,6 @@ class CppcheckToolPlugin(ToolPlugin):
 
         except OSError as ex:
             logging.warning("Cppcheck not found! (%s)", ex)
-            return None
-
-        except subprocess.CalledProcessError as ex:
-            output = ex.output
-            logging.warning("Cppcheck failed! Returncode = %d", ex.returncode)
-            logging.warning("%s exception: %s", self.get_name(), ex.output)
             return None
 
         files: list[str] = []
