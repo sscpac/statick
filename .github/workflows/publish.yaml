@@ -60,6 +60,7 @@ jobs:
 
   # Deployment job
   deploy_pages:
+    name: Deploy to GitHub Pages
     permissions:
       id-token: write
       contents: write
