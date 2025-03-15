@@ -2,9 +2,9 @@
 name: Publish Python 🐍 distributions 📦 to PyPI
 
 on:  # NOLINT
+  pull_request:
   push:
-    tags:
-      - '*'
+  workflow_dispatch:
 
 jobs:
   build-n-publish:
