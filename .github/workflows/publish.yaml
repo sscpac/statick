@@ -60,6 +60,10 @@ jobs:
 
   # Deployment job
   deploy_pages:
+    permissions:
+      id-token: write
+      contents: write
+      pages: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
