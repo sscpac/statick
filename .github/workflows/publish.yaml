@@ -3,8 +3,9 @@ name: Publish Python 🐍 distributions 📦 to PyPI
 
 on:  # NOLINT
   push:
-    tags:
-      - '*'
+    # tags:
+    #   - '*'
+  workflow_dispatch:
 
 jobs:
   build-n-publish:
@@ -37,8 +38,8 @@ jobs:
           uv pip install -q build --system
           python -m build
 
-      - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      # - name: Publish distribution 📦 to PyPI
+      #   uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Upload static docs files as artifact
         id: deployment
