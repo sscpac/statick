@@ -32,10 +32,10 @@ jobs:
           pip install --upgrade uv
           uv pip install .[docs] --system
 
-      # - name: Build a binary wheel and a source tarball
-      #   run: |
-      #     uv pip install -q build --system
-      #     python -m build
+      - name: Build a binary wheel and a source tarball
+        run: |
+          uv pip install -q build --system
+          python -m build
 
       # - name: Publish distribution 📦 to PyPI
       #   uses: pypa/gh-action-pypi-publish@release/v1
@@ -45,9 +45,27 @@ jobs:
         with:
           docs-folder: 'docs/'
 
-      - name: Publish documentation
-        uses: peaceiris/actions-gh-pages@v4
+      # - name: Publish documentation
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./docs/build/html
+      #     publish_branch: gh-pages
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build/html
-          publish_branch: gh-pages
+          path: ./docs/build/html
+
+  # Deployment job
+  deploy_pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build-n-publish
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
