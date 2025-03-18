@@ -14,7 +14,7 @@ echo ". /opt/venv/bin/activate" >> "${HOME}"/.bashrc
 
 echo "" >> ~/.bashrc
 echo "alias pip='uv pip'" >> "${HOME}"/.bashrc
-echo "alias self-check='statick . --level self_check --check --output-dir /tmp/statick-output --log info' >> "${HOME}"/.bashrc
+echo "alias self-check='statick . --level self_check --check --output-dir /tmp/statick-output --log info'" >> "${HOME}"/.bashrc
 
 echo ""
 echo "Setup complete. Development environment ready to go!!"
