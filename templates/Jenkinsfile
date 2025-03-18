@@ -20,7 +20,7 @@ pipeline {
 		}
 		stage('Checkout Statick') {
 			steps {
-				checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'statick']], userRemoteConfigs: [[url: "https://github.com/sscpac/statick.git"]]])
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'statick']], userRemoteConfigs: [[url: "https://github.com/triboelectric/statick.git"]]])
 			}
 		}
 		# Add stages to check out (if needed) and build your project here

@@ -1,7 +1,7 @@
 # Statick
 
-![Unit Tests](https://github.com/sscpac/statick/workflows/Statick/badge.svg)
-[![Codecov](https://codecov.io/gh/sscpac/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/sscpac/statick/)
+![Unit Tests](https://github.com/triboelectric/statick/workflows/Statick/badge.svg)
+[![Codecov](https://codecov.io/gh/triboelectric/statick/branch/master/graphs/badge.svg)](https://codecov.io/gh/triboelectric/statick/)
 [![PyPI version](https://badge.fury.io/py/statick.svg)](https://badge.fury.io/py/statick)
 ![Python Versions](https://img.shields.io/pypi/pyversions/statick.svg)
 ![License](https://img.shields.io/pypi/l/statick.svg)
@@ -532,20 +532,6 @@ Alternatively, Jenkins can be configured with quality gates to fail if a thresho
 
 An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick can be used with Jenkins pipelines.
 
-### External Plugins
-
-Known external Statick plugins.
-Nearly all of these have been merged into the main repository, but they can serve as examples of how to make custom packages.
-
-Plugin Name      | Repository Location
-:--------------- | :-----------------------------------------------
-statick-fortify  | <https://github.com/soartech/statick-fortify>
-statick-md       | <https://github.com/sscpac/statick-md>
-statick-planning | <https://github.com/tdenewiler/statick-planning>
-statick-tex      | <https://github.com/tdenewiler/statick-tex>
-statick-tooling  | <https://github.com/sscpac/statick-tooling>
-statick-web      | <https://github.com/sscpac/statick-web>
-
 ## Customization
 
 ### User Paths
@@ -713,7 +699,7 @@ For the actual implementation of a plugin, it is recommended to copy a suitable 
 modify as needed.
 
 For the contents of `pyproject.toml`, it is recommended to copy a working external plugin.
-Some examples are [statick-md] and [statick-tex].
+An example is [statick-tex].
 Those plugins are set up in such a way that they work with Statick when released on PyPI.
 
 ## Examples
@@ -769,7 +755,7 @@ looking nicer than creating and pushing a new tag from a local source.
 1. Update the `CHANGELOG.md` file to have the new version and release date, and update `statick_tool/__init__.py`
    to have the new version.
    Merge that into `main`.
-1. Go to <https://github.com/sscpac/statick/releases>.
+1. Go to <https://github.com/triboelectric/statick/releases>.
 1. Select `Draft a new release`.
 1. Select `Choose a tag` and make a new one.
    An example is `v0.9.2`.
@@ -997,7 +983,6 @@ His commits were scrubbed from git history upon the initial public release.
 [ruff]: https://github.com/charliermarsh/ruff
 [shellcheck]: https://github.com/koalaman/shellcheck
 [spotbugs]: https://github.com/spotbugs/spotbugs
-[statick-md]: https://github.com/sscpac/statick-md
 [statick-tex]: https://github.com/tdenewiler/statick-tex
 [stylelint]: https://stylelint.io/
 [uncrustify]: https://github.com/uncrustify/uncrustify

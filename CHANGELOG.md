@@ -389,7 +389,7 @@ If a user does not want to fix the additional warnings yet they can pin the vers
   See <https://endoflife.date/python>.
   To continue using Statick with Python 3.6 [pin the version](https://pip.pypa.io/en/stable/user_guide/)
   used to the `0.6` tags.
-  An example is at the discussion at <https://github.com/sscpac/statick/discussions/376>.
+  An example is at the discussion at <https://github.com/triboelectric/statick/discussions/376>.
 
 ## v0.6.3 - 2021-12-14
 
@@ -398,7 +398,7 @@ If a user does not want to fix the additional warnings yet they can pin the vers
 - Tests run on Python 3.10.
 - Docker image created and published on each new release.
   Image forms the basis of the new Statick Github Action.
-  See <https://github.com/sscpac/statick-action>. (Greg Kogut, @gregtkogut)
+  See <https://github.com/triboelectric/statick-action>. (Greg Kogut, @gregtkogut)
 - Test workflow runs on a weekly, scheduled timer. (Greg Kogut, @gregtkogut)
 - Test workflow can be manually triggered to run. (Greg Kogut, @gregtkogut)
 - Stand-alone Python packages are discovered as part of running Statick in workspace mode.
@@ -466,7 +466,7 @@ If a user does not want to fix the additional warnings yet they can pin the vers
 This is expected to be the final release that supports Python 3.5.
 Ubuntu 16.04 has reached end-of-life status.
 The final release of ROS Kinetic has been made.
-See <https://github.com/sscpac/statick/discussions/290> for a discussion on Python 3.5 support in Statick.
+See <https://github.com/triboelectric/statick/discussions/290> for a discussion on Python 3.5 support in Statick.
 
 ### Added
 
