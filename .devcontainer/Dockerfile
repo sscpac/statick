@@ -2,8 +2,8 @@ FROM ubuntu:24.04
 
 LABEL "name"="Statick DevContainer"
 LABEL "version"="0.0"
-LABEL "repository"="https://github.com/sscpac/statick"
-LABEL "homepage"="https://github.com/sscpac/statick"
+LABEL "repository"="https://github.com/triboelectric/statick"
+LABEL "homepage"="https://github.com/triboelectric/statick"
 LABEL "maintainer"="Thomas Denewiler <tdenewiler@gmail.com>"
 
 USER root

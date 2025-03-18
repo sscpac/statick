@@ -46,7 +46,7 @@ execute_command() {
     *)
         echo "Unknown command: $1"
         show_help
-        echo "Use 'niwc --help' for a list of available commands."
+        echo "Use 'dev --help' for a list of available commands."
         ;;
     esac
 }
