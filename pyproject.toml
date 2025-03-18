@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "statick"
 maintainers = [
-    {name = "Thomas Denewiler", email="tdenewiler@gmail.com},
-    {name = "Alexander Xydes", email="axydes@gmail.com},
-    {name = "Greg Kogut", email="gregkogut@gmail.com},
+    {name = "Thomas Denewiler", email="tdenewiler@gmail.com"},
+    {name = "Alexander Xydes", email="axydes@gmail.com"},
+    {name = "Greg Kogut", email="gregkogut@gmail.com"},
 ]
 description="Making code quality easier."
 version = "0.12.0"
