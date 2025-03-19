@@ -47,7 +47,6 @@ Statick is a plugin-based tool with an explicit goal to support external, option
     - [Discovery Plugins](#discovery-plugins)
     - [Tool Plugins](#tool-plugins)
     - [Reporting Plugins](#reporting-plugins)
-    - [External Plugins](#external-plugins)
   - [Customization](#customization)
     - [User Paths](#user-paths)
     - [Custom Profile](#custom-profile)
