@@ -67,17 +67,25 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh && \
     npm config set prefix -g /usr && \
     npm install -g dockerfilelint && \
     npm install -g dockerfile_lint && \
-    npm install -g prettier && \
-    npm install -g eslint && \
-    npm install -g --prefix $HOME/.node_modules eslint-plugin-html && \
-    npm install -g --prefix $HOME/.node_modules eslint-plugin-prettier && \
-    npm install -g --prefix $HOME/.node_modules eslint-config-prettier && \
     npm install -g htmllint-cli && \
     npm install -g markdownlint-cli && \
     npm install -g npm-groovy-lint && \
+    # needed for stylelint to process html
+    npm install -g postcss-html && \ 
+    npm install -g prettier && \
     npm install -g stylelint && \
     npm install -g stylelint-config-standard && \
-    npm install -g json-merger
+    npm install -g write-good && \
+    npm install -g eslint && \
+    # eslint plugins and configs should be installed locally
+    # https://eslint.org/docs/user-guide/migrating-to-6.0.0#plugins-and-shareable-configs-are-no-longer-affected-by-eslints-location
+    npm install --prefix $HOME/.node_modules eslint-plugin-html && \
+    npm install --prefix $HOME/.node_modules eslint-plugin-prettier && \
+    npm install --prefix $HOME/.node_modules eslint-config-prettier && \
+    # View versions of installed packages
+    npm list && \
+    npm list --prefix $HOME/.node_modules && \
+    npm list -g
 
 ENV HOME=/root
 WORKDIR ${HOME}

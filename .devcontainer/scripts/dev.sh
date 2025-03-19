@@ -19,7 +19,7 @@ execute_command() {
     case $1 in
     format)
         cd $APP_HOME || exit
-        black src/statick_tool/ tests/
+        black src/statick_tool/
         find src/statick_tool/ -name \*.py -exec docformatter -i --black {} \;
         ;;
     help)
