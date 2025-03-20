@@ -1,0 +1,96 @@
+#Less fancy PS1, based on Ed Venator's .bashrc,
+#which is based on a standard Ubuntu .bashrc
+
+# Color Defs (thanks Jerry)
+# Reset
+Color_Off="\[\033[0m\]"       # Text Reset
+
+# Regular Colors
+Black="\[\033[0;30m\]"        # Black
+Red="\[\033[0;31m\]"          # Red
+Green="\[\033[0;32m\]"        # Green
+Yellow="\[\033[0;33m\]"       # Yellow
+Blue="\[\033[0;34m\]"         # Blue
+Purple="\[\033[0;35m\]"       # Purple
+Cyan="\[\033[0;36m\]"         # Cyan
+White="\[\033[0;37m\]"        # White
+
+# Boldyellow
+BoldBlack="\[\033[1;30m\]"       # Black
+BoldRed="\[\033[1;31m\]"         # Red
+BoldGreen="\[\033[1;32m\]"       # Green
+BoldYellow="\[\033[1;33m\]"      # Yellow
+BoldBlue="\[\033[1;34m\]"        # Blue
+BoldPurple="\[\033[1;35m\]"      # Purple
+BoldCyan="\[\033[1;36m\]"        # Cyan
+BoldWhite="\[\033[1;37m\]"       # White
+
+# High Intensty
+IBlack="\[\033[0;90m\]"       # Black
+IRed="\[\033[0;91m\]"         # Red
+IGreen="\[\033[0;92m\]"       # Green
+IYellow="\[\033[0;93m\]"      # Yellow
+IBlue="\[\033[0;94m\]"        # Blue
+IPurple="\[\033[0;95m\]"      # Purple
+ICyan="\[\033[0;96m\]"        # Cyan
+IWhite="\[\033[0;97m\]"       # White
+
+# Bold High Intensty
+BIBlack="\[\033[1;90m\]"      # Black
+BIRed="\[\033[1;91m\]"        # Red
+BIGreen="\[\033[1;92m\]"      # Green
+BIYellow="\[\033[1;93m\]"     # Yellow
+BIBlue="\[\033[1;94m\]"       # Blue
+BIPurple="\[\033[1;95m\]"     # Purple
+BICyan="\[\033[1;96m\]"       # Cyan
+BIWhite="\[\033[1;97m\]"      # White
+
+# High Intensty backgrounds
+On_IBlack="\[\033[0;100m\]"   # Black
+On_IRed="\[\033[0;101m\]"     # Red
+On_IGreen="\[\033[0;102m\]"   # Green
+On_IYellow="\[\033[0;103m\]"  # Yellow
+On_IBlue="\[\033[0;104m\]"    # Blue
+On_IPurple="\[\033[10;95m\]"  # Purple
+On_ICyan="\[\033[0;106m\]"    # Cyan
+On_IWhite="\[\033[0;107m\]"   # White
+
+# Variables
+UserName="\u"
+HostName="\h"
+PathShort="\w"
+PathFull="\W"
+NewLine="\n"
+DefaultPrompt="\$"
+
+#Overwrite the prompt from the default bashrc, because who knows what it is
+#This is the default ubuntu color prompt
+#PS1="${debian_chroot:+($debian_chroot)}$IBlack\u@\h$Color_Off:$BoldBlue \w$Color_Off$BoldBlue$Color_Off"
+
+#If you like the default ubuntu prompt and just want to add git decoration
+#You only need these lines (and the appropriate color defs)
+export GIT_PS1_SHOWDIRTYSTATE=1       # * for unstaged and + for staged changes
+export GIT_PS1_SHOWSTASHSTATE=1       # $ if something is stashed
+export GIT_PS1_SHOWUNTRACKEDFILES=1   # % if there are untracked files
+export GIT_PS1_SHOWUPSTREAM=""        # Set to "auto" to show status compared to upstream using =, < (behind), > (ahead), and <> (diverged)
+#export PS1="$PS1$Yellow\$(__git_ps1)$Color_Off \$ "
+
+export PS1="$IBlack\u@\h: $BIBlue$PathShort$Color_Off"'$(git branch &>/dev/null;\
+if [ $? -eq 0 ]; then \
+  echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
+  if [ "$?" -eq "0" ]; then \
+    # @4 - Clean repository - nothing to commit
+    echo "'$Green'"$(__git_ps1 " (%s)"); \
+  else \
+    # @5 - Changes to working tree
+    echo "'$IRed'"$(__git_ps1 " {%s}"); \
+  fi) '$BIBlue$Color_Off'\$ "; \
+  #fi)"; \
+else \
+ # @2 - Prompt when not in GIT repo
+ #echo " '$BIBlue$PathShort$Color_Off'\$ "; \
+ echo " '$Color_Off'\$ "; \
+fi)'
+
+#LS_COLORS='di=1;34'
+#export LS_COLORS

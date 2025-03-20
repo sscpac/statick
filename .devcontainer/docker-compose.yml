@@ -1,0 +1,11 @@
+---
+services:
+  devcontainer:
+    build:
+      context: ../  # Start the context at the project root
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../:/opt/statick:cached  # Mount the project folder that contains .git
+    networks:
+      - default
+    command: sleep infinity  # Required so the container stays open

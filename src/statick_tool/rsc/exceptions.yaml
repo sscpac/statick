@@ -114,6 +114,9 @@ packages:
         # Causes pylint crash when trying to import lizard module.
         - tools: [pylint]
           globs: ["statick_tool/plugins/tool/lizard_tool_plugin.py"]
+        # Third party shell scripts useful in DevContainer.
+        - tools: [shellcheck]
+          globs: [".devcontainer/config/.git-prompt.sh"]
 
 ignore_packages:
   []
