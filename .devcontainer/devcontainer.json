@@ -1,0 +1,35 @@
+{
+	"name": "statick",
+	"service": "devcontainer", // The service name in the docker-compose.yml which is this devContainer itself.
+	"dockerComposeFile": ["docker-compose.yml"],
+	"workspaceFolder": "/opt/statick", // The folder created in the DevContainer where the repo will be.
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"remoteEnv": {},
+	"customizations": {
+		"vscode": {
+			// Add vscode extensions to the container using their ID.
+			"extensions": [
+				"ms-vscode.live-server",
+				"ms-python.python",
+				"eamodio.gitlens"
+			],
+			"settings": {
+				"dev.containers.mountWaylandSocket": false,
+				"http.proxyStrictSSL": false, // Fixes extensions not installing.
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"terminal.integrated.profiles.linux": {
+					"bash": {
+						"path": "bash",
+						"icon": "terminal-bash"
+					}
+				}
+			}
+		}
+	},
+	"remoteUser": "root", // Change this to `root` to make the container run as root.
+	"postCreateCommand": "bash -i ./.devcontainer/scripts/postCreateCommand.sh && exit",
+	"postAttachCommand": "/bin/bash -l" // Start bash with login mode to source ~/.bashrc.
+}
