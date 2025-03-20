@@ -539,9 +539,11 @@ Nearly all of these have been merged into the main repository, but they can serv
 
 Plugin Name      | Repository Location
 :--------------- | :-----------------------------------------------
-statick-fortify  | <https://github.com/soartech/statick-fortify>
+statick-md       | <https://github.com/sscpac/statick-md>
 statick-planning | <https://github.com/tdenewiler/statick-planning>
 statick-tex      | <https://github.com/tdenewiler/statick-tex>
+statick-tooling  | <https://github.com/sscpac/statick-tooling>
+statick-web      | <https://github.com/sscpac/statick-web>
 
 ## Customization
 
