@@ -27,7 +27,7 @@ execute_command() {
         ;;
     qa)
         cd $APP_HOME || exit
-        statick . -o /tmp/x -u statick_config/ --level self_check --log info
+        statick . -o /tmp/x --level self_check --log info
         ;;
     reset-venv)
         rm -rf /opt/venv
