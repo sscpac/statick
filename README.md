@@ -47,6 +47,7 @@ Statick is a plugin-based tool with an explicit goal to support external, option
     - [Discovery Plugins](#discovery-plugins)
     - [Tool Plugins](#tool-plugins)
     - [Reporting Plugins](#reporting-plugins)
+    - [External Plugins](#external-plugins)
   - [Customization](#customization)
     - [User Paths](#user-paths)
     - [Custom Profile](#custom-profile)
@@ -530,6 +531,17 @@ The Statick `--check` flag can be used to cause steps in a Jenkins job to fail i
 Alternatively, Jenkins can be configured with quality gates to fail if a threshold on the number of issues found is exceeded.
 
 An example [Jenkinsfile](templates/Jenkinsfile) is provided to show how Statick can be used with Jenkins pipelines.
+
+### External Plugins
+
+Known external Statick plugins.
+Nearly all of these have been merged into the main repository, but they can serve as examples of how to make custom packages.
+
+Plugin Name      | Repository Location
+:--------------- | :-----------------------------------------------
+statick-fortify  | <https://github.com/soartech/statick-fortify>
+statick-planning | <https://github.com/tdenewiler/statick-planning>
+statick-tex      | <https://github.com/tdenewiler/statick-tex>
 
 ## Customization
 
