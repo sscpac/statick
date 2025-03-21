@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 LABEL maintainer="NIWC"
 
 LABEL org.label-schema.name = "Statick Runner"
-LABEL org.label-schema.vcs-url = "https://github.com/sscpac/statick"
+LABEL org.label-schema.vcs-url = "https://github.com/triboelectric/statick"
 
 USER root
 
