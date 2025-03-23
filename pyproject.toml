@@ -159,7 +159,7 @@ test = [
     "tox-uv",
 ]
 docs = [
-    "sphinx==1.7.9",
+    "sphinx",
     "yaml-1.3",
 ]
 
