@@ -3,9 +3,8 @@ name: Publish Python 🐍 distributions 📦 to PyPI
 
 on:  # NOLINT
   push:
-    # tags:
-    #   - '*'
-  workflow_dispatch:
+    tags:
+      - '*'
 
 jobs:
   build-n-publish:
@@ -38,8 +37,8 @@ jobs:
           uv pip install -q build --system
           python -m build
 
-      # - name: Publish distribution 📦 to PyPI
-      #   uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
 
   pages:
     runs-on: ubuntu-latest
