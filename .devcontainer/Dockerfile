@@ -71,7 +71,7 @@ RUN curl -sL https://deb.nodesource.com/setup_lts.x -o nodesource_setup.sh && \
     npm install -g markdownlint-cli && \
     npm install -g npm-groovy-lint && \
     # needed for stylelint to process html
-    npm install -g postcss-html && \ 
+    npm install -g postcss-html && \
     npm install -g prettier && \
     npm install -g stylelint && \
     npm install -g stylelint-config-standard && \
@@ -94,6 +94,12 @@ WORKDIR ${HOME}
 COPY .devcontainer/config/.git-prompt.sh ${HOME}/.git-prompt.sh
 COPY .devcontainer/config/.bash_prompt ${HOME}/.bash_prompt
 RUN echo ". ~/.git-prompt.sh" >> ${HOME}/.bashrc && \
-    echo ". ~/.bash_prompt" >> ${HOME}/.bashrc
-    
+    echo ". ~/.bash_prompt" >> ${HOME}/.bashrc && \
+    wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash && \
+    echo " \
+    if [ -f ~/.git-completion.bash ]; then \
+      . ~/.git-completion.bash \
+    fi \
+    " >> ${HOME}/.bashrc
+
 WORKDIR /opt
