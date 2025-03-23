@@ -4,7 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "statick"
-authors = [{name = "NIWC Pacific"}]
+maintainers = [
+    {name = "Thomas Denewiler", email="tdenewiler@gmail.com"},
+    {name = "Alexander Xydes", email="axydes@gmail.com"},
+    {name = "Greg Kogut", email="gregkogut@gmail.com"},
+]
 description="Making code quality easier."
 version = "0.12.0"
 readme = "README.md"
@@ -140,8 +144,8 @@ xmllint = "statick_tool.plugins.tool.xmllint:XmllintToolPlugin"
 yamllint = "statick_tool.plugins.tool.yamllint:YamllintToolPlugin"
 
 [project.urls]
-"Homepage" = "https://github.com/sscpac/statick"
-"Bug Tracker" = "https://github.com/sscpac/statick/issues"
+"Homepage" = "https://github.com/triboelectric/statick"
+"Bug Tracker" = "https://github.com/triboelectric/statick/issues"
 
 [project.optional-dependencies]
 test = [
