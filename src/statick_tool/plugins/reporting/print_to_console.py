@@ -21,11 +21,12 @@ class PrintToConsoleReportingPlugin(ReportingPlugin):
         """Go through the issues list and print them to the console.
 
         Args:
-            package (:obj:`Package`): The Package object that was analyzed.
-            issues (:obj:`dict` of :obj:`str` to :obj:`Issue`): The issues
-                found by the Statick analysis, keyed by the tool that found
-                them.
-            level: (:obj:`str`): Name of the level used in the scan
+            package: The Package object that was analyzed.
+            issues: The issues found by the Statick analysis, keyed by the tool that found them.
+            level: Name of the level used in the scan.
+
+        Returns:
+            None, True if the report was successfully printed, otherwise None, False.
         """
         total: int = 0
         for key, value in issues.items():

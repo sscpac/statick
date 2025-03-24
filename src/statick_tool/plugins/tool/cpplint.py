@@ -15,13 +15,25 @@ class CpplintToolPlugin(ToolPlugin):
     """Apply Cpplint tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "cpplint"
 
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Return the name of the tool binary."""
+        """Return the name of the tool binary.
+
+        Args:
+            level: The level of the scan.
+            package: The package to scan.
+
+        Returns:
+            The name of the tool binary.
+        """
         binary = self.get_name()
         if package is not None and "cpplint" in package:
             binary = package["cpplint"]
@@ -29,7 +41,15 @@ class CpplintToolPlugin(ToolPlugin):
         return binary
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if "make_targets" not in package and "headers" not in package:
             return []
 
@@ -77,7 +97,14 @@ class CpplintToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:
-        """Manual exceptions."""
+        """Manual exceptions.
+
+        Args:
+            match: The regex match object.
+
+        Returns:
+            True if the match is an exception, False otherwise.
+        """
         if (
             match.group(1).endswith(".cpp") or match.group(1).endswith(".cc")
         ) and match.group(4) == "build/namespaces":
@@ -96,7 +123,14 @@ class CpplintToolPlugin(ToolPlugin):
         return False
 
     def parse_tool_output(self, output: str) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: The output from the tool.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         lint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]\s\[(\d+)\]"
         parse: Pattern[str] = re.compile(lint_re)
         issues: list[Issue] = []

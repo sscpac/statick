@@ -28,7 +28,15 @@ class ClangFormatXMLParser:
     """Parse XML output from the clang-format tool."""
 
     def parse_xml_output(self, output: str, filename: str) -> list[dict[Any, Any]]:
-        """Parse XML output from the clang-format tool."""
+        """Parse XML output from the clang-format tool.
+
+        Args:
+            output: The XML output from the tool.
+            filename: The name of the file being scanned.
+
+        Returns:
+            A list of dictionaries containing the parsed data.
+        """
         report: list[dict[Any, Any]] = []
         xmls = output.split("<?xml version='1.0'?>")[1:]
         for xml in xmls:
@@ -50,7 +58,15 @@ class ClangFormatXMLParser:
     def generate_report(  # pylint: disable=too-many-locals
         self, content: str, replacements: list[ElementTree.Element]
     ) -> list[dict[Any, Any]]:
-        """Go through content and generate report of issues discovered."""
+        """Go through content and generate report of issues discovered.
+
+        Args:
+            content: The content of the file being scanned.
+            replacements: The replacements to be made.
+
+        Returns:
+            A list of dictionaries containing the report data.
+        """
         report: list[dict[Any, Any]] = []
         for replacement in replacements:
             offset = int(replacement.get("offset", 0))
@@ -103,14 +119,30 @@ class ClangFormatXMLParser:
 
     @classmethod
     def find_index_of_line_start(cls, data: str, offset: int) -> int:
-        """Find where line starts."""
+        """Find where line starts.
+
+        Args:
+            data: The content of the file being scanned.
+            offset: The offset in the file.
+
+        Returns:
+            The index of the line start.
+        """
         index_1 = data.rfind("\n", 0, offset) + 1
         index_2 = data.rfind("\r", 0, offset) + 1
         return max(index_1, index_2)
 
     @classmethod
     def find_index_of_line_end(cls, data: str, offset: int) -> int:
-        """Find where line ends."""
+        """Find where line ends.
+
+        Args:
+            data: The content of the file being scanned.
+            offset: The offset in the file.
+
+        Returns:
+            The index of the line end.
+        """
         index_1 = data.find("\n", offset)
         if index_1 == -1:
             index_1 = len(data)
@@ -121,5 +153,13 @@ class ClangFormatXMLParser:
 
     @classmethod
     def get_line_number(cls, data: str, offset: int) -> int:
-        """Get line number where violation occurs."""
+        """Get line number where violation occurs.
+
+        Args:
+            data: The content of the file being scanned.
+            offset: The offset in the file.
+
+        Returns:
+            The line number.
+        """
         return data[0:offset].count("\n") + data[0:offset].count("\r") + 1

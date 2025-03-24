@@ -15,16 +15,32 @@ class SpotbugsToolPlugin(ToolPlugin):
     """Apply spotbugs tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "spotbugs"
 
     @classmethod
     def get_tool_dependencies(cls) -> list[str]:
-        """Get a list of tools that must run before this one."""
+        """Get a list of tools that must run before this one.
+
+        Returns:
+            List of tool dependencies.
+        """
         return ["make"]
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to process.
+
+        Returns:
+            List of issues or None.
+        """
         # Sanity check - make sure mvn exists
         if not self.command_exists("mvn"):
             logging.warning(
@@ -97,7 +113,14 @@ class SpotbugsToolPlugin(ToolPlugin):
     def parse_file_output(  # pylint: disable=too-many-locals
         self, output: str
     ) -> Optional[list[Issue]]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: Output string.
+
+        Returns:
+            List of issues or None.
+        """
         issues: list[Issue] = []
         # Load the plugin mapping if possible
         warnings_mapping = self.load_mapping()

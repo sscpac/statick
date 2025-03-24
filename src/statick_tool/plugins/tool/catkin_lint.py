@@ -15,17 +15,35 @@ class CatkinLintToolPlugin(ToolPlugin):
     """Apply catkin_lint tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "catkin_lint"
 
     def get_file_types(self) -> list[str]:
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            A list of file types.
+        """
         return ["catkin"]
 
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+            files: The files to scan.
+            user_flags: The user flags to use.
+
+        Returns:
+            The output from the tool.
+        """
         flags: list[str] = []
         flags += user_flags
         tool_bin = self.get_binary()
@@ -51,7 +69,15 @@ class CatkinLintToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions_has_file(cls, match: Match[str], package: Package) -> bool:
-        """Manual exceptions."""
+        """Manual exceptions.
+
+        Args:
+            match: The regex match object.
+            package: The package to scan.
+
+        Returns:
+            True if the match is an exception, False otherwise.
+        """
         message = match.group(5)
         norm_path = os.path.normpath(package.path + "/" + match.group(2))
         with open(norm_path, "r", encoding="utf8") as fid:
@@ -71,7 +97,14 @@ class CatkinLintToolPlugin(ToolPlugin):
 
     @classmethod
     def get_severity(cls, issue_type: str) -> int:
-        """Get level for given issue type."""
+        """Get level for given issue type.
+
+        Args:
+            issue_type: The type of the issue.
+
+        Returns:
+            The severity level.
+        """
         if issue_type == "error":
             return 5
         if issue_type == "warning":
@@ -81,7 +114,15 @@ class CatkinLintToolPlugin(ToolPlugin):
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: The output from the tool.
+            package: The package to scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         lint_re = r"(.+):\s(.+)\((\d+)\):\s(.+):\s(.+)"
         lint2_re = r"(.+):\s(.+):\s(.+)"
         parse: Pattern[str] = re.compile(lint_re)

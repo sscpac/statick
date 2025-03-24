@@ -17,5 +17,14 @@ class DoNothingReportingPlugin(ReportingPlugin):
     def report(
         self, package: Package, issues: dict[str, list[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
-        """Do nothing."""
+        """Do nothing.
+
+        Args:
+            package: The Package object that was analyzed.
+            issues: The issues found by the Statick analysis, keyed by the tool that found them.
+            level: Name of the level used in the scan.
+
+        Returns:
+            None, True indicating the report was processed (even though nothing was done).
+        """
         return None, True

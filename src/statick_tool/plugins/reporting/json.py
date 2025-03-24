@@ -28,6 +28,9 @@ class JsonReportingPlugin(ReportingPlugin):
             issues: The issues found by the Statick analysis,
                     keyed by the tool that found them.
             level: Name of the level used in the scan.
+
+        Returns:
+            None, True if the report was successfully printed, otherwise None, False.
         """
         if not self.plugin_context or not self.plugin_context.config:
             return None, False
@@ -72,7 +75,16 @@ class JsonReportingPlugin(ReportingPlugin):
         return None, True
 
     def write_output(self, package: Package, level: str, line: str) -> bool:
-        """Write JSON output to a file."""
+        """Write JSON output to a file.
+
+        Args:
+            package: The Package object that was analyzed.
+            level: Name of the level used in the scan.
+            line: The JSON string to write to the file.
+
+        Returns:
+            True if the output was successfully written, otherwise False.
+        """
         # By default write report to the current directory.
         output_dir = os.getcwd()
         if (

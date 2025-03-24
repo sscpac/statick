@@ -14,17 +14,35 @@ class CMakelintToolPlugin(ToolPlugin):
     """Apply cmakelint tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "cmakelint"
 
     def get_file_types(self) -> list[str]:
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            A list of file types.
+        """
         return ["cmake_src"]
 
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+            files: The files to scan.
+            user_flags: The user flags to use.
+
+        Returns:
+            The output from the tool.
+        """
         flags: list[str] = []
         flags += user_flags
 
@@ -58,7 +76,15 @@ class CMakelintToolPlugin(ToolPlugin):
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: The output from the tool.
+            package: The package to scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         cmakelint_re = r"(.+):(\d+):\s(.+)\s\[(.+)\]"
         parse: Pattern[str] = re.compile(cmakelint_re)
         issues: list[Issue] = []

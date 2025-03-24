@@ -14,11 +14,23 @@ class MakeToolPlugin(ToolPlugin):
     """Apply Make tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "make"
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to run the tool at.
+
+        Returns:
+            List of issues found or None.
+        """
         if "make_targets" not in package or not package["make_targets"]:
             logging.info("  Skipping make. No targets.")
             return []
@@ -57,12 +69,27 @@ class MakeToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:
-        """Manual exceptions."""
+        """Manual exceptions.
+
+        Args:
+            match: The regex match object.
+
+        Returns:
+            Boolean indicating if the match is an exception.
+        """
         return match.group(4) == "note"
 
     @classmethod
     def filter_matches(cls, matches: Any, package: Package) -> Any:
-        """Filter matches."""
+        """Filter matches.
+
+        Args:
+            matches: List of matches.
+            package: The package being processed.
+
+        Returns:
+            Filtered list of matches.
+        """
         i = 0
         result = []
         while i < len(matches):
@@ -88,7 +115,15 @@ class MakeToolPlugin(ToolPlugin):
     def parse_package_output(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, output: str
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            package: The package being processed.
+            output: The output from the tool.
+
+        Returns:
+            List of issues found.
+        """
         make_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)"
         make_warning_re = r".*\[(.+)\].*"
         parse: Pattern[str] = re.compile(make_re)

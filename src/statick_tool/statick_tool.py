@@ -323,25 +323,52 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def add_timing(
         self, package: str, name: str, plugin_type: str, duration: str
     ) -> None:
-        """Add an entry to the timings list."""
+        """Add an entry to the timings list.
+
+        Args:
+            package: Name of the package.
+            name: Name of the plugin.
+            plugin_type: Type of the plugin.
+            duration: Duration of the plugin execution.
+        """
         timing = Timing(package, name, plugin_type, duration)
         self.timings.append(timing)
 
     def get_timings(self) -> list[Timing]:
-        """Return list of timings for each component."""
+        """Return list of timings for each component.
+
+        Returns:
+            List of timings for each component.
+        """
         return self.timings
 
     def add_tool_version(self, tool: str, tool_version: str) -> None:
-        """Add an entry to the timings list."""
+        """Add an entry to the tool versions list.
+
+        Args:
+            tool: Name of the tool.
+            tool_version: Version of the tool.
+        """
         this_tool_version = ToolVersion(tool, tool_version)
         self.tool_versions.append(this_tool_version)
 
     def get_tool_versions(self) -> list[ToolVersion]:
-        """Return list of version for each tool."""
+        """Return list of version for each tool.
+
+        Returns:
+            List of versions for each tool.
+        """
         return self.tool_versions
 
     def collect_tool_versions(self, args: argparse.Namespace) -> bool:
-        """Print out all tool versions."""
+        """Print out all tool versions.
+
+        Args:
+            args: Arguments from command line.
+
+        Returns:
+            True if successful, False otherwise.
+        """
         success = True
 
         path = os.path.abspath(args.path)
@@ -374,7 +401,16 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     def run(
         self, path: str, args: argparse.Namespace, start_time: Optional[float] = None
     ) -> Tuple[Optional[dict[str, list[Issue]]], bool]:
-        """Run scan tools against targets on path."""
+        """Run scan tools against targets on path.
+
+        Args:
+            path: Path to the target.
+            args: Arguments from command line.
+            start_time: Start time of the scan.
+
+        Returns:
+            Issues found and success status.
+        """
         success = True
 
         path = os.path.abspath(path)
@@ -600,7 +636,15 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     ) -> Tuple[
         Optional[dict[str, list[Issue]]], bool
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-        """Run statick on a workspace."""
+        """Run statick on a workspace.
+
+        Args:
+            parsed_args: Parsed arguments from command line.
+            start_time: Start time of the scan.
+
+        Returns:
+            Issues found and success status.
+        """
         if parsed_args.output_directory:
             out_dir = parsed_args.output_directory
             if not os.path.isdir(out_dir):
@@ -751,7 +795,17 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         package: Package,
         num_packages: int,
     ) -> Tuple[Optional[dict[str, list[Issue]]], list[Timing]]:
-        """Scan each package in a separate process while buffering output."""
+        """Scan each package in a separate process while buffering output.
+
+        Args:
+            parsed_args: Parsed arguments from command line.
+            count: Current package count.
+            package: Package to scan.
+            num_packages: Total number of packages.
+
+        Returns:
+            Issues found and timings.
+        """
         logger = logging.getLogger()
         old_handler = None
         if logger.handlers[0]:
@@ -804,7 +858,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
     @staticmethod
     def print_exit_status(status: bool) -> None:
-        """Print Statick exit status."""
+        """Print Statick exit status.
+
+        Args:
+            status: Exit status.
+        """
         if status:
             logging.info("Statick exiting with success.")
         else:

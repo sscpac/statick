@@ -13,13 +13,23 @@ class DockerfileDiscoveryPlugin(DiscoveryPlugin):
     """Discover Dockerfile files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "dockerfile"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for Dockerfile files."""
+        """Scan package looking for Dockerfile files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         src_files: list[str] = []
         yaml_extensions = (".yaml", ".yml")
 
