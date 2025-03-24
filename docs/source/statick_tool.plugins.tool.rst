@@ -292,14 +292,6 @@ statick_tool.plugins.tool.shellcheck module
     :undoc-members:
     :show-inheritance:
 
-statick_tool.plugins.tool.shellcheck module
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. automodule:: statick_tool.plugins.tool.shellcheck
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 statick_tool.plugins.tool.spotbugs module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
