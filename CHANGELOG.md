@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add command line interface arguments to show tool versions. (#490)
   New arguments to show all tool versions (`--tool-versions-all`) which will not scan anything,
   or just the ones enabled for the current run (`--tool-versions-run`) during a scan.
+- Arguments and return description added to all method docstrings.
 
 ### Fixed
 
