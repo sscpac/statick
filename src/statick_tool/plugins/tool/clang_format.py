@@ -236,7 +236,7 @@ class ClangFormatToolPlugin(ToolPlugin):
 
         return True
 
-    def parse_tool_output(
+    def parse_tool_output(  # pylint: disable=too-many-locals
         self, total_output: list[str], files: list[str]
     ) -> list[Issue]:
         """Parse tool output and report issues.

@@ -321,7 +321,7 @@ class CCCCToolPlugin(ToolPlugin):
         return issues
 
     @classmethod
-    def convert_name_to_id(cls, name: str) -> str:
+    def convert_name_to_id(cls, name: str) -> str:  # pylint: disable=too-many-branches
         """Convert result name to configuration name.
 
         The name given in CCCC results is different than the name given in CCCC
