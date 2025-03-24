@@ -11,7 +11,11 @@ class Profile:  # pylint: disable=too-few-public-methods
     """Manages which scan levels are run for packages."""
 
     def __init__(self, filename: str) -> None:
-        """Initialize profile."""
+        """Initialize profile.
+
+        Args:
+            filename: Name of the profile file.
+        """
         if not filename:
             raise ValueError(f"{filename} is not a valid file")
         with open(filename, encoding="utf8") as fname:
@@ -25,7 +29,14 @@ class Profile:  # pylint: disable=too-few-public-methods
                 raise ValueError(f"No 'default' key found in {filename}!")
 
     def get_package_level(self, package: Package) -> Union[str, Any]:
-        """Get which scan level to use for a given package."""
+        """Get which scan level to use for a given package.
+
+        Args:
+            package: Package to get scan level for.
+
+        Returns:
+            Scan level for package.
+        """
         if "packages" in self.profile:
             packages_profile = self.profile["packages"]
             if packages_profile and package.name in packages_profile:

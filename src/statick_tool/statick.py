@@ -14,7 +14,16 @@ from statick_tool.statick_tool import Statick
 def run(
     statick: Statick, parsed_args: argparse.Namespace, start_time: float
 ) -> bool:  # pragma: no cover
-    """Run Statick on a single package."""
+    """Run Statick on a single package.
+
+    Args:
+        statick: Statick object.
+        parsed_args: Arguments from the command line.
+        start_time: Start time of the scan.
+
+    Returns:
+        True if the scan was successful, False otherwise.
+    """
     path = parsed_args.path
     issues, success = statick.run(path, parsed_args, start_time)
     if issues is None:

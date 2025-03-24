@@ -25,7 +25,11 @@ class Exceptions:
     """Interface for applying exceptions."""
 
     def __init__(self, filename: Optional[str]) -> None:
-        """Initialize exceptions interface."""
+        """Initialize exceptions interface.
+
+        Args:
+            filename: Filename of exceptions.
+        """
         if not filename:
             raise ValueError(f"{filename} is not a valid file")
         with open(filename, encoding="utf8") as fname:
@@ -35,7 +39,11 @@ class Exceptions:
                 raise ValueError(f"{filename} is not a valid YAML file: {ex}") from ex
 
     def get_ignore_packages(self) -> list[str]:
-        """Get list of packages to skip when scanning a workspace."""
+        """Get list of packages to skip when scanning a workspace.
+
+        Returns:
+           List of packages to skip.
+        """
         ignore: list[str] = []
         if (
             "ignore_packages" in self.exceptions
@@ -45,7 +53,14 @@ class Exceptions:
         return ignore
 
     def get_exceptions(self, package: Package) -> dict[Any, Any]:
-        """Get specific exceptions for given package."""
+        """Get specific exceptions for given package.
+
+        Args:
+            package: Package to get exceptions for.
+
+        Returns:
+            Exceptions for the given package.
+        """
         exceptions: dict[Any, Any] = {"file": [], "message_regex": []}
 
         if "global" in self.exceptions and "exceptions" in self.exceptions["global"]:
@@ -84,6 +99,13 @@ class Exceptions:
         Only filters files which have tools=all, intended for use after the discovery
         plugins have been run (so that Statick doesn't run the tool plugins against
         files which will be ignored anyway).
+
+        Args:
+            package: Package to filter files for.
+            file_list: List of files to filter.
+
+        Returns:
+            List of files with exceptions removed.
         """
         exceptions: dict[Any, Any] = self.get_exceptions(package)
         to_remove = []
@@ -109,7 +131,16 @@ class Exceptions:
     def filter_file_exceptions(
         self, package: Package, exceptions: list[Any], issues: dict[str, list[Issue]]
     ) -> dict[str, list[Issue]]:
-        """Filter issues based on file pattern exceptions list."""
+        """Filter issues based on file pattern exceptions list.
+
+        Args:
+            package: Package to filter files for.
+            exceptions: List of exceptions to apply.
+            issues: Issues to filter.
+
+        Returns:
+            Filtered issues.
+        """
         for tool, tool_issues in list(  # pylint: disable=too-many-nested-blocks
             issues.items()
         ):
@@ -142,7 +173,15 @@ class Exceptions:
     def filter_regex_exceptions(
         cls, exceptions: list[Any], issues: dict[str, list[Issue]]
     ) -> dict[str, list[Issue]]:
-        """Filter issues based on message regex exceptions list."""
+        """Filter issues based on message regex exceptions list.
+
+        Args:
+            exceptions: List of exceptions to apply.
+            issues: Issues to filter.
+
+        Returns:
+            Filtered issues.
+        """
         for exception in exceptions:  # pylint: disable=too-many-nested-blocks
             exception_re = exception["regex"]
             exception_tools = exception["tools"]
@@ -184,6 +223,12 @@ class Exceptions:
 
         Sometimes the tools themselves don't properly filter these out if there is a
         complex macro or something.
+
+        Args:
+            issues: Issues to filter.
+
+        Returns:
+            Filtered issues.
         """
         for tool, tool_issues in list(issues.items()):
             warning_printed: bool = False
@@ -217,7 +262,15 @@ class Exceptions:
     def filter_issues(
         self, package: Package, issues: dict[str, list[Issue]]
     ) -> dict[str, list[Issue]]:
-        """Filter issues based on exceptions list."""
+        """Filter issues based on exceptions list.
+
+        Args:
+            package: Package to filter files for.
+            issues: Issues to filter.
+
+        Returns:
+            Filtered issues.
+        """
         exceptions = self.get_exceptions(package)
 
         if exceptions["file"]:
@@ -235,6 +288,9 @@ class Exceptions:
         """Print warning about exception not being applied for an issue.
 
         Warning will only be printed once per tool.
+
+        Args:
+            tool: Tool for which the exception is not being applied.
         """
         logging.warning(
             "[WARNING] File exceptions not available for %s tool "

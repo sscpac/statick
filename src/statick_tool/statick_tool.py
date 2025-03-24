@@ -33,7 +33,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
     """Code analysis front-end."""
 
     def __init__(self, user_paths: list[str]) -> None:
-        """Initialize Statick."""
+        """Initialize Statick.
+
+        Args:
+            user_paths: List of paths to search for resource files.
+        """
         self.default_level = "default"
         self.resources = Resources(user_paths)
 
@@ -66,6 +70,9 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
         Valid levels are: DEBUG, INFO, WARNING, ERROR, CRITICAL. Specifying the level is
         case-insensitive (both upper-case and lower-case are allowed).
+
+        Args:
+            args: Arguments from command line.
         """
         valid_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
         log_level = args.log_level.upper()
@@ -78,7 +85,14 @@ class Statick:  # pylint: disable=too-many-instance-attributes
 
     @classmethod
     def set_cpu_count(cls, num_cpus: str) -> int:
-        """Set correct number of CPU cores to use."""
+        """Set correct number of CPU cores to use.
+
+        Args:
+            num_cpus: Desired number of CPU cores to use.
+
+        Returns:
+            Number of CPU cores to actually use.
+        """
         max_cpus = multiprocessing.cpu_count()
         desired = int(num_cpus)
         if desired > max_cpus or desired == -1:
@@ -89,7 +103,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
         return 1
 
     def get_config(self, args: argparse.Namespace) -> None:
-        """Get Statick configuration."""
+        """Get Statick configuration.
+
+        Args:
+            args: Arguments from command line.
+        """
         base_config_filename = "config.yaml"
         user_config_filename = ""
         if args.config is not None:
@@ -116,7 +134,11 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             )
 
     def get_exceptions(self, args: argparse.Namespace) -> None:
-        """Get Statick exceptions."""
+        """Get Statick exceptions.
+
+        Args:
+            args: Arguments from command line.
+        """
         exceptions_filename = "exceptions.yaml"
         if args.exceptions is not None:
             exceptions_filename = args.exceptions
@@ -130,13 +152,21 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             logging.error("Exceptions file %s has errors: %s", exceptions_filename, ex)
 
     def get_ignore_packages(self) -> list[str]:
-        """Get packages to ignore during scan process."""
+        """Get packages to ignore during scan process.
+
+        Returns:
+            Packages to skip when scanning.
+        """
         if self.exceptions is None:
             return []
         return self.exceptions.get_ignore_packages()
 
     def gather_args(self, args: argparse.ArgumentParser) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Argument parser that arguments will be added to.
+        """
         args.add_argument(
             "--output-directory",
             "-o",
@@ -253,7 +283,15 @@ class Statick:  # pylint: disable=too-many-instance-attributes
             plugin.gather_args(args)
 
     def get_level(self, path: str, args: argparse.Namespace) -> Optional[str]:
-        """Get level to scan package at."""
+        """Get level to scan package at.
+
+        Args:
+            path: Path to package.
+            args: Arguments from command line.
+
+        Returns:
+            Level to scan package at.
+        """
         path = os.path.abspath(path)
 
         if args.level is not None:
