@@ -93,12 +93,12 @@ WORKDIR ${HOME}
 # Fancy prompt.
 COPY .devcontainer/config/.git-prompt.sh ${HOME}/.git-prompt.sh
 COPY .devcontainer/config/.bash_prompt ${HOME}/.bash_prompt
+COPY .devcontainer/config/.git-completion.bash ${HOME}/.git-completion.bash
 RUN echo ". ~/.git-prompt.sh" >> ${HOME}/.bashrc && \
     echo ". ~/.bash_prompt" >> ${HOME}/.bashrc && \
-    wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash && \
-    echo " \
-    if [ -f ~/.git-completion.bash ]; then \
-      . ~/.git-completion.bash \
+    echo " \n\
+    if [ -f ~/.git-completion.bash ]; then \n\
+      . ~/.git-completion.bash \n\
     fi \
     " >> ${HOME}/.bashrc
 
