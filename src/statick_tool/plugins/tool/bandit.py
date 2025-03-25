@@ -26,7 +26,7 @@ class BanditToolPlugin(ToolPlugin):
         """Gather arguments.
 
         Args:
-            args: The arguments namespace.
+            args: Flags for this plugin will be added to these existing arguments.
         """
         args.add_argument(
             "--bandit-bin", dest="bandit_bin", type=str, help="bandit binary path"

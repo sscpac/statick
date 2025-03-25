@@ -36,7 +36,7 @@ class DiscoveryPlugin:
         """Gather arguments for plugin.
 
         Args:
-            args: Arguments from command line.
+            args: Flags for plugins will be added to existing arguments.
         """
 
     def scan(

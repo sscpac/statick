@@ -35,7 +35,7 @@ class ClangTidyToolPlugin(ToolPlugin):
         """Gather arguments.
 
         Args:
-            args: The arguments to gather.
+            args: Flags for this plugin will be added to these existing arguments.
         """
         args.add_argument(
             "--clang-tidy-bin",

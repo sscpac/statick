@@ -38,7 +38,7 @@ class CCCCToolPlugin(ToolPlugin):
         """Gather arguments.
 
         Args:
-            args: The arguments to gather.
+            args: Flags for this plugin will be added to these existing arguments.
         """
         args.add_argument(
             "--cccc-bin", dest="cccc_bin", type=str, help="cccc binary path"

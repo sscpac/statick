@@ -25,7 +25,7 @@ class ReportingPlugin:
         """Gather arguments.
 
         Args:
-            args: Arguments from command line.
+            args: Flags for plugins will be added to existing arguments.
         """
 
     def report(  # type: ignore[empty-body]

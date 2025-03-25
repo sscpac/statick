@@ -25,7 +25,7 @@ class Config:
 
         Args:
             base_file: The base configuration file to use.
-            user_file: The user configuration file to use.
+            user_file: The user configuration file to use, will override base configuration.
             default_level: The default level to use if no level is specified.
         """
         self.default_level = default_level

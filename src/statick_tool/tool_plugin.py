@@ -41,7 +41,7 @@ class ToolPlugin:
         """Gather arguments.
 
         Args:
-            args: Arguments from command line.
+            args: Flags for plugins will be added to existing arguments.
         """
 
     def get_file_types(self) -> list[str]:  # type: ignore[empty-body]

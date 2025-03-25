@@ -35,7 +35,7 @@ class ValValidateToolPlugin(ToolPlugin):
         """Gather arguments.
 
         Args:
-            args: Argument namespace.
+            args: Flags for this plugin will be added to these existing arguments.
         """
         args.add_argument(
             "--val-validate-bin",

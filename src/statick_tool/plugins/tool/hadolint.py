@@ -26,7 +26,7 @@ class HadolintToolPlugin(ToolPlugin):
         """Gather arguments.
 
         Args:
-            args: The arguments namespace.
+            args: Flags for this plugin will be added to these existing arguments.
         """
         args.add_argument(
             "--hadolint-bin",

@@ -47,7 +47,7 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
         """Gather arguments.
 
         Args:
-            args: The arguments to gather.
+            args: Flags for this plugin will be added to these existing arguments.
         """
         args.add_argument(
             "--cmake-flags", dest="cmake_flags", type=str, help="CMake flags"
