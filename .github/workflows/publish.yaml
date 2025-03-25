@@ -14,8 +14,8 @@ jobs:
       name: pypi
       url: https://pypi.org/p/statick
     permissions:
-      id-token: write
       contents: write
+      id-token: write
       pages: write
 
     steps:
@@ -40,14 +40,16 @@ jobs:
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
-      - name: Sphinx lint
-        uses: ammaraskar/sphinx-action@master
+  pages:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      id-token: write
+      pages: write
+    steps:
+      - id: deployment
+        uses: sphinx-notes/pages@v3
         with:
-          docs-folder: 'docs/'
-
-      - name: Publish documentation
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build/html
-          publish_branch: gh-pages
+          documentation_path: docs/source
