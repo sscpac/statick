@@ -16,7 +16,11 @@ class Args:
     """
 
     def __init__(self, name: str) -> None:
-        """Initialize arguments."""
+        """Initialize arguments.
+
+        Args:
+            name: Name of the tool.
+        """
         self.pre_parser = argparse.ArgumentParser(description=name, add_help=False)
         user_path_args = {
             "dest": "user_paths",
@@ -30,7 +34,14 @@ class Args:
         self.parser.add_argument("--user-paths", "-u", **user_path_args)  # type: ignore
 
     def get_user_paths(self, args: Any = None) -> list[str]:
-        """Get a list of user paths containing config or plugins."""
+        """Get a list of user paths containing config or plugins.
+
+        Args:
+            args: Arguments to parse.
+
+        Returns:
+            List of user paths.
+        """
         user_paths: list[str] = []
         args = self.pre_parser.parse_known_args(args)[0]
         if args.user_paths is not None:
@@ -43,5 +54,12 @@ class Args:
         return user_paths
 
     def get_args(self, args: Optional[list[str]] = None) -> argparse.Namespace:
-        """Get parsed command-line arguments."""
+        """Get parsed command-line arguments.
+
+        Args:
+            args: Arguments to parse.
+
+        Returns:
+            Parsed command-line arguments.
+        """
         return self.parser.parse_args(args)

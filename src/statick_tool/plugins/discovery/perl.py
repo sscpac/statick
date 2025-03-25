@@ -13,13 +13,23 @@ class PerlDiscoveryPlugin(DiscoveryPlugin):
     """Discover Perl files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "perl"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for Perl files."""
+        """Scan package looking for Perl files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         perl_files: list[str] = []
 
         self.find_files(package)

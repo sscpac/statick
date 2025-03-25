@@ -21,30 +21,58 @@ class ToolPlugin:
     TOOL_UNKNOWN_STR = "Unknown"
 
     def get_name(self) -> str:  # type: ignore[empty-body]
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of tool.
+        """
         pass  # pylint: disable=unnecessary-pass
 
     @classmethod
     def get_tool_dependencies(cls) -> list[str]:
-        """Get a list of tools that must run before this one."""
+        """Get a list of tools that must run before this one.
+
+        Returns:
+            List of tool dependencies for a tool.
+        """
         return []
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for plugins will be added to existing arguments.
+        """
 
     def get_file_types(self) -> list[str]:  # type: ignore[empty-body]
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            List of file types the plugin can scan.
+        """
 
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Arguments are required because some tools may need to know the package or level
+        to determine the binary name. The binary name can change, most often to add a
+        version number as a suffix.
+
+        Args:
+            level: Level at which to run tool.
+            package: Package on which to run tool.
+        """
         return self.get_name()
 
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
 
         If no version is found the function returns "Unknown".
+
+        Returns:
+            Version of the tool that's installed.
         """
         tool_bin = self.get_binary()
         if not tool_bin:
@@ -61,7 +89,17 @@ class ToolPlugin:
             return self.TOOL_MISSING_STR
 
     def get_version_from_pkg(self, subproc_args: list[str], ver_re_str: str) -> str:
-        """Figure out and return the version of the tool that's installed."""
+        """Figure out and return the version of the tool that's installed.
+
+        If no version is found the function returns "Unknown".
+
+        Args:
+            subproc_args: Arguments to pass to subprocess.
+            ver_re_str: Regular expression to use to parse the version from the output.
+
+        Returns:
+            Version of the tool that's installed.
+        """
         version = self.TOOL_MISSING_STR
 
         try:
@@ -83,7 +121,11 @@ class ToolPlugin:
         return version
 
     def get_version_from_apt(self) -> str:
-        """Figure out and return the version of the tool that's installed by apt."""
+        """Figure out and return the version of the tool that's installed by apt.
+
+        Returns:
+            Version of the tool that's installed.
+        """
         tool_bin = self.get_binary()
         if not tool_bin:
             return self.TOOL_UNKNOWN_STR
@@ -93,7 +135,11 @@ class ToolPlugin:
         )
 
     def get_version_from_docker(self) -> str:
-        """Figure out and return the version of the tool that's installed by docker."""
+        """Figure out and return the version of the tool that's installed by Docker.
+
+        Returns:
+            Version of the tool that's installed.
+        """
         tool_bin = self.get_binary()
         if not tool_bin:
             return self.TOOL_UNKNOWN_STR
@@ -103,7 +149,11 @@ class ToolPlugin:
         )
 
     def get_version_from_npm(self) -> str:
-        """Figure out and return the version of the tool that's installed by npm."""
+        """Figure out and return the version of the tool that's installed by npm.
+
+        Returns:
+            Version of the tool that's installed.
+        """
         tool_bin = self.get_binary()
         if not tool_bin:
             return self.TOOL_UNKNOWN_STR
@@ -120,7 +170,15 @@ class ToolPlugin:
         return version
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: Package to scan.
+            level: Level at which to scan.
+
+        Returns:
+            List of issues from tool.
+        """
         files: list[str] = []
         for file_type in self.get_file_types():
             if file_type in package and package[file_type]:
@@ -145,19 +203,42 @@ class ToolPlugin:
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: Package to scan.
+            level: Level at which to scan.
+            files: List of files to scan.
+            user_flags: User-defined flags.
+
+        Returns:
+            List of output from tool.
+        """
 
     def parse_output(  # type: ignore[empty-body]
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: Output from tool.
+            package: Package with issues.
+        """
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
-        """Set the plugin context."""
+        """Set the plugin context.
+
+        Args:
+            plugin_context: Plugin context.
+        """
         self.plugin_context = plugin_context
 
     def load_mapping(self) -> dict[str, str]:
-        """Load a mapping between warnings and identifiers."""
+        """Load a mapping between warnings and identifiers.
+
+        Returns:
+            Mapping between warnings and identifiers.
+        """
         file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
         full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(
@@ -196,7 +277,15 @@ class ToolPlugin:
         return warning_mapping
 
     def get_user_flags(self, level: str, name: Optional[str] = None) -> list[str]:
-        """Get the user-defined extra flags for a specific tool/level combination."""
+        """Get the user-defined extra flags for a specific tool/level combination.
+
+        Args:
+            level: Level at which to scan.
+            name: Name of the tool.
+
+        Returns:
+            List of user-defined flags.
+        """
         if name is None:
             name = self.get_name()  # pylint: disable=assignment-from-no-return
         assert self.plugin_context is not None
@@ -216,6 +305,12 @@ class ToolPlugin:
 
         If the provided path has an extension on it, don't change it, otherwise try
         adding common extensions.
+
+        Args:
+            path: Path to tool binary.
+
+        Returns:
+            True if the path is a valid executable, False otherwise
         """
         # On Windows, PATHEXT contains a list of extensions which can be
         # appended to a program name when searching PATH.
@@ -236,7 +331,14 @@ class ToolPlugin:
 
     @staticmethod
     def command_exists(command: str) -> bool:
-        """Return whether a particular command is available on $PATH."""
+        """Return whether a particular command is available on $PATH.
+
+        Args:
+            command: Command to check for.
+
+        Returns:
+            True if the command is available on $PATH, False otherwise.
+        """
         fpath, _ = os.path.split(command)
 
         if fpath:

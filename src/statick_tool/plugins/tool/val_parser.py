@@ -25,11 +25,19 @@ class ValParserToolPlugin(ToolPlugin):
     """Apply Parser tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "val_parser"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--val-parser-bin",
             dest="val_parser_bin",
@@ -40,7 +48,15 @@ class ValParserToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level to process (optional).
+            package: The package to process (optional).
+
+        Returns:
+            Name of the tool binary.
+        """
         binary = "Parser"
         if (
             self.plugin_context is not None
@@ -50,7 +66,15 @@ class ValParserToolPlugin(ToolPlugin):
         return binary
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to process.
+
+        Returns:
+            List of issues or None.
+        """
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
             return []
 
@@ -91,7 +115,14 @@ class ValParserToolPlugin(ToolPlugin):
         return issues
 
     def parse_tool_output(self, output: str) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: Output string.
+
+        Returns:
+            List of issues.
+        """
         tool_re: str = r"(.+):\s(.+):\s(.+):\s(.+):\s(.+)\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)
         issues: list[Issue] = []

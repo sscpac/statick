@@ -15,18 +15,38 @@ class RstlintToolPlugin(ToolPlugin):
     """Apply rst-lint tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            The name of the tool.
+        """
         return "rstlint"
 
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level of the scan.
+            package: The package to scan.
+
+        Returns:
+            The binary name of the tool.
+        """
         return "rst-lint"
 
     # pylint: disable=too-many-locals
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         flags: list[str] = []
         user_flags = self.get_user_flags(level)
         flags += user_flags
@@ -54,7 +74,14 @@ class RstlintToolPlugin(ToolPlugin):
     # pylint: enable=too-many-locals
 
     def parse_tool_output(self, total_output: list[SystemMessage]) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: The output from the tool.
+
+        Returns:
+            A list of issues parsed from the output.
+        """
         issues: list[Issue] = []
 
         # Have to ignore some type hints as they are an addition to SystemMessage

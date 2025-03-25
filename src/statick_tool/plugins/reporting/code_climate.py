@@ -25,11 +25,12 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         """Go through the issues list and print them in JSON format.
 
         Args:
-            package (:obj:`Package`): The Package object that was analyzed.
-            issues (:obj:`dict` of :obj:`str` to :obj:`Issue`): The issues
-                found by the Statick analysis, keyed by the tool that found
-                them.
-            level: (:obj:`str`): Name of the level used in the scan.
+            package: The Package object that was analyzed.
+            issues: The issues found by the Statick analysis, keyed by the tool that found them.
+            level: Name of the level used in the scan.
+
+        Returns:
+            None, True if the report was successfully printed, otherwise None, False.
         """
         if not self.plugin_context or not self.plugin_context.config:
             return None, False
@@ -72,7 +73,16 @@ class CodeClimateReportingPlugin(ReportingPlugin):
     def get_issue_dict(
         cls, issue: Issue, category_mapping: dict[str, str], gitlab: bool
     ) -> dict[str, Any]:
-        """Convert Issue object into dictionary."""
+        """Convert Issue object into dictionary.
+
+        Args:
+            issue: The Issue object to convert.
+            category_mapping: A dictionary mapping issue categories.
+            gitlab: A boolean indicating if the output is for GitLab.
+
+        Returns:
+            A dictionary representation of the issue.
+        """
         severity = "info"
         try:
             if int(issue.severity) > 0:
@@ -122,7 +132,16 @@ class CodeClimateReportingPlugin(ReportingPlugin):
         return issue_dict
 
     def write_output(self, package: Package, level: str, line: str) -> bool:
-        """Write JSON output to a file."""
+        """Write JSON output to a file.
+
+        Args:
+            package: The Package object that was analyzed.
+            level: Name of the level used in the scan.
+            line: The JSON string to write to the file.
+
+        Returns:
+            True if the output was successfully written, otherwise False.
+        """
         # By default write report to the current directory.
         output_dir = os.getcwd()
         if (

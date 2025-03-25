@@ -24,11 +24,19 @@ class ValValidateToolPlugin(ToolPlugin):
     """Apply Validate tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "val_validate"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--val-validate-bin",
             dest="val_validate_bin",
@@ -39,7 +47,15 @@ class ValValidateToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level to process (optional).
+            package: The package to process (optional).
+
+        Returns:
+            Name of the tool binary.
+        """
         binary = "Validate"
         if (
             self.plugin_context is not None
@@ -50,7 +66,15 @@ class ValValidateToolPlugin(ToolPlugin):
         return binary
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to process.
+
+        Returns:
+            List of issues or None.
+        """
         if "pddl_domain_src" not in package or not package["pddl_domain_src"]:
             return []
 
@@ -93,7 +117,15 @@ class ValValidateToolPlugin(ToolPlugin):
         return issues
 
     def parse_tool_output(self, output: str, filename: str) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: Output string.
+            filename: Name of the file.
+
+        Returns:
+            List of issues.
+        """
         issues: list[Issue] = []
         issue_found = False
         for item in output.splitlines():

@@ -13,13 +13,23 @@ class TexDiscoveryPlugin(DiscoveryPlugin):
     """Discover TeX files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "tex"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for TeX files."""
+        """Scan package looking for TeX files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         tex_files: list[str] = []
         tex_extensions: Tuple[str, str] = (".tex", ".bib")
         tex_ignore_extensions = (".sty", ".log", ".cls")

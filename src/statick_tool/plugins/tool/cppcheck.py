@@ -25,11 +25,19 @@ class CppcheckToolPlugin(ToolPlugin):
     # pylint: enable=super-init-not-called
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "cppcheck"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--cppcheck-bin", dest="cppcheck_bin", type=str, help="cppcheck binary path"
         )
@@ -37,7 +45,15 @@ class CppcheckToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level of the scan.
+            package: The package to scan.
+
+        Returns:
+            The name of the tool binary.
+        """
         binary = self.get_name()
         if (
             self.plugin_context is not None
@@ -51,6 +67,12 @@ class CppcheckToolPlugin(ToolPlugin):
         """Parse version of tool.
 
         If no version is found the function returns "0.0".
+
+        Args:
+            version_str: The version string to parse.
+
+        Returns:
+            The parsed version string.
         """
         version = "0.0"
         ver_re = r"(.+) ([0-9]*\.?[0-9]+)"
@@ -62,7 +84,15 @@ class CppcheckToolPlugin(ToolPlugin):
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if (
             "make_targets" not in package and "headers" not in package
         ) or self.plugin_context is None:
@@ -145,14 +175,28 @@ class CppcheckToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:
-        """Manual exceptions."""
+        """Manual exceptions.
+
+        Args:
+            match: The regex match object.
+
+        Returns:
+            True if the match is an exception, False otherwise.
+        """
         # Sometimes you can't fix variableScope in old c code
         if match.group(1).endswith(".c") and match.group(4) == "variableScope":
             return True
         return False
 
     def parse_tool_output(self, output: str) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: The output from the tool.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         cppcheck_re = r"\[(.+):(\d+)\]:\s\((.+?)\s(.+?)\)\s(.+)"
         parse: Pattern[str] = re.compile(cppcheck_re)
         issues: list[Issue] = []

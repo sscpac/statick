@@ -13,13 +13,23 @@ class JavaDiscoveryPlugin(DiscoveryPlugin):
     """Discover Java files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "java"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for java files."""
+        """Scan package looking for java files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         java_src_files: list[str] = []
         java_class_files: list[str] = []
 

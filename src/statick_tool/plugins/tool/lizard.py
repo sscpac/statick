@@ -21,11 +21,23 @@ class LizardToolPlugin(ToolPlugin):
     """
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "lizard"
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to run the tool at.
+
+        Returns:
+            List of issues found or None.
+        """
         if not package.path:
             return []
 
@@ -69,7 +81,14 @@ class LizardToolPlugin(ToolPlugin):
         return issues
 
     def parse_tool_output(self, output: str) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: The output from the tool.
+
+        Returns:
+            List of issues found.
+        """
         lizard_re = r"(.+):(\d+):\s(.+):\s(.+)"
         parse: Pattern[str] = re.compile(lizard_re)
         matches = []
@@ -89,12 +108,26 @@ class LizardToolPlugin(ToolPlugin):
         return issues
 
     def remove_invalid_flags(self, flag_list: list[str]) -> list[str]:
-        """Filter out all disabled flags."""
+        """Filter out all disabled flags.
+
+        Args:
+            flag_list: List of flags to filter.
+
+        Returns:
+            List of valid flags.
+        """
         return [x for x in flag_list if self.valid_flag(x)]
 
     @classmethod
     def valid_flag(cls, flag: str) -> bool:
-        """Indicate if passed flag is invalid."""
+        """Indicate if passed flag is invalid.
+
+        Args:
+            flag: The flag to check.
+
+        Returns:
+            Boolean indicating if the flag is valid.
+        """
         disabled_flags = ["-f", "--input_file", "-o", "--output_file", "-Edumpcomments"]
         if flag in disabled_flags:
             return False

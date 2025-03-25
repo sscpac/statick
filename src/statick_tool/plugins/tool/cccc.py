@@ -27,11 +27,19 @@ class CCCCToolPlugin(ToolPlugin):
     """Apply CCCC tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "cccc"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--cccc-bin", dest="cccc_bin", type=str, help="cccc binary path"
         )
@@ -42,7 +50,15 @@ class CCCCToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level of the scan.
+            package: The package to scan.
+
+        Returns:
+            The name of the tool binary.
+        """
         binary = self.get_name()
         if (
             self.plugin_context is not None
@@ -55,13 +71,24 @@ class CCCCToolPlugin(ToolPlugin):
         """Figure out and return the version of the tool that's installed.
 
         If no version is found the function returns "Uninstalled".
+
+        Returns:
+            The version of the tool.
         """
         return self.get_version_from_apt()
 
     def scan(  # pylint: disable=too-many-branches,too-many-locals
         self, package: Package, level: str
     ) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if "c_src" not in package.keys() or not package["c_src"]:
             return []
 
@@ -124,7 +151,16 @@ class CCCCToolPlugin(ToolPlugin):
     def parse_tool_output(  # pylint: disable=too-many-branches
         self, output: dict[Any, Any], src: str, config_file: str
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: The output from the tool.
+            src: The source file being scanned.
+            config_file: The configuration file.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if "CCCC_Project" not in output:
             return []
 
@@ -197,6 +233,12 @@ class CCCCToolPlugin(ToolPlugin):
         http://sarnold.github.io/cccc/CCCC_User_Guide.html#config
 
         `cccc --opt_outfile=cccc.opt`
+
+        Args:
+            config_file: The configuration file.
+
+        Returns:
+            A dictionary containing the parsed configuration.
         """
         config: dict[Any, Any] = {}
 
@@ -219,7 +261,16 @@ class CCCCToolPlugin(ToolPlugin):
     def find_issues(
         self, config: dict[Any, Any], results: dict[Any, Any], src: str
     ) -> list[Issue]:
-        """Identify issues by comparing tool results with tool configuration."""
+        """Identify issues by comparing tool results with tool configuration.
+
+        Args:
+            config: The configuration dictionary.
+            results: The results dictionary.
+            src: The source file being scanned.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         issues: list[Issue] = []
         dummy = []
 
@@ -276,6 +327,12 @@ class CCCCToolPlugin(ToolPlugin):
         The name given in CCCC results is different than the name given in CCCC
         configuration. This will map the name in the configuration file to the name
         given in the results.
+
+        Args:
+            name: The name to convert.
+
+        Returns:
+            The converted name.
         """
         name_id = ""
 

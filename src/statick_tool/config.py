@@ -21,7 +21,13 @@ class Config:
         user_file: Optional[str] = "",
         default_level: Optional[str] = "default",
     ) -> None:
-        """Initialize configuration."""
+        """Initialize the Config object.
+
+        Args:
+            base_file: The base configuration file to use.
+            user_file: The user configuration file to use, will override base configuration.
+            default_level: The default level to use if no level is specified.
+        """
         self.default_level = default_level
         if base_file is None or not os.path.exists(base_file):
             self.config: Any = []
@@ -38,6 +44,9 @@ class Config:
         Any levels in user file will be included in available levels. User levels can
         inherit from the base levels. If user levels and base levels have the same name
         the user level will override the base level.
+
+        Args:
+            user_file: The user configuration file to use.
         """
         user_config = self.get_config_from_file(user_file)
         if user_file:
@@ -54,7 +63,11 @@ class Config:
 
     @staticmethod
     def get_config_from_file(filename: str) -> Any:
-        """Get level configuration from a file."""
+        """Get level configuration from a file.
+
+        Args:
+            filename: The file to get configuration from.
+        """
         if filename:
             with open(filename, encoding="utf8") as fid:
                 try:
@@ -67,11 +80,26 @@ class Config:
         return None
 
     def has_level(self, level: Optional[str]) -> bool:
-        """Check if given level exists in config."""
+        """Check if given level exists in config.
+
+        Args:
+            level: The level to check for.
+
+        Returns:
+            True if level exists in config, False otherwise.
+        """
         return "levels" in self.config and level in self.config["levels"]
 
     def get_enabled_plugins(self, level: str, plugin_type: str) -> list[str]:
-        """Get what plugins are enabled for a certain level."""
+        """Get what plugins are enabled for a certain level.
+
+        Args:
+            level: The level to get plugins for.
+            plugin_type: The type of plugin to get.
+
+        Returns:
+            A list of plugins enabled for the given level.
+        """
         plugins: list[str] = []
 
         if level == self.default_level:
@@ -97,20 +125,48 @@ class Config:
         return plugins
 
     def get_enabled_tool_plugins(self, level: str) -> list[str]:
-        """Get what tool plugins are enabled for a certain level."""
+        """Get what tool plugins are enabled for a certain level.
+
+        Args:
+            level: The level to get tool plugins for.
+
+        Returns:
+            A list of tool plugins enabled for the given level.
+        """
         return self.get_enabled_plugins(level, "tool")
 
     def get_enabled_discovery_plugins(self, level: str) -> list[str]:
-        """Get what discovery plugins are enabled for a certain level."""
+        """Get what discovery plugins are enabled for a certain level.
+
+        Args:
+            level: The level to get discovery plugins for.
+
+        Returns:
+            A list of discovery plugins enabled for the given level..
+        """
         return self.get_enabled_plugins(level, "discovery")
 
     def get_enabled_reporting_plugins(self, level: str) -> list[str]:
-        """Get what reporting plugins are enabled for a certain level."""
+        """Get what reporting plugins are enabled for a certain level.
+
+        Args:
+            level: The level to get reporting plugins for.
+
+        Returns:
+            A list of reporting plugins enabled for the given level.
+        """
         return self.get_enabled_plugins(level, "reporting")
 
     @classmethod
     def str_to_bool(cls, val: Optional[str]) -> bool:
-        """Convert a string to a bool."""
+        """Convert a string to a bool.
+
+        Args:
+            val: The string to convert.
+
+        Returns:
+            True if the string is a truthy value, False otherwise.
+        """
         if val is None:
             return False
         truth_values = ["y", "yes", "t", "true", "on", "1"]
@@ -130,7 +186,18 @@ class Config:
         key: str,
         default: Optional[str] = None,
     ) -> Optional[Union[str, Any]]:
-        """Get flags to use for a plugin at a certain level."""
+        """Get flags to use for a plugin at a certain level.
+
+        Args:
+            plugin_type: The type of plugin to get.
+            plugin: The plugin to get flags for.
+            level: The level to get flags for.
+            key: The key to get.
+            default: The default value to return if the key is not found.
+
+        Returns:
+            The flags to use for a plugin at a certain level.
+        """
         if level not in self.config["levels"]:
             return default
         level_config = self.config["levels"][level]
@@ -157,7 +224,17 @@ class Config:
     def get_tool_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
-        """Get tool flags to use for a plugin at a certain level."""
+        """Get tool flags to use for a plugin at a certain level.
+
+        Args:
+            plugin: The plugin to get flags for.
+            level: The level to get flags for.
+            key: The key to get.
+            default: The default value to return if the key is not found.
+
+        Returns:
+            The flags to use for a plugin at a certain level.
+        """
         tool_flags = self.get_plugin_config("tool", plugin, level, key, default)
         # Make sure the flags are on a single line string and remove double-quotes and
         # whitespace that might have been added from yaml multi-line syntax.
@@ -169,11 +246,31 @@ class Config:
     def get_discovery_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
-        """Get discovery flags to use for a plugin at a certain level."""
+        """Get discovery flags to use for a plugin at a certain level.
+
+        Args:
+            plugin: The plugin to get flags for.
+            level: The level to get flags for.
+            key: The key to get.
+            default: The default value to return if the key is not found.
+
+        Returns:
+            The flags to use for a plugin at a certain level.
+        """
         return self.get_plugin_config("discovery", plugin, level, key, default)
 
     def get_reporting_config(
         self, plugin: str, level: str, key: str, default: Optional[str] = None
     ) -> Optional[str]:
-        """Get reporting flags to use for a plugin at a certain level."""
+        """Get reporting flags to use for a plugin at a certain level.
+
+        Args:
+            plugin: The plugin to get flags for.
+            level: The level to get flags for.
+            key: The key to get.
+            default: The default value to return if the key is not found.
+
+        Returns:
+            The flags to use for a plugin at a certain level.
+        """
         return self.get_plugin_config("reporting", plugin, level, key, default)

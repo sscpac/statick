@@ -13,13 +13,23 @@ class ShellDiscoveryPlugin(DiscoveryPlugin):
     """Discover shell files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "shell"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for shell files."""
+        """Scan package looking for shell files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         shell_files: list[str] = []
         shell_extensions = (".sh", ".bash", ".zsh", ".csh", ".ksh", ".dash")
         shell_output = ("shell script", "dash script", "zsh script")

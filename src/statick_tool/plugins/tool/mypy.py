@@ -15,18 +15,36 @@ class MypyToolPlugin(ToolPlugin):
     """Apply mypy tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "mypy"
 
     def get_file_types(self) -> list[str]:
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            List of file types.
+        """
         return ["python_src"]
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to run the tool at.
+            files: List of files to process.
+            user_flags: List of user flags.
+
+        Returns:
+            List of output strings or None.
+        """
         flags: list[str] = [
             "--show-absolute-path",
             "--show-error-codes",
@@ -64,7 +82,15 @@ class MypyToolPlugin(ToolPlugin):
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: List of output strings.
+            package: The package being processed.
+
+        Returns:
+            List of issues found.
+        """
         # file:line: severity: msg type
         tool_re = r"(.+):(\d+):\s(.+):\s(.+)\s(.+)"
         parse: Pattern[str] = re.compile(tool_re)

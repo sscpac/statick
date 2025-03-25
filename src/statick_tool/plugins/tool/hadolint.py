@@ -15,11 +15,19 @@ class HadolintToolPlugin(ToolPlugin):
     """Apply hadolint tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "hadolint"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--hadolint-bin",
             dest="hadolint_bin",
@@ -34,13 +42,25 @@ class HadolintToolPlugin(ToolPlugin):
         )
 
     def get_file_types(self) -> list[str]:
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            List of file types.
+        """
         return ["dockerfile_src"]
 
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The analysis level.
+            package: The package being analyzed.
+
+        Returns:
+            Name of the tool binary.
+        """
         binary = self.get_name()
         # If the user explicitly specifies a binary, let that override the default
         if self.plugin_context and self.plugin_context.args.hadolint_bin is not None:
@@ -50,7 +70,8 @@ class HadolintToolPlugin(ToolPlugin):
     def get_version(self) -> str:
         """Figure out and return the version of the tool that's installed.
 
-        If no version is found the function returns "Unknown".
+        Returns:
+            Version of the tool or "Unknown" if not found.
         """
         if (
             self.plugin_context
@@ -68,7 +89,17 @@ class HadolintToolPlugin(ToolPlugin):
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package being analyzed.
+            level: The analysis level.
+            files: List of files to process.
+            user_flags: List of user flags.
+
+        Returns:
+            List of output strings or None.
+        """
         tool_config = ".hadolint.yaml"
         user_config = None
         if self.plugin_context is not None:
@@ -123,7 +154,16 @@ class HadolintToolPlugin(ToolPlugin):
     def scan_local_binary(
         self, tool_bin: str, flags: list[str], files: list[str]
     ) -> Optional[str]:
-        """Use locally installed hadolint binary to scan."""
+        """Use locally installed hadolint binary to scan.
+
+        Args:
+            tool_bin: The tool binary.
+            flags: List of flags.
+            files: List of files to scan.
+
+        Returns:
+            Output string or None.
+        """
         try:
             exe = [tool_bin] + flags
             exe.extend(files)
@@ -144,7 +184,17 @@ class HadolintToolPlugin(ToolPlugin):
     def scan_docker(
         self, tool_bin: str, flags: list[str], files: list[str], config_file_path: str
     ) -> Optional[str]:
-        """Use hadolint docker image to scan."""
+        """Use hadolint docker image to scan.
+
+        Args:
+            tool_bin: The tool binary.
+            flags: List of flags.
+            files: List of files to scan.
+            config_file_path: Path to the config file.
+
+        Returns:
+            Output string or None.
+        """
         try:
             json_dict = []
             for src in files:
@@ -199,7 +249,15 @@ class HadolintToolPlugin(ToolPlugin):
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: List of output strings.
+            package: The package being analyzed.
+
+        Returns:
+            List of issues.
+        """
         issues: list[Issue] = []
 
         # pylint: disable=too-many-nested-blocks

@@ -13,13 +13,23 @@ class MarkdownDiscoveryPlugin(DiscoveryPlugin):
     """Discover Markdown files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "markdown"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for Markdown files."""
+        """Scan package looking for Markdown files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         src_files: list[str] = []
 
         self.find_files(package)

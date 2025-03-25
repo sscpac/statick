@@ -13,13 +13,23 @@ class CDiscoveryPlugin(DiscoveryPlugin):
     """Discover C/C++ files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "C"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for C files."""
+        """Scan package looking for C files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         c_files: list[str] = []
         c_extensions = (".c", ".cc", ".cpp", ".cxx", ".h", ".hxx", ".hpp")
         c_output = ("c source", "c program", "c++ source")

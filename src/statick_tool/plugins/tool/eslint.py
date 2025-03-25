@@ -16,15 +16,30 @@ class ESLintToolPlugin(ToolPlugin):
     """Apply eslint tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "eslint"
 
     def get_file_types(self) -> list[str]:
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            List of file types.
+        """
         return ["html_src", "javascript_src"]
 
     def get_format_file(self, level: str) -> Tuple[Optional[str], bool]:
-        """Retrieve format file path."""
+        """Retrieve format file path.
+
+        Args:
+            level: The analysis level.
+
+        Returns:
+            Tuple containing the format file path and a boolean indicating if the file was copied.
+        """
         tool_config = "eslint.config.mjs"
         user_config = None
         if self.plugin_context is not None:
@@ -71,7 +86,17 @@ class ESLintToolPlugin(ToolPlugin):
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package being analyzed.
+            level: The analysis level.
+            files: List of files to process.
+            user_flags: List of user flags.
+
+        Returns:
+            List of output strings or None.
+        """
         tool_bin = self.get_binary()
 
         (format_file_name, copied_file) = self.get_format_file(level)
@@ -132,7 +157,11 @@ class ESLintToolPlugin(ToolPlugin):
 
     @classmethod
     def remove_config_file(cls, format_file_name: str) -> None:
-        """Remove config file automatically copied into directory."""
+        """Remove config file automatically copied into directory.
+
+        Args:
+            format_file_name: The name of the format file.
+        """
         format_file_path = pathlib.Path(format_file_name).expanduser()
         if format_file_path.exists():
             logging.info("Removing copied config file: %s", format_file_path)
@@ -141,7 +170,15 @@ class ESLintToolPlugin(ToolPlugin):
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: List of output strings.
+            package: The package being analyzed.
+
+        Returns:
+            List of issues.
+        """
         issues: list[Issue] = []
         for output in total_output:
             try:

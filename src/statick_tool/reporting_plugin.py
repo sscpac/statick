@@ -15,22 +15,48 @@ class ReportingPlugin:
     plugin_context = None
 
     def get_name(self) -> Optional[str]:
-        """Get name of reporting plugin."""
+        """Get name of reporting plugin.
+
+        Returns:
+            Name of reporting plugin.
+        """
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for plugins will be added to existing arguments.
+        """
 
     def report(  # type: ignore[empty-body]
         self, package: Package, issues: dict[str, list[Issue]], level: str
     ) -> Tuple[Optional[None], bool]:
-        """Run the report generator."""
+        """Run the report generator.
+
+        Args:
+            package: Package with issues.
+            issues: Issues to report.
+            level: Level at which to report.
+
+        Returns:
+            Tuple of None and False.
+        """
 
     def set_plugin_context(self, plugin_context: Union[None, PluginContext]) -> None:
-        """Setter for plugin_context."""
+        """Setter for plugin_context.
+
+        Args:
+            plugin_context: Plugin context.
+        """
         self.plugin_context = plugin_context
 
     def load_mapping(self) -> dict[str, str]:
-        """Load a mapping between two sets."""
+        """Load a mapping between two sets.
+
+        Returns:
+            Mapping between two sets for issues and specific warning types. An example
+            is SEI CERT C++ warnings found by supported tools.
+        """
         file_name: str = f"plugin_mapping/{self.get_name()}.txt"
         assert self.plugin_context is not None
         full_path: Union[Any, str, None] = self.plugin_context.resources.get_file(

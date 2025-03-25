@@ -14,7 +14,8 @@
 			"extensions": [
 				"ms-vscode.live-server",
 				"ms-python.python",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"GitHub.copilot"
 			],
 			"settings": {
 				"dev.containers.mountWaylandSocket": false,

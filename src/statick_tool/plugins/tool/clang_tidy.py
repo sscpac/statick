@@ -15,16 +15,28 @@ class ClangTidyToolPlugin(ToolPlugin):
     """Apply clang-tidy tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "clang-tidy"
 
     @classmethod
     def get_tool_dependencies(cls) -> list[str]:
-        """Get a list of tools that must run before this one."""
+        """Get a list of tools that must run before this one.
+
+        Returns:
+            A list of tool dependencies.
+        """
         return ["make"]
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--clang-tidy-bin",
             dest="clang_tidy_bin",
@@ -33,7 +45,15 @@ class ClangTidyToolPlugin(ToolPlugin):
         )
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if (
             "make_targets" not in package
             or "src_dir" not in package
@@ -102,7 +122,14 @@ class ClangTidyToolPlugin(ToolPlugin):
 
     @classmethod
     def check_for_exceptions(cls, match: Match[str]) -> bool:
-        """Manual exceptions."""
+        """Manual exceptions.
+
+        Args:
+            match: The regex match object.
+
+        Returns:
+            True if the match is an exception, False otherwise.
+        """
         # You are allowed to have 'using namespace' in source files
         if (
             match.group(1).endswith(".cpp") or match.group(1).endswith(".cc")
@@ -111,7 +138,14 @@ class ClangTidyToolPlugin(ToolPlugin):
         return False
 
     def parse_tool_output(self, output: str) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: The output from the tool.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         clang_tidy_re = r"(.+):(\d+):(\d+):\s(.+):\s(.+)\s\[(.+)\]"
         parse: Pattern[str] = re.compile(clang_tidy_re)
         issues: list[Issue] = []

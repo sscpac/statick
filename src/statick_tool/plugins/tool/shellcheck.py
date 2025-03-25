@@ -18,11 +18,19 @@ class ShellcheckToolPlugin(ToolPlugin):
     """Apply shellcheck tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            The name of the tool.
+        """
         return "shellcheck"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--shellcheck-bin",
             dest="shellcheck_bin",
@@ -33,14 +41,30 @@ class ShellcheckToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level of the scan.
+            package: The package to scan.
+
+        Returns:
+            The binary name of the tool.
+        """
         binary = self.get_name()
         if self.plugin_context and self.plugin_context.args.shellcheck_bin is not None:
             binary = self.plugin_context.args.shellcheck_bin
         return binary
 
     def scan(self, package: Package, level: str) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if "shell_src" not in package or not package["shell_src"]:
             return []
 
@@ -82,7 +106,14 @@ class ShellcheckToolPlugin(ToolPlugin):
         return issues
 
     def parse_json_output(self, output: Any) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            output: The JSON output from the tool.
+
+        Returns:
+            A list of issues parsed from the output.
+        """
         issues: list[Issue] = []
         for item in output:
             if (

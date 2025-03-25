@@ -12,13 +12,23 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):
     """Discover PDDL files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "pddl"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for PDDL files."""
+        """Scan package looking for PDDL files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         pddl_files: list[str] = []
 
         self.find_files(package)
@@ -46,7 +56,14 @@ class PDDLDiscoveryPlugin(DiscoveryPlugin):
 
     @classmethod
     def discover_pddl_file_type(cls, filename: str) -> str:
-        """Determine the type of PDDL file that was discovered."""
+        """Determine the type of PDDL file that was discovered.
+
+        Args:
+            filename: The name of the file to check.
+
+        Returns:
+            The type of PDDL file.
+        """
         with open(filename, encoding="utf-8") as f_pddl:
             for line in f_pddl.readlines():
                 if "(define" in line and "domain" in line:

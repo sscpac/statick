@@ -15,13 +15,23 @@ class MavenDiscoveryPlugin(DiscoveryPlugin):
     """Discover Maven files to analyze."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "maven"
 
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for maven files."""
+        """Scan package looking for maven files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         top_poms: list[str] = []
         all_poms: list[str] = []
         deepest_pom_level = 999999

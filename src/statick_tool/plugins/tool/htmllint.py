@@ -14,18 +14,36 @@ class HTMLLintToolPlugin(ToolPlugin):
     """Apply HTML tidy tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "htmllint"
 
     def get_file_types(self) -> list[str]:
-        """Return a list of file types the plugin can scan."""
+        """Return a list of file types the plugin can scan.
+
+        Returns:
+            List of file types.
+        """
         return ["html_src"]
 
     # pylint: disable=too-many-locals
     def process_files(
         self, package: Package, level: str, files: list[str], user_flags: list[str]
     ) -> Optional[list[str]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package being analyzed.
+            level: The analysis level.
+            files: List of files to process.
+            user_flags: List of user flags.
+
+        Returns:
+            List of output strings or None.
+        """
         tool_bin = self.get_binary()
 
         tool_config = ".htmllintrc"

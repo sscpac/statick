@@ -15,11 +15,19 @@ class UncrustifyToolPlugin(ToolPlugin):
     """Apply uncrustify tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "uncrustify"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--uncrustify-bin",
             dest="uncrustify_bin",
@@ -30,7 +38,15 @@ class UncrustifyToolPlugin(ToolPlugin):
     def get_binary(  # pylint: disable=unused-argument
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Get tool binary name."""
+        """Get tool binary name.
+
+        Args:
+            level: The level to process (optional).
+            package: The package to process (optional).
+
+        Returns:
+            Name of the tool binary.
+        """
         binary = self.get_name()
         if (
             self.plugin_context is not None
@@ -43,7 +59,15 @@ class UncrustifyToolPlugin(ToolPlugin):
     def scan(  # pylint: disable=too-many-locals, too-many-branches
         self, package: Package, level: str
     ) -> Optional[list[Issue]]:
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to process.
+            level: The level to process.
+
+        Returns:
+            List of issues or None.
+        """
         if "make_targets" not in package and "headers" not in package:
             return []
 
@@ -123,7 +147,15 @@ class UncrustifyToolPlugin(ToolPlugin):
     def parse_output(
         self, total_output: list[str], package: Optional[Package] = None
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: List of output strings.
+            package: The package to process (optional).
+
+        Returns:
+            List of issues.
+        """
         issues: list[Issue] = []
         for output in total_output:
             issues.append(

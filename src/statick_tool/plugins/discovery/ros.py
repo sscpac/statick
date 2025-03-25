@@ -16,7 +16,11 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
     """Discovery plugin to find ROS packages."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "ros"
 
     @classmethod
@@ -31,7 +35,16 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
         Copied from:
 
 
+
         https://stackoverflow.com/questions/25833613/python-safe-method-to-get-value-of-nested-dictionary
+
+        Args:
+            dictionary: The dictionary to search.
+            keys: The keys to search for.
+            default: The default value if the key is not found.
+
+        Returns:
+            The value found or the default value.
         """
         return reduce(
             lambda d, key: d.get(key, default) if isinstance(d, dict) else default,
@@ -42,7 +55,13 @@ class RosDiscoveryPlugin(DiscoveryPlugin):
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for ROS package files."""
+        """Scan package looking for ROS package files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         cmake_file = os.path.join(package.path, "CMakeLists.txt")
         package_file = os.path.join(package.path, "package.xml")
         ros_version = os.getenv("ROS_VERSION")

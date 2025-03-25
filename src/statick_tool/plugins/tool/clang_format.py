@@ -18,11 +18,19 @@ class ClangFormatToolPlugin(ToolPlugin):
     """Apply clang-format tool and gather results."""
 
     def get_name(self) -> str:
-        """Get name of tool."""
+        """Get name of tool.
+
+        Returns:
+            Name of the tool.
+        """
         return "clang-format"
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--clang-format-bin",
             dest="clang_format_bin",
@@ -52,7 +60,15 @@ class ClangFormatToolPlugin(ToolPlugin):
     def get_binary(
         self, level: Optional[str] = None, package: Optional[Package] = None
     ) -> str:
-        """Return the name of the tool binary."""
+        """Return the name of the tool binary.
+
+        Args:
+            level: The level of the scan.
+            package: The package to scan.
+
+        Returns:
+            The name of the tool binary.
+        """
         user_version = None
         if level is not None and self.plugin_context:
             user_version = self.plugin_context.config.get_tool_config(
@@ -77,7 +93,15 @@ class ClangFormatToolPlugin(ToolPlugin):
     ) -> Optional[
         list[Issue]
     ]:  # pylint: disable=too-many-locals, too-many-branches, too-many-return-statements
-        """Run tool and gather output."""
+        """Run tool and gather output.
+
+        Args:
+            package: The package to scan.
+            level: The level of the scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         if "make_targets" not in package and "headers" not in package:
             return []
 
@@ -149,7 +173,14 @@ class ClangFormatToolPlugin(ToolPlugin):
         return issues
 
     def check_configuration(self, clang_format_bin: str) -> Optional[bool]:
-        """Check that configuration is configured properly."""
+        """Check that configuration is configured properly.
+
+        Args:
+            clang_format_bin: The clang-format binary.
+
+        Returns:
+            True if the configuration is correct, False otherwise.
+        """
         if self.plugin_context is None:
             return False
 
@@ -208,7 +239,15 @@ class ClangFormatToolPlugin(ToolPlugin):
     def parse_tool_output(  # pylint: disable=too-many-locals
         self, total_output: list[str], files: list[str]
     ) -> list[Issue]:
-        """Parse tool output and report issues."""
+        """Parse tool output and report issues.
+
+        Args:
+            total_output: The output from the tool.
+            files: The files to scan.
+
+        Returns:
+            A list of issues found by the tool.
+        """
         clangformat_re = r"<replacement offset="
         parse: Pattern[str] = re.compile(clangformat_re)
         issues: list[Issue] = []

@@ -27,16 +27,28 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     """Discovery plugin to find CMake-based projects."""
 
     def get_name(self) -> str:
-        """Get name of discovery type."""
+        """Get name of discovery type.
+
+        Returns:
+            Name of the discovery type.
+        """
         return "cmake"
 
     @classmethod
     def get_discovery_dependencies(cls) -> list[str]:
-        """Get a list of plugins that must run before this one."""
+        """Get a list of plugins that must run before this one.
+
+        Returns:
+            List of plugin names.
+        """
         return ["ros"]
 
     def gather_args(self, args: argparse.Namespace) -> None:
-        """Gather arguments."""
+        """Gather arguments.
+
+        Args:
+            args: Flags for this plugin will be added to these existing arguments.
+        """
         args.add_argument(
             "--cmake-flags", dest="cmake_flags", type=str, help="CMake flags"
         )
@@ -44,7 +56,13 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     def scan(
         self, package: Package, level: str, exceptions: Optional[Exceptions] = None
     ) -> None:
-        """Scan package looking for CMake files."""
+        """Scan package looking for CMake files.
+
+        Args:
+            package: The package to scan.
+            level: The level of scanning.
+            exceptions: Optional exceptions to apply.
+        """
         if self.plugin_context is None:
             return
 
@@ -146,7 +164,12 @@ class CMakeDiscoveryPlugin(DiscoveryPlugin):
     def process_output(  # pylint: disable=too-many-locals
         cls, output: str, package: Package
     ) -> None:
-        """Parse the tool output."""
+        """Parse the tool output.
+
+        Args:
+            output: The output to parse.
+            package: The package to update.
+        """
         # pylint: disable=anomalous-backslash-in-string
         cmake_target_re = r"-- TARGET: \[NAME:(.+)\]\[SRC_DIR:(.+)\]\[INCLUDE_DIRS:(.*)\]\[SRC:(.+)\]"  # NOQA: W605 # NOLINT
         target_p: Pattern[str] = re.compile(cmake_target_re)
