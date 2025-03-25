@@ -6,8 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Upcoming
 
-The main Statick repository was moved from https://github.com/sscpac/statick to
-https://github.com/triboelectric/statick.
+The main Statick repository was moved from <https://github.com/sscpac/statick> to
+<https://github.com/triboelectric/statick>.
 
 ### Added
 
