@@ -6,12 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Upcoming
 
+The main Statick repository was moved from <https://github.com/sscpac/statick> to
+<https://github.com/triboelectric/statick>.
+
 ### Added
 
 - Add command line interface arguments to show tool versions. (#490)
-  New arguments to show all tool versions (`--tool-versions-all`) which will not scan anything,
-  or just the ones enabled for the current run (`--tool-versions-run`) during a scan.
+  - New arguments to show all tool versions (`--tool-versions-all`) which will not scan anything,
+    or just the ones enabled for the current run (`--tool-versions-run`) during a scan.
 - Arguments and return description added to all method docstrings.
+- Dev container (VS Code) for Statick developers. (#534)
 
 ### Fixed
 
@@ -20,6 +24,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Updated
 
 - Docker image now based on Ubuntu 24.04 instead of Ubuntu 20.04.
+- Organization name changes relfect repository move. (#535)
+- Change types of line number and severity in Issues from string to int. (#529)
 
 ### Removed
 
